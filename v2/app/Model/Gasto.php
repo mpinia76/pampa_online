@@ -1,0 +1,39 @@
+<?php
+class Gasto extends AppModel {
+    public $useTable = 'gasto';
+    public $belongsTo = array(
+        'Rubro' => array(
+            'fields' => 'id,rubro'
+        ),
+        'Subrubro' => array(
+            'fields' => 'id,subrubro'
+        ),
+        'Usuario' => array(
+            'className' => 'Usuario',
+            'foreignKey' => 'user_id',
+            'fields' => 'id,nombre,apellido'
+        ),
+        'Proveedor' => array(
+            'className' => 'Proveedor',
+            'foreignKey' => 'proveedor',
+            'fields' => 'id,nombre'
+        )
+     );
+    
+    public function afterFind($results) {
+        foreach ($results as $key => $val) {
+            if (!empty($val) and isset($val['Gasto']['created'])) {
+                $results[$key]['Gasto']['created']= $this->dateFormatAfterFind($val['Gasto']['created']);
+            }
+            if (!empty($val) and isset($val['Gasto']['fecha'])) {
+                $results[$key]['Gasto']['fecha']= $this->dateFormatAfterFind($val['Gasto']['fecha']);
+            }
+            if (!empty($val) and isset($val['Gasto']['fecha_vencimiento'])) {
+                $results[$key]['Gasto']['fecha_vencimiento']= $this->dateFormatAfterFind($val['Gasto']['fecha_vencimiento']);
+            }
+        }
+        return $results;
+    }
+
+}
+?>

@@ -1,0 +1,281 @@
+<?
+session_start();
+$user_id = $_SESSION['userid'];
+if($user_id == '') { header("Location: index.php"); }
+
+include_once("functions/form.class.php");
+include_once("functions/fechasql.php");
+include_once("config/db.php");
+include_once("config/user.php");
+include_once("functions/abm.php");
+
+$empleado_id = $_GET['empleado_id'];
+$ano = $_GET['ano'];
+$mes = $_GET['mes'];
+
+if(isset($_POST['agregar'])){
+
+	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
+	$rsTemp = mysql_query($sql);
+	while($rs = mysql_fetch_array($rsTemp)){
+		$pagado[$rs['ano']."_".$rs['mes']] = true;
+	}
+	
+                  $today = new DateTime();
+                  $today->modify('-1 month');
+                  $mes_anterior = $today->format('m');
+                  $ano_anterior = $today->format('Y');
+                  
+	if(!$pagado[$_POST['ano']."_".$_POST['mes']] and (($_POST['ano'] == $ano_anterior and $_POST['mes'] == $mes_anterior) or ($_POST['ano'] ==  date('Y') and $_POST['mes'] == date('m')) ) ){
+	
+                        $operacion_monto = $_POST['monto_pendiente'];
+                        include("functions/comprueba_pagos.php");
+		
+		if($procesa){
+		
+			$sql = "INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado)
+					VALUES
+						(".$_POST['empleado_id'].",'".$_POST['monto_pendiente']."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW())";
+			mysql_query($sql); 
+		
+			$operacion_id[] = mysql_insert_id();
+			$operacion_tipo = 'sueldo_pago';
+			
+			include("functions/procesa_pagos.php");
+			
+			$result = 1;
+			
+		}else{
+			
+			if(($operacion_monto+$monto_interes-$monto_descuento) != $monto_pagado){
+				$result = 'Verifique que el sueldo pendiente de pago ('.$operacion_monto.') coincida con el monto que intenta abonar ('.$monto_pagado.')';
+			}elseif($fecha_error != 0){
+				$result = 'La fecha ingresada no es correcta en alguna de las formas de pago';
+			}elseif($error_cheque == true){
+				$result = 'Debe completar el titular del cheque';
+			}elseif($error_cheque_numero == true){
+				$result = 'Ya existe un cheque del banco seleccionado y el numero ingresado';				
+			}elseif($fecha_hoy == false){
+				$result = 'Le fecha de pago no puede ser posterior a hoy';	
+			}else{
+				$result = 'No se pudo procesar la operacion';
+			}
+			
+		}
+	}else{
+                        $result = "El pago no pudo ser realizado, verifique que la fecha no sea posterior al mes acutal";
+                }
+	
+	$empleado_id = $_POST['empleado_id'];
+	$mes = $_POST['mes'];
+	$ano = $_POST['ano'];
+	
+}
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Administrador de empleados</title>
+<script type="text/javascript" src="library/jquery/jquery-1.4.2.min.js"></script>
+
+<!--JQuery Uploadify-->
+<script type="text/javascript" src="library/uploadify/jquery.uploadify.v2.1.0.min.js"></script>
+<script type="text/javascript" src="library/uploadify/swfobject.js"></script>
+<link href="library/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+<!--/JQuery Uploadify-->
+
+<!--JQuery editor-->
+<script type="text/javascript" src="library/jwysiwyg/jquery.wysiwyg.js"></script>
+<link rel="stylesheet" href="library/jwysiwyg/jquery.wysiwyg.css" type="text/css" />
+<!--/JQuery editor-->
+
+<!--JQuery Date Picker-->
+<script type="text/javascript" src="library/datepicker/date.js"></script>
+<!--[if IE]><script type="text/javascript" src="library/datepicker/jquery.bgiframe.js"></script><![endif]-->
+<script type="text/javascript" src="library/datepicker/jquery.datePicker.min-2.1.2.js"></script>
+<link href="library/datepicker/datePicker.css" rel="stylesheet" type="text/css" />
+<style>
+a.dp-choose-date {
+	float: left;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	margin: 5px 3px 0;
+	display: block;
+	text-indent: -2000px;
+	overflow: hidden;
+	background: url(images/calendar.png) no-repeat; 
+}
+a.dp-choose-date.dp-disabled {
+	background-position: 0 -20px;
+	cursor: default;
+}
+/* makes the input field shorter once the date picker code
+ * has run (to allow space for the calendar icon
+ */
+input.dp-applied {
+	width: 140px;
+	float: left;
+}
+</style>
+<!--/JQuery Date Picker-->
+<link href="styles/form.css" rel="stylesheet" type="text/css" />
+<link href="styles/form2.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript"> 
+function vacio(q) {
+	//funcion que chequea que los campos no sean espacios en blanco
+	for ( i = 0; i < q.length; i++ ) {
+			if ( q.charAt(i) != " " ) {
+					return true
+			}
+	}
+	return false
+}
+
+function valida(F) {
+	if(F.forma_pago.value == 'null') {
+	alert("Debe seleccionar una forma de pago");
+	F.forma_pago.focus();
+	return false
+	}
+}
+</script> 
+<script type="text/javascript">
+function addFormaDePago(forma_pago_id){
+
+	var datos = ({
+		'forma_pago' : forma_pago_id
+	});
+	
+	$.ajax({
+		beforeSend: function(){
+			$('#forma_pago_loading').show();
+		},
+		data: datos,
+		url: 'functions/formadepago.php',
+		success: function(data) {
+			$('#forma_pago_loading').hide();
+			$('#forma_de_pago').append(data);
+			$('.date-pick').datePicker().trigger('change');
+		}
+	});
+}
+</script>
+</head>
+
+<body>
+
+<? include_once("config/messages.php"); ?>
+
+<div class="container" style="font-family:arial; font-size:12px;"> 
+
+<?
+$sql = "SELECT * FROM empleado_pago WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
+if(mysql_num_rows(mysql_query($sql)) == 0){
+?>
+    <form method="POST" name="form" action="empleado.pagar.php" onSubmit="return valida(this);">
+        <input type="hidden" name="empleado_id" value="<?=$empleado_id?>" />
+        <input type="hidden" name="ano" value="<?=$ano?>" />
+        <input type="hidden" name="mes" value="<?=$mes?>" />
+        
+        <?
+        $sql = "SELECT * FROM empleado WHERE id = $empleado_id";
+        $rs = mysql_fetch_array(mysql_query($sql));
+        ?>
+        <p><strong><?=$rs['nombre']?> <?=$rs['apellido']?></strong> (<?=$mes?>/<?=$ano?>) </p>
+        
+        <p><strong>Sector de trabajo:</strong> 
+        <?
+        $sql = "SELECT empleado_trabajo.*,a.sector as 'sector1', b.sector as 'sector2', espacio_trabajo.espacio FROM empleado_trabajo LEFT JOIN sector as a ON empleado_trabajo.sector_1_id = a.id LEFT JOIN sector as b ON empleado_trabajo.sector_2_id = b.id INNER JOIN espacio_trabajo ON empleado_trabajo.espacio_trabajo_id = espacio_trabajo.id WHERE empleado_trabajo.empleado_id=$empleado_id ORDER BY empleado_trabajo.id DESC LIMIT 0,1";
+        $rs = mysql_fetch_array(mysql_query($sql));
+        ?>
+        <?=$rs['sector1'] != '' ? $rs['sector1'] : ''?> <?=$rs['sector1'] != '' ? $rs['porcentaje_sector_1']."%" : ''?> 
+        <?=$rs['sector2'] != '' ? " - ".$rs['sector2'] : ''?> <?=$rs['sector2'] != '' ? $rs['porcentaje_sector_2']."%" : ''?>
+        </p>
+        
+        <p><strong>Salario acordado del mes:</strong></p>
+        <?
+        $sql = "SELECT * FROM empleado_sueldo WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano ORDER BY sueldo_id DESC LIMIT 0,1";
+        $rs = mysql_fetch_array(mysql_query($sql));
+        ?>
+        Sueldo: $<?=$rs['sueldo']?> <br>
+        Viaticos: $<?=$rs['viaticos']?> <br>
+        Asignaciones: $<?=$rs['asignaciones']?> <br>
+        Presentismo: $<?=$rs['presentismo']?> <br>
+        Aguinaldo: $<?=$rs['aguinaldo']?> <br>
+        <? $salario = $rs['sueldo'] + $rs['viaticos'] + $rs['asignaciones'] + $rs['presentismo'] + $rs['aguinaldo']; ?>
+        Total: $<?=$salario?>
+        
+        <p><strong>Horas extras aprobadas:</strong></p>
+        <?
+            $sql = "
+            SELECT
+                ehe.*,
+                she.*,
+                s.sector
+            FROM 
+                empleado_hora_extra ehe INNER JOIN sector_horas_extras she ON ehe.hora_extra_id = she.id INNER JOIN sector s ON she.sector_id = s.id 
+            WHERE 
+                ehe.empleado_id = $empleado_id 
+                AND 
+                ehe.estado = 1 
+                AND
+                ehe.mes = $mes 
+                AND 
+                ehe.ano = $ano
+            ";
+            $rsTemp = mysql_query($sql); echo mysql_error();
+            if(mysql_num_rows($rsTemp) > 0) {
+                while($rs = mysql_fetch_array($rsTemp)){ ?>
+                <?=$rs['sector']?>: <?=$rs['cantidad_solicitada']?> hrs. solicitadas - <?=$rs['cantidad_aprobada']?> hrs. aprobadas = $<?=$rs['cantidad_aprobada']*$rs['valor']?> <br>
+                <? $horas_extras = $horas_extras + ($rs['cantidad_aprobada']*$rs['valor']); ?>
+                <? } ?>
+            <? }else{ ?>
+                No se han cargado horas extras
+            <? } ?>
+        </p>
+        
+        <p><strong>Adelantos otorgados:</strong></p>
+        <?
+            $sql = "SELECT * FROM empleado_adelanto WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
+            $rsTemp = mysql_query($sql);
+            if(mysql_num_rows($rsTemp) > 0) {
+                while($rs = mysql_fetch_array($rsTemp)){ ?>
+                <?=fechavista($rs['creado'])?> $<?=$rs['monto']?> <?=$rs['comentarios']?> <br>
+                <? $adelantos = $adelantos + $rs['monto']; ?>
+                <? } ?>
+            <? }else{ ?>
+                No se han otorgado adelantos
+            <? } ?>
+        </p>
+        
+        <p><strong>Pendiente de pago:</strong> $<?=$salario+$horas_extras-$adelantos?></p>
+        <input type="hidden" name="monto_pendiente" value="<?=$salario+$horas_extras-$adelantos?>"  />
+        
+        <div class="label">Forma de pago</div>
+            <div class="content">
+            <select name="forma_pago">
+            <option value="null">Seleccionar...</option>
+            <?
+            $sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4,6) ORDER BY forma_pago ";
+            $rsTemp = mysql_query($sql);
+            while($rs = mysql_fetch_array($rsTemp)){?>
+            <option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
+            <? } ?>
+            </select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
+            </div>
+            <div style="clear:both;"></div>
+    
+        <div class="form" id="forma_de_pago" style="font-family:arial; font-size:12px; margin-left:-10px; margin-top:-10px;"></div>
+        
+        <p align="center"><input type="submit" value="Guardar" name="agregar" /></p> 
+    </form> 
+<? }else{ ?>
+	<p>El salario para este periodo ya ha sido abonado</p>
+<? } ?>
+</div>
+</body>
+</html>

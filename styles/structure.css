@@ -1,0 +1,87 @@
+body{
+background:#F3F3F3;
+margin:0;
+}
+.logo{
+position:absolute;
+left:50%;
+top:150px;
+margin-left:-250px;
+}
+
+/* BARRA SUPERIOR */
+#top_bar{
+background:url(../images/bg_top_bar.png) repeat-x;
+width:100%;
+height:50px;
+display:inline-table;
+}
+#top_bar #bt_menu{
+float:left;
+background:url(../images/bg_bt_menu.png) no-repeat;
+width:130px;
+height:50px;
+}
+#top_bar #texto{
+float:right;
+margin-right:20px;
+padding:5px;
+color:#FFFFFF;
+height:50px;
+text-align:right;
+font-family:Arial, Helvetica, sans-serif;
+font-size:14px;
+font-weight:bold;
+}
+#top_bar #texto a{
+color:#FFFFFF;
+}
+
+/* MENU */
+#menu{
+    width:200px;
+    position:absolute;
+    top:32px;
+    left:0px;
+    z-index:100;
+    border: solid 1px #BFD0E7;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#menu .item{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    font-weight:bold;
+    padding:5px;
+    padding-left: 15px;
+    cursor:pointer;
+    display: none;
+}
+#menu .item:hover{
+    background:#BFD0E7;
+}
+#menu .title:hover{
+    background:#BFD0E7;
+}
+#menu .title{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    padding:5px;
+    cursor:pointer;
+}
+#desktop{
+    margin-top:-20px;
+    width:100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

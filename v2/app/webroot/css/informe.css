@@ -1,0 +1,49 @@
+body{
+    font-size: 12px;
+    font-family: arial;
+}
+.extras{
+    display: none;
+}
+.extras_adelantados{
+    display: none;
+}
+.extras_no_adelantados{
+    display: none;
+}
+td{
+    padding: 2px;
+}
+td.total{
+    background: #D3E9F7;
+    font-weight: bold;
+}
+td.total2{
+    background: #FFFBD4;
+    font-weight: bold;
+}
+tr.titulo{
+    text-align: center;
+    font-weight: bold;
+}
+tr.titulo2{
+    text-align: center;
+}
+tr.titulo2 td{
+    width: 50px;
+}
+tr.contenido{
+    text-align: center;
+}
+tr.hover td{
+    border-bottom: solid 1px #000;
+}
+td.mes{
+    text-align: left;
+    font-weight: bold;
+}
+td.link{
+    color: blue;
+    text-decoration: underline;
+    cursor:pointer;
+}
