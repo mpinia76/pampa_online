@@ -197,11 +197,15 @@ function finalizar(){
 
 <?php 
     echo $this->Form->create(false, array('class' => 'form-inline'));
+
     echo $this->Form->input('year' ,array(
-   'type' => 'select',
-   'label' => false,
-    'options' => array('2015'=>'2015','2014'=>'2014','2013'=>'2013','2012'=>'2012','2011'=>'2011'), 'default'=>'2015', 'style' => 'float: left; display:inline;'
-   ));
+                                            'type' => 'date',
+                                            'label' => false,
+                                            'minYear' => '2012', 
+                                            'maxYear' => date('Y') + 2,
+                                            'dateFormat'=> 'Y',
+                                            'style' => 'float: left; display:inline;'
+                                           ));
    
 
     echo $this->Form->input('month' ,array(

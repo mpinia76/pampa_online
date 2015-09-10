@@ -1,11 +1,10 @@
 <?
 //DATOS PARA LA BASE DE DATOS MYSQL
 
-
 $dbhost = "localhost";				
 $dbname = "produccion";						
-$dbuser = "produccion";								
-$dbpassword = "PKVJ6HQVwE96yBNj";
+$dbuser = "root";								
+$dbpassword = "";
 
 //CONEXION A LA BASE DE DATOS
 

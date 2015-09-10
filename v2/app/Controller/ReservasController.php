@@ -8,11 +8,18 @@ class ReservasController extends AppController {
 		
     public function index(){
 	    $this->layout = 'index';
-	  
-	    if(isset($this->data['year'])){
-		  $_SESSION['year'] = $this->data['year'];
+ 
+	    print_r(array_values($this->data['year']));
+        $array = $this->data['year'];
+        echo array_values($array[0]);
+        echo "//";
+        echo $this->data['month'];
+
+	    if(sizeof($this->data['year'])>0){
+          $_SESSION['year'] = array_pop($this->data['year']);
 		  $_SESSION['month'] = $this->data['month'];
 		}else{
+            echo "else";
 		  $_SESSION['year'] = '2015';
 		  $_SESSION['month'] = 'Todos';
 		}
@@ -22,11 +29,11 @@ class ReservasController extends AppController {
     public function index_restringido(){
 	   $this->layout = 'index';
 	   $_SESSION['restricted'] = 'true'; 
-	   if(isset($this->data['year'])){
-		  $_SESSION['year'] = $this->data['year'];
-		  $_SESSION['month'] = $this->data['month'];
+	   if(sizeof($this->data['year'])>0){
+          $_SESSION['year'] = array_pop($this->data['year']);
+          $_SESSION['month'] = $this->data['month'];
 		}else{
-		  $_SESSION['year'] = '2014';
+		  $_SESSION['year'] = '2015';
 		  $_SESSION['month'] = '01';
 		}
     }
@@ -47,7 +54,7 @@ class ReservasController extends AppController {
 	   	 
 		if($month == 'Todos'){
 		    $from = $year .'-01-01';
-	              $to = $year .'-12-31';
+	          $to = $year .'-12-31';
 		}else{
 		    $from = $year .'-'. $month .'-01';
 		    $to = $year .'-'. $month .'-31';
