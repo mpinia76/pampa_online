@@ -305,7 +305,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				</span>
 				</li>
 				<li><label>Responsable:</label><?=$rs['nombre']?> <?=$rs['apellido']?></li>
-				<? if($_GET['action'] == 'editar' and $subestado < 3){ ?>
+				<? if($_GET['action'] == 'editar'){ ?>
 					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
 					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
