@@ -1,3 +1,4 @@
 /v2/app/Config/*
 /v2/app/tmp/*
 /config/*
+/v2/vendors/*
