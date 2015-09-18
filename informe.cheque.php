@@ -22,7 +22,7 @@ cursor:pointer;
 
 <body>
 <? include_once("config/db.php"); ?>
-<? if(isset($_POST['ano'])) { $ano = $_POST['ano']; }else{ $ano='2012'; } ?>
+<? if(isset($_POST['ano'])) { $ano = $_POST['ano']; }else{ $ano= date('Y'); } ?>
 <form method="post" action="<?=$_SERVER['PHP_SELF']?>">
 <select size="1" name="ano">
 	<option <? if($ano == '2010'){?> selected="selected" <? } ?> >2010</option>
@@ -31,6 +31,9 @@ cursor:pointer;
 	<option <? if($ano == '2013'){?> selected="selected" <? } ?> >2013</option>
 	<option <? if($ano == '2014'){?> selected="selected" <? } ?> >2014</option>
 	<option <? if($ano == '2015'){?> selected="selected" <? } ?> >2015</option>
+    <option <? if($ano == '2016'){?> selected="selected" <? } ?> >2016</option>
+    <option <? if($ano == '2017'){?> selected="selected" <? } ?> >2017</option>
+    <option <? if($ano == '2018'){?> selected="selected" <? } ?> >2018</option>
 </select> 
 <input type="submit" value=">" name="buscar" />
 </form>

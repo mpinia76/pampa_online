@@ -19,7 +19,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	
 	$saldo = $saldo_rs['saldo'];
 	
-	$sinc_sql = "SELECT caja_sincronizada.usuario_id,caja_sincronizada.fecha,caja_sincronizada.monto,usuario.nombre, usuario.apellido FROM caja_sincronizada INNER JOIN usuario ON caja_sincronizada.usuario_id = usuario.id WHERE caja_sincronizada.caja_id = ".$rs['id']." ORDER BY caja_sincronizada.fecha DESC LIMIT 1";
+	$sinc_sql = "SELECT caja_sincronizada.usuario_id,caja_sincronizada.fecha,caja_sincronizada.monto,usuario.nombre, usuario.apellido FROM caja_sincronizada INNER JOIN usuario ON caja_sincronizada.usuario_id = usuario.id WHERE caja_sincronizada.caja_id = ".$rs['id']." ORDER BY caja_sincronizada.fecha desc LIMIT 1";
 	$sinc_rs = mysql_fetch_array(mysql_query($sinc_sql));
 	$usuario = $sinc_rs['nombre']." ".$sinc_rs['apellido'];
 	if($sinc_rs['fecha'] != ''){ $fecha = date("d/m/Y H:i:s",strtotime($sinc_rs['fecha'])); }else{ $fecha = ''; }
