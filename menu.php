@@ -28,12 +28,12 @@
         
         <div class="title" onclick="$('.administracion').toggle();"><img width="30" src="images/ico_admin.png" align="absmiddle" /> Administracion</div>
         <? if(MENU_4){?>
-        <div class="administracion item" onclick="createWindow('w_cuenta','Administrador de cuentas','cuentas.php','850','400'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_cuenta','Administrador de cuentas','cuentas.php','1230','400'); $('#menu').hide();">
             Creaci&oacute;n y Conciliaci&oacute;n de cuentas Bancarias 
         </div>
         <? } ?>
         <? if(MENU_16){?>
-        <div class="administracion item" onclick="createWindow('w_caja','Administrador de cajas','cajas.php','900','400'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_caja','Administrador de cajas','cajas.php','1230','400'); $('#menu').hide();">
             Creaci&oacute;n y Conciliaci&oacute;n de Cajas
         </div>
         <? } ?>
@@ -43,32 +43,32 @@
         </div>
         <? } ?>
         <? if(MENU_19){?>
-        <div class="administracion item" onclick="createWindow('w_empleados_sueldos','Administrador de sueldos','empleados_sueldos.php','800','435'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_empleados_sueldos','Administrador de sueldos','empleados_sueldos.php','1230','435'); $('#menu').hide();">
             Pago de haberes
         </div>
         <? } ?>
         <? if(MENU_12){?>
-        <div class="administracion item" onclick="createWindow('w_proveedor','Proveedores','proveedores.php','600','400'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_proveedor','Proveedores','proveedores.php','1230','400'); $('#menu').hide();">
             Alta de Proveedores
         </div>
         <? } ?>
         <? if(MENU_14){?>
-        <div class="administracion item" onclick="createWindow('w_cheque_consumo','Movimientos de cheques','cheques_movimientos.php','850','500'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_cheque_consumo','Movimientos de cheques','cheques_movimientos.php','1230','500'); $('#menu').hide();">
             Cheques a debitar
         </div>
         <? } ?>
         <? if(MENU_15){?>
-        <div class="administracion item" onclick="createWindow('w_transferencia_consumo','Transferencias','transferencias_movimientos.php','850','500'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_transferencia_consumo','Transferencias','transferencias_movimientos.php','1230','500'); $('#menu').hide();">
             Transferencias a debitar
         </div>
         <? } ?>
         <? if(MENU_22){?>
-        <div class="administracion item" onclick="createWindow('w_cobro_cheques','Cheques a acreditar','v2/cobro_cheques/index','800','500'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_cobro_cheques','Cheques a acreditar','v2/cobro_cheques/index','1230','500'); $('#menu').hide();">
             Cheques de 3ros a acreditar
         </div>
         <? } ?>
         <? if(MENU_23){?>
-        <div class="administracion item" onclick="createWindow('w_cobro_transferencias','Transferencias a acreditar','v2/cobro_transferencias/index','800','500'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_cobro_transferencias','Transferencias a acreditar','v2/cobro_transferencias/index','1230','500'); $('#menu').hide();">
             Transferencias a acreditar
         </div>
         <? } ?>
@@ -168,19 +168,19 @@
         
         <? if(MENU_9){?>
         <div class="title" onclick="$('.informes').toggle();"><img width="30" src="images/ico_informes.png" align="absmiddle" /> Informes</div>
-        <div class="informes item" onclick="createWindow('w_informe','Informe economico','informe.economico.php','1000','400'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_informe','Informe economico','informe.economico.php','1230','400'); $('#menu').hide();">
             Egresos
         </div>
-        <div class="informes item" onclick="createWindow('w_informe','Informe financiero','informe.financiero.php','1000','400'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_informe','Informe financiero','informe.financiero.php','1230','400'); $('#menu').hide();">
             Financiero  de Egresos
         </div>
-        <div class="informes item" onclick="createWindow('w_ventas_informe_economico','Informe economico de ventas','/v2/informes/index_ventas_economico','1000','600'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_ventas_informe_economico','Informe economico de ventas','/v2/informes/index_ventas_economico','1230','600'); $('#menu').hide();">
             Ventas
         </div>
-        <div class="informes item" onclick="createWindow('w_ventas_informe_financiero','Informe financiero de ventas','/v2/informes/index_ventas_financiero','1000','600'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_ventas_informe_financiero','Informe financiero de ventas','/v2/informes/index_ventas_financiero','1230','600'); $('#menu').hide();">
             Financiero de Ventas
         </div>
-        <div class="informes item" onclick="createWindow('w_informe_cheques','Informe de cheques','informe.cheque.php','1000','400'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_informe_cheques','Informe de cheques','informe.cheque.php','1230','400'); $('#menu').hide();">
             Movimiento de Cheques librados
         </div>
         <? } ?>
