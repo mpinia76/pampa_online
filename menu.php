@@ -73,7 +73,7 @@
         </div>
         <? } ?>
         <? if(MENU_24){?>
-        <div class="administracion item" onclick="createWindow('w_cobro_tarjetas','Transacciones con tarjeta','v2/cobro_tarjetas/index','900','500'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_cobro_tarjetas','Transacciones con tarjeta','v2/cobro_tarjetas/index','1230','500'); $('#menu').hide();">
             Transacciones con tarjeta
         </div>
         <? } ?>

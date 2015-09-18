@@ -5,15 +5,25 @@ class CobroTarjetasController extends AppController {
         $this->layout = 'index';
         
         $rows = array();
-        $transacciones = $this->CobroTarjeta->find('all',array('recursive' => 2));
+        //$transacciones = $this->get_transacciones();
       
     }
     
+
+    public function get_transacciones() {
+        $result = Cache::read('get_transacciones', 'long');
+            if (!$result) {
+                 $transacciones = $this->CobroTarjeta->find('all',array('order' => 'ReservaCobro.fecha desc','recursive' => 2));
+                Cache::write('get_transacciones', $lotes, 'long');
+            }
+            return $transacciones;
+    }
+
     public function dataTable(){
         $this->layout = 'ajax';
         
         $rows = array();
-        $transacciones = $this->CobroTarjeta->find('all',array('recursive' => 2)); 
+        $transacciones = $this->get_transacciones();
         foreach($transacciones as $transaccion){
             if($transaccion['CobroTarjetaLote']['id'] == ''){
                 $estado = 'Pendiente de cierre';
