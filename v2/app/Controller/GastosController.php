@@ -7,13 +7,21 @@ class GastosController extends AppController {
 	
 	    $this->layout = 'index';
 	    
-		
+		if(isset($this->data['year'])){
+		  $_SESSION['year'] = $this->data['year'];
+		}else{
+		  $_SESSION['year'] = '2015';
+		 }
 		
 		$this->loadModel('Rubro');
         $this->set('rubros',$this->Rubro->find('list',array('order' => 'Rubro.rubro asc')));
         
         $this->loadModel('Subrubro');
         $this->set('subrubros',$this->Subrubro->find('list',array('order' => 'Subrubro.subrubro asc')));
+
+        $this->loadModel('Usuario');
+        $this->set('usuario',$this->Usuario->find('list',array('order' => 'Usuario.nombre asc')));
+
     }
     
     public function dataTable(){
@@ -21,9 +29,14 @@ class GastosController extends AppController {
 	    $rows = array();
 		$limit = $_SESSION['year'];
 		
-   
-	     $gastos = $this->Gasto->find('all',array('order' => 'Gasto.created desc'));
-       
+        if($limit == "todos"){
+            $gastos = $this->Gasto->find('all',array('order' => 'Gasto.created desc'));
+        }else{
+		  $from = $limit .'-01-01 00:00:00';
+		  $to = $limit .'-12-31 00:00:00';
+		  $gastos = $this->Gasto->find('all',array('order' => 'Gasto.created desc', 'conditions' => array('Gasto.created between ? and ?' => array($from, $to))));
+        }
+
         foreach($gastos as $gasto){
             //estado y nro de orden
             if($gasto['Gasto']['estado'] == 0 and $gasto['Gasto']['nro_orden'] == 0){
@@ -59,7 +72,8 @@ class GastosController extends AppController {
                 $proveedor,
                 $gasto['Gasto']['factura_tipo']." ".$gasto['Gasto']['factura_nro'],
                 $gasto['Gasto']['monto'],
-                $estado
+                $estado,
+                $gasto['Usuario']['nombre']
             );
         }
         $this->set('aaData',$rows);

@@ -1,64 +1,64 @@
 <?php ini_set('memory_limit', '-1');
 session_start();
 class ReservasController extends AppController {
-    
+
 	public $scaffold;
-    public $components = array('Mpdf'); 
-   
-		
+    public $components = array('Mpdf');
+
+
     public function index(){
 	    $this->layout = 'index';
- 
-	    //print_r(array_values($this->data['year']));
+
+	    // print_r(array_values($this->data['year']));
         //$array = $this->data['year'];
-       // echo array_values($array[0]);
-       // echo "//";
-       // echo $this->data['month'];
+        //echo array_values($array[0]);
+        //echo "--";
+        //echo $this->data['month'];
 
 	    if(sizeof($this->data['year'])>0){
           $_SESSION['year'] = array_pop($this->data['year']);
 		  $_SESSION['month'] = $this->data['month'];
 		}else{
-    	  $_SESSION['year'] = '2015';
+          $_SESSION['year'] = date('Y');
 		  $_SESSION['month'] = 'Todos';
 		}
-	 	
+
     }
-    
+
     public function index_restringido(){
 	   $this->layout = 'index';
-	   $_SESSION['restricted'] = 'true'; 
+	   $_SESSION['restricted'] = 'true';
 	   if(sizeof($this->data['year'])>0){
           $_SESSION['year'] = array_pop($this->data['year']);
           $_SESSION['month'] = $this->data['month'];
 		}else{
-		  $_SESSION['year'] = '2015';
+		  $_SESSION['year'] = date('Y');
 		  $_SESSION['month'] = '01';
 		}
     }
-    
+
      public function get_reservas_restringidas($year, $month) {
         $from = $year .'-'. $month .'-01 00:00:00';
 	$to = $year .'-'. $month .'-31 00:00:00';
 	$result = Cache::read('get_reservas_restringidas', 'long');
         if (!$result) {
-	 $result = $this->Reserva->find('all',array('order' => 'Reserva.id desc', 'conditions' => array('Reserva.check_out between ? and ?' => array($from, $to))));
-	 Cache::write('get_reservas_restringidas', $result, 'long');
-	}
+			$result = $this->Reserva->find('all',array('order' => 'Reserva.id desc', 'conditions' => array('Reserva.check_out between ? and ?' => array($from, $to))));
+			Cache::write('get_reservas_restringidas', $result, 'long');
+		}
         return $result;
     }
-	 
-	 
+
+
       public function get_reservas($year, $month) {
-	   	 
+
 		if($month == 'Todos'){
 		    $from = $year .'-01-01';
-	          $to = $year .'-12-31';
+	            $to = $year .'-12-31';
 		}else{
 		    $from = $year .'-'. $month .'-01';
 		    $to = $year .'-'. $month .'-31';
 		}
-		
+
 		$result = Cache::read('get_reservas', 'long');
                 if (!$result) {
 	         $result = $this->Reserva->find('all',array('order' => 'Reserva.id desc', 'conditions' => array('Reserva.check_in between ? and ?' => array($from, $to))));
@@ -66,23 +66,23 @@ class ReservasController extends AppController {
 	       }
           return $result;
     }
-	
-    public function dataTable($columnas_extras = 'todas', $order = 'Reserva.id desc'){ 
-           
+
+    public function dataTable($columnas_extras = 'todas', $order = 'Reserva.id desc'){
+
             $rows = array();
-	 	   
+
 	    $year = $_SESSION['year'];
 	    $month = $_SESSION['month'];
 	    $restricted = $_SESSION['restricted'];
-		
+
 	    if ($restricted == 'true') {
 	       $reservas = $this->get_reservas_restringidas($year, $month);
-	    } else { 
+	    } else {
                $reservas = $this->get_reservas($year, $month);
-	    } 
-        
-		 
-				
+	    }
+
+
+
         foreach($reservas as $reserva){
             $adelantadas = 0;
             $no_adelantadas = 0;
@@ -100,7 +100,7 @@ class ReservasController extends AppController {
                         $pagado += $cobro['monto_neto'];
                     }
                 }
-            } 
+            }
             if(count($reserva['ReservaExtra']>0)){
                 foreach($reserva['ReservaExtra'] as $extra){
                     if($extra['adelantada'] == 1){
@@ -110,14 +110,14 @@ class ReservasController extends AppController {
                     }
                 }
             }
-            
+
             $devoluciones = 0;
             if(count($reserva['ReservaDevolucion']) > 0){
                 foreach($reserva['ReservaDevolucion'] as $devolucion){
                     $devoluciones += $devolucion['monto'];
                 }
             }
-            
+
             $facturado = 0;
             if(count($reserva['ReservaFactura']) > 0){
                 foreach($reserva['ReservaFactura'] as $factura){
@@ -126,7 +126,7 @@ class ReservasController extends AppController {
             }
             $pendiente = $reserva['Reserva']['total'] + $no_adelantadas - $descontado - $pagado + $devoluciones;
             $total = $reserva['Reserva']['total'] + $no_adelantadas - $descontado;
-            
+
             switch($reserva['Reserva']['estado']){
                 case 0:
                     if($pagado == 0){
@@ -197,7 +197,7 @@ class ReservasController extends AppController {
             'aaData'
         ));
     }
-    
+
     public function cancelar(){
         $this->layout = 'ajax';
 
@@ -227,16 +227,16 @@ class ReservasController extends AppController {
             $resultado = 'ERROR';
             $mensaje = 'No se puede cancelar sin realizar alguna devolucion, consulte con el administrador';
         }
-        
+
         $this->set('resultado',$resultado);
         $this->set('mensaje',$mensaje);
-        
+
         $this->set('_serialize', array(
             'resultado',
             'mensaje'
         ));
     }
-    
+
     public function finalizar(){
         $this->layout = 'ajax';
 
@@ -250,14 +250,14 @@ class ReservasController extends AppController {
                 }
             }
         }
-        
+
         $facturado = 0;
         if(count($reserva['ReservaFactura']) > 0){
             foreach($reseva['ReservaFactura'] as $factura){
                 $facturado += $factura['monto'];
             }
         }
-        
+
         if($facturado >= $fiscal){
             $resultado = 'OK';
             $mensaje = '';
@@ -267,35 +267,35 @@ class ReservasController extends AppController {
         }
         $this->Reserva->set('estado',1);
         $this->Reserva->save();
-        
+
         $this->set('resultado',$resultado);
         $this->set('mensaje',$mensaje);
-        
+
         $this->set('_serialize', array(
             'resultado',
             'mensaje'
         ));
     }
-    
+
     public function crear(){
         $this->layout = 'form';
-        
+
         //ultimo numero de reserva
         $ultima_reserva = $this->Reserva->find('first',array('order' => array('Reserva.id' => 'desc')));
         $ultimo_nro = $ultima_reserva['Reserva']['numero'] + 1;
         $this->set('ultimo_nro',$ultimo_nro);
-        
-        //lista de empleados de reservas, tengo que ir a buscar por sector de trabajo 
+
+        //lista de empleados de reservas, tengo que ir a buscar por sector de trabajo
         $this->loadModel('EmpleadoTrabajo');
         $sectores = $this->EmpleadoTrabajo->find('all',array('order' => array('EmpleadoTrabajo.id ASC'),'conditions' => array('EmpleadoTrabajo.sector_1_id' => 1, 'Empleado.estado' => 1)));
         foreach($sectores as $sector){
             $empleados[$sector['Empleado']['id']] = $sector['Empleado']['nombre']." ".$sector['Empleado']['apellido'];
         }
         $this->set('empleados',$empleados);
-        
+
         //lista de apartamentos
         $this->set('apartamentos', $this->Reserva->Apartamento->find('list'));
-        
+
         //iva
         $this->set('iva_ops', array('Responsable Inscripto' => 'Responsable Inscripto', 'Excento' => 'Excento', 'Consumidor Final' => 'Consumidor Final', 'Monotributo' => 'Monotributo'));
 
@@ -304,27 +304,27 @@ class ReservasController extends AppController {
         $this->set('extra_rubros',$this->ExtraRubro->find('list', array('conditions' => array('extra_variables' => 0))));
 
     }
-    
+
     public function editar($id = null){
         $this->layout = 'form';
-        
+
         $this->loadModel('ExtraRubro');
         $this->set('extra_rubros',$this->ExtraRubro->find('list', array('conditions' => array('extra_variables' => 0))));
-        
+
         $extras = $this->Reserva->ReservaExtra->find('all',array('conditions' => array('reserva_id' => $id, 'adelantada' => 1, 'extra_id !=' => 0),'recursive' => 2));
         $this->set('extras',$extras);
-        
+
         //lista de apartamentos
         $this->set('apartamentos', $this->Reserva->Apartamento->find('list'));
 
-        //lista de empleados de reservas, tengo que ir a buscar por sector de trabajo 
+        //lista de empleados de reservas, tengo que ir a buscar por sector de trabajo
         $this->loadModel('EmpleadoTrabajo');
         $sectores = $this->EmpleadoTrabajo->find('all',array('order' => array('EmpleadoTrabajo.id ASC'),'conditions' => array('EmpleadoTrabajo.sector_1_id' => 1, 'Empleado.estado' => 1)));
         foreach($sectores as $sector){
             $empleados[$sector['Empleado']['id']] = $sector['Empleado']['nombre']." ".$sector['Empleado']['apellido'];
         }
         $this->set('empleados',$empleados);
-        
+
         //iva
         $this->set('iva_ops', array('Responsable Inscripto' => 'Responsable Inscripto', 'Excento' => 'Excento', 'Consumidor Final' => 'Consumidor Final', 'Monotributo' => 'Monotributo'));
 
@@ -334,21 +334,21 @@ class ReservasController extends AppController {
     }
 
     public function guardar(){
-        
+
         //load modules
         $this->loadModel('Cliente');
         $this->loadModel('ReservaExtra');
-        
+
         //print_r($this->request->data);
         if(!empty($this->request->data)) {
-            
+
             //valido cliente
             $cliente = $this->request->data['Cliente'];
             $this->Cliente->set($cliente);
             if(!$this->Cliente->validates()){
                  $errores['Cliente'] = $this->Cliente->validationErrors;
             }
-            
+
             //vaildo reserva
             $reserva = $this->request->data['Reserva'];
             $this->Reserva->set($reserva);
@@ -364,11 +364,11 @@ class ReservasController extends AppController {
             }else{
                 //guardo cliente
                 $this->Cliente->save();
-                
+
                 //guardo reserva
                 $this->Reserva->set('cliente_id',$this->Cliente->id);
                 $this->Reserva->save();
-                
+
                 //guardo reserva extras
                 if(array_key_exists('ReservaExtraId',$this->request->data)){
                     $reservaextras = $this->request->data['ReservaExtraId'];
@@ -387,7 +387,7 @@ class ReservasController extends AppController {
                         }
                     }
                 }
-                
+
                 $this->set('resultado','OK');
                 $this->set('mensaje','Datos guardados');
                 $this->set('detalle','');
@@ -395,24 +395,24 @@ class ReservasController extends AppController {
             $this->set('_serialize', array(
                 'resultado',
                 'mensaje' ,
-                'detalle' 
+                'detalle'
             ));
         }
     }
-    
+
     public function plantilla($reserva_id){
         $this->layout = 'plantilla';
-        
+
         $this->loadModel('ExtraRubro');
         $this->set('extra_rubros',$this->ExtraRubro->find('list'));
-        
+
         $this->loadModel('ExtraSubrubro');
         $this->set('extra_subrubros',$this->ExtraSubrubro->find('list'));
-        
+
         $this->Reserva->id = $reserva_id;
         $reserva = $this->Reserva->read();
         $this->set('reserva',$reserva);
-        
+
         $pagado = 0;
         $descontado = 0;
         if(count($reserva['ReservaCobro'])>0){
@@ -427,13 +427,13 @@ class ReservasController extends AppController {
         $this->set('pagado',$pagado);
         $this->set('pendiente',$reserva['Reserva']['total'] - $descontado - $pagado);
         $this->set('total',$reserva['Reserva']['total'] - $descontado);
-        
+
         //genero el pdf
-        $this->Mpdf->init(); 
-        $this->Mpdf->setFilename('reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf'); 
-        $this->Mpdf->setOutput('D'); 
+        $this->Mpdf->init();
+        $this->Mpdf->setFilename('reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf');
+        $this->Mpdf->setOutput('D');
     }
-    
+
 
     //protege el controlador solo para usuarios
     public function beforeFilter(){

@@ -1,7 +1,7 @@
 $.fn.dataTableExt.afnFiltering.push(
     function( oSettings, aData, iDataIndex ) {
         var iFini = document.getElementById('fini').value;
-        var iFfin = "10/09/2015";
+        var iFfin = document.getElementById('ffin').value;
         var iStartDateCol = document.getElementById('fini_col').value;
         var iEndDateCol = document.getElementById('ffin_col').value;;
          

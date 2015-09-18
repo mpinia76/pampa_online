@@ -15,7 +15,7 @@ $this->Js->buffer('
         "fnDrawCallback": function( oSettings ) { console.log(oSettings);
             $("#dataTable tr").unbind("dblclick").dblclick(function(){
                 var data = oTable.fnGetData( this );
-                createWindow("w_gastos_view","Ver gasto","/pampa_online/gastos.view.php?dataid="+data[0]+"&action=consultar","600","400");
+                createWindow("w_gastos_view","Ver gasto","/gastos.view.php?dataid="+data[0]+"&action=consultar","600","400");
             });
             $("#dataTable tr").click(function(e){
                 if(e.shiftKey){
@@ -42,8 +42,9 @@ $this->Js->buffer('
         "aoColumns": [
             {"bVisible": false },
             null,
+            null,
             {"sType": "date-uk"},
-            {"sType": "date-uk"},
+            null,
             null,
             null,
             null,
@@ -56,7 +57,7 @@ $this->Js->buffer('
    $("#data_search").keyup( function () { oTable.fnFilter(this.value); });
 ');
 //extra libreria para agregar filtro de fecha
-echo $this->Html->script('dataTables.dateSort', array('block' => 'extra_scripts'));
+//echo $this->Html->script('dataTables.dateSort', array('block' => 'extra_scripts'));
 echo $this->Html->script('dataTables.dateSort_1', array('block' => 'extra_scripts'));
 
 //filtrar total de resultados
@@ -67,6 +68,13 @@ $this->Js->buffer('
     $("#filter_orden").keyup(function(){
         oTable.fnFilter($(this).val(),1);
     });
+
+    $("#filter_creado").keyup(function(){
+        oTable.fnFilter($(this).val(),2);
+    });
+
+
+
     $("#filter_factura").keyup(function(){
         oTable.fnFilter($(this).val(),7);
     });
@@ -96,6 +104,7 @@ $this->Js->buffer('
             });
          }
     });
+
     $("#filter_estado").change(function(){ 
         if($(this).val() == ""){
             oTable.fnFilter($(this).val(),9);
@@ -103,6 +112,11 @@ $this->Js->buffer('
             oTable.fnFilter($("#filter_estado option:selected").text(),9);
          }
      });
+
+    $("#filter_responsable").keyup(function(){
+        oTable.fnFilter($(this).val(),10);
+    });
+
 ');
 
 //abrir ventanas
@@ -114,19 +128,13 @@ $this->Js->buffer('
 ');
 ?>
 <script>
-
-$(function(){
-    var date = "01/01/" + new Date().getFullYear();
-    $('#fini').val(date).trigger('change');
-});
-
 function abonar(){
     var selected = new Array();
     $('.row_selected').each(function(e,i){
         var data = oTable.fnGetData(e);
         selected.push(data[0]);
     });
-    createWindow('w_gastos_pagar','Agregar gasto','/pampa_online/gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
+    createWindow('w_gastos_pagar','Agregar gasto','/gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
 }
 function action(action){
     var row = $('.row_selected');
@@ -136,23 +144,12 @@ function action(action){
         alert('Debe seleecionar un registro');
     }else{
         var data = oTable.fnGetData(row[0]);
-        createWindow('w_gastos_consultar','ver gasto','/pampa_online/gastos.view.php?action='+action+'&dataid='+data[0],'600','400');
+        createWindow('w_gastos_consultar','ver gasto','/gastos.view.php?action='+action+'&dataid='+data[0],'600','400');
     }
 }
-
-function editar(){
-    var row = $("#dataTable tr.row_selected");
-    if(row.length == 0){
-        alert('Debe seleccionar un registro');
-    }else{
-       createWindow("w_gastos_editar","Editar gasto","<?php echo $this->Html->url('/gastos/editar', true);?>/"+data[0],"630","600");        
-    }
-}
-
 </script>
 <ul class="action_bar">
-    <li onclick="createWindow('w_gastos_add','Agregar gasto','/pampa_online/gastos.add.php','600','400');" class="boton agregar">Agregar</li>
-    <li onclick="action('editar');" class="boton editar">Editar</li>
+    <li onclick="createWindow('w_gastos_add','Agregar gasto','/gastos.add.php','600','400');" class="boton agregar">Agregar</li>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('consultar');" class="boton consultar">Consultar</li> <? } ?>
     <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <? } ?>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('abonar');"  class="boton abonar">Abonar</li><? } ?>
@@ -164,14 +161,17 @@ function editar(){
     <thead>
         <tr>
             <th width="100">Id</th>
+            <!-- Campo Orden -->
             <th width="100">
                 <input type="text" style="width: 90%;" id="filter_orden" />
             </th>
+
+            <!-- Campo Creado -->
             <th width="150">
-                <input type="text" class="date_filter"  placeholder="desde" style="width: 100%;" id="fini" value="10/04/2014"/> 
-                <input type="hidden" id="ffin_col" value="2"/> 
-                <input type="hidden" id="fini_col" value="2"/> 
+               <input type="text" style="width: 90%;" id="filter_creado" />
             </th>
+
+            <!-- Campo Devengao-->
             <th width="150">
                 <input type="text" class="datepicker date_filter" placeholder="desde" style="width: 40%;" id="fini2"/> 
                 <input type="text" class="datepicker date_filter"  placeholder="hasta" style="width: 40%;" id="ffin2"/>
@@ -199,6 +199,9 @@ function editar(){
                     <option>Desaprobado</option>
                 </select>
             </th>
+            <th width="100">
+                <input type="text" style="width: 90%;" id="filter_responsable" />
+            </th>
         </tr>
         <tr>
             <th width="100">Id</th>
@@ -211,6 +214,7 @@ function editar(){
             <th width="150">Factura</th>
             <th width="70">Monto</th>
             <th width="100">Estado</th>
+            <th width="50">Responsable</th>
         </tr>
     </thead>
     <tbody></tbody>
