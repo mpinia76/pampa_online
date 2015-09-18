@@ -78,7 +78,7 @@
         </div>
         <? } ?>
         <? if(MENU_25){?>
-        <div class="administracion item" onclick="createWindow('w_cobro_tarjeta_lotes','Lotes de tarjeta','v2/cobro_tarjeta_lotes/index','800','500'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_cobro_tarjeta_lotes','Lotes de tarjeta','v2/cobro_tarjeta_lotes/index','1230','500'); $('#menu').hide();">
             Cierre y acreditaci&oacute;n de lotes
         </div>
         <? } ?>
@@ -88,7 +88,7 @@
          </div>
         <? } ?>
         <? if(MENU_26){?>
-        <div class="administracion item" onclick="createWindow('w_tarjeta_resumen','Resumen de tarjetas','tarjeta_resumen.php','800','420'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_tarjeta_resumen','Resumen de tarjetas','tarjeta_resumen.php','1230','420'); $('#menu').hide();">
             Resumen de Tarjetas Corporativas
         </div>	
         <? } ?>

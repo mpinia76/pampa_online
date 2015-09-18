@@ -20,10 +20,20 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
         return b - a;
     }
 } );
+
+
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-    "date-uk-pre": function ( a ) {
-        var ukDatea = a.split('/');
-        return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+
+     "date-uk-pre": function ( a ) {
+
+	    if ($.trim(a) != '') {
+		    var ukDatea = $.trim(a).split('/');
+            var x = (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+		} else {
+		    x = 10000000000000;
+		}
+
+		return x;
     },
  
     "date-uk-asc": function ( a, b ) {

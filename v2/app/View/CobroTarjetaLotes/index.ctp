@@ -3,6 +3,7 @@
 $this->Js->buffer('$.datepicker.regional[ "es" ]');
 $this->Js->buffer('$(".datepicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd" });');
 
+
 //dataTables
 $this->Js->buffer('
     oTable = $("#dataTable").dataTable( {
@@ -38,10 +39,12 @@ $this->Js->buffer('
     $("#filter_estado").change(function(){
         oTable.fnReloadAjax("dataTable/"+$(this).val());
     });
-     $("#data_search").keyup( function () { oTable.fnFilter(this.value); });
+
+   $("#data_search").keyup( function () { oTable.fnFilter(this.value); });
     $("#cerrar_box").jqm();
     $("#acreditar_box").jqm();
 ');
+
 
 //abrir ventanas
 $this->Js->buffer('

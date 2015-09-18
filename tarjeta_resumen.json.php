@@ -3,7 +3,7 @@ session_start();
 
 include_once("config/db.php");
 
-$sql = "SELECT tarjeta_resumen.*, CONCAT(banco.banco,' ',tarjeta_marca.marca,' ',tarjeta.titular) AS tarjeta FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id INNER JOIN tarjeta_resumen ON tarjeta_resumen.tarjeta_id=tarjeta.id ORDER BY tarjeta_resumen.vencimiento ASC";
+$sql = "SELECT tarjeta_resumen.*, CONCAT(banco.banco,' ',tarjeta_marca.marca,' ',tarjeta.titular) AS tarjeta FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id INNER JOIN tarjeta_resumen ON tarjeta_resumen.tarjeta_id=tarjeta.id ORDER BY tarjeta_resumen.vencimiento DESC";
 
 $rsTemp = mysql_query($sql);
 echo mysql_error();
