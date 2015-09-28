@@ -57,6 +57,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					recibo_nro='".$_POST['recibo_nro']."',
 					monto='".$_POST['monto']."'
 				WHERE id=".$_POST['gasto_id'];
+
 		mysql_query($sql);
 
 		
@@ -193,12 +194,12 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		
 	});
 	
-	function createCombo(tabla,campo_id,campo,value){
-	
+	function createCombo(){
+		var value = event.currentTarget.value;
 		var datos = ({
-			'tabla' : tabla,
-			'campo_id' : campo_id,
-			'campo' : campo,
+			'tabla' : 'subrubro',
+			'campo_id' : 'rubro_id',
+			'campo' : 'subrubro',
 			'value' : value
 		});
 		
@@ -305,10 +306,10 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				</span>
 				</li>
 				<li><label>Responsable:</label><?=$rs['nombre']?> <?=$rs['apellido']?></li>
-				<? if($_GET['action'] == 'editar'){ ?>
+				<? if($_GET['action'] == 'editar'  and $subestado < 3){ ?>
 					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
-					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
+					<select name="rubro" onChange="createCombo();">
 					<?
 					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
 					$rsTemp2 = mysql_query($sql2);
@@ -360,8 +361,48 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 						<input type="text" name="factura_nro" /></li>
 					<? } ?>
 					
-				<? }elseif( ($_GET['action'] == 'editar' and $subestado == 3) or ($_GET['action'] == 'abonar' and $subestado == 2) ) { ?>
-				
+				<? }elseif( ($_GET['action'] == 'editar' and $subestado == 3)) { ?>					
+					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
+					<li><label>Rubro:</label>
+					<select name="rubro" onChange="createCombo();">
+					<?
+					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
+					$rsTemp2 = mysql_query($sql2);
+					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					<option <? if($rs2['id']==$rs['rubro_id']){ ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['rubro']?></option>
+					<? } ?>
+					</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
+					<li id="subrubro"><label>Subrubro:</label>
+						<div id="subrubro_combo">
+							<select name="subrubro_id" size="1">
+							<?
+							$sql2 = "SELECT id,subrubro FROM subrubro WHERE rubro_id = ".$rs['rubro_id']." ORDER BY subrubro ";
+							$rsTemp2 = mysql_query($sql2);
+							while($rs2 = mysql_fetch_array($rsTemp2)){?>
+							<option <? if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['subrubro']?></option>
+							<? } ?>
+							</select> 
+						</div>
+					</li>
+					<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
+					<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
+					<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
+					<input type="hidden" name="descripcion" value="<?=$rs['descripcion']?>" />
+					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?=$rs['remito_nro']?>" /></li>
+					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?=$rs['recibo_nro']?>" /></li>
+					<li><label>Factura:</label>
+					<select size="1" name="factura_tipo">
+						<option value="n">Tipo</option>
+						<option value="A">A</option>
+						<option value="B">B</option>
+						<option value="C">C</option>
+					</select> 
+					<select size="1" name="factura_orden">
+						<option value="B">0001</option>
+						<option value="N">0002</option>
+					</select> 
+					<input type="text" name="factura_nro" /></li>
+				<? }elseif($_GET['action'] == 'abonar' and $subestado == 2){ ?>
 					<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
 					<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
 					<li><label>Rubro:</label><?=$rs['rubro']?></li>
@@ -386,7 +427,48 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 						<option value="N">0002</option>
 					</select> 
 					<input type="text" name="factura_nro" /></li>
-				<? }elseif($subestado >= 0){ ?>
+				<? }elseif($subestado == 4){ ?>
+					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
+					<li><label>Rubro:</label>
+					<select name="rubro" onChange="createCombo();">
+					<?
+					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
+					$rsTemp2 = mysql_query($sql2);
+					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					<option <? if($rs2['id']==$rs['rubro_id']){ ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['rubro']?></option>
+					<? } ?>
+					</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
+					<li id="subrubro"><label>Subrubro:</label>
+						<div id="subrubro_combo">
+							<select name="subrubro_id" size="1">
+							<?
+							$sql2 = "SELECT id,subrubro FROM subrubro WHERE rubro_id = ".$rs['rubro_id']." ORDER BY subrubro ";
+							$rsTemp2 = mysql_query($sql2);
+							while($rs2 = mysql_fetch_array($rsTemp2)){?>
+							<option <? if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['subrubro']?></option>
+							<? } ?>
+							</select> 
+						</div>
+					</li>
+					<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
+					<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
+					<li><label>Rubro:</label><?=$rs['rubro']?></li>
+					<input type="hidden" name="rubro" value="<?=$rs['rubro_id']?>" />
+					<li><label>Sububro:</label><?=$rs['subrubro']?></li>
+					<input type="hidden" name="subrubro_id" value="<?=$rs['subrubro_id']?>" />
+					<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
+					<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
+					<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
+					<input type="hidden" name="descripcion" value="<?=$rs['descripcion']?>" />
+					<li><label>Remito:</label><?=$rs['remito_nro']?></li>
+					<input type="hidden" name="remito_nro" value="<?=$rs['remito_nro']?>" />
+					<li><label>Recibo::</label><?=$rs['recibo_nro']?></li>
+					<input type="hidden" name="recibo_nro" value="<?=$rs['recibo_nro']?>" />
+					<li><label>Factura:</label>Tipo: <?=$rs['factura_tipo']?> Numero: <?=$rs['factura_nro']?></li>
+					<input type="hidden" name="factura_orden" value="<?=$rs['factura_orden']?>" />
+					<input type="hidden" name="factura_tipo" value="<?=$rs['factura_tipo']?>" />
+					<input type="hidden" name="factura_nro" value="<?=$rs['factura_nro']?>" />
+				<? }elseif($subestado > 0){ ?>
 					<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
 					<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
 					<li><label>Rubro:</label><?=$rs['rubro']?></li>

@@ -7,8 +7,7 @@ $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
-<li></li>
-<h3>Cheque</h3>
+<li><h3>Cheque</h3></li>
 <li><label>Cuenta:</label><?=$rs['banco']?> <?=$rs['cuenta_tipo']?></li>
 <li><label>Numero:</label><?=$rs['numero']?></li>
 <li><label>Titular:</label><?=$rs['titular']?></li>
@@ -25,8 +24,7 @@ $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
-<li></li>
-<h3>Transferencia</h3>
+<li><h3>Transferencia</h3></li>
 <li><label>Cuenta origen:</label><?=$rs['banco']?> <?=$rs['cuenta_tipo']?></li>
 <li><label>Cuenta destino:</label><?=$rs['cuenta_destino']?></li>
 <li><label>A la fecha:</label><?=fechavista($rs['fecha'])?></li>
@@ -42,7 +40,7 @@ $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
-<h3>Cheque de tercero</h3>
+<li><h3>Cheque de tercero</h3><li>
 <li><label>Banco:</label><?=$rs['banco']?></li>
 <li><label>Numero:</label><?=$rs['numero']?></li>
 <li><label>Monto:</label>$<?=$rs['monto_neto'] + $rs['interes']?></li>
@@ -55,8 +53,7 @@ $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
-<li></li>
-<h3>Debtio</h3>
+<li><h3>Debito</h3></li>
 <li><label>Cuenta:</label><?=$rs['banco']?> <?=$rs['cuenta_tipo']?></li>
 <li><label>Monto:</label>$<?=$rs['monto']?></li>
 <li><label>Interes:</label>$<?=$rs['interes']?></li>
@@ -70,8 +67,7 @@ $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
-<li></li>
-<h3>Efectivo</h3>
+<li><h3>Efectivo</h3></li>
 <li><label>Caja origen:</label><?=$rs['caja']?></li>
 <li><label>A la fecha:</label><?=fechavista($rs['fecha'])?></li>
 <li><label>Monto:</label>$<?=$rs['monto']?></li>
@@ -86,8 +82,7 @@ $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
-<li></li>
-<h3>Tarjeta</h3>
+<li><h3>Tarjeta</h3></li>
 <li><label>Tarjeta:</label><?=$rs['banco']?> <?=$rs['marca']?> <?=$rs['titular']?></li>
 <li><label>Comprobante:</label><?=$rs['comprobante_nro']?></li>
 <li><label>Monto:</label>$<?=$rs['monto']?></li>
@@ -104,7 +99,6 @@ $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
-<li></li>
-<h3>Cuentas a pagar</h3>
+<li><h3>Cuentas a pagar</h3></li>
 <li><label>Monto:</label>$<?=$rs['monto']?></li>
 <? }} ?>
