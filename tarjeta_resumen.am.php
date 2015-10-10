@@ -73,11 +73,14 @@ if(isset($dataid)){
 	foreach($campos as $clave=>$atr){
 		if($atr['type']=='date'){
 			$campos[$clave]['value'] = fechavista($rs[$clave]);
+
 		}elseif($atr['type']=='textarea'){
 			$campos[$clave]['value'] = stripslashes($rs[$clave]);
 		}else{
 			$campos[$clave]['value'] = $rs[$clave];
+
 		}
+
 	}
 		
 	$form->setBotonValue('Editar resumen'); //leyenda del boton editar

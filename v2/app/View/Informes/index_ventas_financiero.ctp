@@ -5,6 +5,8 @@
     <option>2014</option>
     <option>2015</option>
     <option>2016</option>
+    <option>2017</option>
+    <option>2018</option>
 </select> <input type="button" onclick="ver_financiero();" value="Ver" />
 <div id="informe_financiero"></div>
 <script>
@@ -40,6 +42,8 @@ function ver_financiero(){
     <option>2014</option>
     <option>2015</option>
     <option>2016</option>
+    <option>2017</option>
+    <option>2018</option>
 </select> <input type="button" onclick="ver_financiero_mensual();" value="Ver" />
 <div id="financiero_mensual"></div>
 <script>

@@ -279,6 +279,9 @@ function sumMes(i){
 			<option <? if($ano == '2013'){ ?> selected="selected" <? } ?> value="2013">2013</option>
 			<option <? if($ano == '2014'){ ?> selected="selected" <? } ?> value="2014">2014</option>
 			<option <? if($ano == '2015'){ ?> selected="selected" <? } ?> value="2015">2015</option>
+            <option <? if($ano == '2016'){ ?> selected="selected" <? } ?> value="2016">2016</option>
+            <option <? if($ano == '2017'){ ?> selected="selected" <? } ?> value="2017">2017</option>
+            <option <? if($ano == '2018'){ ?> selected="selected" <? } ?> value="2018">2018</option>
 		</select>
 	</p>
     <?

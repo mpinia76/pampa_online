@@ -15,7 +15,7 @@ $this->Js->buffer('
         "fnDrawCallback": function( oSettings ) { console.log(oSettings);
             $("#dataTable tr").unbind("dblclick").dblclick(function(){
                 var data = oTable.fnGetData( this );
-                createWindow("w_gastos_view","Ver gasto","/gastos.view.php?dataid="+data[0]+"&action=consultar","600","400");
+                createWindow("w_gastos_view","Ver gasto","/pampa_online/gastos.view.php?dataid="+data[0]+"&action=consultar","600","400");
             });
             $("#dataTable tr").click(function(e){
                 if(e.shiftKey){
@@ -134,7 +134,7 @@ function abonar(){
         var data = oTable.fnGetData(e);
         selected.push(data[0]);
     });
-    createWindow('w_gastos_pagar','Agregar gasto','/gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
+    createWindow('w_gastos_pagar','Agregar gasto','/pampa_online/gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
 }
 function action(action){
     var row = $('.row_selected');
@@ -144,12 +144,12 @@ function action(action){
         alert('Debe seleecionar un registro');
     }else{
         var data = oTable.fnGetData(row[0]);
-        createWindow('w_gastos_consultar','ver gasto','/gastos.view.php?action='+action+'&dataid='+data[0],'600','400');
+        createWindow('w_gastos_consultar','ver gasto','/pampa_online/gastos.view.php?action='+action+'&dataid='+data[0],'600','400');
     }
 }
 </script>
 <ul class="action_bar">
-    <li onclick="createWindow('w_gastos_add','Agregar gasto','/gastos.add.php','600','400');" class="boton agregar">Agregar</li>
+    <li onclick="createWindow('w_gastos_add','Agregar gasto','/pampa_online/gastos.add.php','600','400');" class="boton agregar">Agregar</li>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('consultar');" class="boton consultar">Consultar</li> <? } ?>
     <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <? } ?>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('abonar');"  class="boton abonar">Abonar</li><? } ?>

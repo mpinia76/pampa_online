@@ -5,6 +5,8 @@
     <option>2014</option>
     <option>2015</option>
     <option>2016</option>
+    <option>2017</option>
+    <option>2018</option>
 </select> <input type="button" onclick="ver_economico();" value="Ver" /> <span id="cargando" style="display:none;">Cargando ...</span>
 <div id="informe_economico"></div>
 <script>

@@ -28,7 +28,8 @@ class GastosController extends AppController {
 	
 	    $rows = array();
 		$limit = $_SESSION['year'];
-		
+
+
         if($limit == "todos"){
             $gastos = $this->Gasto->find('all',array('order' => 'Gasto.created desc'));
         }else{
