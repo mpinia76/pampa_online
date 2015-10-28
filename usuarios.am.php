@@ -41,7 +41,15 @@ $campos['password'] 		= array(
 								'label' 			=> 'Password',
 								'requerid' 			=> true
 							);
-											
+$campos['espacio_trabajo_id'] = array(
+								'type'				=> 'combo',
+								'label'				=> 'Espacio de Trabajo',
+								'tabla'				=> 'espacio_trabajo',
+								'campo_id'			=> 'id',
+								'campo'				=> 'espacio',
+								'requerid' 			=> true
+							);
+			
 
 include_once("functions/common.php");
 
