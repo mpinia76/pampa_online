@@ -29,13 +29,32 @@ class GastosController extends AppController {
 	    $rows = array();
 		$limit = $_SESSION['year'];
 
-
+        $user_id = $_SESSION['userid'];
+        $user = $this->Usuario->find('first',array('conditions'=>array('Usuario.id'=>$_SESSION['userid'])));
+        $espacioTrabajo = $user['EspacioTrabajo']['id'];        
+       
         if($limit == "todos"){
-            $gastos = $this->Gasto->find('all',array('order' => 'Gasto.created desc'));
+
+            $query = "SELECT * FROM gasto as Gasto 
+                    inner join usuario as Usuario on Gasto.user_id = Usuario.id 
+                    inner join rubro  as Rubro on Gasto.rubro_id = Rubro.id
+                    inner join subrubro as Subrubro on Gasto.subrubro_id = Subrubro.id
+                    where Usuario.espacio_trabajo_id = '$espacioTrabajo'
+                    order by Gasto.created desc";
+            $gastos = $this->Gasto->query($query);
+
         }else{
-		  $from = $limit .'-01-01 00:00:00';
-		  $to = $limit .'-12-31 00:00:00';
-		  $gastos = $this->Gasto->find('all',array('order' => 'Gasto.created desc', 'conditions' => array('Gasto.created between ? and ?' => array($from, $to))));
+
+            $from = $limit .'-01-01 00:00:00';
+            $to = $limit .'-12-31 00:00:00';
+            $query = "SELECT * FROM gasto as Gasto 
+                    inner join usuario as Usuario on Gasto.user_id = Usuario.id 
+                    inner join rubro  as Rubro on Gasto.rubro_id = Rubro.id
+                    inner join subrubro as Subrubro on Gasto.subrubro_id = Subrubro.id
+                    where Usuario.espacio_trabajo_id = '$espacioTrabajo' and Gasto.created between '$from' and '$to' 
+                    order by Gasto.created desc";
+            $gastos = $this->Gasto->query($query);
+            
         }
 
         foreach($gastos as $gasto){

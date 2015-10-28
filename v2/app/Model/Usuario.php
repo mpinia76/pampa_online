@@ -18,5 +18,6 @@ class Usuario extends AppModel {
             'unique'                 => true
         )
     );
+    public $belongsTo = 'EspacioTrabajo';
 }
 ?>
