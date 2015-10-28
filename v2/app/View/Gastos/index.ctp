@@ -149,6 +149,7 @@ function action(action){
 }
 </script>
 <ul class="action_bar">
+    <li onclick="window.location.reload()" class="boton actualizar">Actualizar</li>
     <li onclick="createWindow('w_gastos_add','Agregar gasto','/pampa_online/gastos.add.php','600','400');" class="boton agregar">Agregar</li>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('consultar');" class="boton consultar">Consultar</li> <? } ?>
     <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <? } ?>

@@ -66,6 +66,13 @@ ul.action_bar li.filtro{
     margin-left: 5px;
     margin-top: -5px;
 }
+ul.action_bar li.actualizar{
+    padding-left: 23px;
+    background-image: url("../img/bt_reload.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+    height: 16px;
+}
 a{
     cursor: pointer;
     text-decoration: none;
