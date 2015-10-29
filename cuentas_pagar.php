@@ -39,19 +39,20 @@ var dataid;
 function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
-    mygrid.setHeader("Nro. orden,Tipo de opeacion,Proveedor,Monto,Estado"); 		//nombre de las columnas
-   	mygrid.attachHeader("#text_filter,#select_filter,#select_filter,#text_filter,<div id='estado_filter'></div>");
-	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,${#stat_total},&nbsp;");
-	mygrid.enablePaging(true,12,10,"pagingArea",true,"recinfoArea");
-	mygrid.setInitWidths("100,*,*,100,100"); 				//ancho de las columnas
-    mygrid.setColAlign("left,left,left,right,right");			//alineacion de las columnas
-	mygrid.setColSorting("int,str,str,int,na");			//tipo datos para ordenar
-	mygrid.setColTypes("ro,ro,ro,price,ro");				//editable o no
-	mygrid.enableEditEvents(false,false,false,false,false);
+    mygrid.setHeader("Nro. orden,Tipo de opeacion,Proveedor,Monto,Estado,Fecha de devengado,Cantidad de dias, Numero de Factura, Responsable"); 		//nombre de las columnas
+   	mygrid.attachHeader("#text_filter,#select_filter,#select_filter,#text_filter,<div id='estado_filter'></div>,#text_filter,#text_filter,#text_filter,#text_filter");
+	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,${#stat_total},&nbsp;,&nbsp;,&nbsp;,&nbsp;,&nbsp;");
+	mygrid.enablePaging(true,12,10,"pagingArea",true,"recinfoArea",true,true,true,true);
+	mygrid.setInitWidths("100,*,*,100,100,*,*,*,*"); 				//ancho de las columnas
+    mygrid.setColAlign("left,left,left,right,right,right,right,right,right");			//alineacion de las columnas
+	mygrid.setColSorting("int,str,str,int,na,str,int,str,str");			//tipo datos para ordenar
+	mygrid.setColTypes("ro,ro,ro,price,ro,ro,ro,ro,ro");				//editable o no
+	mygrid.enableEditEvents(false,false,false,false,false,false,false,false,false);
 	mygrid.enableMultiselect(true);
     mygrid.setSkin("dhx_skyblue");
 	mygrid.load("<?=$json?>?pagado=no","json");	//ruta al json con datos
-	mygrid.init();		addFilter();
+	mygrid.init();		
+	addFilter();
 }
 
 function edit(action){

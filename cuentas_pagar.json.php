@@ -27,20 +27,25 @@ if($_GET['pagado'] == 'no'){
 }elseif($_GET['pagado'] == 't'){
 	$estado = '';
 }
+
 $sql = "SELECT 
-			'Gasto' as operacion,cuenta_a_pagar.*,gasto.proveedor,gasto.nro_orden 
+			'Gasto' as operacion,cuenta_a_pagar.*,gasto.proveedor,gasto.nro_orden,gasto.factura_nro,gasto.fecha, usuario.nombre, usuario.apellido 
 		FROM cuenta_a_pagar 
 		INNER JOIN gasto 
-			ON cuenta_a_pagar.operacion_id=gasto.id AND cuenta_a_pagar.operacion_tipo='gasto' $estado
+			ON cuenta_a_pagar.operacion_id=gasto.id AND cuenta_a_pagar.operacion_tipo='gasto'
+			INNER JOIN usuario 
+			ON usuario.id=gasto.user_id  $estado
 		UNION 
 		SELECT 
-			'Compra' as operacion,cuenta_a_pagar.*,compra.proveedor,compra.nro_orden
+			'Compra' as operacion,cuenta_a_pagar.*,compra.proveedor,compra.nro_orden,compra.factura_nro,compra.fecha, usuario.nombre, usuario.apellido
 		FROM cuenta_a_pagar 
 		INNER JOIN compra 
-			ON cuenta_a_pagar.operacion_id=compra.id AND cuenta_a_pagar.operacion_tipo='compra' $estado 
+			ON cuenta_a_pagar.operacion_id=compra.id AND cuenta_a_pagar.operacion_tipo='compra'  
+			INNER JOIN usuario 
+			ON usuario.id=compra.user_id  $estado
 		UNION
 		SELECT 
-			CONCAT('Resumen ',tarjeta_resumen.nombre) as operacion,cuenta_a_pagar.*, '' as proveedor, '' as nro_orden 
+			CONCAT('Resumen ',tarjeta_resumen.nombre) as operacion,cuenta_a_pagar.*, '' as proveedor, '' as nro_orden ,'' as factura_nro, '' as fecha, '' as nombre, '' as apellido
 		FROM cuenta_a_pagar
 		INNER JOIN tarjeta_resumen
 			ON cuenta_a_pagar.operacion_id=tarjeta_resumen.id AND cuenta_a_pagar.operacion_tipo='tarjeta_resumen' $estado";
@@ -53,6 +58,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 	}else{
 		$estado = 'Pagado';
 	}
+
+	$segundos= strtotime('now')-strtotime($rs['fecha']);
+	$cantidad_dias=intval($segundos/60/60/24);
 	
 	$data = array(
 		"id" => $rs['id'],
@@ -61,8 +69,12 @@ while($rs = mysql_fetch_array($rsTemp)){
 			$rs['operacion'],
 			getProveedor($rs['proveedor'],$provs),
 			$rs['monto'],
-			$estado
-		)
+			$estado,
+			$rs['fecha'],
+			$cantidad_dias,
+			$rs['factura_nro'],
+			$rs['nombre'].' '.$rs['apellido']
+		)	
 	);
 	array_push($rows,$data);
 }
