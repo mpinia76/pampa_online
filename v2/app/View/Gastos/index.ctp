@@ -52,6 +52,7 @@ $this->Js->buffer('
             null,
             null,
             null,
+            null,
             null
         ]
     });
@@ -61,6 +62,7 @@ $this->Js->buffer('
 //extra libreria para agregar filtro de fecha
 //echo $this->Html->script('dataTables.dateSort', array('block' => 'extra_scripts'));
 //echo $this->Html->script('dataTables.dateSort_1', array('block' => 'extra_scripts'));
+
 
 //filtrar total de resultados
 $this->Js->buffer('
@@ -78,6 +80,7 @@ $this->Js->buffer('
     $("#filter_devengado").keyup(function(){
         oTable.fnFilter($(this).val(),3);
     });
+
 
     $("#filter_factura").keyup(function(){
         oTable.fnFilter($(this).val(),7);
@@ -186,6 +189,7 @@ function action(action){
                <input type="text" style="width: 90%;" id="filter_devengado" />
             </th>
        
+
             <th width="150">
                 <?php echo $this->Form->input('rubro',array('label'=>false, 'options' => $rubros, 'empty' => 'Rubro', 'id' => 'filter_rubro'));?>
             </th>
