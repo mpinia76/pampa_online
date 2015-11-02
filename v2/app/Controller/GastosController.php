@@ -209,6 +209,7 @@ class GastosController extends AppController {
         }
     }
 
+
     /* Cache query */
      public function get_gastos() {
        	$result = Cache::read('get_gastos', 'long');
