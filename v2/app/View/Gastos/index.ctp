@@ -52,7 +52,6 @@ $this->Js->buffer('
             null,
             null,
             null,
-            null,
             null
         ]
     });
