@@ -9,11 +9,6 @@ class ReservasController extends AppController {
     public function index(){
 	    $this->layout = 'index';
 
-	    // print_r(array_values($this->data['year']));
-        //$array = $this->data['year'];
-        //echo array_values($array[0]);
-        //echo "--";
-        //echo $this->data['month'];
 
 	    if(sizeof($this->data['year'])>0){
           $_SESSION['year'] = array_pop($this->data['year']);

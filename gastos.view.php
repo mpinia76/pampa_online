@@ -189,33 +189,34 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	$(function()
 	{
 		$('.date-pick').datePicker().trigger('change');
+        $('.date-pick.date-edit').datePicker({startDate:'01/01/2010'}).trigger('change');
 
 		$("#proveedores").combobox();
 		
 	});
 	
-	function createCombo(){
-		var value = event.currentTarget.value;
-		var datos = ({
-			'tabla' : 'subrubro',
-			'campo_id' : 'rubro_id',
-			'campo' : 'subrubro',
-			'value' : value
-		});
-		
-		$.ajax({
-			beforeSend: function(){
-				$('#combo_loading').show();
-			},
-			data: datos,
-			url: 'functions/createcombo.php',
-			success: function(data) {
-				$('#combo_loading').hide();
-				$('#subrubro_combo').html(data);
-				$('#subrubro').show();
-			}
-		});
-	}
+	function createCombo(tabla,campo_id,campo,value){
+
+        var datos = ({
+            'tabla' : tabla,
+            'campo_id' : campo_id,
+            'campo' : campo,
+            'value' : value
+         });
+
+        $.ajax({
+            beforeSend: function(){
+                $('#combo_loading').show();
+            },
+            data: datos,
+            url: 'functions/createcombo.php',
+            success: function(data) {
+                $('#combo_loading').hide();
+                $('#subrubro_combo').html(data);
+                $('#subrubro').show();
+            }
+        });
+    }
 	</script>
 	<script type="text/javascript">
 	function addFormaDePago(forma_pago_id){
@@ -362,9 +363,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<? } ?>
 					
 				<? }elseif( ($_GET['action'] == 'editar' and $subestado == 3)) { ?>					
-					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
+					<li><label>Fecha devengado:</label><input class="date-pick date-edit dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
-					<select name="rubro" onChange="createCombo();">
+					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
 					<?
 					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
 					$rsTemp2 = mysql_query($sql2);
@@ -428,9 +429,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					</select> 
 					<input type="text" name="factura_nro" /></li>
 				<? }elseif($subestado == 4){ ?>
-					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
+					<li><label>Fecha devengado:</label><input class="date-pick date-edit dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
-					<select name="rubro" onChange="createCombo();">
+					<select name="rubro" onchange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
 					<?
 					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
 					$rsTemp2 = mysql_query($sql2);
@@ -450,12 +451,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							</select> 
 						</div>
 					</li>
-					<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
-					<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
-					<li><label>Rubro:</label><?=$rs['rubro']?></li>
-					<input type="hidden" name="rubro" value="<?=$rs['rubro_id']?>" />
-					<li><label>Sububro:</label><?=$rs['subrubro']?></li>
-					<input type="hidden" name="subrubro_id" value="<?=$rs['subrubro_id']?>" />
+
+
+
 					<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
 					<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
 					<li><label>Descripcion:</label><?=$rs['descripcion']?></li>

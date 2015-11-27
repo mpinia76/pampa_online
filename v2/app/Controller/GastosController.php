@@ -32,7 +32,6 @@ class GastosController extends AppController {
              $gastos = $this->get_gastos();
             
         }else{
-          
 
             $query = "SELECT * FROM gasto as Gasto 
                     inner join usuario as Usuario on Gasto.user_id = Usuario.id 
@@ -216,7 +215,7 @@ class GastosController extends AppController {
         if (!$result) {
             $result = $this->Gasto->find('all',array('order' => 'Gasto.created desc'));
 			Cache::write('get_gastos', $result, 'long');
-		}else{print_r("//ACIERTO CACHE//");}
+		}
         return $result;
     }
 

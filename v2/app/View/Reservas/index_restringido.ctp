@@ -32,7 +32,7 @@ $this->Js->buffer('
             null,
             null,
             {"sType": "date-uk"},
-            {"sType": "date-euro"},
+            {"sType": "date-uk"},
             null,
             null,
             null,
