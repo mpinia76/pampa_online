@@ -37,8 +37,10 @@ class GastosController extends AppController {
                     inner join usuario as Usuario on Gasto.user_id = Usuario.id 
                     inner join rubro  as Rubro on Gasto.rubro_id = Rubro.id
                     inner join subrubro as Subrubro on Gasto.subrubro_id = Subrubro.id
-                    where Usuario.espacio_trabajo_id = '$espacioTrabajo'
+                    left join proveedor as Proveedor on Gasto.proveedor = Proveedor.id
+                    where Usuario.espacio_trabajo_id = '$espacioTrabajo' and Usuario.admin = 0
                     order by Gasto.created desc";
+
             $gastos = $this->Gasto->query($query);
 
             
