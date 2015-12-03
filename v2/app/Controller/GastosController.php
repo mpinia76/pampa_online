@@ -83,7 +83,7 @@ class GastosController extends AppController {
                 $gasto['Gasto']['factura_tipo']." ".$gasto['Gasto']['factura_nro'],
                 $gasto['Gasto']['monto'],
                 $estado,
-                $gasto['Usuario']['nombre']
+                $gasto['Usuario']['nombre'].','.$gasto['Usuario']['apellido']
             );
         }
         $this->set('aaData',$rows);
