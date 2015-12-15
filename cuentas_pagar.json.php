@@ -53,14 +53,16 @@ $sql = "SELECT
 $rsTemp = mysql_query($sql); echo mysql_error();
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){
-	if($rs['estado']==0){
+   if($rs['estado']==0){
 		$estado = 'Pendiente de pago';
+		$segundos= strtotime('now')-strtotime($rs['fecha']);
 	}else{
 		$estado = 'Pagado';
+		$segundos= strtotime($rs['fecha_pago'])-strtotime($rs['fecha']);
 	}
 
-	$segundos= strtotime('now')-strtotime($rs['fecha']);
 	$cantidad_dias=intval($segundos/60/60/24);
+
 	
 	$data = array(
 		"id" => $rs['id'],

@@ -44,7 +44,7 @@ $this->Js->buffer('
         "aoColumns": [
             {"bVisible": false },
             null,
-            {"sType": "date-euro"},
+            null,
             null,            
             null,
             null,

@@ -49,6 +49,13 @@ $campos['espacio_trabajo_id'] = array(
 								'campo'				=> 'espacio',
 								'requerid' 			=> true
 							);
+
+
+$campos['admin']            = array(
+								'type'				=> 'checkbox',
+								'label'				=> 'Administrador',
+								'requerid' 			=> true
+							);
 			
 
 include_once("functions/common.php");
