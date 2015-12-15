@@ -1,4 +1,4 @@
-<?
+<?php
 $tabla 	= "sector"; //tabla
 $label 	= "sector"; //nombre para el editar y agregar
 $file 	= "sectores.php"; //archivo
@@ -25,7 +25,7 @@ include_once("functions/delete.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -44,7 +44,7 @@ function doInitGrid(){
 	mygrid.setColTypes("ro,price");				//editable o no
 	mygrid.enableEditEvents(false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?=$json?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>","json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -53,7 +53,7 @@ function edit(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_edit','Editar <?=$label?>','<?=$abm?>?dataid='+dataid,'400','200'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_edit','Editar <?php echo $label?>','<?php echo $abm?>?dataid='+dataid,'400','200'); //nombre de los divs
 	}
 }
 function eliminar(){
@@ -61,18 +61,18 @@ function eliminar(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?=$file?>?delete=on&dataid='+dataid; //ruta
+		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?php echo $file?>?delete=on&dataid='+dataid; //ruta
 	}
 }
 function add(){
-	createWindow('w_<?=$tabla?>_add','Agregar <?=$label?>','<?=$abm?>','400','200'); //botones
+	createWindow('w_<?php echo $tabla?>_add','Agregar <?php echo $label?>','<?php echo $abm?>','400','200'); //botones
 }
 function addHoraExtra(){
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_horas','Horas extras','sectores_horas.am.php?sector_id='+dataid,'400','200'); //botones
+		createWindow('w_<?php echo $tabla?>_horas','Horas extras','sectores_horas.am.php?sector_id='+dataid,'400','200'); //botones
 	}
 }
 

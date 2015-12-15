@@ -1,4 +1,4 @@
-<?
+<?php
 if(isset($_POST['ok'])){
 
 	include_once("config/db.php");
@@ -48,7 +48,7 @@ include_once("functions/delete.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -74,7 +74,7 @@ function doInitGrid(){
 	mygrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro");				//editable o no
 	mygrid.enableEditEvents(false,false,false,false,false,false,false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?=$json?>?debitado=no","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>?debitado=no","json");	//ruta al json con datos
 	mygrid.init();
 	addFilter();
 	estado = "no";
@@ -84,13 +84,13 @@ function doInitGrid(){
 function makeFilter(){
 	estado = $('#estado').val();
 	mygrid.clearAll();
-	mygrid.load("<?=$json?>?debitado="+estado+"&inicio="+inicio+"&fin="+fin,"json");
+	mygrid.load("<?php echo $json?>?debitado="+estado+"&inicio="+inicio+"&fin="+fin,"json");
 }
 function filterByFecha(){
 	inicio = $('#fecha_desde').val();
 	fin = $('#fecha_hasta').val();
 	mygrid.clearAll();
-	mygrid.load("<?=$json?>?debitado="+estado+"&inicio="+inicio+"&fin="+fin,"json");
+	mygrid.load("<?php echo $json?>?debitado="+estado+"&inicio="+inicio+"&fin="+fin,"json");
 }
 function addFilter(){
 	$('#estado_filter').html('<select id="estado" onchange="makeFilter();"><option selected="selected" value="no">Pendiente</option><option value="si">Debitada</option><option value="t">Todas</option></select>');
@@ -110,7 +110,7 @@ function edit(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_edit','Editar <?=$label?>','transferencias_movimientos.am.php?dataid='+dataid,'600','400'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_edit','Editar <?php echo $label?>','transferencias_movimientos.am.php?dataid='+dataid,'600','400'); //nombre de los divs
 	}
 }
 
@@ -148,15 +148,15 @@ input.dp-applied {
 <script src="js/createWindow.js"></script>
 </head>
 <body onload="doInitGrid(); $('.fecha').datePicker({startDate:'01/01/2010'});">
-<form name="form" method="post" action="<?=$_SERVER['PHP_SELF']?>">
+<form name="form" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
 <input type="hidden" name="tabla" value="" />
 <input type="hidden" name="ok" value="1" />
 <input type="hidden" name="registro" value="" />
 </form>
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
-	<? if(ACCION_59){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" /> Editar</li><? } ?>
-	<? if(ACCION_38){ ?><li onclick="aprobar()" class="item"><img src="images/ok.gif" align="absmiddle" />  Confirmar d&eacute;bito</li><? } ?>
+	<?php if(ACCION_59){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" /> Editar</li><?php } ?>
+	<?php if(ACCION_38){ ?><li onclick="aprobar()" class="item"><img src="images/ok.gif" align="absmiddle" />  Confirmar d&eacute;bito</li><?php } ?>
 	<li class="item">Ver desde: </li>
 	<li class="item"><input id="fecha_desde" type="text" class="fecha"> </li>
 	<li class="item">hasta: </li>

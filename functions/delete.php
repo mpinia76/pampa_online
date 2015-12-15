@@ -1,4 +1,4 @@
-<?
+<?php
 if(isset($_GET['dataid']) and isset($_GET['delete'])){
 	$dataid = $_GET['dataid'];
 	include_once("config/db.php");

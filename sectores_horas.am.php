@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -108,23 +108,23 @@ input.dp-applied {
 </style>
 <!--/JQuery Date Picker-->
 
-<?=$form->printJS()?>
+<?php echo $form->printJS()?>
 
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-<? if(isset($_POST['agregar'])){?>
+<?php  if(isset($_POST['agregar'])){?>
 	<script>
 	var dhxWins = parent.dhxWins;
 	dhxWins.window('w_sector').attachURL('sectores.php');
 	dhxWins.window('w_sector_horas').close();
 	</script>
-<? } ?>
+<?php  } ?>
 
-<? include_once("config/messages.php"); ?>
+<?php  include_once("config/messages.php"); ?>
 
-<?=$form->printHTML()?>
+<?php echo $form->printHTML()?>
 
 </body>
 </html>

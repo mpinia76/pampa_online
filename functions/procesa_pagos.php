@@ -1,4 +1,4 @@
-<?
+<?php
 //PROCESA LOS DIFERENTES SISTEMAS DE PAGO
 //@operacion_id (Array)
 //@operacion_tipo

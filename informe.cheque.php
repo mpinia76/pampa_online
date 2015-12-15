@@ -21,19 +21,19 @@ cursor:pointer;
 </head>
 
 <body>
-<? include_once("config/db.php"); ?>
-<? if(isset($_POST['ano'])) { $ano = $_POST['ano']; }else{ $ano= date('Y'); } ?>
-<form method="post" action="<?=$_SERVER['PHP_SELF']?>">
+<?php include_once("config/db.php"); ?>
+<?php if(isset($_POST['ano'])) { $ano = $_POST['ano']; }else{ $ano= date('Y'); } ?>
+<form method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
 <select size="1" name="ano">
-	<option <? if($ano == '2010'){?> selected="selected" <? } ?> >2010</option>
-	<option <? if($ano == '2011'){?> selected="selected" <? } ?> >2011</option>
-	<option <? if($ano == '2012'){?> selected="selected" <? } ?> >2012</option>
-	<option <? if($ano == '2013'){?> selected="selected" <? } ?> >2013</option>
-	<option <? if($ano == '2014'){?> selected="selected" <? } ?> >2014</option>
-	<option <? if($ano == '2015'){?> selected="selected" <? } ?> >2015</option>
-    <option <? if($ano == '2016'){?> selected="selected" <? } ?> >2016</option>
-    <option <? if($ano == '2017'){?> selected="selected" <? } ?> >2017</option>
-    <option <? if($ano == '2018'){?> selected="selected" <? } ?> >2018</option>
+	<option <?php if($ano == '2010'){?> selected="selected" <?php } ?> >2010</option>
+	<option <?php if($ano == '2011'){?> selected="selected" <?php } ?> >2011</option>
+	<option <?php if($ano == '2012'){?> selected="selected" <?php } ?> >2012</option>
+	<option <?php if($ano == '2013'){?> selected="selected" <?php } ?> >2013</option>
+	<option <?php if($ano == '2014'){?> selected="selected" <?php } ?> >2014</option>
+	<option <?php if($ano == '2015'){?> selected="selected" <?php } ?> >2015</option>
+    <option <?php if($ano == '2016'){?> selected="selected" <?php } ?> >2016</option>
+    <option <?php if($ano == '2017'){?> selected="selected" <?php } ?> >2017</option>
+    <option <?php if($ano == '2018'){?> selected="selected" <?php } ?> >2018</option>
 </select> 
 <input type="submit" value=">" name="buscar" />
 </form>
@@ -56,12 +56,12 @@ cursor:pointer;
 		<th width="50">Octubre</th>
 		<th width="50">Noviembre</th>
 		<th width="50">Diciembre</th>
-		<th width="50"><?=$ano?></th>
+		<th width="50"><?php echo $ano?></th>
 		<th width="50">Total</th>
 	</tr>
 </thead>
 <tbody>
-<?
+<?php 
 
 $tabla 		= "cheque_consumo";
 $sql_meses 	= sql_meses($tabla,$ano,'fecha');
@@ -71,20 +71,20 @@ $rsTemp =  mysql_query($sql);echo mysql_error();
 while($rs = mysql_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
-		<td><?=$rs['tipo']?></td>
-		<? for($i=0;$i<12;$i++){ ?>
-		<td class="cheque_librado_fecha_<?=$i?>"><?=$rs[$i]?></td>
-		<? } ?>
-		<td class="cheque_librado_total_anual"><?=$rs['anual']?></td>
-		<td class="cheque_librado_total"><?=$rs['total']?></td>
+		<td><?php echo $rs['tipo']?></td>
+		<?php for($i=0;$i<12;$i++){ ?>
+		<td class="cheque_librado_fecha_<?php echo $i?>"><?php echo $rs[$i]?></td>
+		<?php } ?>
+		<td class="cheque_librado_total_anual"><?php echo $rs['anual']?></td>
+		<td class="cheque_librado_total"><?php echo $rs['total']?></td>
 	</tr>
-	<? } ?>
-<? } ?>
+	<?php } ?>
+<?php } ?>
 	<tr style="background:#FC6;">
 		<td>Total</td>
-		<? for($i=0;$i<12;$i++){ ?>
-		<td class="total_cheque_librado_fecha_<?=$i?>"></td>
-		<? } ?>
+		<?php for($i=0;$i<12;$i++){ ?>
+		<td class="total_cheque_librado_fecha_<?php echo $i?>"></td>
+		<?php } ?>
 		<td class="total_cheque_librado_anual"></td>
 		<td class="total_cheque_librado_total"></td>
 	</tr>
@@ -140,12 +140,12 @@ $(".total_cheque_librado_anual").html(roundVal(sum));
 		<th width="50">Octubre</th>
 		<th width="50">Noviembre</th>
 		<th width="50">Diciembre</th>
-		<th width="50"><?=$ano?></th>
+		<th width="50"><?php echo $ano?></th>
 		<th width="50">Total</th>
 	</tr>
 </thead>
 <tbody>
-<?
+<?php 
 
 $tabla 		= "cheque_consumo";
 $sql_meses 	= sql_meses($tabla,$ano,'fecha_debitado');
@@ -155,20 +155,20 @@ $rsTemp =  mysql_query($sql);echo mysql_error();
 while($rs = mysql_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
-		<td><?=$rs['tipo']?></td>
-		<? for($i=0;$i<12;$i++){ ?>
-		<td class="cheque_fecha_<?=$i?>"><?=$rs[$i]?></td>
-		<? } ?>
-		<td class="cheque_total_anual"><?=$rs['anual']?></td>
-		<td class="cheque_total"><?=$rs['total']?></td>
+		<td><?php echo $rs['tipo']?></td>
+		<?php for($i=0;$i<12;$i++){ ?>
+		<td class="cheque_fecha_<?php echo $i?>"><?php echo $rs[$i]?></td>
+		<?php } ?>
+		<td class="cheque_total_anual"><?php echo $rs['anual']?></td>
+		<td class="cheque_total"><?php echo $rs['total']?></td>
 	</tr>
-	<? } ?>
-<? } ?>
+	<?php } ?>
+<?php } ?>
 	<tr style="background:#FFFF00;">
 		<td>Total</td>
-		<? for($i=0;$i<12;$i++){ ?>
-		<td class="total_cheque_fecha_<?=$i?>"></td>
-		<? } ?>
+		<?php for($i=0;$i<12;$i++){ ?>
+		<td class="total_cheque_fecha_<?php echo $i?>"></td>
+		<?php } ?>
 		<td class="total_cheque_anual"></td>
 		<td class="total_cheque_total"></td>
 	</tr>
@@ -206,7 +206,7 @@ $(".total_cheque_anual").html(roundVal(sum));
 
 </script>
 
-<?
+<?php 
 $ant = $ano - 1;
 $sql = "SELECT if(sum(monto) is null,0,sum(monto)) as 'acumulado' FROM cheque_consumo WHERE debitado = 0 AND YEAR(fecha) = '$ant'";
 $rs = mysql_fetch_array(mysql_query($sql))
@@ -228,7 +228,7 @@ $rs = mysql_fetch_array(mysql_query($sql))
 		<th width="50">Octubre</th>
 		<th width="50">Noviembre</th>
 		<th width="50">Diciembre</th>
-		<th width="50"><?=$ano?></th>
+		<th width="50"><?php echo $ano?></th>
 		<th width="50">Total</th>
 	</tr>
 </thead>
@@ -255,17 +255,17 @@ $sql = "SELECT
     $rs = mysql_fetch_array(mysql_query($sql)); //echo $sql; //echo mysql_error();
     for($i=0;$i<12;$i++){
 ?>
-		<td width="50" class="pendiente_<?=$i?>"><?=$rs[$i]?></td>
+		<td width="50" class="pendiente_<?php echo $i?>"><?php echo $rs[$i]?></td>
 <?php
     }
 ?>
                 
-		<td width="50"><?=$rs['anual']?></td>
-		<td width="50"><?=$rs['total']?></td>
+		<td width="50"><?php echo $rs['anual']?></td>
+		<td width="50"><?php echo $rs['total']?></td>
 	</tr>
 	<tr>
 		<td width="100">Acumulado</th>
-		<td width="50" class="acumulado_0"><?=$rs['acumulado']?></th>
+		<td width="50" class="acumulado_0"><?php echo $rs['acumulado']?></th>
 		<td width="50" class="acumulado_1"></th>
 		<td width="50" class="acumulado_2"></th>
 		<td width="50" class="acumulado_3"></th>

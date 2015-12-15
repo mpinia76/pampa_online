@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("model/form.class.php");
 include_once("config/db.php");
 include_once("functions/abm.php");
@@ -37,15 +37,15 @@ $form->setCampos($campos);
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Documento sin t&iacute;tulo</title>
-<?=$form->printJS()?>
+<?php echo $form->printJS()?>
 <link href="styles/form.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php  include_once("config/messages.php"); ?>
 
-<?=$form->printHTML()?>
+<?php echo $form->printHTML()?>
 
 </body>
 </html>

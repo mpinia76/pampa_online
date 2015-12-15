@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -128,25 +128,25 @@ function valida(F) {
 
 <body>
 
-<? if(isset($_POST['agregar'])){ ?>
+<?php  if(isset($_POST['agregar'])){ ?>
 	<script>
 	var dhxWins = parent.dhxWins;
-	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?=$_POST['empleado_id']?>');
+	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?php echo $_POST['empleado_id']?>');
 	</script>
-<? } ?>
+<?php  } ?>
 
-<? include_once("config/messages.php"); ?>
+<?php  include_once("config/messages.php"); ?>
 
 <div class="container"> 
 
-<form method="POST" name="form" action="empleado.horas_extras.php?empleado_id=<?=$_GET['empleado_id']?>" onSubmit="return valida(this);">
-	<input type="hidden" name="empleado_id" value="<?=$_GET['empleado_id']?>" />
+<form method="POST" name="form" action="empleado.horas_extras.php?empleado_id=<?php echo $_GET['empleado_id']?>" onSubmit="return valida(this);">
+	<input type="hidden" name="empleado_id" value="<?php echo $_GET['empleado_id']?>" />
     
     <div class="label">Sector</div>
         <div class="content">
         <select name="sector_id">
         <option value="null">Seleccionar...</option>
-        <?
+        <?php 
         $sql = "SELECT sector_1_id,sector_2_id FROM empleado_trabajo WHERE empleado_id = ".$_GET['empleado_id']." ORDER BY id DESC LIMIT 1";
         $rsector = mysql_fetch_array(mysql_query($sql));
 
@@ -160,9 +160,9 @@ function valida(F) {
 			$sql = "SELECT * FROM sector WHERE id IN (".$lista_sector.")";
 			$rsTemp = mysql_query($sql); 
 			while($rs = mysql_fetch_array($rsTemp)){ ?>
-				<option value="<?=$rs['hora_extra_activa']?>"><?=$rs['sector']?></option>
-			<? } ?>
-		<? } ?>
+				<option value="<?php echo $rs['hora_extra_activa']?>"><?php echo $rs['sector']?></option>
+			<?php  } ?>
+		<?php  } ?>
         </select>
         </div>
         <div style="clear:both;"></div>
@@ -195,7 +195,7 @@ function valida(F) {
     
     <div class="label">A&ntilde;o</div>
         <div class="content">
-        <input type="text" size="2" name="ano" value="<?=date("Y")?>" />
+        <input type="text" size="2" name="ano" value="<?php echo date("Y")?>" />
         </div>
         <div style="clear:both;"></div>
 	

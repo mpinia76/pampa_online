@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -168,49 +168,49 @@ function addFormaDePago(forma_pago_id){
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php  include_once("config/messages.php"); ?>
 
 <div class="container" style="font-family:arial; font-size:12px;"> 
 
-<?
+<?php 
 $sql = "SELECT * FROM empleado_pago WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
 if(mysql_num_rows(mysql_query($sql)) == 0){
 ?>
     <form method="POST" name="form" action="empleado.pagar.php" onSubmit="return valida(this);">
-        <input type="hidden" name="empleado_id" value="<?=$empleado_id?>" />
-        <input type="hidden" name="ano" value="<?=$ano?>" />
-        <input type="hidden" name="mes" value="<?=$mes?>" />
+        <input type="hidden" name="empleado_id" value="<?php echo $empleado_id?>" />
+        <input type="hidden" name="ano" value="<?php echo $ano?>" />
+        <input type="hidden" name="mes" value="<?php echo $mes?>" />
         
-        <?
+        <?php 
         $sql = "SELECT * FROM empleado WHERE id = $empleado_id";
         $rs = mysql_fetch_array(mysql_query($sql));
         ?>
-        <p><strong><?=$rs['nombre']?> <?=$rs['apellido']?></strong> (<?=$mes?>/<?=$ano?>) </p>
+        <p><strong><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></strong> (<?php echo $mes?>/<?php echo $ano?>) </p>
         
         <p><strong>Sector de trabajo:</strong> 
-        <?
+        <?php 
         $sql = "SELECT empleado_trabajo.*,a.sector as 'sector1', b.sector as 'sector2', espacio_trabajo.espacio FROM empleado_trabajo LEFT JOIN sector as a ON empleado_trabajo.sector_1_id = a.id LEFT JOIN sector as b ON empleado_trabajo.sector_2_id = b.id INNER JOIN espacio_trabajo ON empleado_trabajo.espacio_trabajo_id = espacio_trabajo.id WHERE empleado_trabajo.empleado_id=$empleado_id ORDER BY empleado_trabajo.id DESC LIMIT 0,1";
         $rs = mysql_fetch_array(mysql_query($sql));
         ?>
-        <?=$rs['sector1'] != '' ? $rs['sector1'] : ''?> <?=$rs['sector1'] != '' ? $rs['porcentaje_sector_1']."%" : ''?> 
-        <?=$rs['sector2'] != '' ? " - ".$rs['sector2'] : ''?> <?=$rs['sector2'] != '' ? $rs['porcentaje_sector_2']."%" : ''?>
+        <?php echo $rs['sector1'] != '' ? $rs['sector1'] : ''?> <?php echo $rs['sector1'] != '' ? $rs['porcentaje_sector_1']."%" : ''?> 
+        <?php echo $rs['sector2'] != '' ? " - ".$rs['sector2'] : ''?> <?php echo $rs['sector2'] != '' ? $rs['porcentaje_sector_2']."%" : ''?>
         </p>
         
         <p><strong>Salario acordado del mes:</strong></p>
-        <?
+        <?php 
         $sql = "SELECT * FROM empleado_sueldo WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano ORDER BY sueldo_id DESC LIMIT 0,1";
         $rs = mysql_fetch_array(mysql_query($sql));
         ?>
-        Sueldo: $<?=$rs['sueldo']?> <br>
-        Viaticos: $<?=$rs['viaticos']?> <br>
-        Asignaciones: $<?=$rs['asignaciones']?> <br>
-        Presentismo: $<?=$rs['presentismo']?> <br>
-        Aguinaldo: $<?=$rs['aguinaldo']?> <br>
-        <? $salario = $rs['sueldo'] + $rs['viaticos'] + $rs['asignaciones'] + $rs['presentismo'] + $rs['aguinaldo']; ?>
-        Total: $<?=$salario?>
+        Sueldo: $<?php echo $rs['sueldo']?> <br>
+        Viaticos: $<?php echo $rs['viaticos']?> <br>
+        Asignaciones: $<?php echo $rs['asignaciones']?> <br>
+        Presentismo: $<?php echo $rs['presentismo']?> <br>
+        Aguinaldo: $<?php echo $rs['aguinaldo']?> <br>
+        <?php  $salario = $rs['sueldo'] + $rs['viaticos'] + $rs['asignaciones'] + $rs['presentismo'] + $rs['aguinaldo']; ?>
+        Total: $<?php echo $salario?>
         
         <p><strong>Horas extras aprobadas:</strong></p>
-        <?
+        <?php 
             $sql = "
             SELECT
                 ehe.*,
@@ -230,41 +230,41 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
             $rsTemp = mysql_query($sql); echo mysql_error();
             if(mysql_num_rows($rsTemp) > 0) {
                 while($rs = mysql_fetch_array($rsTemp)){ ?>
-                <?=$rs['sector']?>: <?=$rs['cantidad_solicitada']?> hrs. solicitadas - <?=$rs['cantidad_aprobada']?> hrs. aprobadas = $<?=$rs['cantidad_aprobada']*$rs['valor']?> <br>
-                <? $horas_extras = $horas_extras + ($rs['cantidad_aprobada']*$rs['valor']); ?>
-                <? } ?>
-            <? }else{ ?>
+                <?php echo $rs['sector']?>: <?php echo $rs['cantidad_solicitada']?> hrs. solicitadas - <?php echo $rs['cantidad_aprobada']?> hrs. aprobadas = $<?php echo $rs['cantidad_aprobada']*$rs['valor']?> <br>
+                <?php  $horas_extras = $horas_extras + ($rs['cantidad_aprobada']*$rs['valor']); ?>
+                <?php  } ?>
+            <?php  }else{ ?>
                 No se han cargado horas extras
-            <? } ?>
+            <?php  } ?>
         </p>
         
         <p><strong>Adelantos otorgados:</strong></p>
-        <?
+        <?php 
             $sql = "SELECT * FROM empleado_adelanto WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
             $rsTemp = mysql_query($sql);
             if(mysql_num_rows($rsTemp) > 0) {
                 while($rs = mysql_fetch_array($rsTemp)){ ?>
-                <?=fechavista($rs['creado'])?> $<?=$rs['monto']?> <?=$rs['comentarios']?> <br>
-                <? $adelantos = $adelantos + $rs['monto']; ?>
-                <? } ?>
-            <? }else{ ?>
+                <?php echo fechavista($rs['creado'])?> $<?php echo $rs['monto']?> <?php echo $rs['comentarios']?> <br>
+                <?php  $adelantos = $adelantos + $rs['monto']; ?>
+                <?php  } ?>
+            <?php  }else{ ?>
                 No se han otorgado adelantos
-            <? } ?>
+            <?php  } ?>
         </p>
         
-        <p><strong>Pendiente de pago:</strong> $<?=$salario+$horas_extras-$adelantos?></p>
-        <input type="hidden" name="monto_pendiente" value="<?=$salario+$horas_extras-$adelantos?>"  />
+        <p><strong>Pendiente de pago:</strong> $<?php echo $salario+$horas_extras-$adelantos?></p>
+        <input type="hidden" name="monto_pendiente" value="<?php echo $salario+$horas_extras-$adelantos?>"  />
         
         <div class="label">Forma de pago</div>
             <div class="content">
             <select name="forma_pago">
             <option value="null">Seleccionar...</option>
-            <?
+            <?php 
             $sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4,6) ORDER BY forma_pago ";
             $rsTemp = mysql_query($sql);
             while($rs = mysql_fetch_array($rsTemp)){?>
-            <option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-            <? } ?>
+            <option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+            <?php  } ?>
             </select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
             </div>
             <div style="clear:both;"></div>
@@ -273,9 +273,9 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
         
         <p align="center"><input type="submit" value="Guardar" name="agregar" /></p> 
     </form> 
-<? }else{ ?>
+<?php  }else{ ?>
 	<p>El salario para este periodo ya ha sido abonado</p>
-<? } ?>
+<?php  } ?>
 </div>
 </body>
 </html>

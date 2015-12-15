@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 
 $data 	= explode(",",$_GET['dataid']);
@@ -7,7 +7,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 
 	<p align="center">Seleccione un s&oacute;lo registro</p>
 
-<? }elseif(is_array($data) and count($data)>1 and ($_GET['action'] == 'abonar') or isset($_POST['datos']) ){
+<?php }elseif(is_array($data) and count($data)>1 and ($_GET['action'] == 'abonar') or isset($_POST['datos']) ){
 
 	$dataid = $_GET['dataid'];
 	include("compras.pagar.php");
@@ -254,84 +254,84 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	</head>
 	
 	<body>
-	<? if( isset($_POST['guardar']) or isset($_POST['actualizar']) or isset($_POST['aprobar']) or isset($_POST['desaprobar']) ) { ?>
+	<?php  if( isset($_POST['guardar']) or isset($_POST['actualizar']) or isset($_POST['aprobar']) or isset($_POST['desaprobar']) ) { ?>
 	<script>
 	var dhxWins = parent.dhxWins;
 	dhxWins.window('w_compra').attachURL('compras.php');
 	</script>
-	<? } ?>
+	<?php  } ?>
 	
-	<? include_once("config/messages.php"); ?>
+	<?php  include_once("config/messages.php"); ?>
 	
 	<div class="formContainer">
 	<form method="post" name="form" action="compras.view.php" onSubmit="return valida(this);">
-		<input type="hidden" name="compra_id" value="<?=$operacion_id?>" />
-		<input type="hidden" name="compra_monto" value="<?=$rs['monto']?>" />
+		<input type="hidden" name="compra_id" value="<?php echo $operacion_id?>" />
+		<input type="hidden" name="compra_monto" value="<?php echo $rs['monto']?>" />
 		<fieldset>
 			<legend>Detalle de compra</legend> 
 			<ul class="form">
 				<li><label>Estado:</label>
 				<span style="background:#FFFF99;">
-				<? if($rs['estado'] == 0 and $rs['nro_orden'] == 0){ ?>
-					<? $subestado = 1; ?>
+				<?php  if($rs['estado'] == 0 and $rs['nro_orden'] == 0){ ?>
+					<?php  $subestado = 1; ?>
 					Pendiente de autorizaci&oacute;n
-				<? }elseif($rs['estado'] == 0 and $rs['nro_orden'] != 0){ ?>
-					<? $subestado = 2; ?>
+				<?php  }elseif($rs['estado'] == 0 and $rs['nro_orden'] != 0){ ?>
+					<?php  $subestado = 2; ?>
 					Compra autorizada, pendiente de pago
-				<? }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] == ''){ ?>
-					<? $subestado = 3; ?>
+				<?php  }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] == ''){ ?>
+					<?php  $subestado = 3; ?>
 					Compra autorizada, abonado, falta numero de factura 
-				<? }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] != ''){ ?>
-					<? $subestado = 4; ?>
+				<?php  }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] != ''){ ?>
+					<?php  $subestado = 4; ?>
 					Compra autorizada, abonado, con numero de factura
-				<? }elseif($rs['estado'] == 2){ ?>
-					<? $subestado = 0; ?>
+				<?php  }elseif($rs['estado'] == 2){ ?>
+					<?php  $subestado = 0; ?>
 					Compra no autorizada
-				<? } ?>
+				<?php  } ?>
 				</span>
 				</li>
-				<li><label>Responsable:</label><?=$rs['nombre']?> <?=$rs['apellido']?></li>
-				<? if($_GET['action'] == 'editar' and $subestado < 3){ ?>
-					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
+				<li><label>Responsable:</label><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></li>
+				<?php  if($_GET['action'] == 'editar' and $subestado < 3){ ?>
+					<li><label>Fecha devengado:</label><input class="date-pick dp-applied" name="fecha" value="<?php echo fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
 					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
-					<?
+					<?php 
 					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
 					$rsTemp2 = mysql_query($sql2);
 					while($rs2 = mysql_fetch_array($rsTemp2)){?>
-					<option <? if($rs2['id']==$rs['rubro_id']){ ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['rubro']?></option>
-					<? } ?>
+					<option <?php  if($rs2['id']==$rs['rubro_id']){ ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['rubro']?></option>
+					<?php  } ?>
 					</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
 					<li id="subrubro"><label>Subrubro:</label>
 						<div id="subrubro_combo">
 							<select name="subrubro_id" size="1">
-							<?
+							<?php 
 							$sql2 = "SELECT id,subrubro FROM subrubro WHERE rubro_id = ".$rs['rubro_id']." ORDER BY subrubro ";
 							$rsTemp2 = mysql_query($sql2);
 							while($rs2 = mysql_fetch_array($rsTemp2)){?>
-							<option <? if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['subrubro']?></option>
-							<? } ?>
+							<option <?php  if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['subrubro']?></option>
+							<?php  } ?>
 							</select> 
 						</div>
 					</li>
 					<li><label>Proveedor:</label>
 					<select id="proveedores" name="proveedor" size="1">
 					<option value="">Seleccione uno...</option>
-					<?
+					<?php 
 					$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
 					$rsTemp2 = mysql_query($sql2);
 					while($rs2 = mysql_fetch_array($rsTemp2)){?>
-					<option <? if($rs2['id']==$rs['proveedor']){ $selected = true; ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['nombre']?></option>
-					<? } ?>
-					<? if(!$selected){ ?>
-					<option value="<?=$rs['proveedor']?>" selected="selected"><?=$rs['proveedor']?></option>
-					<? } ?>
+					<option <?php  if($rs2['id']==$rs['proveedor']){ $selected = true; ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['nombre']?></option>
+					<?php  } ?>
+					<?php  if(!$selected){ ?>
+					<option value="<?php echo $rs['proveedor']?>" selected="selected"><?php echo $rs['proveedor']?></option>
+					<?php  } ?>
 					</select>
 					</li>
-					<li><label>Descripcion:</label><textarea name="descripcion"><?=$rs['descripcion']?></textarea></li>
-					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?=$rs['remito_nro']?>" /></li>
-					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?=$rs['recibo_nro']?>" /></li>
-					<? if($subestado == 2){ ?>
+					<li><label>Descripcion:</label><textarea name="descripcion"><?php echo $rs['descripcion']?></textarea></li>
+					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?php echo $rs['remito_nro']?>" /></li>
+					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?php echo $rs['recibo_nro']?>" /></li>
+					<?php  if($subestado == 2){ ?>
 						<li><label>Factura:</label>
 						<select size="1" name="factura_tipo">
 							<option value="n">Tipo</option>
@@ -344,22 +344,22 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							<option value="N">0002</option>
 						</select> 
 						<input type="text" name="factura_nro" /></li>
-					<? } ?>
+					<?php  } ?>
 					
-				<? }elseif( ($_GET['action'] == 'editar' and $subestado == 3) or ($_GET['action'] == 'abonar' and $subestado == 2) ) { ?>
+				<?php  }elseif( ($_GET['action'] == 'editar' and $subestado == 3) or ($_GET['action'] == 'abonar' and $subestado == 2) ) { ?>
 				
-					<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
-					<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
-					<li><label>Rubro:</label><?=$rs['rubro']?></li>
-					<input type="hidden" name="rubro" value="<?=$rs['rubro_id']?>" />
-					<li><label>Sububro:</label><?=$rs['subrubro']?></li>
-					<input type="hidden" name="subrubro_id" value="<?=$rs['subrubro_id']?>" />
-					<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
-					<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
-					<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
-					<input type="hidden" name="descripcion" value="<?=$rs['descripcion']?>" />
-					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?=$rs['remito_nro']?>" /></li>
-					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?=$rs['recibo_nro']?>" /></li>
+					<li><label>Fecha devengado:</label><?php echo fechavista($rs['fecha'])?></li>
+					<input type="hidden" name="fecha" value="<?php echo fechavista($rs['fecha'])?>" />
+					<li><label>Rubro:</label><?php echo $rs['rubro']?></li>
+					<input type="hidden" name="rubro" value="<?php echo $rs['rubro_id']?>" />
+					<li><label>Sububro:</label><?php echo $rs['subrubro']?></li>
+					<input type="hidden" name="subrubro_id" value="<?php echo $rs['subrubro_id']?>" />
+					<li><label>Proveedor:</label><?php echo getProveedor($rs['proveedor'])?></li>
+					<input type="hidden" name="proveedor" value="<?php echo getProveedor($rs['proveedor'])?>" />
+					<li><label>Descripcion:</label><?php echo $rs['descripcion']?></li>
+					<input type="hidden" name="descripcion" value="<?php echo $rs['descripcion']?>" />
+					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?php echo $rs['remito_nro']?>" /></li>
+					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?php echo $rs['recibo_nro']?>" /></li>
 					<li><label>Factura:</label>
 					<select size="1" name="factura_tipo">
 						<option value="n">Tipo</option>
@@ -372,67 +372,67 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 						<option value="N">0002</option>
 					</select> 
 					<input type="text" name="factura_nro" /></li>
-				<? }elseif($subestado >= 0){ ?>
-					<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
-					<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
-					<li><label>Rubro:</label><?=$rs['rubro']?></li>
-					<input type="hidden" name="rubro" value="<?=$rs['rubro_id']?>" />
-					<li><label>Sububro:</label><?=$rs['subrubro']?></li>
-					<input type="hidden" name="subrubro_id" value="<?=$rs['subrubro_id']?>" />
-					<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
-					<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
-					<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
-					<input type="hidden" name="descripcion" value="<?=$rs['descripcion']?>" />
-					<li><label>Remito:</label><?=$rs['remito_nro']?></li>
-					<input type="hidden" name="remito_nro" value="<?=$rs['remito_nro']?>" />
-					<li><label>Recibo::</label><?=$rs['recibo_nro']?></li>
-					<input type="hidden" name="recibo_nro" value="<?=$rs['recibo_nro']?>" />
-					<? if($subestado > 1){ ?>
-					<li><label>Factura:</label>Tipo: <?=$rs['factura_tipo']?> Numero: <?=$rs['factura_nro']?></li>
-					<input type="hidden" name="factura_orden" value="<?=$rs['factura_orden']?>" />
-					<input type="hidden" name="factura_tipo" value="<?=$rs['factura_tipo']?>" />
-					<input type="hidden" name="factura_nro" value="<?=$rs['factura_nro']?>" />
-					<? } ?>
-				<? } ?>
-				<? if($_GET['action'] == 'editar' and $subestado < 3 and ACCION_40){ ?>
-					<li><label>Monto neto:</label><input type="text" name="monto" value="<?=$rs['monto']?>" /></li>
-				<? }else{ ?>
-					<li><label>Monto neto:</label>$<?=$rs['monto']?></li>
-                    <input type="hidden" name="monto" value="<?=$rs['monto']?>" />
-				<? } ?>
+				<?php  }elseif($subestado >= 0){ ?>
+					<li><label>Fecha devengado:</label><?php echo fechavista($rs['fecha'])?></li>
+					<input type="hidden" name="fecha" value="<?php echo fechavista($rs['fecha'])?>" />
+					<li><label>Rubro:</label><?php echo $rs['rubro']?></li>
+					<input type="hidden" name="rubro" value="<?php echo $rs['rubro_id']?>" />
+					<li><label>Sububro:</label><?php echo $rs['subrubro']?></li>
+					<input type="hidden" name="subrubro_id" value="<?php echo $rs['subrubro_id']?>" />
+					<li><label>Proveedor:</label><?php echo getProveedor($rs['proveedor'])?></li>
+					<input type="hidden" name="proveedor" value="<?php echo getProveedor($rs['proveedor'])?>" />
+					<li><label>Descripcion:</label><?php echo $rs['descripcion']?></li>
+					<input type="hidden" name="descripcion" value="<?php echo $rs['descripcion']?>" />
+					<li><label>Remito:</label><?php echo $rs['remito_nro']?></li>
+					<input type="hidden" name="remito_nro" value="<?php echo $rs['remito_nro']?>" />
+					<li><label>Recibo::</label><?php echo $rs['recibo_nro']?></li>
+					<input type="hidden" name="recibo_nro" value="<?php echo $rs['recibo_nro']?>" />
+					<?php  if($subestado > 1){ ?>
+					<li><label>Factura:</label>Tipo: <?php echo $rs['factura_tipo']?> Numero: <?php echo $rs['factura_nro']?></li>
+					<input type="hidden" name="factura_orden" value="<?php echo $rs['factura_orden']?>" />
+					<input type="hidden" name="factura_tipo" value="<?php echo $rs['factura_tipo']?>" />
+					<input type="hidden" name="factura_nro" value="<?php echo $rs['factura_nro']?>" />
+					<?php  } ?>
+				<?php  } ?>
+				<?php  if($_GET['action'] == 'editar' and $subestado < 3 and ACCION_40){ ?>
+					<li><label>Monto neto:</label><input type="text" name="monto" value="<?php echo $rs['monto']?>" /></li>
+				<?php  }else{ ?>
+					<li><label>Monto neto:</label>$<?php echo $rs['monto']?></li>
+                    <input type="hidden" name="monto" value="<?php echo $rs['monto']?>" />
+				<?php  } ?>
 				
 				
-	<? if($rs['nro_orden']==0 and $rs['estado']==0 and $_GET['action'] == 'autorizar'){ ?>
+	<?php  if($rs['nro_orden']==0 and $rs['estado']==0 and $_GET['action'] == 'autorizar'){ ?>
 				
 			</ul>
 		</fieldset>
 		<p align="center"><input type="submit" value="Aprobar compra" name="aprobar" /> <input type="submit" value="Desaprobar compra" name="desaprobar" /></p> 
 	</form>
 	
-	<? }elseif($rs['estado']==0 and $_GET['action'] == 'autorizar' and $rs['nro_orden']!=0){ ?>
+	<?php  }elseif($rs['estado']==0 and $_GET['action'] == 'autorizar' and $rs['nro_orden']!=0){ ?>
 			</ul>
 		</fieldset>
-		<input type="hidden" name="compra_id" value="<?=$operacion_id?>" />
+		<input type="hidden" name="compra_id" value="<?php echo $operacion_id?>" />
 	</form>
 	
-	<? }elseif($_GET['action'] == 'editar'){ ?>
-			<? if($subestado >= 3) { include("pagos.view.php"); } ?>
+	<?php  }elseif($_GET['action'] == 'editar'){ ?>
+			<?php  if($subestado >= 3) { include("pagos.view.php"); } ?>
 			</ul>
 		</fieldset>
 		<p align="center"><input type="submit" value="Actualizar datos" name="actualizar" /></p> 
 	</form>
 	
-	<? }elseif($rs['nro_orden']!=0 and $rs['estado']==0 and $_GET['action'] == 'abonar'){ ?>
+	<?php  }elseif($rs['nro_orden']!=0 and $rs['estado']==0 and $_GET['action'] == 'abonar'){ ?>
 	
 				<li><label>Forma de pago:</label>
 				<select name="forma_pago">
 				<option value="n">Seleccionar...</option>
-				<?
+				<?php 
 				$sql = "SELECT id,forma_pago FROM forma_pago ORDER BY forma_pago";
 				$rsTemp = mysql_query($sql);
 				while($rs = mysql_fetch_array($rsTemp)){?>
-				<option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-				<? } ?>
+				<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+				<?php  } ?>
 				</select> &nbsp; <a style="cursor:pointer; color:#0000FF; text-decoration:underline;" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
 				<div id="forma_de_pago"></div>
 			</ul>
@@ -440,21 +440,21 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		<p align="center"><input type="submit" value="Abonar" name="guardar" /></p> 
 	</form>
 				
-	<? }elseif($rs['nro_orden']!=0 and $rs['estado']==1 and ($_GET['action'] == 'consultar' or $_GET['action'] == 'autorizar' or $_GET['action'] == 'abonar') ){ ?>
-				<? include("pagos.view.php") ?>
+	<?php  }elseif($rs['nro_orden']!=0 and $rs['estado']==1 and ($_GET['action'] == 'consultar' or $_GET['action'] == 'autorizar' or $_GET['action'] == 'abonar') ){ ?>
+				<?php  include("pagos.view.php") ?>
 			</ul>
 		</fieldset>
 	</form>
 	
-	<? }elseif($rs['estado']==2){ ?>
+	<?php  }elseif($rs['estado']==2){ ?>
 			</ul>
 		</fieldset>
-		<input type="hidden" name="compra_id" value="<?=$operacion_id?>" />
+		<input type="hidden" name="compra_id" value="<?php echo $operacion_id?>" />
 		<p align="center">Este compra fue desaprobado por administraci&oacute;n</p> 
 	</form>
 	
-	<? } ?>
+	<?php  } ?>
 	</div> 
 	</body>
 	</html>
-<? } ?>
+<?php  } ?>

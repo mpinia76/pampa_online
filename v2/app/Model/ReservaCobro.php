@@ -66,14 +66,14 @@ class ReservaCobro extends AppModel {
         }
     }
     
-    public function beforeSave() {
+    public function beforeSave($options = Array()) {
         if (!empty($this->data['ReservaCobro']['fecha'])) {
             $this->data['ReservaCobro']['fecha'] = $this->dateFormatBeforeSave($this->data['ReservaCobro']['fecha']);
         }
         return true;
     }
     
-    public function afterFind($results) {
+    public function afterFind($results, $primary = false) {
         foreach ($results as $key => $val) {
             if (isset($val['ReservaCobro']['fecha'])) {
                 $results[$key]['ReservaCobro']['fecha']= $this->dateFormatAfterFind($val['ReservaCobro']['fecha']);

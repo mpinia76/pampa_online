@@ -1,4 +1,4 @@
-<?
+<?php
 //funcion para obtener el nombre del proveedor segun corresponda
 function getProveedor($nombre){
 	

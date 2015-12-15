@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -178,19 +178,19 @@ function addFormaDePago(forma_pago_id){
 
 <body>
 
-<? if(isset($_POST['agregar'])){ ?>
+<?php  if(isset($_POST['agregar'])){ ?>
 	<script>
 	var dhxWins = parent.dhxWins;
-	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?=$_POST['empleado_id']?>');
+	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?php echo $_POST['empleado_id']?>');
 	</script>
-<? } ?>
+<?php  } ?>
 
-<? include_once("config/messages.php"); ?>
+<?php  include_once("config/messages.php"); ?>
 
 <div class="container"> 
 
 <form method="POST" name="form" action="empleado.adelanto.php" onSubmit="return valida(this);">
-	<input type="hidden" name="empleado_id" value="<?=$empleado_id?>" />
+	<input type="hidden" name="empleado_id" value="<?php echo $empleado_id?>" />
     
     <div class="label">Monto</div>
         <div class="content">
@@ -220,7 +220,7 @@ function addFormaDePago(forma_pago_id){
     
     <div class="label">A&ntilde;o</div>
         <div class="content">
-        <input type="text" size="2" name="ano" value="<?=date("Y")?>" />
+        <input type="text" size="2" name="ano" value="<?php echo date("Y")?>" />
         </div>
         <div style="clear:both;"></div>
 
@@ -234,12 +234,12 @@ function addFormaDePago(forma_pago_id){
         <div class="content">
         <select name="forma_pago">
 		<option value="null">Seleccionar...</option>
-		<?
+		<?php 
 		$sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4) ORDER BY forma_pago ";
 		$rsTemp = mysql_query($sql);
 		while($rs = mysql_fetch_array($rsTemp)){?>
-		<option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-		<? } ?>
+		<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+		<?php  } ?>
 		</select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
         </div>
         <div style="clear:both;"></div>

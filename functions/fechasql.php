@@ -1,4 +1,4 @@
-<?
+<?php
 function fechasql($fecha){
 	$part=explode("/",$fecha);
 	$mysql=$part[2]."-".$part[1]."-".$part[0];

@@ -61,14 +61,14 @@ class ReservaFactura extends AppModel {
         }
     }
     
-    public function beforeSave() {
+    public function beforeSave($options = Array()) {
         if (!empty($this->data['ReservaFactura']['fecha_emision'])) {
             $this->data['ReservaFactura']['fecha_emision'] = $this->dateFormatBeforeSave($this->data['ReservaFactura']['fecha_emision']);
         }
         return true;
     }
     
-    public function afterFind($results) {
+    public function afterFind($results, $primary = false) {
         foreach ($results as $key => $val) {
             if (isset($val['ReservaFactura']['fecha_emision'])) {
                 $results[$key]['ReservaFactura']['fecha_emision']= $this->dateFormatAfterFind($val['ReservaFactura']['fecha_emision']);

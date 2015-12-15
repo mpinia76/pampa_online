@@ -1,4 +1,4 @@
-<?
+<?php
 $tabla 	= "cuenta_a_pagar"; //tabla
 $label 	= "cuenta"; //nombre para el editar y agregar
 $file 	= "cuentas_pagar.php"; //archivo
@@ -27,7 +27,7 @@ include_once("functions/delete.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -50,7 +50,7 @@ function doInitGrid(){
 	mygrid.enableEditEvents(false,false,false,false,false,false,false,false,false);
 	mygrid.enableMultiselect(true);
     mygrid.setSkin("dhx_skyblue");
-	mygrid.load("<?=$json?>?pagado=no","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>?pagado=no","json");	//ruta al json con datos
 	mygrid.init();		
 	addFilter();
 }
@@ -65,7 +65,7 @@ function edit(action){
 		if(data.length>1 && action != 'abonar'){
 			alert('Debe seleccionar un solo registro');
 		}else{
-			createWindow('w_<?=$tabla?>_edit','Ver <?=$label?>','<?=$abm?>?dataid='+dataid+'&action='+action,'600','400'); //nombre de los divs
+			createWindow('w_<?php echo $tabla?>_edit','Ver <?php echo $label?>','<?php echo $abm?>?dataid='+dataid+'&action='+action,'600','400'); //nombre de los divs
 		}
 	}
 }
@@ -74,13 +74,13 @@ function eliminar(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?=$file?>?delete=on&dataid='+dataid; //ruta
+		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?php echo $file?>?delete=on&dataid='+dataid; //ruta
 	}
 }
 function add(){
-	createWindow('w_subrubros_add','Agregar <?=$label?>','<?=$abm?>','600','400'); //botones
+	createWindow('w_subrubros_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }function addFilter(){	$('#estado_filter').html('<select id="estado" onchange="makeFilter();"><option selected="selected" value="no">Pendiente</option><option value="si">Pagada</option><option value="t">Todas</option></select>');}
-function makeFilter(){	estado = $('#estado').val();	mygrid.clearAll();	mygrid.load("<?=$json?>?pagado="+estado,"json");}
+function makeFilter(){	estado = $('#estado').val();	mygrid.clearAll();	mygrid.load("<?php echo $json?>?pagado="+estado,"json");}
 </script>
 <script src="js/createWindow.js"></script>
 </head>

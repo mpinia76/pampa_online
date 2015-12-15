@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 
@@ -220,16 +220,16 @@ input.dp-applied {
 </style>
 <!--/JQuery Date Picker-->
 
-<?=$form->printJS()?>
+<?php $form->printJS()?>
 
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php include_once("config/messages.php"); ?>
 
-<?=$form->printHTML()?>
+<?php $form->printHTML()?>
 
 </body>
 </html>
