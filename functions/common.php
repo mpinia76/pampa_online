@@ -1,10 +1,12 @@
-<?
+<?php
 if(isset($_GET['dataid'])){
 	$dataid = $_GET['dataid'];
 }
 
 if(isset($_POST['agregar'])){
+	
 	foreach($campos as $key=>$atr){
+		
 		if($atr['type']=='date'){
 			$datos[$key] = fechasql($_POST[$key]);
 		}elseif($atr['type']=='textarea'){
@@ -14,7 +16,11 @@ if(isset($_POST['agregar'])){
 		}else{
 			$datos[$key] = $_POST[$key];
 		}
-	}		
+	}	
+	//print_r($datos);
+	if (!$datos['id']) {
+		$datos['id']='0';
+	}	
 	$result = mysql_insert($tabla,$datos);
 	$usuario_id = mysql_insert_id();
 	

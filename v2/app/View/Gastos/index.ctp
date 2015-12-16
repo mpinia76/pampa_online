@@ -44,7 +44,7 @@ $this->Js->buffer('
         "aoColumns": [
             {"bVisible": false },
             null,
-            null,
+            {"sType": "date-euro"},
             null,            
             null,
             null,
@@ -162,10 +162,10 @@ function action(action){
 
     <li onclick="window.location.reload()" class="boton actualizar">Actualizar</li>
     <li onclick="createWindow('w_gastos_add','Agregar gasto','/gastos.add.php','600','400');" class="boton agregar">Agregar</li>
-    <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('consultar');" class="boton consultar">Consultar</li> <? } ?>
-    <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <? } ?>
-    <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('abonar');"  class="boton abonar">Abonar</li><? } ?>
-    <?php if(isset($usuario_accion['20'])){ ?><li onclick="action('autorizar');" class="boton autorizar">Autorizar</li> <? } ?>
+    <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('consultar');" class="boton consultar">Consultar</li> <?php  } ?>
+    <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <?php  } ?>
+    <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('abonar');"  class="boton abonar">Abonar</li><?php  } ?>
+    <?php if(isset($usuario_accion['20'])){ ?><li onclick="action('autorizar');" class="boton autorizar">Autorizar</li> <?php  } ?>
     <li class="filtro">Buscar <input id="data_search" type="text"/></li>
 </ul>
 

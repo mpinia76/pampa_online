@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -191,15 +191,15 @@ function valida(F) {
 <? if(isset($_POST['agregar'])){ ?>
 	<script>
 	var dhxWins = parent.dhxWins;
-	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?=$_POST['empleado_id']?>');
+	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?php echo $_POST['empleado_id']?>');
 	dhxWins.window('w_emplado_add_jornada').close();
 	</script>
 <? } ?>
 <div class="container">
 
 	<form method="POST" name="form" action="empleados.trabajo.php" onSubmit="return valida(this);">
-	<input type="hidden" name="empleado_id" value="<?=$_GET['empleado_id']?>" />
-	<input type="hidden" name="creado_por" value="<?=$user_id?>" />
+	<input type="hidden" name="empleado_id" value="<?php echo $_GET['empleado_id']?>" />
+	<input type="hidden" name="creado_por" value="<?php echo $user_id?>" />
 
 	<div class="label">Horas 0001</div>
 		<div class="content">
@@ -227,7 +227,7 @@ function valida(F) {
 			<? $sql = "SELECT * FROM espacio_trabajo ORDER BY espacio ASC";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){ ?>
-			<option value="<?=$rs['id']?>"><?=$rs['espacio']?></option>
+			<option value="<?php echo $rs['id']?>"><?php echo $rs['espacio']?></option>
 			<? } ?>
 			</select>
 		</div>
@@ -240,7 +240,7 @@ function valida(F) {
 			<? $sql = "SELECT * FROM sector ORDER BY sector ASC";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){ ?>
-			<option value="<?=$rs['id']?>"><?=$rs['sector']?></option>
+			<option value="<?php echo $rs['id']?>"><?php echo $rs['sector']?></option>
 			<? } ?>
 			</select>
 		</div>
@@ -253,7 +253,7 @@ function valida(F) {
 			<? $sql = "SELECT * FROM sector ORDER BY sector ASC";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){ ?>
-			<option value="<?=$rs['id']?>"><?=$rs['sector']?></option>
+			<option value="<?php echo $rs['id']?>"><?php echo $rs['sector']?></option>
 			<? } ?>
 			</select>
 		</div>

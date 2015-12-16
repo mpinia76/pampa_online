@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 
 $data 	= explode(",",$_GET['dataid']);
@@ -7,7 +7,7 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 
 	<p align="center">Seleccione un s&oacute;lo registro</p>
 
-<? }elseif(is_array($data) and count($data)>1 and ($_GET['action'] == 'abonar') or isset($_POST['datos']) ){
+<?php }elseif(is_array($data) and count($data)>1 and ($_GET['action'] == 'abonar') or isset($_POST['datos']) ){
 
 	$dataid = $_GET['dataid'];
 	include("cuentas_pagar.pagar.php");
@@ -150,41 +150,41 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 	
 	<body>
 
-	<? if( isset($_POST['guardar']) ) { ?>
+	<?php if( isset($_POST['guardar']) ) { ?>
 	<script>
 	var dhxWins = parent.dhxWins;
 	dhxWins.window('w_cuenta_a_pagar').attachURL('cuentas_pagar.php');
 	</script>
-	<? } ?>	
+	<?php } ?>	
 
-	<? include_once("config/messages.php"); ?>
+	<?php include_once("config/messages.php"); ?>
 	<div class="formContainer">
 	<form method="post" name="form" action="cuentas_pagar.view.php">
-		<input type="hidden" name="cuenta_id" value="<?=$rs_cuenta['id']?>" />
-		<input type="hidden" name="cuenta_pendiente" value="<?=$rs_cuenta['monto']?>"  />
+		<input type="hidden" name="cuenta_id" value="<?php echo $rs_cuenta['id']?>" />
+		<input type="hidden" name="cuenta_pendiente" value="<?php echo $rs_cuenta['monto']?>"  />
 		<fieldset>
-			<legend>Detalle de <?=$operacion_tipo?></legend> 
+			<legend>Detalle de <?php echo $operacion_tipo?></legend> 
 			<ul class="form">
-				<li><label>Responsable:</label><?=$rs['nombre']?> <?=$rs['apellido']?></li>
-				<li><label>Fecha:</label><?=fechavista($rs['fecha'])?></li>
-				<li><label>Rubro:</label><?=$rs['rubro']?></li>
-				<li><label>Sububro:</label><?=$rs['subrubro']?></li>
-				<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
-				<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
-				<li><label>Monto de la operacion:</label>$<?=$rs['monto']?></li>
-				<li><label>Monto pendiente:</label>$<?=$rs_cuenta['monto']?></li>
+				<li><label>Responsable:</label><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></li>
+				<li><label>Fecha:</label><?php echo fechavista($rs['fecha'])?></li>
+				<li><label>Rubro:</label><?php echo $rs['rubro']?></li>
+				<li><label>Sububro:</label><?php echo $rs['subrubro']?></li>
+				<li><label>Proveedor:</label><?php echo getProveedor($rs['proveedor'])?></li>
+				<li><label>Descripcion:</label><?php echo $rs['descripcion']?></li>
+				<li><label>Monto de la operacion:</label>$<?php echo $rs['monto']?></li>
+				<li><label>Monto pendiente:</label>$<?php echo $rs_cuenta['monto']?></li>
 				
-	<? if( ($estado==0 and $_GET['action'] == 'abonar') or (isset($_POST['guardar']) and $result != 1) ){ ?>
+	<?php if( ($estado==0 and $_GET['action'] == 'abonar') or (isset($_POST['guardar']) and $result != 1) ){ ?>
 	
 				<li><label>Forma de pago:</label>
 				<select name="forma_pago">
 				<option value="n">Seleccionar...</option>
-				<?
+				<?php
 				$sql = "SELECT id,forma_pago FROM forma_pago ORDER BY forma_pago";
 				$rsTemp = mysql_query($sql);
 				while($rs = mysql_fetch_array($rsTemp)){?>
-				<option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-				<? } ?>
+				<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+				<?php } ?>
 				</select> &nbsp; <a href="#" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
 				<div id="forma_de_pago"></div>
 			</ul>
@@ -192,14 +192,14 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 		<p align="center"><input type="submit" value="Guardar datos" name="guardar" /></p> 
 	</form>
 				
-	<? }elseif($estado == 1){ ?>
-			<li><label>Fecha de pago:</label><?=fechavista($rs_cuenta['fecha_pago'])?></li>
-			<? include("pagos.view.php") ?>
+	<?php }elseif($estado == 1){ ?>
+			<li><label>Fecha de pago:</label><?php echo fechavista($rs_cuenta['fecha_pago'])?></li>
+			<?php include("pagos.view.php") ?>
 			</ul>
 		</fieldset>
 	</form>
-	<? } ?>
+	<?php } ?>
 	</div> 
 	</body>
 	</html>
-<? } ?>
+<?php } ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 
 if(isset($_GET['exit']) and $_GET['exit']=="on"){

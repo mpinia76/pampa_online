@@ -1,4 +1,4 @@
-<?
+<?php
 
 $file 	= "cajas_detalle.php"; //archivo
 $json	= "cajas_detalle.json2.php"; //json
@@ -26,7 +26,7 @@ include_once("functions/delete.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -48,7 +48,7 @@ function doInitGrid(){
 	mygrid.setColTypes("ro,ro,ro,price,price");				//editable o no
 	mygrid.enableEditEvents(false,false,false,false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?=$json?>?caja_id=<?=$_GET['caja_id']?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>?caja_id=<?php echo $_GET['caja_id']?>","json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -57,7 +57,7 @@ function edit(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_edit','Editar <?=$label?>','<?=$abm?>?dataid='+dataid,'600','400'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_edit','Editar <?php echo $label?>','<?php echo $abm?>?dataid='+dataid,'600','400'); //nombre de los divs
 	}
 }
 function eliminar(){
@@ -65,11 +65,11 @@ function eliminar(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?=$file?>?delete=on&dataid='+dataid; //ruta
+		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?php echo $file?>?delete=on&dataid='+dataid; //ruta
 	}
 }
 function add(){
-	createWindow('w_subrubros_add','Agregar <?=$label?>','<?=$abm?>','600','400'); //botones
+	createWindow('w_subrubros_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 
 </script>

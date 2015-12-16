@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 
@@ -167,25 +167,25 @@ function valida(F) {
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php include_once("config/messages.php"); ?>
 
 <div class="container">
 
 <form method="POST" name="form" action="cajas_detalle.am.php" onSubmit="return valida(this);">
 
 <div class="label"></div><div class="content"><input  size="" type="hidden" value="" name="id" /></div><div style="clear:both;"></div>
-<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" value="<?=date("d/m/Y")?>" name="fecha" /></div><div style="clear:both;"></div>
+<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" value="<?php echo date("d/m/Y")?>" name="fecha" /></div><div style="clear:both;"></div>
 <div class="label">Caja</div>
 <div class="content">
 	<select name="caja_id">
 	<option value="null">Seleccionar...</option>
-	<?
+	<?php 
 	$sql = "SELECT id,caja FROM caja INNER JOIN usuario_caja ON usuario_caja.caja_id = caja.id AND usuario_caja.usuario_id = $user_id ";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){ ?>
 	?>
-	<option  value="<?=$rs['id']?>"><?=$rs['caja']?></option>
-	<? } ?>
+	<option  value="<?php echo $rs['id']?>"><?php echo $rs['caja']?></option>
+	<?php } ?>
 	</select>
 </div>
 <div style="clear:both;"></div>
@@ -193,16 +193,16 @@ function valida(F) {
 <div class="content">
 	<select name="motivo_id" onchange="if($(this).val() == 'otro'){ $('#otro_motivo').show(); }else{ $('#otro_motivo').hide(); } ">
 	<option value="null">Seleccionar...</option>
-	<?
+	<?php 
 	$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1 ORDER BY nombre ASC";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){ ?>
 	?>
-	<option value="<?=$rs['id']?>"><?=$rs['nombre']?></option>
-	<? } ?>
-	<? if(ACCION_42){ ?>
+	<option value="<?php echo $rs['id']?>"><?php echo $rs['nombre']?></option>
+	<?php } ?>
+	<?php if(ACCION_42){ ?>
 	<option value="otro">Otro</option> 
-	<? } ?>
+	<?php } ?>
 	</select><br />	
 	<input id="otro_motivo" style="display:none; " type="text" name="otro_motivo" value="" />
 </div>

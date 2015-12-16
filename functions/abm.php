@@ -1,4 +1,4 @@
-<?
+<?php
 function mysql_insert($tabla,$campos){
 $query='INSERT INTO `'.$tabla.'` (';
 $count=0;
@@ -30,6 +30,7 @@ $valor="'".$valor."'";}
 $count++;
 }
 $query.=')';
+//echo $query;
 mysql_query($query);
 $result=mysql_affected_rows();
 if($result=="-1"){

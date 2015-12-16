@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("config/db.php");
 include_once("config/user.php");
 
@@ -36,7 +36,7 @@ if(ACCION_66 and ACCION_67){
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -58,7 +58,7 @@ function doInitGrid(){
 	mygrid.enableEditEvents(false,false,false,false,false,false,false,false,false,false);
 	mygrid.enableMultiselect(true);
     mygrid.setSkin("dhx_skyblue");
-	//mygrid.load("<?=$json?>?ano=<?=date('Y')?>&mes=<?=date('n')?>&espacio=<?=$espacio?>","json");	//ruta al json con datos
+	//mygrid.load("<?php echo $json?>?ano=<?php echo date('Y')?>&mes=<?php echo date('n')?>&espacio=<?php echo $espacio?>","json");	//ruta al json con datos
 	mygrid.init();
 }
 function ver(){
@@ -74,7 +74,7 @@ function ver(){
 		$('#mygrid_container').show();
 		$('#mensaje').hide();
 		mygrid.clearAll();	
-		mygrid.load("<?=$json?>?ano="+ano+"&mes="+mes+"&espacio=<?=$espacio?>","json");
+		mygrid.load("<?php echo $json?>?ano="+ano+"&mes="+mes+"&espacio=<?php echo $espacio?>","json");
 	}
 }
 function pagar(){
@@ -87,7 +87,7 @@ function pagar(){
 	}else if(mes == ''){
 		alert('Debe completar con un ano');
 	}else{
-		createWindow('w_<?=$tabla?>_pagar','Pago de sueldo','empleado.pagar.php?empleado_id='+dataid+'&mes='+mes+'&ano='+ano,'650','550'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_pagar','Pago de sueldo','empleado.pagar.php?empleado_id='+dataid+'&mes='+mes+'&ano='+ano,'650','550'); //nombre de los divs
 	}
 }
 </script>
@@ -115,7 +115,7 @@ function pagar(){
 	</select>
 	</li>	
 	<li onclick="ver()" class="item">Ver</li>
-    <? if(ACCION_63){ ?><li onclick="pagar()" class="item">Pagar</li><? } ?>
+    <?php  if(ACCION_63){ ?><li onclick="pagar()" class="item">Pagar</li><?php  } ?>
 </ul>
 <div id="mensaje" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:12px;">Seleccione un mes para ver el detalle</div>
 <div id="mygrid_container" style="width:100%;height:320px; display:none;"></div><!--

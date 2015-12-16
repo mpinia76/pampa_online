@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 
@@ -41,7 +41,7 @@ include_once("functions/delete.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -60,7 +60,7 @@ function doInitGrid(){
 	mygrid.setColTypes("ro,ro,ro,price,price");				//editable o no
 	mygrid.enableEditEvents(false,false,false,false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?=$json?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>","json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -69,7 +69,7 @@ function ver_detalle(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_detalle','Detalle de movimientos','cajas_detalle.php?caja_id='+dataid,'610','500'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_detalle','Detalle de movimientos','cajas_detalle.php?caja_id='+dataid,'610','500'); //nombre de los divs
 	}
 }
 function eliminar(){
@@ -77,28 +77,28 @@ function eliminar(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?=$file?>?delete=on&dataid='+dataid; //ruta
+		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?php echo $file?>?delete=on&dataid='+dataid; //ruta
 	}
 }
 function add(){
-	createWindow('w_<?=$tabla?>_add','Agregar <?=$label?>','<?=$abm?>','600','400'); //botones
+	createWindow('w_<?php echo $tabla?>_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 function edit(){
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_edit','Editar <?=$label?>','<?=$abm?>?dataid='+dataid,'600','400'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_edit','Editar <?php echo $label?>','<?php echo $abm?>?dataid='+dataid,'600','400'); //nombre de los divs
 	}
 }
 function add_movimiento(){
-	createWindow('w_<?=$tabla?>_detalle_add','Agregar movimiento','cajas_detalle.am.php','600','400'); //botones
+	createWindow('w_<?php echo $tabla?>_detalle_add','Agregar movimiento','cajas_detalle.am.php','600','400'); //botones
 }
 function add_transferencia(){
-	createWindow('w_<?=$tabla?>_transferencia_add','Agregar transferencia','cajas_transferencia.am.php','600','400'); //botones
+	createWindow('w_<?php echo $tabla?>_transferencia_add','Agregar transferencia','cajas_transferencia.am.php','600','400'); //botones
 }
 function add_deposito(){
-	createWindow('w_<?=$tabla?>_deposito_add','Hacer deposito','caja_extraccion.am.php','600','400'); //botones
+	createWindow('w_<?php echo $tabla?>_deposito_add','Hacer deposito','caja_extraccion.am.php','600','400'); //botones
 }
 function sincronizar(){
 	dataid = mygrid.getSelectedRowId();
@@ -106,7 +106,7 @@ function sincronizar(){
 		alert('Debe seleccionar un registro');
 	}else{
 		if(confirm("Confirma que ha sincronizado el saldo de caja?")){
-			window.location.href='<?=$file?>?sincronizar=si&caja_id='+dataid;
+			window.location.href='<?php echo $file?>?sincronizar=si&caja_id='+dataid;
 		}
 	}
 }
@@ -118,13 +118,13 @@ function sincronizar(){
 <body onload="doInitGrid();">
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
-	<? if(ACCION_44){ ?><li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li><? } ?>
-                    <? if(ACCION_44){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li><? } ?>
+	<?php if(ACCION_44){ ?><li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li><?php } ?>
+                    <?php if(ACCION_44){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li><?php } ?>
 	<li onclick="ver_detalle()" class="item"><img src="images/bt_view.png" align="absmiddle" />  Detalles</li>
-	<? if(ACCION_55){ ?><li onclick="add_movimiento()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar movimiento</li><? } ?>
-	<? if(ACCION_45){ ?><li onclick="add_transferencia()" class="item"><img src="images/bt_transfer.png" align="absmiddle" />  Transferencias</li><? } ?>
-    <? if(ACCION_46){ ?><li onclick="add_deposito()" class="item"><img src="images/bt_deposit.png" align="absmiddle" />  Depositar en cuenta</li><? } ?>
-    <? if(ACCION_47){ ?> <li onclick="sincronizar()" class="item"><img src="images/bt_sincronize.png" align="absmiddle" /> Sincronizar caja</li><? } ?>
+	<?php if(ACCION_55){ ?><li onclick="add_movimiento()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar movimiento</li><?php } ?>
+	<?php if(ACCION_45){ ?><li onclick="add_transferencia()" class="item"><img src="images/bt_transfer.png" align="absmiddle" />  Transferencias</li><?php } ?>
+    <?php if(ACCION_46){ ?><li onclick="add_deposito()" class="item"><img src="images/bt_deposit.png" align="absmiddle" />  Depositar en cuenta</li><?php } ?>
+    <?php if(ACCION_47){ ?> <li onclick="sincronizar()" class="item"><img src="images/bt_sincronize.png" align="absmiddle" /> Sincronizar caja</li><?php } ?>
 </ul>
 <div id="mygrid_container" style="width:100%;height:280px;"></div>
 </body>

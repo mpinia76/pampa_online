@@ -20,7 +20,7 @@ class Gasto extends AppModel {
         )
      );
     
-    public function afterFind($results) {
+    public function afterFind($results, $primary = false) {
         foreach ($results as $key => $val) {
             if (!empty($val) and isset($val['Gasto']['created'])) {
                 $results[$key]['Gasto']['created']= $this->dateFormatAfterFind($val['Gasto']['created']);

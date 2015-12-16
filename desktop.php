@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 if(empty($_SESSION['userid']) or $_SESSION['userid']==''){
 	header("Location: index.php");
@@ -68,8 +68,8 @@ $(document).ready(function() {
 
 <body onload="doOnLoad(); $('#desktop').height(GetHeight()-40);">
 
-<? include_once("top-bar.php"); ?>
-<? include_once("menu.php"); ?>
+<?php include_once("top-bar.php"); ?>
+<?php include_once("menu.php"); ?>
 
 <div id="desktop">
 <img class="logo" src="images/logo_gr.png" />

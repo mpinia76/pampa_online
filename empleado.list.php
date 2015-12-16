@@ -20,7 +20,7 @@ function findEmpleado (){
 <select id="empleado_id" name="empleado_id" onChange="findEmpleado();"> 
 <option value="null" selected="selected">Seleccionar...</option>
 
-<?
+<?php
 include_once("config/db.php");
 
 $sql = "SELECT id,nombre,apellido FROM empleado WHERE estado = 1 ORDER BY apellido ASC";
@@ -30,9 +30,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 
 ?>
 
-<option value="<?=$rs['id']?>"><?=$rs['apellido']?> <?=$rs['nombre']?></option>
+<option value="<?php echo $rs['id']?>"><?php echo $rs['apellido']?> <?php echo $rs['nombre']?></option>
 
-<? } ?>
+<?php } ?>
 
 </select> <img id="loading" src="images/loading.gif" style="display:none" />
 

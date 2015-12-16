@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -238,23 +238,23 @@ function sumMes(i){
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php  include_once("config/messages.php"); ?>
 
-<? if(isset($_POST['agregar'])){ ?>
+<?php  if(isset($_POST['agregar'])){ ?>
 	<script>
 	var dhxWins = parent.dhxWins;
-	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?=$_POST['empleado_id']?>');
+	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?php echo $_POST['empleado_id']?>');
 	dhxWins.window('w_emplado_add_salario').close();
 	</script>
-<? } ?>
+<?php  } ?>
 <div class="container">
 
 	<form method="POST" name="form" action="empleados.sueldo.php" onSubmit="return valida(this);">
-	<input type="hidden" name="empleado_id" value="<?=$_GET['empleado_id']?>" />
-	<input type="hidden" name="creado_por" value="<?=$user_id?>" />
+	<input type="hidden" name="empleado_id" value="<?php echo $_GET['empleado_id']?>" />
+	<input type="hidden" name="creado_por" value="<?php echo $user_id?>" />
 	
-	<? $ano = $_GET['ano']; ?>
-    <?
+	<?php  $ano = $_GET['ano']; ?>
+    <?php 
 	$sql = "SELECT * FROM empleado_sueldo WHERE empleado_id = ".$_GET['empleado_id']." AND ano = $ano ORDER BY sueldo_id DESC LIMIT 0,12";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){
@@ -273,25 +273,25 @@ function sumMes(i){
 	}
 	?>
     <p><strong>A&ntilde;o:</strong> 
-		<select size="1" id="ano" name="ano" onchange="document.location.href = 'empleados.sueldo.php?ano='+$('#ano').val()+'&empleado_id=<?=$_GET['empleado_id']?>'">
-			<option <? if($ano == '2011'){ ?> selected="selected" <? } ?> value="2011">2011</option>
-			<option <? if($ano == '2012'){ ?> selected="selected" <? } ?> value="2012">2012</option>
-			<option <? if($ano == '2013'){ ?> selected="selected" <? } ?> value="2013">2013</option>
-			<option <? if($ano == '2014'){ ?> selected="selected" <? } ?> value="2014">2014</option>
-			<option <? if($ano == '2015'){ ?> selected="selected" <? } ?> value="2015">2015</option>
-            <option <? if($ano == '2016'){ ?> selected="selected" <? } ?> value="2016">2016</option>
-            <option <? if($ano == '2017'){ ?> selected="selected" <? } ?> value="2017">2017</option>
-            <option <? if($ano == '2018'){ ?> selected="selected" <? } ?> value="2018">2018</option>
+		<select size="1" id="ano" name="ano" onchange="document.location.href = 'empleados.sueldo.php?ano='+$('#ano').val()+'&empleado_id=<?php echo $_GET['empleado_id']?>'">
+			<option <?php  if($ano == '2011'){ ?> selected="selected" <?php  } ?> value="2011">2011</option>
+			<option <?php  if($ano == '2012'){ ?> selected="selected" <?php  } ?> value="2012">2012</option>
+			<option <?php  if($ano == '2013'){ ?> selected="selected" <?php  } ?> value="2013">2013</option>
+			<option <?php  if($ano == '2014'){ ?> selected="selected" <?php  } ?> value="2014">2014</option>
+			<option <?php  if($ano == '2015'){ ?> selected="selected" <?php  } ?> value="2015">2015</option>
+            <option <?php  if($ano == '2016'){ ?> selected="selected" <?php  } ?> value="2016">2016</option>
+            <option <?php  if($ano == '2017'){ ?> selected="selected" <?php  } ?> value="2017">2017</option>
+            <option <?php  if($ano == '2018'){ ?> selected="selected" <?php  } ?> value="2018">2018</option>
 		</select>
 	</p>
-    <?
+    <?php 
 	$sql = "SELECT * FROM empleado_sueldo_0001 WHERE sueldo_id = $sueldo_id";
 	$rs = mysql_fetch_array(mysql_query($sql));
 	?>
-	<p><strong>Categoria del trabajador:</strong> <input type="text" name="categoria" size="20" value="<?=$rs['categoria']?>" /></p>
-	<p><strong>Calificaci&oacute;n:</strong> <input type="text" name="calificacion" size="20" value="<?=$rs['calificacion']?>" /></p>
-	<p><strong>Secci&oacute;n:</strong> <input type="text" name="seccion" size="20" value="<?=$rs['seccion']?>" /></p>
-	<p><strong>Sueldo de bolsillo estimado:</strong> <input type="text" name="sueldo_aprox" value="<?=$rs['sueldo']?>" size="20" /></p>
+	<p><strong>Categoria del trabajador:</strong> <input type="text" name="categoria" size="20" value="<?php echo $rs['categoria']?>" /></p>
+	<p><strong>Calificaci&oacute;n:</strong> <input type="text" name="calificacion" size="20" value="<?php echo $rs['calificacion']?>" /></p>
+	<p><strong>Secci&oacute;n:</strong> <input type="text" name="seccion" size="20" value="<?php echo $rs['seccion']?>" /></p>
+	<p><strong>Sueldo de bolsillo estimado:</strong> <input type="text" name="sueldo_aprox" value="<?php echo $rs['sueldo']?>" size="20" /></p>
 	<table cellpadding="0" cellspacing="0">
     	<tr style="font-weight:bold;">
         	<td width="100">Mes</td>
@@ -303,47 +303,47 @@ function sumMes(i){
             <td width="100">Total</td>
 		</tr>
         
-	<? for($i=1; $i<=12; $i++){ ?>
+	<?php  for($i=1; $i<=12; $i++){ ?>
     	
     	<tr>
-        	<td><?=mes($i)?></td>
+        	<td><?php echo mes($i)?></td>
             
-            <? if($pagado[$ano."_".$i] or $ano < date('Y') or ($ano == date('Y') and $i < (date('m')-1) ) ){ ?>
-            	<td><?=$asignado[$ano."_".$i]['sueldo']?> <input type="hidden" name="sueldo[]" value="<?=$asignado[$ano."_".$i]['sueldo']?>" /></td>
-                <td><?=$asignado[$ano."_".$i]['viaticos']?> <input type="hidden" name="viaticos[]" value="<?=$asignado[$ano."_".$i]['viaticos']?>" /></td>
-                <td><?=$asignado[$ano."_".$i]['asignaciones']?> <input type="hidden" name="asignaciones[]" value="<?=$asignado[$ano."_".$i]['asignaciones']?>" /></td>
-                <td><?=$asignado[$ano."_".$i]['presentismo']?> <input type="hidden" name="presentismo[]" value="<?=$asignado[$ano."_".$i]['presentismo']?>" /></td>
-                <td><?=$asignado[$ano."_".$i]['aguinaldo']?> <input type="hidden" name="aguinaldo[]" value="<?=$asignado[$ano."_".$i]['aguinaldo']?>" /></td>
-                <td><?=$asignado[$ano."_".$i]['sueldo']+$asignado[$ano."_".$i]['viaticos']+$asignado[$ano."_".$i]['asignaciones']+$asignado[$ano."_".$i]['presentismo']+$asignado[$ano."_".$i]['aguinaldo']?></td>
-            <? }else{ ?>
+            <?php  if($pagado[$ano."_".$i] or $ano < date('Y') or ($ano == date('Y') and $i < (date('m')-1) ) ){ ?>
+            	<td><?php echo $asignado[$ano."_".$i]['sueldo']?> <input type="hidden" name="sueldo[]" value="<?php echo $asignado[$ano."_".$i]['sueldo']?>" /></td>
+                <td><?php echo $asignado[$ano."_".$i]['viaticos']?> <input type="hidden" name="viaticos[]" value="<?php echo $asignado[$ano."_".$i]['viaticos']?>" /></td>
+                <td><?php echo $asignado[$ano."_".$i]['asignaciones']?> <input type="hidden" name="asignaciones[]" value="<?php echo $asignado[$ano."_".$i]['asignaciones']?>" /></td>
+                <td><?php echo $asignado[$ano."_".$i]['presentismo']?> <input type="hidden" name="presentismo[]" value="<?php echo $asignado[$ano."_".$i]['presentismo']?>" /></td>
+                <td><?php echo $asignado[$ano."_".$i]['aguinaldo']?> <input type="hidden" name="aguinaldo[]" value="<?php echo $asignado[$ano."_".$i]['aguinaldo']?>" /></td>
+                <td><?php echo $asignado[$ano."_".$i]['sueldo']+$asignado[$ano."_".$i]['viaticos']+$asignado[$ano."_".$i]['asignaciones']+$asignado[$ano."_".$i]['presentismo']+$asignado[$ano."_".$i]['aguinaldo']?></td>
+            <?php  }else{ ?>
             <td>
-            <? $asignado[$ano."_".$i]['sueldo'] != '' ? $value = $asignado[$ano."_".$i]['sueldo'] : $value = 0; ?>
-            <input type="text" name="sueldo[]" value="<?=$value?>" size="5" onblur="sumMes('<?=$i?>');" class="mes_<?=$i?>" />
+            <?php  $asignado[$ano."_".$i]['sueldo'] != '' ? $value = $asignado[$ano."_".$i]['sueldo'] : $value = 0; ?>
+            <input type="text" name="sueldo[]" value="<?php echo $value?>" size="5" onblur="sumMes('<?php echo $i?>');" class="mes_<?php echo $i?>" />
             </td>
             <td>
-            <? $asignado[$ano."_".$i]['viaticos'] != '' ? $value = $asignado[$ano."_".$i]['viaticos'] : $value = 0; ?>
-            <input type="text" name="viaticos[]" value="<?=$value?>" size="5" onblur="sumMes('<?=$i?>');" class="mes_<?=$i?>" />
+            <?php  $asignado[$ano."_".$i]['viaticos'] != '' ? $value = $asignado[$ano."_".$i]['viaticos'] : $value = 0; ?>
+            <input type="text" name="viaticos[]" value="<?php echo $value?>" size="5" onblur="sumMes('<?php echo $i?>');" class="mes_<?php echo $i?>" />
             </td>
             <td>
-            <? $asignado[$ano."_".$i]['asignaciones'] != '' ? $value = $asignado[$ano."_".$i]['asignaciones'] : $value = 0; ?>
-            <input type="text" name="asignaciones[]" value="<?=$value?>" size="5" onblur="sumMes('<?=$i?>');" class="mes_<?=$i?>" />
+            <?php  $asignado[$ano."_".$i]['asignaciones'] != '' ? $value = $asignado[$ano."_".$i]['asignaciones'] : $value = 0; ?>
+            <input type="text" name="asignaciones[]" value="<?php echo $value?>" size="5" onblur="sumMes('<?php echo $i?>');" class="mes_<?php echo $i?>" />
             </td>
             <td>
-            <? $asignado[$ano."_".$i]['presentismo'] != '' ? $value = $asignado[$ano."_".$i]['presentismo'] : $value = 0; ?>
-            <input type="text" name="presentismo[]" value="<?=$value?>" size="5" onblur="sumMes('<?=$i?>');" class="mes_<?=$i?>" />
+            <?php  $asignado[$ano."_".$i]['presentismo'] != '' ? $value = $asignado[$ano."_".$i]['presentismo'] : $value = 0; ?>
+            <input type="text" name="presentismo[]" value="<?php echo $value?>" size="5" onblur="sumMes('<?php echo $i?>');" class="mes_<?php echo $i?>" />
             </td>
 			<td>
-            <? $asignado[$ano."_".$i]['aguinaldo'] != '' ? $value = $asignado[$ano."_".$i]['aguinaldo'] : $value = 0; ?>
-            <input type="text" name="aguinaldo[]" value="<?=$value?>" size="5" onblur="sumMes('<?=$i?>');" class="mes_<?=$i?>" />
+            <?php  $asignado[$ano."_".$i]['aguinaldo'] != '' ? $value = $asignado[$ano."_".$i]['aguinaldo'] : $value = 0; ?>
+            <input type="text" name="aguinaldo[]" value="<?php echo $value?>" size="5" onblur="sumMes('<?php echo $i?>');" class="mes_<?php echo $i?>" />
             </td>
-			<td id="mes_<?=$i?>"></td>
-            <? } ?>
+			<td id="mes_<?php echo $i?>"></td>
+            <?php  } ?>
         </tr>
         <script>
-		sumMes('<?=$i?>');
+		sumMes('<?php echo $i?>');
 		</script>
         
-    <? } ?>
+    <?php  } ?>
     
     </table>
 

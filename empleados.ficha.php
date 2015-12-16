@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("functions/form.class.php");
 include_once("functions/fechasql.php");
 include_once("config/db.php");
@@ -76,19 +76,19 @@ var xpos = position[0];
 var ypos = position[1];
 
 function addJornada(){
-	createWindow('w_emplado_add_jornada','Jornada de trabajo de <?=$rs['nombre']?> <?=$rs['apellido']?>','empleados.trabajo.php?empleado_id=<?=$rs['id']?>','600','400');
+	createWindow('w_emplado_add_jornada','Jornada de trabajo de <?php echo $rs['nombre']?> <?php echo $rs['apellido']?>','empleados.trabajo.php?empleado_id=<?php echo $rs['id']?>','600','400');
 }
 function addSalario(){
-	createWindow('w_emplado_add_salario','Salario de <?=$rs['nombre']?> <?=$rs['apellido']?>','empleados.sueldo.php?empleado_id=<?=$rs['id']?>&ano=<?=date("Y")?>','600','600');
+	createWindow('w_emplado_add_salario','Salario de <?php echo $rs['nombre']?> <?php echo $rs['apellido']?>','empleados.sueldo.php?empleado_id=<?php echo $rs['id']?>&ano=<?php echo date("Y")?>','600','600');
 }
 function addHoraExtra(){
-	createWindow('w_emplado_add_hora_extra','Agregar Horas extras a <?=$rs['nombre']?> <?=$rs['apellido']?>','empleado.horas_extras.php?empleado_id=<?=$rs['id']?>','500','300');
+	createWindow('w_emplado_add_hora_extra','Agregar Horas extras a <?php echo $rs['nombre']?> <?php echo $rs['apellido']?>','empleado.horas_extras.php?empleado_id=<?php echo $rs['id']?>','500','300');
 }
 function verHorasExtras(){
-	createWindow('w_empleado_hora_extra','Ver Horas extras de <?=$rs['nombre']?> <?=$rs['apellido']?>','horas_extras.php?empleado_id=<?=$rs['id']?>','700','500');
+	createWindow('w_empleado_hora_extra','Ver Horas extras de <?php echo $rs['nombre']?> <?php echo $rs['apellido']?>','horas_extras.php?empleado_id=<?php echo $rs['id']?>','700','500');
 }
 function addAdelanto(){
-	createWindow('w_empleado_adelanto','Adelantos a <?=$rs['nombre']?> <?=$rs['apellido']?>','empleado.adelanto.php?empleado_id=<?=$rs['id']?>','500','400');
+	createWindow('w_empleado_adelanto','Adelantos a <?php echo $rs['nombre']?> <?php echo $rs['apellido']?>','empleado.adelanto.php?empleado_id=<?php echo $rs['id']?>','500','400');
 }
 
 </script>
@@ -106,32 +106,32 @@ function addAdelanto(){
 <div id="wrapper">
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr>
-	<? if($rs['foto'] != ''){ ?>
-		<td valign="top" width="120"><img src="empleados/<?=$rs['foto']?>" width="100" style="margin-top:10px;" /></td>
-	<? } ?>
+	<?php  if($rs['foto'] != ''){ ?>
+		<td valign="top" width="120"><img src="empleados/<?php echo $rs['foto']?>" width="100" style="margin-top:10px;" /></td>
+	<?php  } ?>
 		<td>
 		<p>
-		<b><?=$rs['nombre']?> <?=$rs['apellido']?></b> (<?=$rs['nro_legajo']?>) <br>
-		Alta: <?=fechavista($rs['fecha_alta'])?> - Inicio actividades: <?=fechavista($rs['inicio_actividades'])?>
+		<b><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></b> (<?php echo $rs['nro_legajo']?>) <br>
+		Alta: <?php echo fechavista($rs['fecha_alta'])?> - Inicio actividades: <?php echo fechavista($rs['inicio_actividades'])?>
 		<p> 
 		<p>
-		<?=$rs['email']?><br>
-		<?=$rs['telefono_fijo']?> / <?=$rs['telefono_cel']?><br>
-		<?=$rs['domicilio_reside']?> <?=$rs['localidad']?> <?=$rs['provincia']?>
+		<?php echo $rs['email']?><br>
+		<?php echo $rs['telefono_fijo']?> / <?php echo $rs['telefono_cel']?><br>
+		<?php echo $rs['domicilio_reside']?> <?php echo $rs['localidad']?> <?php echo $rs['provincia']?>
 		</p>
 		<p>
-		DNI: <?=$rs['dni']?> <br>
-		Nacimiento: <?=fechavista($rs['nacimiento'])?> <br>
-		Domicilio DNI: <?=$rs['domicilio_dni']?> <br>
-		Estado civil: <?=$rs['estado_civil']?> <br>
-		Hijos: <?=$rs['cant_hijos']?> <br>
-		Estudios: <?=$rs['estudios']?>
+		DNI: <?php echo $rs['dni']?> <br>
+		Nacimiento: <?php echo fechavista($rs['nacimiento'])?> <br>
+		Domicilio DNI: <?php echo $rs['domicilio_dni']?> <br>
+		Estado civil: <?php echo $rs['estado_civil']?> <br>
+		Hijos: <?php echo $rs['cant_hijos']?> <br>
+		Estudios: <?php echo $rs['estudios']?>
 		</p>
 		</td>
 	</tr>
 </table>
 <p><strong>Detalle de la jornada de trabajo</strong></p>
-<?
+<?php 
 $sql = "SELECT empleado_trabajo.*,a.sector as 'sector1', b.sector as 'sector2', espacio_trabajo.espacio FROM empleado_trabajo LEFT JOIN sector as a ON empleado_trabajo.sector_1_id = a.id LEFT JOIN sector as b ON empleado_trabajo.sector_2_id = b.id INNER JOIN espacio_trabajo ON empleado_trabajo.espacio_trabajo_id = espacio_trabajo.id WHERE empleado_trabajo.empleado_id=".$_GET['empleado_id']." ORDER BY id DESC";
 $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp) > 0){
@@ -149,23 +149,23 @@ if(mysql_num_rows($rsTemp) > 0){
 			<td>Sector 2</td>
 			<td width="50">%</td>
 		</tr>
-<? 	while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  	while($rs = mysql_fetch_array($rsTemp)){ ?>
 		
-		<tr <? if($i != 1){ ?> class="jornada-historico" <? } ?>>
-			<td><?=fechavista($rs['fecha'])?></td>
-            <td><?=$rs['horas_0001']?></td>
-			<td><?=$rs['horas_0002']?></td>
-			<td><?=$rs['duracion_jornada']?></td>
-			<td><?=$rs['espacio']?></td>
-			<td><?=$rs['sector1'] != '' ? $rs['sector1'] : ''?></td>
-			<td><?=$rs['sector1'] != '' ? $rs['porcentaje_sector_1'] : ''?></td>
-			<td><?=$rs['sector2'] != '' ? $rs['sector2'] : ''?></td>
-			<td><?=$rs['sector2'] != '' ? $rs['porcentaje_sector_2'] : ''?></td>
+		<tr <?php  if($i != 1){ ?> class="jornada-historico" <?php  } ?>>
+			<td><?php echo fechavista($rs['fecha'])?></td>
+            <td><?php echo $rs['horas_0001']?></td>
+			<td><?php echo $rs['horas_0002']?></td>
+			<td><?php echo $rs['duracion_jornada']?></td>
+			<td><?php echo $rs['espacio']?></td>
+			<td><?php echo $rs['sector1'] != '' ? $rs['sector1'] : ''?></td>
+			<td><?php echo $rs['sector1'] != '' ? $rs['porcentaje_sector_1'] : ''?></td>
+			<td><?php echo $rs['sector2'] != '' ? $rs['sector2'] : ''?></td>
+			<td><?php echo $rs['sector2'] != '' ? $rs['porcentaje_sector_2'] : ''?></td>
 		</tr>
-		<? $i++; ?>
-<? 	} ?>
+		<?php  $i++; ?>
+<?php  	} ?>
 </table>
-<? } ?>
+<?php  } ?>
 
 <p>
 <a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="$('.jornada-historico').toggle();">Ver historico</a> - 
@@ -173,7 +173,7 @@ if(mysql_num_rows($rsTemp) > 0){
 </p>
 
 <p><strong>Salario convenido</strong></p>
-<?
+<?php 
 $sql = "SELECT * FROM empleado_sueldo_0001 WHERE empleado_id = ".$_GET['empleado_id']."";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
@@ -270,121 +270,121 @@ if(mysql_num_rows($rsTemp) > 0){
         <td width="80">Nov</td>
         <td width="80">Dic</td>
    	</tr>
-<? while($rs = mysql_fetch_array($rsTemp)){ ?>
-	<tr <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
-    	<td rowspan="6" valign="middle"><?=$rs['ano']?></td>
-    	<td rowspan="6" valign="middle"><?=fechavista($rs['creado'])?></td>
+<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+	<tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
+    	<td rowspan="6" valign="middle"><?php echo $rs['ano']?></td>
+    	<td rowspan="6" valign="middle"><?php echo fechavista($rs['creado'])?></td>
     	<td>Salario</td>
-        <td><?=$rs['sueldo1']?></td>
-        <td><?=$rs['sueldo2']?></td>
-        <td><?=$rs['sueldo3']?></td>
-        <td><?=$rs['sueldo4']?></td>
-        <td><?=$rs['sueldo5']?></td>
-        <td><?=$rs['sueldo6']?></td>
-        <td><?=$rs['sueldo7']?></td>
-        <td><?=$rs['sueldo8']?></td>
-        <td><?=$rs['sueldo9']?></td>
-        <td><?=$rs['sueldo10']?></td>
-        <td><?=$rs['sueldo11']?></td>
-        <td><?=$rs['sueldo12']?></td>
+        <td><?php echo $rs['sueldo1']?></td>
+        <td><?php echo $rs['sueldo2']?></td>
+        <td><?php echo $rs['sueldo3']?></td>
+        <td><?php echo $rs['sueldo4']?></td>
+        <td><?php echo $rs['sueldo5']?></td>
+        <td><?php echo $rs['sueldo6']?></td>
+        <td><?php echo $rs['sueldo7']?></td>
+        <td><?php echo $rs['sueldo8']?></td>
+        <td><?php echo $rs['sueldo9']?></td>
+        <td><?php echo $rs['sueldo10']?></td>
+        <td><?php echo $rs['sueldo11']?></td>
+        <td><?php echo $rs['sueldo12']?></td>
    	</tr>
-	<tr <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
+	<tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
     	<td>Viaticos</td>
-        <td><?=$rs['viaticos1']?></td>
-        <td><?=$rs['viaticos2']?></td>
-        <td><?=$rs['viaticos3']?></td>
-        <td><?=$rs['viaticos4']?></td>
-        <td><?=$rs['viaticos5']?></td>
-        <td><?=$rs['viaticos6']?></td>
-        <td><?=$rs['viaticos7']?></td>
-        <td><?=$rs['viaticos8']?></td>
-        <td><?=$rs['viaticos9']?></td>
-        <td><?=$rs['viaticos10']?></td>
-        <td><?=$rs['viaticos11']?></td>
-        <td><?=$rs['viaticos12']?></td>
+        <td><?php echo $rs['viaticos1']?></td>
+        <td><?php echo $rs['viaticos2']?></td>
+        <td><?php echo $rs['viaticos3']?></td>
+        <td><?php echo $rs['viaticos4']?></td>
+        <td><?php echo $rs['viaticos5']?></td>
+        <td><?php echo $rs['viaticos6']?></td>
+        <td><?php echo $rs['viaticos7']?></td>
+        <td><?php echo $rs['viaticos8']?></td>
+        <td><?php echo $rs['viaticos9']?></td>
+        <td><?php echo $rs['viaticos10']?></td>
+        <td><?php echo $rs['viaticos11']?></td>
+        <td><?php echo $rs['viaticos12']?></td>
    	</tr>
-	<tr <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
+	<tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
     	<td>Asignaciones</td>
-        <td><?=$rs['asignaciones1']?></td>
-        <td><?=$rs['asignaciones2']?></td>
-        <td><?=$rs['asignaciones3']?></td>
-        <td><?=$rs['asignaciones4']?></td>
-        <td><?=$rs['asignaciones5']?></td>
-        <td><?=$rs['asignaciones6']?></td>
-        <td><?=$rs['asignaciones7']?></td>
-        <td><?=$rs['asignaciones8']?></td>
-        <td><?=$rs['asignaciones9']?></td>
-        <td><?=$rs['asignaciones10']?></td>
-        <td><?=$rs['asignaciones11']?></td>
-        <td><?=$rs['asignaciones12']?></td>
+        <td><?php echo $rs['asignaciones1']?></td>
+        <td><?php echo $rs['asignaciones2']?></td>
+        <td><?php echo $rs['asignaciones3']?></td>
+        <td><?php echo $rs['asignaciones4']?></td>
+        <td><?php echo $rs['asignaciones5']?></td>
+        <td><?php echo $rs['asignaciones6']?></td>
+        <td><?php echo $rs['asignaciones7']?></td>
+        <td><?php echo $rs['asignaciones8']?></td>
+        <td><?php echo $rs['asignaciones9']?></td>
+        <td><?php echo $rs['asignaciones10']?></td>
+        <td><?php echo $rs['asignaciones11']?></td>
+        <td><?php echo $rs['asignaciones12']?></td>
    	</tr>
-	<tr <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
+	<tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
     	<td>Presentismo</td>
-        <td><?=$rs['presentismo1']?></td>
-        <td><?=$rs['presentismo2']?></td>
-        <td><?=$rs['presentismo3']?></td>
-        <td><?=$rs['presentismo4']?></td>
-        <td><?=$rs['presentismo5']?></td>
-        <td><?=$rs['presentismo6']?></td>
-        <td><?=$rs['presentismo7']?></td>
-        <td><?=$rs['presentismo8']?></td>
-        <td><?=$rs['presentismo9']?></td>
-        <td><?=$rs['presentismo10']?></td>
-        <td><?=$rs['presentismo11']?></td>
-        <td><?=$rs['presentismo12']?></td>
+        <td><?php echo $rs['presentismo1']?></td>
+        <td><?php echo $rs['presentismo2']?></td>
+        <td><?php echo $rs['presentismo3']?></td>
+        <td><?php echo $rs['presentismo4']?></td>
+        <td><?php echo $rs['presentismo5']?></td>
+        <td><?php echo $rs['presentismo6']?></td>
+        <td><?php echo $rs['presentismo7']?></td>
+        <td><?php echo $rs['presentismo8']?></td>
+        <td><?php echo $rs['presentismo9']?></td>
+        <td><?php echo $rs['presentismo10']?></td>
+        <td><?php echo $rs['presentismo11']?></td>
+        <td><?php echo $rs['presentismo12']?></td>
    	</tr>
-	<tr <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
+	<tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
     	<td>Aguinaldo</td>
-        <td><?=$rs['aguinaldo1']?></td>
-        <td><?=$rs['aguinaldo2']?></td>
-        <td><?=$rs['aguinaldo3']?></td>
-        <td><?=$rs['aguinaldo4']?></td>
-        <td><?=$rs['aguinaldo5']?></td>
-        <td><?=$rs['aguinaldo6']?></td>
-        <td><?=$rs['aguinaldo7']?></td>
-        <td><?=$rs['aguinaldo8']?></td>
-        <td><?=$rs['aguinaldo9']?></td>
-        <td><?=$rs['aguinaldo10']?></td>
-        <td><?=$rs['aguinaldo11']?></td>
-        <td><?=$rs['aguinaldo12']?></td>
+        <td><?php echo $rs['aguinaldo1']?></td>
+        <td><?php echo $rs['aguinaldo2']?></td>
+        <td><?php echo $rs['aguinaldo3']?></td>
+        <td><?php echo $rs['aguinaldo4']?></td>
+        <td><?php echo $rs['aguinaldo5']?></td>
+        <td><?php echo $rs['aguinaldo6']?></td>
+        <td><?php echo $rs['aguinaldo7']?></td>
+        <td><?php echo $rs['aguinaldo8']?></td>
+        <td><?php echo $rs['aguinaldo9']?></td>
+        <td><?php echo $rs['aguinaldo10']?></td>
+        <td><?php echo $rs['aguinaldo11']?></td>
+        <td><?php echo $rs['aguinaldo12']?></td>
    	</tr>
-	<tr style="background:#FF9;" <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
+	<tr style="background:#FF9;" <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
     	<td>Total</td>
-        <td><?=$rs['sueldo1'] + $rs['viaticos1'] + $rs['asignaciones1'] + $rs['presentismo1'] + $rs['aguinaldo1']?></td>
-        <td><?=$rs['sueldo2'] + $rs['viaticos2'] + $rs['asignaciones2'] + $rs['presentismo2'] + $rs['aguinaldo2']?></td>
-        <td><?=$rs['sueldo3'] + $rs['viaticos3'] + $rs['asignaciones3'] + $rs['presentismo3'] + $rs['aguinaldo3']?></td>
-        <td><?=$rs['sueldo4'] + $rs['viaticos4'] + $rs['asignaciones4'] + $rs['presentismo4'] + $rs['aguinaldo4']?></td>
-        <td><?=$rs['sueldo5'] + $rs['viaticos5'] + $rs['asignaciones5'] + $rs['presentismo5'] + $rs['aguinaldo5']?></td>
-        <td><?=$rs['sueldo6'] + $rs['viaticos6'] + $rs['asignaciones6'] + $rs['presentismo6'] + $rs['aguinaldo6']?></td>
-        <td><?=$rs['sueldo7'] + $rs['viaticos7'] + $rs['asignaciones7'] + $rs['presentismo7'] + $rs['aguinaldo7']?></td>
-        <td><?=$rs['sueldo8'] + $rs['viaticos8'] + $rs['asignaciones8'] + $rs['presentismo8'] + $rs['aguinaldo8']?></td>
-        <td><?=$rs['sueldo9'] + $rs['viaticos9'] + $rs['asignaciones9'] + $rs['presentismo9'] + $rs['aguinaldo9']?></td>
-        <td><?=$rs['sueldo10'] + $rs['viaticos10'] + $rs['asignaciones10'] + $rs['presentismo10'] + $rs['aguinaldo10']?></td>
-        <td><?=$rs['sueldo11'] + $rs['viaticos11'] + $rs['asignaciones11'] + $rs['presentismo11'] + $rs['aguinaldo11']?></td>
-        <td><?=$rs['sueldo12'] + $rs['viaticos12'] + $rs['asignaciones12'] + $rs['presentismo12'] + $rs['aguinaldo12']?></td>
+        <td><?php echo $rs['sueldo1'] + $rs['viaticos1'] + $rs['asignaciones1'] + $rs['presentismo1'] + $rs['aguinaldo1']?></td>
+        <td><?php echo $rs['sueldo2'] + $rs['viaticos2'] + $rs['asignaciones2'] + $rs['presentismo2'] + $rs['aguinaldo2']?></td>
+        <td><?php echo $rs['sueldo3'] + $rs['viaticos3'] + $rs['asignaciones3'] + $rs['presentismo3'] + $rs['aguinaldo3']?></td>
+        <td><?php echo $rs['sueldo4'] + $rs['viaticos4'] + $rs['asignaciones4'] + $rs['presentismo4'] + $rs['aguinaldo4']?></td>
+        <td><?php echo $rs['sueldo5'] + $rs['viaticos5'] + $rs['asignaciones5'] + $rs['presentismo5'] + $rs['aguinaldo5']?></td>
+        <td><?php echo $rs['sueldo6'] + $rs['viaticos6'] + $rs['asignaciones6'] + $rs['presentismo6'] + $rs['aguinaldo6']?></td>
+        <td><?php echo $rs['sueldo7'] + $rs['viaticos7'] + $rs['asignaciones7'] + $rs['presentismo7'] + $rs['aguinaldo7']?></td>
+        <td><?php echo $rs['sueldo8'] + $rs['viaticos8'] + $rs['asignaciones8'] + $rs['presentismo8'] + $rs['aguinaldo8']?></td>
+        <td><?php echo $rs['sueldo9'] + $rs['viaticos9'] + $rs['asignaciones9'] + $rs['presentismo9'] + $rs['aguinaldo9']?></td>
+        <td><?php echo $rs['sueldo10'] + $rs['viaticos10'] + $rs['asignaciones10'] + $rs['presentismo10'] + $rs['aguinaldo10']?></td>
+        <td><?php echo $rs['sueldo11'] + $rs['viaticos11'] + $rs['asignaciones11'] + $rs['presentismo11'] + $rs['aguinaldo11']?></td>
+        <td><?php echo $rs['sueldo12'] + $rs['viaticos12'] + $rs['asignaciones12'] + $rs['presentismo12'] + $rs['aguinaldo12']?></td>
    	</tr>
-	<tr <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
+	<tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
 		<td colspan="15">
-		<b>Calificacion:</b> <?=$sueldo_0001[$rs['sueldo_id']]['calificacion']?> <br>
-		<b>Seccion:</b> <?=$sueldo_0001[$rs['sueldo_id']]['seccion']?> <br>
-		<b>Sueldo de bolsillo estimado:</b> <?=$sueldo_0001[$rs['sueldo_id']]['sueldo']?> <br>
-		<b>Categoria:</b> <?=$sueldo_0001[$rs['sueldo_id']]['categoria']?>
+		<b>Calificacion:</b> <?php echo $sueldo_0001[$rs['sueldo_id']]['calificacion']?> <br>
+		<b>Seccion:</b> <?php echo $sueldo_0001[$rs['sueldo_id']]['seccion']?> <br>
+		<b>Sueldo de bolsillo estimado:</b> <?php echo $sueldo_0001[$rs['sueldo_id']]['sueldo']?> <br>
+		<b>Categoria:</b> <?php echo $sueldo_0001[$rs['sueldo_id']]['categoria']?>
 		</td>
 	</tr>
-    <tr <? if($i != 1){ ?> class="sueldos-historico" <? } ?>>
+    <tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
     	<td colspan="15">&nbsp;</td>
     </tr>
-    <? $i++; ?>
-<? } ?>
+    <?php  $i++; ?>
+<?php  } ?>
 </table>
-<? } ?>
+<?php  } ?>
 <p>
 <a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="$('.sueldos-historico').toggle();">Ver historico</a> -
 <a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="addSalario()">Asignar nuevo sueldo</a>
 </p>
 
 <p><strong>Horas Extras Aprobadas</strong></p>
-<?
+<?php 
 $sql = "SELECT 
 			ano,
 			sum(if(mes = 1,ehe.cantidad_aprobada*she.valor,0)) as '1', 
@@ -426,40 +426,40 @@ if(mysql_num_rows($rsTemp) > 0){
         <td width="80">Nov</td>
         <td width="80">Dic</td>
    	</tr>
-<? while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
 	<tr>
-    	<td valign="middle" align="center"><?=$rs['ano']?></td>
-        <td><?=round($rs['1'],2)?></td>
-        <td><?=round($rs['2'],2)?></td>
-        <td><?=round($rs['3'],2)?></td>
-        <td><?=round($rs['4'],2)?></td>
-        <td><?=round($rs['5'],2)?></td>
-        <td><?=round($rs['6'],2)?></td>
-        <td><?=round($rs['7'],2)?></td>
-        <td><?=round($rs['8'],2)?></td>
-        <td><?=round($rs['9'],2)?></td>
-        <td><?=round($rs['10'],2)?></td>
-        <td><?=round($rs['11'],2)?></td>
-        <td><?=round($rs['12'],2)?></td>
+    	<td valign="middle" align="center"><?php echo $rs['ano']?></td>
+        <td><?php echo round($rs['1'],2)?></td>
+        <td><?php echo round($rs['2'],2)?></td>
+        <td><?php echo round($rs['3'],2)?></td>
+        <td><?php echo round($rs['4'],2)?></td>
+        <td><?php echo round($rs['5'],2)?></td>
+        <td><?php echo round($rs['6'],2)?></td>
+        <td><?php echo round($rs['7'],2)?></td>
+        <td><?php echo round($rs['8'],2)?></td>
+        <td><?php echo round($rs['9'],2)?></td>
+        <td><?php echo round($rs['10'],2)?></td>
+        <td><?php echo round($rs['11'],2)?></td>
+        <td><?php echo round($rs['12'],2)?></td>
    	</tr>
-<? } ?>
+<?php  } ?>
 </table>
-<? }else{ ?>
+<?php  }else{ ?>
 No se ha cargado ninguna hora extra aprobada
-<? } ?>
+<?php  } ?>
 <p>
 <a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="addHoraExtra()">Agregar hora extra</a> 
 - <a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="verHorasExtras()">Ver horas extras asignadas</a>
-<?
+<?php 
 $sql = "SELECT id FROM empleado_hora_extra WHERE empleado_id = ".$_GET['empleado_id']." AND estado = 0";
 $cant = mysql_num_rows(mysql_query($sql));
 if($cant > 0){?>
-	(<?=$cant?> pendientes de aprobar) 
-<? } ?>
+	(<?php echo $cant?> pendientes de aprobar) 
+<?php  } ?>
 </p>
 
 <p><strong>Adelantos otorgados</strong></p>
-<?
+<?php 
 $sql = "SELECT 
 			ano,
 			sum(if(mes = 1,monto,0)) as '1', 
@@ -498,27 +498,27 @@ if(mysql_num_rows($rsTemp) > 0){
         <td width="80">Nov</td>
         <td width="80">Dic</td>
    	</tr>
-<? while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
 	<tr>
-    	<td valign="middle" align="center"><?=$rs['ano']?></td>
-        <td><?=round($rs['1'],2)?></td>
-        <td><?=round($rs['2'],2)?></td>
-        <td><?=round($rs['3'],2)?></td>
-        <td><?=round($rs['4'],2)?></td>
-        <td><?=round($rs['5'],2)?></td>
-        <td><?=round($rs['6'],2)?></td>
-        <td><?=round($rs['7'],2)?></td>
-        <td><?=round($rs['8'],2)?></td>
-        <td><?=round($rs['9'],2)?></td>
-        <td><?=round($rs['10'],2)?></td>
-        <td><?=round($rs['11'],2)?></td>
-        <td><?=round($rs['12'],2)?></td>
+    	<td valign="middle" align="center"><?php echo $rs['ano']?></td>
+        <td><?php echo round($rs['1'],2)?></td>
+        <td><?php echo round($rs['2'],2)?></td>
+        <td><?php echo round($rs['3'],2)?></td>
+        <td><?php echo round($rs['4'],2)?></td>
+        <td><?php echo round($rs['5'],2)?></td>
+        <td><?php echo round($rs['6'],2)?></td>
+        <td><?php echo round($rs['7'],2)?></td>
+        <td><?php echo round($rs['8'],2)?></td>
+        <td><?php echo round($rs['9'],2)?></td>
+        <td><?php echo round($rs['10'],2)?></td>
+        <td><?php echo round($rs['11'],2)?></td>
+        <td><?php echo round($rs['12'],2)?></td>
    	</tr>
-<? } ?>
+<?php  } ?>
 </table>
-<? }else{ ?>
+<?php  }else{ ?>
 No se ha otorgado ningun adelanto
-<? } ?>
+<?php  } ?>
 <p><a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="addAdelanto()">Otorgar adelanto</a></p>
 </div>
 </body>

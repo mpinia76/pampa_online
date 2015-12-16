@@ -15,12 +15,12 @@
 		<th width="50">Octubre</th>
 		<th width="50">Noviembre</th>
 		<th width="50">Diciembre</th>
-		<th width="50"><?=$ano?></th>
+		<th width="50"><?php echo $ano?></th>
 		<th width="50">Total</th>
 	</tr>
 </thead>
 <tbody>
-<?
+<?php 
 
 $tabla 		= "cheque_consumo";
 $sql_meses 	= sql_meses($tabla,$ano,'fecha_debitado');
@@ -30,20 +30,20 @@ $rsTemp =  mysql_query($sql);echo mysql_error();
 while($rs = mysql_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
-		<td><?=$rs['tipo']?></td>
-		<? for($i=0;$i<12;$i++){ ?>
-		<td class="cheque_fecha_<?=$i?>"><?=$rs[$i]?></td>
-		<? } ?>
-		<td class="cheque_total_anual"><?=$rs['anual']?></td>
-		<td class="cheque_total"><?=$rs['total']?></td>
+		<td><?php echo $rs['tipo']?></td>
+		<?php for($i=0;$i<12;$i++){ ?>
+		<td class="cheque_fecha_<?php echo $i?>"><?php echo $rs[$i]?></td>
+		<?php } ?>
+		<td class="cheque_total_anual"><?php echo $rs['anual']?></td>
+		<td class="cheque_total"><?php echo $rs['total']?></td>
 	</tr>
-	<? } ?>
-<? } ?>
+	<?php } ?>
+<?php } ?>
 	<tr style="background:#FFFF00;">
 		<td>Total</td>
-		<? for($i=0;$i<12;$i++){ ?>
-		<td class="total_cheque_fecha_<?=$i?>"></td>
-		<? } ?>
+		<?php for($i=0;$i<12;$i++){ ?>
+		<td class="total_cheque_fecha_<?php echo $i?>"></td>
+		<?php } ?>
 		<td class="total_cheque_anual"></td>
 		<td class="total_cheque_total"></td>
 	</tr>

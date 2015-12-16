@@ -1,4 +1,4 @@
-<?
+<?php
 //COMPRUEBA LOS MONTOS INGRESADOS
 
 $monto_pagado = 0;

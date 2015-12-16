@@ -1,4 +1,4 @@
-<?
+<?php
 //FUNCIONES DE FECHAS
 
 //Agrega a una fecha anos,meses,dias,horas,minutos o segundos y la devuelve en el formato deseado

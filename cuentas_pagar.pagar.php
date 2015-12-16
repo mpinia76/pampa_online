@@ -1,4 +1,4 @@
-<?
+<?php
 
 include_once("functions/fechasql.php");
 include_once("functions/date.php");
@@ -179,7 +179,7 @@ function addFormaDePago(forma_pago_id){
 
 <body>
 
-<? 
+<?php 
 if(isset($_POST['datos']) and $result == 1){ 
 	include_once("config/messages.php");
 ?>
@@ -187,7 +187,7 @@ if(isset($_POST['datos']) and $result == 1){
 	var dhxWins = parent.dhxWins;
 	dhxWins.window('w_cuenta_a_pagar').attachURL('cuentas_pagar.php');
 	</script>
-<?
+<?php
 }elseif($total != $registros){ 
 	$result = 'No se pueden abonar los registros seleccionados, verifique los estados';
 	include_once("config/messages.php");
@@ -197,44 +197,44 @@ if(isset($_POST['datos']) and $result == 1){
 
 <div class="formContainer">
 <form method="post" name="form" action="cuentas_pagar.view.php">
-<input type="hidden" name="datos" value="<?=$_GET['dataid']?>" />
-<input type="hidden" name="operacion_tipo" value="<?=$operacion_tipo?>"  />
+<input type="hidden" name="datos" value="<?php echo $_GET['dataid']?>" />
+<input type="hidden" name="operacion_tipo" value="<?php echo $operacion_tipo?>"  />
 	<fieldset>
-		<legend>Detalle de <?=$operacion_tipo?></legend> 
+		<legend>Detalle de <?php echo $operacion_tipo?></legend> 
 		<ul class="form">
 
-		<? while($rs = mysql_fetch_array($rsTemp)){ ?>
-			<input type="hidden" name="cuentas_id[]" value="<?=$cuenta_id[$rs['id']]?>" />
-			<input type="hidden" name="cuentas_pendiente[]" value="<?=$monto[$rs['id']]?>"  />
-			<input type="hidden" name="cuentas_operacion[]" value="<?=$rs['id']?>" />
-			<input type="hidden" name="operacion_orden[]" value="<?=$rs['nro_orden']?>" />
-			<li><label><strong>Responsable:</strong></label><?=$rs['nombre']?> <?=$rs['apellido']?></li>
-			<li><label>Fecha:</label><?=fechavista($rs['fecha'])?></li>
-			<li><label>Rubro:</label><?=$rs['rubro']?></li>
-			<li><label>Sububro:</label><?=$rs['subrubro']?></li>
-			<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
-			<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
-			<li><label>Monto de la operacion:</label>$<?=$rs['monto']?></li>
-			<li><label>Monto pendiente:</label>$<?=$monto[$rs['id']]?></li>
-            <? $total_abonar = $total_abonar + $monto[$rs['id']]; ?>
-		<? } ?>
-			<li><label>Monto total pendiente:</label>$<?=$total_abonar?></li>
+		<?php while($rs = mysql_fetch_array($rsTemp)){ ?>
+			<input type="hidden" name="cuentas_id[]" value="<?php echo $cuenta_id[$rs['id']]?>" />
+			<input type="hidden" name="cuentas_pendiente[]" value="<?php echo $monto[$rs['id']]?>"  />
+			<input type="hidden" name="cuentas_operacion[]" value="<?php echo $rs['id']?>" />
+			<input type="hidden" name="operacion_orden[]" value="<?php echo $rs['nro_orden']?>" />
+			<li><label><strong>Responsable:</strong></label><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></li>
+			<li><label>Fecha:</label><?php echo fechavista($rs['fecha'])?></li>
+			<li><label>Rubro:</label><?php echo $rs['rubro']?></li>
+			<li><label>Sububro:</label><?php echo $rs['subrubro']?></li>
+			<li><label>Proveedor:</label><?php echo getProveedor($rs['proveedor'])?></li>
+			<li><label>Descripcion:</label><?php echo $rs['descripcion']?></li>
+			<li><label>Monto de la operacion:</label>$<?php echo $rs['monto']?></li>
+			<li><label>Monto pendiente:</label>$<?php echo $monto[$rs['id']]?></li>
+            <?php $total_abonar = $total_abonar + $monto[$rs['id']]; ?>
+		<?php } ?>
+			<li><label>Monto total pendiente:</label>$<?php echo $total_abonar?></li>
 			<li><label>Forma de pago:</label>
 			<select name="forma_pago">
 			<option value="n">Seleccionar...</option>
-			<?
+			<?php
 			$sql = "SELECT id,forma_pago FROM forma_pago WHERE id != 5 ORDER BY forma_pago ";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){?>
-			<option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-			<? } ?>
+			<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+			<?php } ?>
 			</select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
 			<div id="forma_de_pago"></div>
 		</ul>
 	</fieldset> 
 	<p align="center"><input type="submit" value="Guardar datos" name="guardar" /></p> 
 </form>
-<? } ?>
+<?php } ?>
 </div> 
 </body>
 </html>

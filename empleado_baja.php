@@ -1,4 +1,4 @@
-<?
+<?php
 //DATOS DEL USUARIO
 session_start();
 $user_id = $_SESSION['userid'];

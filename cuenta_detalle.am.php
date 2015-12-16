@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 
@@ -164,25 +164,25 @@ function valida(F) {
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php include_once("config/messages.php"); ?>
 
 <div class="container">
 
 <form method="POST" name="form" action="cuenta_detalle.am.php" onSubmit="return valida(this);">
 
 <div class="label"></div><div class="content"><input  size="" type="hidden"  name="id" /></div><div style="clear:both;"></div>
-<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" value="<?=date("d/m/Y")?>" name="fecha" /></div><div style="clear:both;"></div>
+<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" value="<?php echo date("d/m/Y")?>" name="fecha" /></div><div style="clear:both;"></div>
 <div class="label">Cuenta</div>
 <div class="content">
 	<select name="cuenta_id">
 	<option value="null">Seleccionar...</option>
-	<?
+	<?php
 	$sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){ ?>
 	?>
-	<option  value="<?=$rs['id']?>"><?=$rs['banco']?> <?=$rs['sucursal']?> <?=$rs['cuenta_tipo']?> <?=$rs['nombre']?></option>
-	<? } ?>
+	<option  value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
+	<?php } ?>
 	</select>
 </div>
 <div style="clear:both;"></div>
@@ -190,16 +190,16 @@ function valida(F) {
 <div class="content">
 	<select name="motivo_id" onchange="if($(this).val() == 'otro'){ $('#otro_motivo').show(); }else{ $('#otro_motivo').hide(); } ">
 	<option value="null">Seleccionar...</option>
-	<?
+	<?php
 	$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 2 ORDER BY nombre ASC";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){ ?>
 	?>
-	<option value="<?=$rs['id']?>"><?=$rs['nombre']?></option>
-	<? } ?>
-	<? if(ACCION_41){ ?>
+	<option value="<?php echo $rs['id']?>"><?php echo $rs['nombre']?></option>
+	<?php } ?>
+	<?php if(ACCION_41){ ?>
 	<option value="otro">Otro</option> 
-	<? } ?>
+	<?php } ?>
 	</select><br />	
 	<input id="otro_motivo" style="display:none; " type="text" name="otro_motivo" value="" />
 </div>

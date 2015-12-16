@@ -54,7 +54,7 @@ class Reserva extends AppModel {
         if($check_in < $check_out) return true;
     }
 
-    public function beforeSave() {
+    public function beforeSave($options = Array()) {
         if (!empty($this->data['Reserva']['check_in']) && !empty($this->data['Reserva']['check_out'])) {
             $this->data['Reserva']['check_in'] = $this->dateFormatBeforeSave($this->data['Reserva']['check_in']);
             $this->data['Reserva']['check_out'] = $this->dateFormatBeforeSave($this->data['Reserva']['check_out']);
@@ -66,7 +66,7 @@ class Reserva extends AppModel {
         return true;
     }
     
-    public function afterFind($results) {
+    public function afterFind($results, $primary = false) {
         foreach ($results as $key => $val) {
             if (!empty($val) and isset($val['Reserva']['check_in'])) {
                 $results[$key]['Reserva']['check_in']= $this->dateFormatAfterFind($val['Reserva']['check_in']);

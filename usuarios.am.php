@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("functions/form.class.php");
 include_once("config/db.php");
 include_once("functions/abm.php");
@@ -47,6 +47,13 @@ $campos['espacio_trabajo_id'] = array(
 								'tabla'				=> 'espacio_trabajo',
 								'campo_id'			=> 'id',
 								'campo'				=> 'espacio',
+								'requerid' 			=> true
+							);
+
+
+$campos['admin']            = array(
+								'type'				=> 'checkbox',
+								'label'				=> 'Administrador',
 								'requerid' 			=> true
 							);
 			
@@ -142,16 +149,16 @@ input.dp-applied {
 </style>
 <!--/JQuery Date Picker-->
 
-<?=$form->printJS()?>
+<?php echo $form->printJS()?>
 
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php include_once("config/messages.php"); ?>
 
-<?=$form->printHTML()?>
+<?php echo $form->printHTML()?>
 
 </body>
 </html>
