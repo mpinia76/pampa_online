@@ -13,7 +13,7 @@ class CobroTarjetasController extends AppController {
     public function get_transacciones() {
         $result = Cache::read('get_transacciones', 'long');
             if (!$result) {
-                 $transacciones = $this->CobroTarjeta->find('all',array('order' => 'ReservaCobro.fecha desc','recursive' => 2));
+                 $transacciones = $this->CobroTarjeta->find('all',array('order' => 'ReservaCobro.fecha asc','recursive' => 2));
                 Cache::write('get_transacciones', $lotes, 'long');
             }
             return $transacciones;

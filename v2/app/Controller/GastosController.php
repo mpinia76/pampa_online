@@ -27,13 +27,14 @@ class GastosController extends AppController {
         $espacioTrabajo = $user['EspacioTrabajo']['id'];        
 
         if ($user['Usuario']['admin'] == '1'){
-         
-            //$gastos = $this->Gasto->find('all',array('order' => 'Gasto.created desc'));
-             $gastos = $this->get_gastos();
-            
+            $gastos = $this->get_gastos();
         }else{
+			$gastos = $this->Gasto->find('all',array('conditions'=>array('Usuario.espacio_trabajo_id'=>$espacioTrabajo,
+                                                                         'Usuario.admin' => 0),
+                                                         'order' => 'Gasto.created desc'));
 
-            $query = "SELECT * FROM gasto as Gasto 
+
+            /*$query = "SELECT * FROM gasto as Gasto
                     inner join usuario as Usuario on Gasto.user_id = Usuario.id 
                     inner join rubro  as Rubro on Gasto.rubro_id = Rubro.id
                     inner join subrubro as Subrubro on Gasto.subrubro_id = Subrubro.id
@@ -42,7 +43,7 @@ class GastosController extends AppController {
                     order by Gasto.created desc";
 
             $gastos = $this->Gasto->query($query);
-
+            */
             
         }       
  
@@ -83,7 +84,11 @@ class GastosController extends AppController {
                 $gasto['Gasto']['factura_tipo']." ".$gasto['Gasto']['factura_nro'],
                 $gasto['Gasto']['monto'],
                 $estado,
+<<<<<<< HEAD
                 $gasto['Usuario']['nombre'].','.$gasto['Usuario']['apellido']
+=======
+                $gasto['Usuario']['nombre'].','.$gasto['Usuario']['apellido']
+>>>>>>> b64d7f1eb014af061804f7f3cd4bd4b47ed1937e
             );
         }
         $this->set('aaData',$rows);
@@ -217,7 +222,11 @@ class GastosController extends AppController {
         if (!$result) {
             $result = $this->Gasto->find('all',array('order' => 'Gasto.created desc'));
 			Cache::write('get_gastos', $result, 'long');
+<<<<<<< HEAD
 		}
+=======
+		}
+>>>>>>> b64d7f1eb014af061804f7f3cd4bd4b47ed1937e
         return $result;
     }
 

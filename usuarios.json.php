@@ -3,7 +3,8 @@ session_start();
 
 include_once("config/db.php");
 
-$sql = "SELECT * FROM usuario WHERE admin!=1 AND id!=".$_SESSION['userid'];
+//$sql = "SELECT * FROM usuario WHERE admin!=1 AND id!=".$_SESSION['userid'];
+$sql = "SELECT * FROM usuario WHERE id!=".$_SESSION['userid'];
 
 $rsTemp = mysql_query($sql);
 $rows = array();

@@ -7,11 +7,11 @@ class CobroTransferenciasController extends AppController {
     public function dataTable($estado = ''){
         $rows = array();
         if($estado == ''){
-            $transferencias = $this->CobroTransferencia->find('all',array('order' => 'ReservaCobro.fecha desc', 'recursive' => 2));
+            $transferencias = $this->CobroTransferencia->find('all',array('order' => 'ReservaCobro.fecha asc', 'recursive' => 2));
         }elseif($estado == 'pendiente'){
-            $transferencias = $this->CobroTransferencia->find('all',array('order' => 'ReservaCobro.fecha desc','conditions' => array('CobroTransferencia.acreditado' => '0'), 'recursive' => 2));
+            $transferencias = $this->CobroTransferencia->find('all',array('order' => 'ReservaCobro.fecha asc','conditions' => array('CobroTransferencia.acreditado' => '0'), 'recursive' => 2));
         }elseif($estado == 'acreditado'){
-            $transferencias = $this->CobroTransferencia->find('all',array('order' => 'ReservaCobro.fecha desc','conditions' => array('CobroTransferencia.acreditado' => '1'), 'recursive' => 2));            
+            $transferencias = $this->CobroTransferencia->find('all',array('order' => 'ReservaCobro.fecha asc','conditions' => array('CobroTransferencia.acreditado' => '1'), 'recursive' => 2));
         }
 
         foreach($transferencias as $tran){
