@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 
 include_once("functions/fechasql.php");
@@ -178,20 +178,20 @@ function valida(F) {
 
 <body>
 	
-<? if(isset($nro_orden)){ ?>
+<?php  if(isset($nro_orden)){ ?>
 	<script>
 	var dhxWins = parent.dhxWins;
 	dhxWins.window('w_gasto').attachURL('/v2/gastos/index');
 	</script>
-<? } ?>
-<? include_once("config/messages.php"); ?>
-<? if(isset($nro_orden)){
+<?php  } ?>
+<?php  include_once("config/messages.php"); ?>
+<?php  if(isset($nro_orden)){
 	if($nro_orden==0){
 		echo '<div id="mensaje" class="ok"><p><img src="images/error.gif" align="absmiddle" /> &nbsp; El gasto debe ser aprobado por administaci&oacute;n</p></div>';
 	}else{
 		echo '<div id="mensaje" class="ok"><p><img src="images/ok.gif" align="absmiddle" /> &nbsp; El gasto se aprob&oacute; con la orden de pago: '.$nro_orden.'</p></div>';?>
 
-<?
+<?php 
 	}
 }
 ?>
@@ -206,23 +206,23 @@ function valida(F) {
 			<li><label>Rubro:</label>
 			<select name="rubro" onchange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
 			<option value="null">Seleccionar...</option>
-			<?
+			<?php 
 			$sql = "SELECT id,rubro FROM rubro ORDER BY rubro";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){?>
-			<option value="<?=$rs['id']?>"><?=$rs['rubro']?></option>
-			<? } ?>
+			<option value="<?php echo $rs['id']?>"><?php echo $rs['rubro']?></option>
+			<?php  } ?>
 			</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
 			<li id="subrubro" style="display:none;"><label>Subrubro:</label><div id="subrubro_combo"></div></li>
 			<li><label>Proveedor:</label>
 			<select id="proveedores" name="proveedor" size="1">
 			<option value="">Seleccione uno...</option>
-			<?
+			<?php 
 			$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
 			$rsTemp2 = mysql_query($sql2);
 			while($rs2 = mysql_fetch_array($rsTemp2)){?>
-			<option <? if($rs2['id']==$rs['proveedor_id']){ ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['nombre']?></option>
-			<? } ?>
+			<option <?php  if($rs2['id']==$rs['proveedor_id']){ ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['nombre']?></option>
+			<?php  } ?>
 			</select>
 			</li>
 			<li><label>Descripcion:</label><textarea name="descripcion"></textarea></li>
