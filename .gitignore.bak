@@ -2,3 +2,6 @@
 /v2/app/tmp/*
 /config/*
 /v2/vendors/*
+/.buildpath
+/.project
+/.settings/*
