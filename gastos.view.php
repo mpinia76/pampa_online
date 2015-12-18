@@ -174,6 +174,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		max-height: 100px;
 		overflow-y: auto;
 	}
+	select{
+		height: 21px;
+	}
 	
 	</style>
 	<?
@@ -362,10 +365,10 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 						<input type="text" name="factura_nro" /></li>
 					<? } ?>
 					
-				<? }elseif( ($_GET['action'] == 'editar' and $subestado == 3)) { ?>					
+				<? }elseif( ($_GET['action'] == 'editar' and $subestado == 3)) { ?>									
 					<li><label>Fecha devengado:</label><input class="date-pick date-edit dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
-					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
+					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);;">
 					<?
 					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
 					$rsTemp2 = mysql_query($sql2);
@@ -385,10 +388,21 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							</select> 
 						</div>
 					</li>
-					<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
-					<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
-					<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
-					<input type="hidden" name="descripcion" value="<?=$rs['descripcion']?>" />
+					<li><label>Proveedor:</label>
+					<select id="proveedores" name="proveedor" size="1">
+					<option value="">Seleccione uno...</option>
+					<?
+					$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
+					$rsTemp2 = mysql_query($sql2);
+					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					<option <? if($rs2['id']==$rs['proveedor']){ $selected = true; ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['nombre']?></option>
+					<? } ?>
+					<? if(!$selected){ ?>
+					<option value="<?=$rs['proveedor']?>" selected="selected"><?=$rs['proveedor']?></option>
+					<? } ?>
+					</select>
+					</li>
+					<li><label>Descripcion:</label><textarea name="descripcion"><?=$rs['descripcion']?></textarea></li>					
 					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?=$rs['remito_nro']?>" /></li>
 					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?=$rs['recibo_nro']?>" /></li>
 					<li><label>Factura:</label>
@@ -428,10 +442,10 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 						<option value="N">0002</option>
 					</select> 
 					<input type="text" name="factura_nro" /></li>
-				<? }elseif($subestado == 4){ ?>
+				<? }elseif($_GET['action'] == 'editar' and $subestado == 4){ ?>
 					<li><label>Fecha devengado:</label><input class="date-pick date-edit dp-applied" name="fecha" value="<?=fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
-					<select name="rubro" onchange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
+					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);;">
 					<?
 					$sql2 = "SELECT id,rubro FROM rubro ORDER BY rubro";
 					$rsTemp2 = mysql_query($sql2);
@@ -451,21 +465,36 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							</select> 
 						</div>
 					</li>
+					<li><label>Proveedor:</label>
+					<select id="proveedores" name="proveedor" size="1">
+					<option value="">Seleccione uno...</option>
+					<?
+					$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
+					$rsTemp2 = mysql_query($sql2);
+					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					<option <? if($rs2['id']==$rs['proveedor']){ $selected = true; ?> selected="selected" <? } ?> value="<?=$rs2['id']?>"><?=$rs2['nombre']?></option>
+					<? } ?>
+					<? if(!$selected){ ?>
+					<option value="<?=$rs['proveedor']?>" selected="selected"><?=$rs['proveedor']?></option>
+					<? } ?>
+					</select>
+					</li>
+					<li><label>Descripcion:</label><textarea name="descripcion"><?=$rs['descripcion']?></textarea></li>					
+					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?=$rs['remito_nro']?>" /></li>
+					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?=$rs['recibo_nro']?>" /></li>
+					<li><label>Factura:</label>
 
-
-
-					<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
-					<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
-					<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
-					<input type="hidden" name="descripcion" value="<?=$rs['descripcion']?>" />
-					<li><label>Remito:</label><?=$rs['remito_nro']?></li>
-					<input type="hidden" name="remito_nro" value="<?=$rs['remito_nro']?>" />
-					<li><label>Recibo::</label><?=$rs['recibo_nro']?></li>
-					<input type="hidden" name="recibo_nro" value="<?=$rs['recibo_nro']?>" />
-					<li><label>Factura:</label>Tipo: <?=$rs['factura_tipo']?> Numero: <?=$rs['factura_nro']?></li>
-					<input type="hidden" name="factura_orden" value="<?=$rs['factura_orden']?>" />
-					<input type="hidden" name="factura_tipo" value="<?=$rs['factura_tipo']?>" />
-					<input type="hidden" name="factura_nro" value="<?=$rs['factura_nro']?>" />
+					<select size="1" name="factura_tipo">					
+						<option value="n"  <?php if($rs['factura_tipo'] == "n") echo"selected";?> >Tipo</option>
+						<option value="A" <?php if($rs['factura_tipo'] == "A") echo"selected";?> >A</option>
+						<option value="B" <?php if($rs['factura_tipo'] == "B") echo"selected";?> >B</option>
+						<option value="C" <?php if($rs['factura_tipo'] == "C") echo"selected";?> >C</option>
+					</select> 
+					<select size="1" name="factura_orden">
+						<option value="B" <?php if($rs['factura_orden'] == "B") echo"selected";?> >0001</option>
+						<option value="N" <?php if($rs['factura_orden'] == "N") echo"selected";?> >0002</option>
+					</select> 
+					<input type="text" name="factura_nro" value="<?=$rs['factura_nro']?>" /></li>
 				<? }elseif($subestado > 0){ ?>
 					<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
 					<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
