@@ -1,19 +1,11 @@
 RewriteEngine on
 
+RewriteCond %{HTTP_HOST} ^localhost/pampa_online$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^localhost/pampa_online$ 
+RewriteCond %{REQUEST_URI} !/pampa_online/
+RewriteRule (.*) /pampa_online/$1 [L]
+
 AddDefaultCharset utf-8
-
-RewriteRule ^newsletter/([0-9]+)-([0-9]+).html boletines/consultar.html?oid=$1&contacto_oid=$2 [L]
-
-RewriteRule ^newsletter/([0-9]+)-([0-9]+)-([0-9]+).html$ boletines/consultar.html?oid=$1&facebook=$2&contacto_oid=$3 [L]
-
-RewriteCond $1 !^(ckeditor) 
-RewriteRule ^(.*)\.html$ rastynewsletterapp.php?path=$1&type=1 [L,QSA]
-RewriteRule ^(.*)\.json$ rastynewsletterapp.php?path=$1&type=2 [L,QSA]
-RewriteRule ^(.*)\.pdf$ rastynewsletterapp.php?name=$1&type=3 [L,QSA]
-RewriteRule ^(.*)\.rasty$ rastynewsletterapp.php?name=$1&type=4 [L,QSA]
-RewriteRule ^(.*)\.do$ rastynewsletterapp.php?path=$1&type=5 [L,QSA]
-#RewriteRule ^(.*)$ rastynewsletterapp.php?path=$1 [L,QSA]
-
 
 
 php_flag apc.cache_by_default Off

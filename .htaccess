@@ -1,9 +1,7 @@
 RewriteEngine on
 
+
 AddDefaultCharset utf-8
-
-
-
 
 
 php_flag apc.cache_by_default Off
