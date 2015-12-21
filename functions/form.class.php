@@ -419,6 +419,9 @@ class Form{
 		
 		$js .= 'function valida(F) {';
 		$js .= $this->js_valida;
+		$js .= "$('#agregarSubmit').val('Procesando...');";
+		$js .= "$('#agregarSubmit').attr('disabled','disabled');";
+		$js .= "$('#agregar').val('1');";
 		$js .= '}</script>';
 		
 		$this->js .= $js;
@@ -430,8 +433,8 @@ class Form{
 		
 		echo '
 		<div class="container">
-		<form method="POST" name="form" action="'.$this->action.'" onSubmit="return valida(this);">';
-		
+		<form method="POST" name="form" action="'.$this->action.'" onSubmit="return valida(this);">
+		<input name="agregar" id="agregar" type="hidden" value="0">';
 		if($this->extra_file_top != ''){
 			
 			$dataid = $this->dataid;
@@ -449,7 +452,7 @@ class Form{
 		}
 		
 		echo '
-		<p align="center"><input type="submit" value="'.$this->boton_value.'" name="'.$this->boton_name.'" /></p>
+		<p align="center"><input type="submit" value="'.$this->boton_value.'" name="'.$this->boton_name.'" id="'.$this->boton_name.'"/></p>
 		</form>
 		</div>
 		<script type="text/javascript">

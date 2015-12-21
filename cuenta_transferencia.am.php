@@ -1,4 +1,4 @@
-<?
+<?php 
 session_start();
 $user_id = $_SESSION['userid'];
 
@@ -10,7 +10,7 @@ include_once("functions/abm.php");
 //indicar tabla a editar
 $tabla = 'cuenta_movimiento';
 
-if(isset($_POST['agregar'])){
+if(($_POST['agregar'])){
 	//proceso la entrada de plata a la cuenta
 	$sql_entra = "INSERT INTO $tabla (fecha,origen,cuenta_id,monto,usuario_id) 
 				VALUES 
@@ -134,7 +134,11 @@ function valida(F) {
 
 	return false
 
-	}}
+	}
+	$('#agregarSubmit').val('Procesando...');
+	$('#agregarSubmit').attr('disabled','disabled');
+	$('#agregar').val('1');
+}
 					
 </script>
 
@@ -145,22 +149,23 @@ function valida(F) {
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php  include_once("config/messages.php"); ?>
 
 <div class="container">
 
 <form method="POST" name="form" action="cuenta_transferencia.am.php" onSubmit="return valida(this);">
-<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" name="fecha" value="<?=date("d/m/Y")?>" /></div><div style="clear:both;"></div>
+<input name="agregar" id="agregar" type="hidden" value="0">
+<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" name="fecha" value="<?php echo date("d/m/Y")?>" /></div><div style="clear:both;"></div>
 
 <div class="label">Caja origen</div>
 <div class="content">
 	<select name="origen">
 	<option value="null">Seleccionar...</option>
-	<? $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
+	<?php  $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){ ?>
-	<option value="<?=$rs['id']?>"><?=$rs['banco']?> <?=$rs['sucursal']?> <?=$rs['cuenta_tipo']?> <?=$rs['nombre']?></option>
-	<? } ?>
+	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
+	<?php  } ?>
 	</select>
 </div>
 <div style="clear:both;"></div>
@@ -169,11 +174,11 @@ function valida(F) {
 <div class="content">
 	<select name="cuenta_id">
 	<option value="null">Seleccionar...</option>
-	<? $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
+	<?php  $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){ ?>
-	<option value="<?=$rs['id']?>"><?=$rs['banco']?> <?=$rs['sucursal']?> <?=$rs['cuenta_tipo']?> <?=$rs['nombre']?></option>
-	<? } ?>
+	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
+	<?php  } ?>
 	</select>
 </div>
 <div style="clear:both;"></div>
@@ -182,7 +187,7 @@ function valida(F) {
 
 </div>
 
-<p align="center"><input type="submit" value="Hacer transferencia" name="agregar" /></p>
+<p align="center"><input type="submit" value="Hacer transferencia" name="agregarSubmit" id="agregarSubmit" /></p>
 
 </form>
 

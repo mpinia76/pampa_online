@@ -6,7 +6,15 @@ $sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 2";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
 	$motivos[$rs['id']] = $rs['nombre'];
-}$sql = "SELECT *,DATE(fecha) as fecha2, TIME(TIMESTAMPADD(HOUR,2,fecha)) as hora FROM cuenta_sincronizada WHERE cuenta_id =".$_GET['cuenta_id'];$rsTemp = mysql_query($sql);while($rs = mysql_fetch_array($rsTemp)){	$sincronizada[round($rs['monto'],1)]['fecha'] = $rs['fecha2'];	$sincronizada[round($rs['monto'],1)]['monto'] = $rs['monto'];	$sincronizada[round($rs['monto'],1)]['usuario_id'] = $rs['usuario_id']; $sincronizada[round($rs['monto'],1)]['usuario_id'] = $rs['usuario_id']; $sincronizada[round($rs['monto'],1)]['hora'] = $rs['hora'];}
+}$sql = "SELECT *,DATE(fecha) as fecha2, TIME(TIMESTAMPADD(HOUR,2,fecha)) as hora FROM cuenta_sincronizada WHERE cuenta_id =".$_GET['cuenta_id'];
+$rsTemp = mysql_query($sql);
+while($rs = mysql_fetch_array($rsTemp)){
+	$sincronizada[round($rs['monto'],1)]['fecha'] = $rs['fecha2'];	
+	$sincronizada[round($rs['monto'],1)]['monto'] = $rs['monto'];	
+	$sincronizada[round($rs['monto'],1)]['usuario_id'] = $rs['usuario_id']; 
+	$sincronizada[round($rs['monto'],1)]['usuario_id'] = $rs['usuario_id']; 
+	$sincronizada[round($rs['monto'],1)]['hora'] = $rs['hora'];
+}
 $sql = "SELECT * FROM tarjeta_resumen";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
@@ -66,7 +74,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$cuentas[$rs['id']] = $rs['banco']." ".$rs['sucursal']." ".$rs['cuenta_tipo']." ".$rs['nombre'];
 }
 
-$sql = "SELECT cheque_consumo.numero,cuenta_movimiento.registro_id, rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, cuenta_movimiento.id, cuenta_movimiento.cuenta_id, cuenta_movimiento.monto, cuenta_movimiento.fecha, cuenta_movimiento.origen FROM rel_pago_operacion RIGHT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' WHERE cuenta_movimiento.cuenta_id = ".$_GET['cuenta_id']." ORDER BY fecha DESC";
+$sql = "SELECT cheque_consumo.numero,cuenta_movimiento.registro_id, rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, cuenta_movimiento.id, cuenta_movimiento.cuenta_id, cuenta_movimiento.monto, cuenta_movimiento.fecha, cuenta_movimiento.origen, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM rel_pago_operacion RIGHT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN usuario ON cuenta_movimiento.usuario_id = usuario.id WHERE cuenta_movimiento.cuenta_id = ".$_GET['cuenta_id']." ORDER BY fecha DESC";
 
 $rsTemp = mysql_query($sql);
 $rows = array();
@@ -116,6 +124,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	
 	$rowTemp[$rs['id']]['id'] = $rs['id'];
 	$rowTemp[$rs['id']]['detalle'] = $detalle;
+	$rowTemp[$rs['id']]['user'] = $rs['user'];
 	$rowTemp[$rs['id']]['monto'] = $rs['monto'];
 	$rowTemp[$rs['id']]['fecha'] = $rs['fecha'];
 	$rowTemp[$rs['id']]['orden'] = '';
@@ -150,15 +159,33 @@ if(is_array($compras) and count($compras)>0){
 		$rowTemp[$consumo_id]['orden'] = $operacion['compra_'.$compra_id];
 	}
 } //si compras es array y mayor a cero
-foreach($rowTemp as $id=>$datos){	$total = $total + $datos['monto'];	}$i = 1;
-foreach($rowTemp as $id=>$datos){		if($i == 1){ 		$balance = $total; 		$prev_id = $id;	}else{		$balance = $balance - $rowTemp[$prev_id]['monto'];		$prev_id = $id;	}	$i++;	if($sincronizada[round($balance,1)]['monto'] != ''){		$datos['detalle'] = $datos['detalle'].' (sincronizada '.$sincronizada[round($balance,1)]['hora'].')';	}	
+foreach($rowTemp as $id=>$datos){	
+	$total = $total + $datos['monto'];	
+}
+$i = 1;
+foreach($rowTemp as $id=>$datos){
+	if($i == 1){
+		$balance = $total; 		
+		$prev_id = $id;	
+	}
+	else{
+		$balance = $balance - $rowTemp[$prev_id]['monto'];		
+		$prev_id = $id;	
+	}	
+	$i++;	
+	if($sincronizada[round($balance,1)]['monto'] != ''){
+		$datos['detalle'] = $datos['detalle'].' (sincronizada '.$sincronizada[round($balance,1)]['hora'].')';	
+	}	
 	$data = array(
 		"id" => $id,
 		"data" => array(
 			$datos['fecha'],
 			ucwords($datos['detalle']),
 			$datos['orden'],
-			$datos['monto'],						$balance
+			ucwords($datos['user']),
+			($datos['monto']>=0)?$datos['monto']:'',	
+			($datos['monto']<0)?$datos['monto']:'',					
+			round($balance,2)
 		)
 	);
 	array_push($rows,$data);		

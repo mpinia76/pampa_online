@@ -46,20 +46,20 @@ $campos['monto']			= array(
 								'requerid' 			=> true
 							);
 
-if(isset($_POST['agregar'])){
+if(($_POST['agregar'])){
 	//proceso la entrada de plata a la caja
 	$sql_entra = "INSERT INTO $tabla (fecha,origen,caja_id,monto,usuario_id) 
 				VALUES 
 				('".fechasql($_POST['fecha'])."','caja_".$_POST['origen']."','".$_POST['caja_id']."','".$_POST['monto']."',$user_id)";
 	mysql_query($sql_entra);
 	echo mysql_error();
-	
+	//echo $sql_entra."<br>";
 	//proceso la salida de plata
 	$sql_sale = "INSERT INTO $tabla (fecha,origen,caja_id,monto,usuario_id) 
 				VALUES 
 				('".fechasql($_POST['fecha'])."','hacia_".$_POST['caja_id']."','".$_POST['origen']."','-".$_POST['monto']."',$user_id)";
 	mysql_query($sql_sale);
-	
+	//echo $sql_sale."<br>";
 	$result = 1;
 }
 
@@ -83,7 +83,7 @@ if(isset($dataid)){
 }else{
 
 	$form->setBotonValue('Hacer transferencia'); //leyenda del boton
-	$form->setBotonName('agregar');
+	$form->setBotonName('agregarSubmit');
 	
 }
 

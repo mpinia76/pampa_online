@@ -38,15 +38,15 @@ var dataid;
 function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
-    mygrid.setHeader("Fecha, Detalle, Orden, Monto, Balance"); 		//nombre de las columnas
-	mygrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,&nbsp;");
-	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,${#stat_total},&nbsp;");
+    mygrid.setHeader("Fecha, Detalle, Orden/Reserva, Usuario, Credito, Debito, Saldo"); 		//nombre de las columnas
+	mygrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,&nbsp;");
+	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},${#stat_total}");
 	mygrid.enablePaging(true,10,10,"pagingArea",true,"recinfoArea");
-    mygrid.setInitWidths("80,*,80,80,80"); 				//ancho de las columnas
-    mygrid.setColAlign("left,left,right,right,right");			//alineacion de las columnas
-	mygrid.setColSorting("str,str,int,int,int");			//tipo datos para ordenar
-	mygrid.setColTypes("ro,ro,ro,price,price");				//editable o no
-	mygrid.enableEditEvents(false,false,false,false,false);
+    mygrid.setInitWidths("60,*,60,110,80,80,90"); 				//ancho de las columnas
+    mygrid.setColAlign("left,left,right,left,right,right,right");			//alineacion de las columnas
+	mygrid.setColSorting("str,str,int,str,int,int,int");			//tipo datos para ordenar
+	mygrid.setColTypes("ro,ro,ro,ro,price,price,price");				//editable o no
+	mygrid.enableEditEvents(false,false,false,false,false,false,false);
     mygrid.setSkin("dhx_skyblue");		
 	mygrid.load("<?php echo $json?>?caja_id=<?php echo $_GET['caja_id']?>","json");	//ruta al json con datos
 	mygrid.init();

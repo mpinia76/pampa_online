@@ -69,7 +69,7 @@ function ver_detalle(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?php echo $tabla?>_detalle','Detalle de movimientos','cajas_detalle.php?caja_id='+dataid,'610','500'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_detalle','Detalle de movimientos','cajas_detalle.php?caja_id='+dataid,'810','500'); //nombre de los divs
 	}
 }
 function eliminar(){
