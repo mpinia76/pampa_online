@@ -4,11 +4,7 @@ session_start();
 include_once("config/db.php");
 $balance = 0;
 
-$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
-	$motivos[$rs['id']] = $rs['nombre'];
-}
+
 $sql = "SELECT *,DATE(fecha) as fecha2, TIME(TIMESTAMPADD(HOUR,2,fecha)) as hora FROM caja_sincronizada WHERE caja_id =".$_GET['caja_id'];
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){	
@@ -17,11 +13,7 @@ while($rs = mysql_fetch_array($rsTemp)){
     $sincronizada[round($rs['monto'],1)]['usuario_id'] = $rs['usuario_id']; 
     $sincronizada[round($rs['monto'],1)]['hora'] = $rs['hora'];    
 }
-$sql = "SELECT * FROM caja";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
-	$cajas[$rs['id']] = $rs['caja'];
-}
+
 
 $sql = "SELECT * FROM tarjeta_resumen";
 $rsTemp = mysql_query($sql);
@@ -72,12 +64,20 @@ while($rs = mysql_fetch_array($rsTemp)){
 	
 		$detalle = $rs['origen'];
                                     $es_caja = explode('_',$detalle);
-                                    if($es_caja[0] == 'caja'){
-                                            $detalle = "Transferencia desde ".$cajas[$es_caja[1]];
-                                    }elseif($es_caja[0] == 'hacia'){
-                                            $detalle = "Transferencia hacia ".$cajas[$es_caja[1]];
+                                    if(($es_caja[0] == 'caja')||($es_caja[0] == 'hacia')){
+                                    	$sqlCaja = "SELECT * FROM caja WHERE id = ".$es_caja[1];
+										$rsCaja = mysql_query($sqlCaja);
+                                    	if($rsCaja = mysql_fetch_array($rsCaja)){
+												$detalle = ($es_caja[0] == 'caja')?"Transferencia desde ".$rsCaja['caja']:"Transferencia hacia ".$rsCaja['caja'];
+											}
+                                            
                                     }elseif($es_caja[0] == 'motivo'){
-                                            $detalle = $motivos[$es_caja[1]];
+                                            $sqlMotivo = "SELECT nombre FROM motivo WHERE motivo_grupo_id = 1 AND id = ".$es_caja[1];
+											$rsMotivo = mysql_query($sqlMotivo);
+											if($rsMotivo = mysql_fetch_array($rsMotivo)){
+												$detalle = $rsMotivo['nombre'];
+											}
+		                                            //$detalle = $motivos[$es_caja[1]];
                                     }elseif($es_caja[0] == 'haciacuenta'){
                                             $detalle = "Deposito en cuenta ".$cuentas[$es_caja[1]];
                                     }elseif($es_caja[0] == 'desdecuenta'){

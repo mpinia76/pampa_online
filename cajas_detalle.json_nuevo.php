@@ -1,14 +1,28 @@
 <?php
+header("Content-type:text/xml");
+ini_set('max_execution_time', 600);
+	
+print("<?xml version=\"1.0\"  encoding=\"ISO-8859-1\"?>");
 session_start();
 
 include_once("config/db.php");
 $balance = 0;
 
-$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1";
+
+if(isset($_GET["posStart"]))
+	$posStart = $_GET['posStart'];
+else
+	$posStart = 0;
+if(isset($_GET["count"]))
+	$count = $_GET['count'];
+else
+	$count = 10;
+
+/*$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
 	$motivos[$rs['id']] = $rs['nombre'];
-}
+}*/
 $sql = "SELECT *,DATE(fecha) as fecha2, TIME(TIMESTAMPADD(HOUR,2,fecha)) as hora FROM caja_sincronizada WHERE caja_id =".$_GET['caja_id'];
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){	
@@ -64,7 +78,17 @@ while($rs = mysql_fetch_array($rsTemp)){
 
 $sql = "SELECT rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, caja_movimiento.id, caja_movimiento.caja_id, caja_movimiento.monto, caja_movimiento.fecha, caja_movimiento.origen, caja_movimiento.registro_id FROM rel_pago_operacion RIGHT JOIN caja_movimiento ON rel_pago_operacion.forma_pago = 'efectivo' AND rel_pago_operacion.forma_pago_id = caja_movimiento.registro_id WHERE caja_id =".$_GET['caja_id']." ORDER BY fecha DESC";
 
+if($posStart==0){
+	$sqlCount = "Select count(*) as cnt from ($sql) as tbl";
+	//print($sqlCount);
+	$resCount = mysql_query ($sqlCount);
+	while($rowCount=mysql_fetch_array($resCount)){
+		$totalCount = $rowCount["cnt"];
+	}
+}
+$sql.= " LIMIT ".$posStart.",".$count;
 $rsTemp = mysql_query($sql);
+print("<rows total_count='".$totalCount."' pos='".$posStart."'>");
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){
 
@@ -77,7 +101,12 @@ while($rs = mysql_fetch_array($rsTemp)){
                                     }elseif($es_caja[0] == 'hacia'){
                                             $detalle = "Transferencia hacia ".$cajas[$es_caja[1]];
                                     }elseif($es_caja[0] == 'motivo'){
-                                            $detalle = $motivos[$es_caja[1]];
+		                                    $sqlMotivo = "SELECT nombre FROM motivo WHERE motivo_grupo_id = 1 AND id = ".$es_caja[1];
+											$rsMotivo = mysql_query($sqlMotivo);
+											if($rs = mysql_fetch_array($rsMotivo)){
+												$detalle = $rs['nombre'];
+											}
+		                                            //$detalle = $motivos[$es_caja[1]];
                                     }elseif($es_caja[0] == 'haciacuenta'){
                                             $detalle = "Deposito en cuenta ".$cuentas[$es_caja[1]];
                                     }elseif($es_caja[0] == 'desdecuenta'){
@@ -148,16 +177,16 @@ foreach($rowTemp as $id=>$datos){
 	if($i == 1){
 		$balance = $total;
 		 $prev_id = $id;	
-}
-else{
-	$balance = $balance - $rowTemp[$prev_id]['monto'];
-	$prev_id = $id;
-}	
-$i++;	
-if($sincronizada[round($balance,1)]['monto'] != ''){
-	$datos['detalle'] = $datos['detalle'].' (sincronizada '.$sincronizada[round($balance,1)]['hora'].')';	
-}	
-	$data = array(
+	}
+	else{
+		$balance = $balance - $rowTemp[$prev_id]['monto'];
+		$prev_id = $id;
+	}	
+	$i++;	
+	if($sincronizada[round($balance,1)]['monto'] != ''){
+		$datos['detalle'] = $datos['detalle'].' (sincronizada '.$sincronizada[round($balance,1)]['hora'].')';	
+	}	
+/*	$data = array(
 		"id" => $id,
 		"data" => array(
 			$datos['fecha'],
@@ -167,13 +196,31 @@ if($sincronizada[round($balance,1)]['monto'] != ''){
 			round($balance,2)
 		)
 	);
-	array_push($rows,$data);
+	array_push($rows,$data);*/
+	print("<row id='".$id."'>");
+					print("<cell>");
+					print($datos['fecha']);//."[".$row['item_id']."]");	
+					print("</cell>");
+					print("<cell>");
+					print(ucwords($datos['detalle']));	
+					print("</cell>");
+					print("<cell>");
+					print($datos['orden']);	
+					print("</cell>");
+					print("<cell>");
+					print($datos['monto']);	
+					print("</cell>");
+					print("<cell>");
+					print(round($balance,2));	
+					print("</cell>");
+				print("</row>");
+				$posStart++;
 }
-
-$array = array("rows" => $rows);
+print("</rows>");
+/*$array = array("rows" => $rows);
 
 $json = json_encode($array);
 
-echo $json;
+echo $json;*/
 
 ?>
