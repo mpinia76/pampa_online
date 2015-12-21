@@ -10,8 +10,7 @@ include_once("config/user.php");
 
 //indicar tabla a editar
 $tabla = 'caja_movimiento';
-
-if(isset($_POST['agregar'])){
+if(($_POST['agregar'])){
 	
 	$fecha 		= fechasql($_POST['fecha']);
 	$caja_id 	= $_POST['caja_id'];
@@ -111,7 +110,7 @@ return false
 
 }
 function valida(F) {
-
+	
 	
 	if($('#otro_motivo').css('display') != 'none' && $('#otro_motivo').val() == ''){
 		
@@ -159,7 +158,11 @@ function valida(F) {
 
 		
 
-}}
+	}
+	$('#agregarSubmit').val('Procesando...');
+	$('#agregarSubmit').attr('disabled','disabled');
+	$('#agregar').val('1');
+	}
 </script>
 
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
@@ -172,7 +175,7 @@ function valida(F) {
 <div class="container">
 
 <form method="POST" name="form" action="cajas_detalle.am.php" onSubmit="return valida(this);">
-
+<input name="agregar" id="agregar" type="hidden" value="0">
 <div class="label"></div><div class="content"><input  size="" type="hidden" value="" name="id" /></div><div style="clear:both;"></div>
 <div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" value="<?php echo date("d/m/Y")?>" name="fecha" /></div><div style="clear:both;"></div>
 <div class="label">Caja</div>
@@ -205,11 +208,12 @@ function valida(F) {
 	<?php } ?>
 	</select><br />	
 	<input id="otro_motivo" style="display:none; " type="text" name="otro_motivo" value="" />
+	
 </div>
 <div style="clear:both;"></div>
 <div class="label">Monto</div><div class="content"><input  size="5" type="text" value="" name="monto" /></div><div style="clear:both;"></div>
 
-<p align="center"><input type="submit" value="Agregar movimiento" name="agregar" /></p>
+<p align="center"><input type="submit" value="Agregar movimiento" name="agregarSubmit" id="agregarSubmit" /></p>
 
 </form>
 
