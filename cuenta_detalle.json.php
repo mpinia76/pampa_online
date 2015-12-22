@@ -74,8 +74,14 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$cuentas[$rs['id']] = $rs['banco']." ".$rs['sucursal']." ".$rs['cuenta_tipo']." ".$rs['nombre'];
 }
 
-$sql = "SELECT cheque_consumo.numero,cuenta_movimiento.registro_id, rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, cuenta_movimiento.id, cuenta_movimiento.cuenta_id, cuenta_movimiento.monto, cuenta_movimiento.fecha, cuenta_movimiento.origen, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM rel_pago_operacion RIGHT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN usuario ON cuenta_movimiento.usuario_id = usuario.id WHERE cuenta_movimiento.cuenta_id = ".$_GET['cuenta_id']." ORDER BY fecha DESC";
-
+$sql = "SELECT cheque_consumo.numero,cuenta_movimiento.registro_id, rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, cuenta_movimiento.id, cuenta_movimiento.cuenta_id, cuenta_movimiento.monto, cuenta_movimiento.fecha, cuenta_movimiento.origen, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM rel_pago_operacion RIGHT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN usuario ON cuenta_movimiento.usuario_id = usuario.id WHERE cuenta_movimiento.cuenta_id = ".$_GET['cuenta_id'];
+if (isset($_GET['desde_mask'])) {
+	$sql .=" AND fecha >= '".$_GET['desde_mask']."'";
+}
+if (isset($_GET['hasta_mask'])) {
+	$sql .=" AND fecha <= '".$_GET['hasta_mask']."'";
+}
+$sql .=" ORDER BY fecha DESC";
 $rsTemp = mysql_query($sql);
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){

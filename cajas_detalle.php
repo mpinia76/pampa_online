@@ -40,7 +40,7 @@ function doInitGrid(){
 	mygrid.setImagePath("library/dhtml/imgs/");
     mygrid.setHeader("Fecha, Detalle, Orden/Reserva, Usuario, Credito, Debito, Saldo"); 		//nombre de las columnas
 	mygrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,&nbsp;");
-	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},${#stat_total}");
+	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},&nbsp;");
 	mygrid.enablePaging(true,10,10,"pagingArea",true,"recinfoArea");
     mygrid.setInitWidths("60,*,60,110,80,80,90"); 				//ancho de las columnas
     mygrid.setColAlign("left,left,right,left,right,right,right");			//alineacion de las columnas

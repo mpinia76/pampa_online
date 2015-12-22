@@ -34,13 +34,13 @@ var ypos = position[1];
 var mygrid;
 
 var dataid;
-	
+var timeoutHnd;	
 function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
     mygrid.setHeader("Fecha, Detalle, Orden/Reserva, Usuario, Credito, Debito, Saldo"); 		//nombre de las columnas
     mygrid.attachHeader("#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,&nbsp;");
-	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},${#stat_total}");
+	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},&nbsp;");
 	mygrid.enablePaging(true,10,10,"pagingArea",true,"recinfoArea");
 	mygrid.setInitWidths("60,*,60,110,80,80,90"); 				//ancho de las columnas
     mygrid.setColAlign("left,left,right,left,right,right,right");			//alineacion de las columnas
@@ -50,6 +50,22 @@ function doInitGrid(){
     mygrid.setSkin("dhx_skyblue");		
 	mygrid.load("<?php echo $json?>?cuenta_id=<?php echo $_GET['cuenta_id']?>","json");	//ruta al json con datos
 	mygrid.init();
+}
+
+function doSearch(ev){
+	
+	var elem = ev.target||ev.srcElement;
+	if(timeoutHnd)
+		clearTimeout(timeoutHnd);
+	timeoutHnd = setTimeout(reloadGrid,500)
+}
+function reloadGrid(){
+	var desde_mask = document.getElementById("search_desde").value;
+	var hasta_mask = document.getElementById("search_hasta").value;
+	//showLoading(true);
+	mygrid.clearAndLoad("<?php echo $json?>?cuenta_id=<?php echo $_GET['cuenta_id']?>&desde_mask="+desde_mask+"&hasta_mask="+hasta_mask,"json");
+	if (window.a_direction)
+		myGrid.setSortImgState(true,window.s_col,window.a_direction);
 }
 
 function edit(){
@@ -80,6 +96,15 @@ function add(){
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
 </ul>
+<div>
+		Desde
+		<input type="text" id="search_desde" onKeyDown="doSearch(arguments[0]||event)">
+
+	
+		Hasta
+		<input type="text" id="search_hasta" onKeyDown="doSearch(arguments[0]||event)">
+		
+	</div>
 <div id="mygrid_container" style="width:100%;height:300px;"></div>
 <ul id="menu">
 <div style="float:left; margin-top:4px; width:300px;" id="pagingArea"></div>
