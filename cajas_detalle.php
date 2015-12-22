@@ -14,6 +14,7 @@ include_once("functions/delete.php");
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Documento sin t&iacute;tulo</title>
 <link rel="STYLESHEET" type="text/css" href="styles/toolbar.css">
+<script type="text/javascript" src="library/jquery/jquery-1.4.2.min.js"></script> 
 <!--dhtmlGrid-->
 <link rel="STYLESHEET" type="text/css" href="library/dhtml/styles/dhtmlxgrid.css">
 <link rel="STYLESHEET" type="text/css" href="library/dhtml/styles/dhtmlxgrid_dhx_skyblue.css">
@@ -23,6 +24,7 @@ include_once("functions/delete.php");
 <script src="library/dhtml/js/dhtmlxgrid_filter.js"></script>
 <script src="library/dhtml/js/dhtmlxgrid_srnd.js"></script>
 <script src="library/dhtml/js/dhtmlxgrid_pgn.js"></script>
+<script src="library/dhtml/js/dhtmlxgrid_export.js"></script>
 <script>
 var dhxWins = parent.dhxWins;
 
@@ -52,6 +54,23 @@ function doInitGrid(){
 	mygrid.init();
 }
 
+function doSearch(ev){
+	
+	var elem = ev.target||ev.srcElement;
+	if(timeoutHnd)
+		clearTimeout(timeoutHnd);
+	timeoutHnd = setTimeout(reloadGrid,500)
+}
+function reloadGrid(){
+	var desde_mask = document.getElementById("fecha_desde").value;
+	var hasta_mask = document.getElementById("fecha_hasta").value;
+	//showLoading(true);
+	mygrid.clearAndLoad("<?php echo $json?>?caja_id=<?php echo $_GET['caja_id']?>&desde_mask="+desde_mask+"&hasta_mask="+hasta_mask,"json");
+	/*if (window.a_direction)
+		myGrid.setSortImgState(true,window.s_col,window.a_direction);*/
+}
+
+
 function edit(){
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
@@ -73,13 +92,50 @@ function add(){
 }
 
 </script>
+<!--JQuery Date Picker-->
+<script type="text/javascript" src="library/datepicker/date.js"></script>
+<!--[if IE]><script type="text/javascript" src="library/datepicker/jquery.bgiframe.js"></script><![endif]-->
+<script type="text/javascript" src="library/datepicker/jquery.datePicker.min-2.1.2.js"></script>
+<link href="library/datepicker/datePicker.css" rel="stylesheet" type="text/css" />
+<style>
+a.dp-choose-date {
+	float: left;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	margin: 5px 3px 0;
+	display: block;
+	text-indent: -2000px;
+	overflow: hidden;
+	background: url(images/calendar.png) no-repeat; 
+}
+a.dp-choose-date.dp-disabled {
+	background-position: 0 -20px;
+	cursor: default;
+}
+/* makes the input field shorter once the date picker code
+ * has run (to allow space for the calendar icon
+ */
+input.dp-applied {
+	width: 80px;
+	float: left;
+}
+</style>
+<!--/JQuery Date Picker-->
 <script src="js/createWindow.js"></script>
 </head>
 
-<body onload="doInitGrid();">
+<body onload="doInitGrid(); $('.fecha').datePicker({startDate:'01/01/2010'});">
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
+	<li class="item">Ver desde: </li>
+	<li class="item"><input id="fecha_desde" type="text" class="fecha"> </li>
+	<li class="item">hasta: </li>
+	<li class="item"><input id="fecha_hasta" type="text" class="fecha"> </li>
+	<li class="item"><img style="cursor:pointer;" onclick="reloadGrid();" src="images/bt_view.png" align="absmiddle" /> </li>
+	<li class="item"><img style="cursor:pointer;" onclick="mygrid.toExcel('library/grid-excel-php/generate.php');" src="images/bt_excel.png" align="absmiddle" /> </li>
 </ul>
+
 <div id="mygrid_container" style="width:100%;height:300px;"></div>
 <ul id="menu">
 <div style="float:left; margin-top:4px; width:300px;" id="pagingArea"></div>

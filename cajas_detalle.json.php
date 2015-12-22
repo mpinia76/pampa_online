@@ -2,6 +2,8 @@
 session_start();
 
 include_once("config/db.php");
+include_once("functions/date.php");
+include_once("functions/fechasql.php");
 $balance = 0;
 
 $sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1";
@@ -61,8 +63,16 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$salario[$rs['id']] = "Salario a ".$rs['apellido']." ".$rs['nombre'];
 }
 
-$sql = "SELECT rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, caja_movimiento.id, caja_movimiento.caja_id, caja_movimiento.monto, caja_movimiento.fecha, caja_movimiento.origen, caja_movimiento.registro_id, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM rel_pago_operacion RIGHT JOIN caja_movimiento ON rel_pago_operacion.forma_pago = 'efectivo' AND rel_pago_operacion.forma_pago_id = caja_movimiento.registro_id LEFT JOIN usuario ON caja_movimiento.usuario_id = usuario.id WHERE caja_id =".$_GET['caja_id']." ORDER BY fecha DESC";
-
+$sql = "SELECT rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, caja_movimiento.id, caja_movimiento.caja_id, caja_movimiento.monto, caja_movimiento.fecha, caja_movimiento.origen, caja_movimiento.registro_id, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM rel_pago_operacion RIGHT JOIN caja_movimiento ON rel_pago_operacion.forma_pago = 'efectivo' AND rel_pago_operacion.forma_pago_id = caja_movimiento.registro_id LEFT JOIN usuario ON caja_movimiento.usuario_id = usuario.id WHERE caja_id =".$_GET['caja_id'];
+if ((isset($_GET['desde_mask']))&&($_GET['desde_mask']!='')) {
+	$desde = fechasql($_GET['desde_mask']);
+	$sql .=" AND caja_movimiento.fecha >= '".$desde."'";
+}
+if ((isset($_GET['hasta_mask']))&&($_GET['hasta_mask']!=''))  {
+	$hasta = fechasql($_GET['hasta_mask']);
+	$sql .=" AND caja_movimiento.fecha <= '".$hasta."'";
+}
+$sql .=" ORDER BY caja_movimiento.fecha DESC";
 $rsTemp = mysql_query($sql);
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){
