@@ -91,7 +91,7 @@ function doInitGrid(){
 }
 
 
-function aprobar(){
+function aprobar_viejo(){
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
 		alert('Debe seleccionar un registro');
@@ -101,6 +101,16 @@ function aprobar(){
 		document.form.submit();
 	}
 }
+
+function aprobar(){
+	dataid = mygrid.getSelectedRowId();
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else{
+		createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','cheques_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+	}
+}
+
 function filterByFecha(){
 	inicio = $('#fecha_desde').val();
 	fin = $('#fecha_hasta').val();

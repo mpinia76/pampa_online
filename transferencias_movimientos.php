@@ -95,7 +95,7 @@ function filterByFecha(){
 function addFilter(){
 	$('#estado_filter').html('<select id="estado" onchange="makeFilter();"><option selected="selected" value="no">Pendiente</option><option value="si">Debitada</option><option value="t">Todas</option></select>');
 }
-function aprobar(){
+function aprobar_viejo(){
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
 		alert('Debe seleccionar un registro');
@@ -103,6 +103,14 @@ function aprobar(){
 		document.form.tabla.value = 'transferencia_consumo';
 		document.form.registro.value = dataid;
 		document.form.submit();
+	}
+}
+function aprobar(){
+	dataid = mygrid.getSelectedRowId();
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else{
+		createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','transferencias_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
 	}
 }
 function edit(){

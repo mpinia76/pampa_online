@@ -15,5 +15,11 @@ function createWindow(id,titulo,url,w,h) {
 	w1 = dhxWins.createWindow(id, xpos, ypos, w, h);
     w1.setText(titulo);
 	w1.attachURL(url);
+	w1.attachEvent('onClose', Refresh);
+}
 
+function Refresh(w1){
+	window.location.reload();
+	return true;
+	
 }
