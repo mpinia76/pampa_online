@@ -19,22 +19,34 @@ $xmlString = urldecode($xmlString);
 if ($debug == true) {
 	error_log($xmlString, 3, 'debug_'.date("Y_m_d__H_i_s").'.xml');
 }
-
-
-$excel = new gridExcelGenerator();
-$sql = "SELECT banco.banco,cuenta.* FROM cuenta  INNER JOIN banco ON cuenta.banco_id=banco.id WHERE cuenta.id = ".$_GET['nombre'];
-$rs = mysql_fetch_array(mysql_query($sql));
 $tipo = ($_GET['caja'])?'Caja':'Cuenta';
 $desde = ($_GET['desde']!='')?" del ".$_GET['desde']:"";
 $hasta = ($_GET['hasta']!='')?" al ".$_GET['hasta']:"";
-$primerCelda = $tipo.": ".$rs['banco'].' ('.$rs['sucursal'].') '.$rs['nombre'].$desde.$hasta;
-$xmlString = str_replace("</rows>", "<row></row><row><cell></cell><cell color='red'><![CDATA[$primerCelda]]></cell></row></rows>", $xmlString);
-$xml = simplexml_load_string($xmlString);
-//echo $primerCelda;
 $desde = ($_GET['desde']!='')?"_".str_replace('/', '', $_GET['desde']):"";
 $hasta = ($_GET['hasta']!='')?"_".str_replace('/', '', $_GET['hasta']):"";
 
-$nombre = $tipo."_".$rs['banco'].'_('.$rs['sucursal'].')_'.$rs['nombre'].$desde.$hasta;
+
+
+$excel = new gridExcelGenerator();
+if ($_GET['cuenta']) {
+	$sql = "SELECT banco.banco,cuenta.* FROM cuenta  INNER JOIN banco ON cuenta.banco_id=banco.id WHERE cuenta.id = ".$_GET['nombre'];
+	$rs = mysql_fetch_array(mysql_query($sql));
+	$primerCelda = $tipo.": ".$rs['banco'].' ('.$rs['sucursal'].') '.$rs['nombre'].$desde.$hasta;
+	$nombre = $tipo."_".$rs['banco'].'_('.$rs['sucursal'].')_'.$rs['nombre'].$desde.$hasta;
+}
+else{
+	$sql = "SELECT caja.* FROM caja WHERE id = ".$_GET['nombre'];
+	$rs = mysql_fetch_array(mysql_query($sql));
+	$primerCelda = $tipo.": ".$rs['caja'].$desde.$hasta;
+	$nombre = $tipo."_".$rs['caja'].$desde.$hasta;
+}
+
+
+
+$xmlString = str_replace("</rows>", "<row></row><row><cell></cell><cell color='red'><![CDATA[$primerCelda]]></cell></row></rows>", $xmlString);
+$xml = simplexml_load_string($xmlString);
+//echo $primerCelda;
+
 //echo $nombre;
 $excel->printGrid($xml, $nombre);
 
