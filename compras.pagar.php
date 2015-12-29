@@ -207,21 +207,24 @@ function vacio(q) {
 return false
 }
 function valida(F) {
-			if(F.rubro.value == 'null') {
-			alert("Rubro es obligatorio")
-			F.rubro.focus();
-			return false
-			}
-			if(vacio(F.fecha.value) == false) {
-			alert("Fecha es obligatorio")
-			F.fecha.focus();
-			return false
-			}
-			if(vacio(F.monto.value) == false) {
-			alert("El monto es obligatorio")
-			F.monto.focus();
-			return false
-			}
+	if(F.rubro.value == 'null') {
+		alert("Rubro es obligatorio")
+		F.rubro.focus();
+		return false
+	}
+	if(vacio(F.fecha.value) == false) {
+		alert("Fecha es obligatorio")
+		F.fecha.focus();
+		return false
+	}
+	if(vacio(F.monto.value) == false) {
+		alert("El monto es obligatorio")
+		F.monto.focus();
+		return false
+	}
+	$('#agregarSubmit').val('Procesando...');
+	$('#agregarSubmit').attr('disabled','disabled');
+	$('#guardar').val('1');
 }
 </script>
 </head>
@@ -246,6 +249,7 @@ if(isset($_POST['datos']) and $result == 1){
 	
 	<div class="formContainer">
 	<form method="post" name="form" action="compras.view.php?dataid=<?php echo $dataid?>" onSubmit="return valida(this);">
+	<input name="guardar" id="guardar" type="hidden" value="0">
 	<input type="hidden" name="datos" value="<?php echo $_GET['dataid']?>" />
 		<fieldset>
 			<legend>Detalle de los compras seleccionados</legend> 
@@ -316,7 +320,7 @@ if(isset($_POST['datos']) and $result == 1){
 				<div id="forma_de_pago"></div>
 			</ul>
 		</fieldset> 
-		<p align="center"><input type="submit" value="Abonar" name="guardar" /></p> 
+		<p align="center"><input type="submit" value="Abonar" name="agregarSubmit" id="agregarSubmit" /></p> 
 	</form>
 	</div>
 <?php  } ?> 

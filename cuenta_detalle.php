@@ -90,6 +90,13 @@ function add(){
 	createWindow('w_subrubros_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 
+function exportarExcel(){
+	var desde = $('#fecha_desde').val();
+	var hasta = $('#fecha_hasta').val();
+	//alert('library/grid-excel-php/generate.php?cuenta=1&nombre=administracion&desde='+desde+'hasta='+hasta);
+	mygrid.toExcel('library/grid-excel-php/generate.php?cuenta=1&nombre=<?php echo $_GET['cuenta_id']?>&desde='+desde+'&hasta='+hasta);
+}
+
 </script>
 <!--JQuery Date Picker-->
 <script type="text/javascript" src="library/datepicker/date.js"></script>
@@ -132,7 +139,7 @@ input.dp-applied {
 	<li class="item">hasta: </li>
 	<li class="item"><input id="fecha_hasta" type="text" class="fecha"> </li>
 	<li class="item"><img style="cursor:pointer;" onclick="reloadGrid();" src="images/bt_view.png" align="absmiddle" /> </li>
-	<li class="item"><img style="cursor:pointer;" onclick="mygrid.toExcel('library/grid-excel-php/generate.php');" src="images/bt_excel.png" align="absmiddle" /> </li>
+	<li class="item"><img style="cursor:pointer;" onclick="exportarExcel()" src="images/bt_excel.png" align="absmiddle" /> </li>
 </ul>
 
 <div id="mygrid_container" style="width:100%;height:300px;"></div>

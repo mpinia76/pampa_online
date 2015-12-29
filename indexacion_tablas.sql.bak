@@ -401,3 +401,7 @@ ALTER TABLE `usuario`
 ALTER TABLE `usuario_caja`
 	ADD INDEX `usuario_id` (`usuario_id`),
 	ADD INDEX `caja_id` (`caja_id`);
+
+ALTER TABLE `usuario_cuenta`
+	ADD INDEX `usuario_id` (`usuario_id`),
+	ADD INDEX `cuenta_id` (`cuenta_id`);

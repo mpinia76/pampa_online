@@ -19,7 +19,8 @@ function createWindow(id,titulo,url,w,h) {
 }
 
 function Refresh(w1){
-	window.location.reload();
+	if (window.location!=null)
+		window.location.reload();
 	return true;
 	
 }

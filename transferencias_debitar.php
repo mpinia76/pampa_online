@@ -109,7 +109,7 @@ function valida(F) {
 
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body onload="$('.fecha').datePicker({startDate:'01/01/2010'});">
 
 <?php  include_once("config/messages.php"); ?>
 

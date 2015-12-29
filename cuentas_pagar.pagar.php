@@ -173,6 +173,13 @@ function addFormaDePago(forma_pago_id){
 		}
 	});
 }
+
+function valida(F) {
+	
+	$('#agregarSubmit').val('Procesando...');
+	$('#agregarSubmit').attr('disabled','disabled');
+	$('#guardar').val('1');
+}
 </script>
 
 </head>
@@ -196,7 +203,8 @@ if(isset($_POST['datos']) and $result == 1){
 ?>
 
 <div class="formContainer">
-<form method="post" name="form" action="cuentas_pagar.view.php">
+<form method="post" name="form" action="cuentas_pagar.view.php" onSubmit="return valida(this);">
+<input name="guardar" id="guardar" type="hidden" value="0">
 <input type="hidden" name="datos" value="<?php echo $_GET['dataid']?>" />
 <input type="hidden" name="operacion_tipo" value="<?php echo $operacion_tipo?>"  />
 	<fieldset>
@@ -232,7 +240,7 @@ if(isset($_POST['datos']) and $result == 1){
 			<div id="forma_de_pago"></div>
 		</ul>
 	</fieldset> 
-	<p align="center"><input type="submit" value="Guardar datos" name="guardar" /></p> 
+	<p align="center"><input type="submit" value="Guardar datos" name="agregarSubmit" id="agregarSubmit" /></p> 
 </form>
 <?php } ?>
 </div> 

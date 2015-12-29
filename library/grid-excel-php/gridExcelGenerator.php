@@ -44,13 +44,13 @@ class gridExcelGenerator {
 	private $coll_options = Array();
 	private $hiddenCols = Array();
 
-	public function printGrid($xml) {
+	public function printGrid($xml, $title) {
 		$this->headerParse($xml->head);
 		$this->footerParse($xml->foot);
 		$this->mainParse($xml);
 		$this->collectionsParse($xml->coll_options);
 		$this->rowsParse($xml->row);
-		$this->printGridExcel();
+		$this->printGridExcel($title);
 	}
 
 
@@ -217,14 +217,14 @@ class gridExcelGenerator {
 		}
 	}
 
-	public function printGridExcel() {
+	public function printGridExcel($title = 'dhtmlxGrid') {
 		$this->wrapper = new gridExcelWrapper();
 		$this->wrapper->createXLS($this->headerFileName, $this->headerLinesNum, $this->creator, $this->lastModifiedBy, $this->title, $this->subject, $this->dsc, $this->keywords, $this->category);
 		$this->wrapper->headerPrint($this->columns, $this->widthProportionality, $this->headerHeight, $this->textColor, $this->bgColor, $this->lineColor, $this->headerFontSize, $this->fontFamily, $this->without_header);
 		for ($i = 0; $i < count($this->rows); $i++)
 			$this->wrapper->rowPrint($this->rows[$i], $this->rowHeight, $this->lineColor, $this->gridFontSize, $this->fontFamily);
 		$this->wrapper->footerPrint($this->footerColumns, $this->headerHeight, $this->textColor, $this->bgColor, $this->lineColor, $this->headerFontSize, $this->fontFamily);
-		$this->wrapper->outXLS($this->title, $this->outputType);
+		$this->wrapper->outXLS($title, $this->outputType);
 	}
 
 	private function strip($param) {

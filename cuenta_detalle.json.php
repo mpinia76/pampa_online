@@ -94,6 +94,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	if($rs['operacion_tipo'] == ''){
 	
 		$detalle = $rs['origen'];
+		$orden ='';
 		
 		if($detalle == 'cheque'){
 			$detalle = 'cheque ('.$rs['numero'].')';
@@ -114,9 +115,11 @@ while($rs = mysql_fetch_array($rsTemp)){
 		}elseif($es_cuenta[0] == 'desdecaja'){
 			$detalle = "Deposito desde caja ".$cajas[$es_cuenta[1]];
 		}elseif($es_cuenta[0] == 'reservatransferencia'){
-                                        $detalle = "Transferencia por Reserva ".$reserva_cobro_transferencia[$es_cuenta[1]];
+                                        $detalle = "Transferencia";
+                                        $orden ='Res. '.$reserva_cobro_transferencia[$es_cuenta[1]];
 		}elseif($es_cuenta[0] == 'reservacheque'){
-                                        $detalle = "Cheque por Reserva ".$reserva_cobro_cheque[$es_cuenta[1]];
+                                        $detalle = "Cheque";
+                                        $orden ='Res. '.$reserva_cobro_transferencia[$es_cuenta[1]];
 		}elseif($es_cuenta[0] == 'acreditacionlote'){
                                         $detalle = $lotes[$es_cuenta[1]];
 		}
@@ -138,7 +141,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$rowTemp[$rs['id']]['user'] = $rs['user'];
 	$rowTemp[$rs['id']]['monto'] = $rs['monto'];
 	$rowTemp[$rs['id']]['fecha'] = $rs['fecha'];
-	$rowTemp[$rs['id']]['orden'] = '';
+	$rowTemp[$rs['id']]['orden'] = $orden;
 }
 
 //agrego detalle de los gastos

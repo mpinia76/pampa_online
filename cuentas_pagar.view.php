@@ -144,6 +144,13 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 			}
 		});
 	}
+
+	function valida(F) {
+		
+		$('#agregarSubmit').val('Procesando...');
+		$('#agregarSubmit').attr('disabled','disabled');
+		$('#guardar').val('1');
+	}
 	</script>
 	
 	</head>
@@ -159,7 +166,8 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 
 	<?php include_once("config/messages.php"); ?>
 	<div class="formContainer">
-	<form method="post" name="form" action="cuentas_pagar.view.php">
+	<form method="post" name="form" action="cuentas_pagar.view.php" onSubmit="return valida(this);">
+		<input name="guardar" id="guardar" type="hidden" value="0">
 		<input type="hidden" name="cuenta_id" value="<?php echo $rs_cuenta['id']?>" />
 		<input type="hidden" name="cuenta_pendiente" value="<?php echo $rs_cuenta['monto']?>"  />
 		<fieldset>
@@ -189,7 +197,7 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 				<div id="forma_de_pago"></div>
 			</ul>
 		</fieldset> 
-		<p align="center"><input type="submit" value="Guardar datos" name="guardar" /></p> 
+		<p align="center"><input type="submit" value="Guardar datos" name="agregarSubmit" id="agregarSubmit" /></p> 
 	</form>
 				
 	<?php }elseif($estado == 1){ ?>

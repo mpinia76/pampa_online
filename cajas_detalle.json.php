@@ -80,6 +80,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	if($rs['operacion_tipo'] == ''){
 	
 		$detalle = $rs['origen'];
+		$orden = '';
                                     $es_caja = explode('_',$detalle);
                                     if($es_caja[0] == 'caja'){
                                             $detalle = "Transferencia desde ".$cajas[$es_caja[1]];
@@ -94,7 +95,8 @@ while($rs = mysql_fetch_array($rsTemp)){
                                     }elseif($es_caja[0] == 'tarjetaresumen'){			
                                             $detalle = $resumen[$es_caja[1]];
                                     }elseif($es_caja[0] == 'reservacobro'){
-                                            $detalle = 'Cobro de Reserva nro: '.$reserva_cobro[$es_caja[1]];
+                                            $detalle = 'Cobro de Reserva';
+                                            $orden = 'Nro: '.$reserva_cobro[$es_caja[1]];
                                     }
 		
 	}else{
@@ -117,7 +119,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$rowTemp[$rs['id']]['user'] = $rs['user'];
 	$rowTemp[$rs['id']]['monto'] = $rs['monto'];
 	$rowTemp[$rs['id']]['fecha'] = $rs['fecha'];
-	$rowTemp[$rs['id']]['orden'] = '';
+	$rowTemp[$rs['id']]['orden'] = $orden;
 }
 
 //agrego detalle de los gastos
