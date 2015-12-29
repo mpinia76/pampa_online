@@ -34,7 +34,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 $sql = "SELECT rd.id, r.numero FROM reserva_devoluciones rd INNER JOIN reservas r ON rd.reserva_id = r.id AND rd.forma_pago = 'EFECTIVO' ";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
-    $devoluciones[$rs['id']] = 'Devolucion de Reserva nro: '.$rs['numero'];
+    $devoluciones[$rs['id']] = 'Devolucion de Reserva';;
 }
 
 $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id ORDER BY banco.banco";
