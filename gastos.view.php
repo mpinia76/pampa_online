@@ -2,7 +2,7 @@
 session_start();
 
 $data 	= explode(",",$_GET['dataid']);
-
+print_r($_POST);
 if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_GET['action'] == 'editar' or $_GET['action'] == 'autorizar') ){ ?>
 
 	<p align="center">Seleccione un s&oacute;lo registro</p>
@@ -23,7 +23,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	include_once("config/db.php");
 	include_once("config/user.php");
 	
-	if(isset($_POST['aprobar'])){ //gasto aprobado
+	if(($_POST['aprobar'])){ //gasto aprobado
 		$sql = "SELECT nro_orden FROM gasto ORDER BY nro_orden DESC LIMIT 1";
 		$rs = mysql_fetch_array(mysql_query($sql));
 		$nro_orden = $rs['nro_orden'] + 1; //obtengo el numero de orden
@@ -35,13 +35,13 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		$result = 1;
 		$_GET['action'] = 'abonar';
 		
-	}elseif(isset($_POST['desaprobar'])){ //gasto desaprobado
+	}elseif(($_POST['desaprobar'])){ //gasto desaprobado
 		$sql = "UPDATE gasto SET estado=2 WHERE id=".$_POST['gasto_id'];
 		mysql_query($sql);
 		$dataid = $_POST['gasto_id'];
 		$result = 1;
 		$_GET['action'] = 'consultar';
-	}elseif(isset($_POST['actualizar'])){ //actualizo algunos datos
+	}elseif(($_POST['actualizar'])){ //actualizo algunos datos
 		
 		$result = 1;
 		$sql = "UPDATE gasto SET 
@@ -64,7 +64,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		$dataid = $_POST['gasto_id'];
 		$_GET['action'] = 'editar';
 		
-	}elseif(isset($_POST['guardar'])){ //guardo los datos extras del gasto
+	}elseif(($_POST['guardar'])){ //guardo los datos extras del gasto
 		$dataid = $_POST['gasto_id'];
 		$_GET['action'] = 'abonar';
 		
