@@ -16,7 +16,7 @@ $this->Js->buffer('
             $("#dataTable tr").unbind("dblclick").dblclick(function(){
                 var data = oTable.fnGetData( this );
 
-                createWindow("w_gastos_view","Ver gasto","/gastos.view.php?dataid="+data[0]+"&action=consultar","600","400");
+                createWindow("w_gastos_view","Ver gasto","gastos.view.php?dataid="+data[0]+"&action=consultar","600","400");
 
             });
             $("#dataTable tr").click(function(e){
@@ -141,7 +141,7 @@ function abonar(){
         selected.push(data[0]);
     });
 
-    createWindow('w_gastos_pagar','Agregar gasto','/gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
+    createWindow('w_gastos_pagar','Agregar gasto','gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
 
 }
 function action(action){
@@ -153,7 +153,7 @@ function action(action){
     }else{
         var data = oTable.fnGetData(row[0]);
 
-        createWindow('w_gastos_consultar','ver gasto','/gastos.view.php?action='+action+'&dataid='+data[0],'600','400');
+        createWindow('w_gastos_consultar','ver gasto','gastos.view.php?action='+action+'&dataid='+data[0],'600','400');
 
     }
 }
@@ -161,7 +161,7 @@ function action(action){
 <ul class="action_bar">
 
     <li onclick="window.location.reload()" class="boton actualizar">Actualizar</li>
-    <li onclick="createWindow('w_gastos_add','Agregar gasto','/gastos.add.php','600','400');" class="boton agregar">Agregar</li>
+    <li onclick="createWindow('w_gastos_add','Agregar gasto','gastos.add.php','600','400');" class="boton agregar">Agregar</li>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('consultar');" class="boton consultar">Consultar</li> <?php  } ?>
     <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <?php  } ?>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('abonar');"  class="boton abonar">Abonar</li><?php  } ?>

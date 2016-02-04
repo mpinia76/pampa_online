@@ -9,8 +9,9 @@ class InformesController extends AppController {
     }
     
     function ventas_economico($ano){
-        ini_set( "memory_limit", "512M" );
-        error_reporting(0);     
+        ini_set( "memory_limit", "-1" );
+        ini_set('max_execution_time', "-1");
+        //error_reporting(0);
         
         $this->layout = 'ajax';
         

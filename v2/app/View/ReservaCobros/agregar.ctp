@@ -53,7 +53,7 @@ if(count($reserva_descuentos) > 0){  ?>
                 <td><?php echo $descuento['Descuento']['motivo'];?></td>
                 <td align="right">$<?php echo $descuento['Descuento']['monto'];?></td>
             </tr>
-            <? } ?>
+            <?php } ?>
         </table>
         <table width="100%" >
             <tr class="saldo_pendiente">
@@ -201,7 +201,7 @@ if(count($reserva['ReservaDevolucion']) > 0){
 
 <div class="ym-gbox saldo_pendiente">
     Cobro neto de intereses: $<?php echo $pagado?><br/>
-    <? if($devoluciones > 0){ ?> Devoluciones: $<?=$devoluciones?><br/> <? } ?>
+    <?php if($devoluciones > 0){ ?> Devoluciones: $<?php echo $devoluciones?><br/> <?php } ?>
     Saldo pendiente: $<?php echo $reserva['Reserva']['total'] + $no_adelantadas - $pagado - $descuentos + $devoluciones?>
 </div>
 

@@ -1,0 +1,20 @@
+2016-02-03 9:50:05 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado)
+					VALUES
+						(8,'9560',1,2016,29,NOW())
+2016-02-03 9:51:28 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado)
+					VALUES
+						(8,'9560',1,2016,29,NOW())
+2016-02-03 9:53:24 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado)
+					VALUES
+						(8,'9560',1,2016,29,NOW())
+2016-02-03 9:56:42 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado)
+					VALUES
+						(8,'9560',1,2016,29,NOW())
+2016-02-03 10:00:50 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado)
+					VALUES
+						(8,'9560',1,2016,29,NOW())

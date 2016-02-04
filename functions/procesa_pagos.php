@@ -3,6 +3,7 @@
 //@operacion_id (Array)
 //@operacion_tipo
 
+
 //proceso los pagos de cuentas a pagar
 if(isset($_POST['cuenta'])){
 
@@ -55,6 +56,7 @@ if(isset($_POST['efectivo'])){
 			//agrego el registro de gasto de efectivo
 			$sql = "INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
 				(".$efectivo_caja_id[$key].",'".$efectivo_monto[$key]."','".$efectivo_interes[$key]."','".$efectivo_descuento[$key]."','".fechasql($efectivo_fecha[$key])."')";
+			//_log($sql);
 			mysql_query($sql);
 			$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 			
@@ -62,6 +64,7 @@ if(isset($_POST['efectivo'])){
 			foreach($operacion_id as $clave=>$valor){
 				$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 					($registro_id, 'efectivo', '$operacion_tipo', $valor)";
+				//_log($sql);
 				mysql_query($sql);
 			} 
 				
@@ -74,6 +77,7 @@ if(isset($_POST['efectivo'])){
 			
 			$sql = "INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha) VALUES 
 				(".$efectivo_caja_id[$key].",'efectivo_consumo',$registro_id,'-$efectivo','".fechasql($efectivo_fecha[$key])."')";
+			//_log($sql);
 			mysql_query($sql);
 		
 		}
@@ -164,7 +168,7 @@ if(isset($_POST['cheque'])){
 			$sql = "INSERT INTO cheque_consumo (numero,titular,fecha,monto,interes,descuento,cuenta_id) VALUES 
 					('".$cheque_numero[$key]."','".$cheque_titular[$key]."','".fechasql($cheque_fecha[$key])."','".$cheque_monto[$key]."','".$cheque_interes[$key]."','".$cheque_descuento[$key]."','".$cheque_cuenta_id[$key]."')";
 			mysql_query($sql);
-
+			//_log($sql);
 			$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 			
 			//guardo la relacion de pago y operacion
@@ -172,6 +176,7 @@ if(isset($_POST['cheque'])){
 				$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 					($registro_id, 'cheque', '$operacion_tipo', $valor)";
 				mysql_query($sql);
+				//_log($sql);
 			} 
 			
 		}
@@ -232,7 +237,7 @@ if(isset($_POST['transferencia'])){
 //proceso si hay un debito de la cuenta
 if(isset($_POST['debito'])){
 
-	$fecha				= date("Y-m-d");
+	$fecha				= $_POST['debito_fecha'];;
 	$debito				= $_POST['debito'];
 	$debito_cuenta_id 	= $_POST['debito_cuenta_id'];
 	$debito_monto 		= $_POST['debito_monto'];
@@ -245,7 +250,8 @@ if(isset($_POST['debito'])){
 		foreach($debito as $key=>$value){
 		
 			$monto = $debito_monto[$key] + $debito_interes[$key] - $debito_descuento[$key];
-			$insert = "INSERT INTO cuenta_movimiento (fecha,cuenta_id,origen,monto) VALUES ('$fecha','$debito_cuenta_id[$key]','$detalle','-$monto')";
+			$insert = "INSERT INTO cuenta_movimiento (fecha,cuenta_id,origen,monto) VALUES ('".fechasql($fecha[$key])."','$debito_cuenta_id[$key]','$detalle','-$monto')";
+			//echo $insert."<br>";
 			mysql_query($insert);
 		
 			$registro_id = mysql_insert_id(); //numero id en el tipo de pago
@@ -254,6 +260,7 @@ if(isset($_POST['debito'])){
 			foreach($operacion_id as $clave=>$valor){
 				$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 					($registro_id, 'debito', '$operacion_tipo', $valor)";
+				//echo $sql."<br>";
 				mysql_query($sql);
 			}
 			

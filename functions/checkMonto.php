@@ -1,4 +1,4 @@
-<?
+<?php
 $monto 	= $_GET['monto'];
 $tabla	= $_GET['tabla'];
 

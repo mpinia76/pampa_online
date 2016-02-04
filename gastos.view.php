@@ -2,7 +2,7 @@
 session_start();
 
 $data 	= explode(",",$_GET['dataid']);
-print_r($_POST);
+
 if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_GET['action'] == 'editar' or $_GET['action'] == 'autorizar') ){ ?>
 
 	<p align="center">Seleccione un s&oacute;lo registro</p>
@@ -90,7 +90,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							recibo_nro='".$_POST['recibo_nro']."'
 						WHERE id=".$_POST['gasto_id'];
 				mysql_query($sql);
-	
+				//echo $sql."<br>";
 				$operacion_id[] = $dataid;
 				$operacion_tipo = 'gasto';
 				
@@ -285,14 +285,16 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				$('#guardar').val('1');
 		<?php } ?>
 	}
+	
 	</script>
+	
 	</head>
 	
 	<body>
 	<?php if( isset($_POST['guardar']) or isset($_POST['actualizar']) or isset($_POST['aprobar']) or isset($_POST['desaprobar']) ) { ?>
 	<script>
 	var dhxWins = parent.dhxWins;
-	dhxWins.window('w_gasto').attachURL('/v2/gastos/index');
+	dhxWins.window('w_gasto').attachURL('v2/gastos/index');
 	</script>
 	<?php } ?>
 	
@@ -370,19 +372,19 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<li><label>Descripcion:</label><textarea name="descripcion"><?php echo $rs['descripcion']?></textarea></li>
 					<li><label>Remito:</label><input type="text" name="remito_nro" value="<?php echo $rs['remito_nro']?>" /></li>
 					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?php echo $rs['recibo_nro']?>" /></li>
-					<?php if($subestado == 2){ ?>
+					<?php if(($subestado == 2)||($subestado == 1)){ ?>
 						<li><label>Factura:</label>
 						<select size="1" name="factura_tipo">
-							<option value="n">Tipo</option>
-							<option value="A">A</option>
-							<option value="B">B</option>
-							<option value="C">C</option>
-						</select> 
-						<select size="1" name="factura_orden">
-							<option value="B">0001</option>
-							<option value="N">0002</option>
-						</select> 
-						<input type="text" name="factura_nro" /></li>
+						<option value="n" <?php if($rs['factura_tipo']=='n'){ ?> selected="selected" <?php } ?>>Tipo</option>
+						<option value="A" <?php if($rs['factura_tipo']=='A'){ ?> selected="selected" <?php } ?>>A</option>
+						<option value="B" <?php if($rs['factura_tipo']=='B'){ ?> selected="selected" <?php } ?>>B</option>
+						<option value="C" <?php if($rs['factura_tipo']=='C'){ ?> selected="selected" <?php } ?>>C</option>
+					</select> 
+					<select size="1" name="factura_orden">
+						<option value="B" <?php if($rs['factura_orden']=='B'){ ?> selected="selected" <?php } ?>>0001</option>
+						<option value="N" <?php if($rs['factura_orden']=='N'){ ?> selected="selected" <?php } ?>>0002</option>
+					</select> 
+					<input type="text" name="factura_nro" value="<?php echo $rs['factura_nro']?>"/></li>
 					<?php } ?>
 					
 				<?php }elseif( ($_GET['action'] == 'editar' and $subestado == 3)) { ?>									
@@ -427,16 +429,16 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?php echo $rs['recibo_nro']?>" /></li>
 					<li><label>Factura:</label>
 					<select size="1" name="factura_tipo">
-						<option value="n">Tipo</option>
-						<option value="A">A</option>
-						<option value="B">B</option>
-						<option value="C">C</option>
+						<option value="n" <?php if($rs['factura_tipo']=='n'){ ?> selected="selected" <?php } ?>>Tipo</option>
+						<option value="A" <?php if($rs['factura_tipo']=='A'){ ?> selected="selected" <?php } ?>>A</option>
+						<option value="B" <?php if($rs['factura_tipo']=='B'){ ?> selected="selected" <?php } ?>>B</option>
+						<option value="C" <?php if($rs['factura_tipo']=='C'){ ?> selected="selected" <?php } ?>>C</option>
 					</select> 
 					<select size="1" name="factura_orden">
-						<option value="B">0001</option>
-						<option value="N">0002</option>
+						<option value="B" <?php if($rs['factura_orden']=='B'){ ?> selected="selected" <?php } ?>>0001</option>
+						<option value="N" <?php if($rs['factura_orden']=='N'){ ?> selected="selected" <?php } ?>>0002</option>
 					</select> 
-					<input type="text" name="factura_nro" /></li>
+					<input type="text" name="factura_nro" value="<?php echo $rs['factura_nro']?>"/></li>
 				<?php }elseif($_GET['action'] == 'abonar' and $subestado == 2){ ?>
 					<li><label>Fecha devengado:</label><?php echo fechavista($rs['fecha'])?></li>
 					<input type="hidden" name="fecha" value="<?php echo fechavista($rs['fecha'])?>" />
@@ -452,16 +454,16 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<li><label>Recibo:</label><input type="text" name="recibo_nro" value="<?php echo $rs['recibo_nro']?>" /></li>
 					<li><label>Factura:</label>
 					<select size="1" name="factura_tipo">
-						<option value="n">Tipo</option>
-						<option value="A">A</option>
-						<option value="B">B</option>
-						<option value="C">C</option>
+						<option value="n" <?php if($rs['factura_tipo']=='n'){ ?> selected="selected" <?php } ?>>Tipo</option>
+						<option value="A" <?php if($rs['factura_tipo']=='A'){ ?> selected="selected" <?php } ?>>A</option>
+						<option value="B" <?php if($rs['factura_tipo']=='B'){ ?> selected="selected" <?php } ?>>B</option>
+						<option value="C" <?php if($rs['factura_tipo']=='C'){ ?> selected="selected" <?php } ?>>C</option>
 					</select> 
 					<select size="1" name="factura_orden">
-						<option value="B">0001</option>
-						<option value="N">0002</option>
+						<option value="B" <?php if($rs['factura_orden']=='B'){ ?> selected="selected" <?php } ?>>0001</option>
+						<option value="N" <?php if($rs['factura_orden']=='N'){ ?> selected="selected" <?php } ?>>0002</option>
 					</select> 
-					<input type="text" name="factura_nro" /></li>
+					<input type="text" name="factura_nro" value="<?php echo $rs['factura_nro']?>"/></li>
 				<?php }elseif($_GET['action'] == 'editar' and $subestado == 4){ ?>
 					<li><label>Fecha devengado:</label><input class="date-pick date-edit dp-applied" name="fecha" value="<?php echo fechavista($rs['fecha'])?>" /></li>
 					<li><label>Rubro:</label>
@@ -530,7 +532,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<input type="hidden" name="remito_nro" value="<?php echo $rs['remito_nro']?>" />
 					<li><label>Recibo::</label><?php echo $rs['recibo_nro']?></li>
 					<input type="hidden" name="recibo_nro" value="<?php echo $rs['recibo_nro']?>" />
-					<?php if($subestado > 1){ ?>
+					<?php if($subestado > 0){ ?>
 					<li><label>Factura:</label>Tipo: <?php echo $rs['factura_tipo']?> Numero: <?php echo $rs['factura_nro']?></li>
 					<input type="hidden" name="factura_orden" value="<?php echo $rs['factura_orden']?>" />
 					<input type="hidden" name="factura_tipo" value="<?php echo $rs['factura_tipo']?>" />

@@ -174,10 +174,10 @@
         <div class="informes item" onclick="createWindow('w_informe','Informe financiero','informe.financiero.php','1230','400'); $('#menu').hide();">
             Financiero  de Egresos
         </div>
-        <div class="informes item" onclick="createWindow('w_ventas_informe_economico','Informe economico de ventas','/v2/informes/index_ventas_economico','1230','600'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_ventas_informe_economico','Informe economico de ventas','v2/informes/index_ventas_economico','1230','600'); $('#menu').hide();">
             Ventas
         </div>
-        <div class="informes item" onclick="createWindow('w_ventas_informe_financiero','Informe financiero de ventas','/v2/informes/index_ventas_financiero','1230','600'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_ventas_informe_financiero','Informe financiero de ventas','v2/informes/index_ventas_financiero','1230','600'); $('#menu').hide();">
             Financiero de Ventas
         </div>
         <div class="informes item" onclick="createWindow('w_informe_cheques','Informe de cheques','informe.cheque.php','1230','400'); $('#menu').hide();">

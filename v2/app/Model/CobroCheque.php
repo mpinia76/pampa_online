@@ -70,7 +70,7 @@ class CobroCheque extends AppModel {
         'ano_mes_acreditado' => 'DATE_FORMAT(CobroCheque.fecha_acreditado,"%y%m")'
     );
     
-    public function beforeSave() {
+    public function beforeSave($options = Array()) {
         if (!empty($this->data['CobroCheque']['fecha_cobro'])) {
             $this->data['CobroCheque']['fecha_cobro'] = $this->dateFormatBeforeSave($this->data['CobroCheque']['fecha_cobro']);
         }
@@ -80,7 +80,7 @@ class CobroCheque extends AppModel {
         return true;
     }
 
-    public function afterFind($results) {
+    public function afterFind($results, $primary = false) {
         foreach ($results as $key => $val) {
             if (isset($val['CobroCheque']['fecha_cobro'])) {
                 $results[$key]['CobroCheque']['fecha_cobro']= $this->dateFormatAfterFind($val['CobroCheque']['fecha_cobro']);

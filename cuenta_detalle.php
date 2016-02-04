@@ -49,8 +49,10 @@ function doInitGrid(){
 	mygrid.setColSorting("str,str,int,str,int,int,int");			//tipo datos para ordenar
 	mygrid.setColTypes("ro,ro,ro,ro,price,price,price");				//editable o no
 	mygrid.enableEditEvents(false,false,false,false,false,false,false);
-    mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?php echo $json?>?cuenta_id=<?php echo $_GET['cuenta_id']?>","json");	//ruta al json con datos
+    mygrid.setSkin("dhx_skyblue");	
+    var desde_mask = document.getElementById("fecha_desde").value;
+	var hasta_mask = document.getElementById("fecha_hasta").value;	
+	mygrid.load("<?php echo $json?>?cuenta_id=<?php echo $_GET['cuenta_id']?>&desde_mask="+desde_mask+"&hasta_mask="+hasta_mask,"json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -135,9 +137,9 @@ input.dp-applied {
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
 	<li class="item">Ver desde: </li>
-	<li class="item"><input id="fecha_desde" type="text" class="fecha"> </li>
+	<li class="item"><input id="fecha_desde" type="text" class="fecha" value="<?php /*echo date('d/m/Y',strtotime('-30 day'));*/  ?>"> </li>
 	<li class="item">hasta: </li>
-	<li class="item"><input id="fecha_hasta" type="text" class="fecha"> </li>
+	<li class="item"><input id="fecha_hasta" type="text" class="fecha" value="<?php /*echo date('d/m/Y');*/  ?>"> </li>
 	<li class="item"><img style="cursor:pointer;" onclick="reloadGrid();" src="images/bt_view.png" align="absmiddle" /> </li>
 	<li class="item"><img style="cursor:pointer;" onclick="exportarExcel()" src="images/bt_excel.png" align="absmiddle" /> </li>
 </ul>

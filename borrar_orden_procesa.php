@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("config/db.php");
 
 $nro_orden = $_POST['nro_orden'];

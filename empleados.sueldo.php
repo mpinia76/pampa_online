@@ -308,7 +308,8 @@ function sumMes(i){
     	<tr>
         	<td><?php echo mes($i)?></td>
             
-            <?php  if($pagado[$ano."_".$i] or $ano < date('Y') or ($ano == date('Y') and $i < (date('m')-1) ) ){ ?>
+            <?php  //if($pagado[$ano."_".$i] or $ano < date('Y') or ($ano == date('Y') and $i < (date('m')-1) ) ){ ?>
+            <?php  if($pagado[$ano."_".$i]){ ?>
             	<td><?php echo $asignado[$ano."_".$i]['sueldo']?> <input type="hidden" name="sueldo[]" value="<?php echo $asignado[$ano."_".$i]['sueldo']?>" /></td>
                 <td><?php echo $asignado[$ano."_".$i]['viaticos']?> <input type="hidden" name="viaticos[]" value="<?php echo $asignado[$ano."_".$i]['viaticos']?>" /></td>
                 <td><?php echo $asignado[$ano."_".$i]['asignaciones']?> <input type="hidden" name="asignaciones[]" value="<?php echo $asignado[$ano."_".$i]['asignaciones']?>" /></td>

@@ -5,6 +5,9 @@ include_once("functions/fechasql.php");
 include_once("config/db.php");
 
 if(isset($_POST['monto'])){
+	
+	
+	
 		
 	$sql = "SELECT valor FROM configuracion WHERE id='compra_aprobada'";
 	$rs = mysql_fetch_array(mysql_query($sql));
@@ -32,6 +35,8 @@ if(isset($_POST['monto'])){
 
 	$operacion_id 	= mysql_insert_id();
 	$operacion_tipo = "compra";
+		
+	
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
@@ -144,6 +149,8 @@ function valida(F) {
 			
 	var datos = ({
 		'monto' : F.monto.value,
+		'proveedor' : F.proveedor.value,
+		'factura_nro' : F.factura_nro.value,
 		'tabla' : 'compra'
 	});
 	
@@ -152,17 +159,26 @@ function valida(F) {
 			$('#loading').show();
 		},
 		data: datos,
-		url: 'functions/checkMonto.php',
+		url: 'functions/checkFactura.php',
+		dataType:"json",
 		success: function(data) {
 		
-			if(data == 'si'){		
-				if(confirm("Ya existe una compra con ese monto, desea continuar?") ){
+			if(data["siMonto"] == 'si'){		
+				if(confirm("El dia "+data["fecha"]+" existe una compra por $"+F.monto.value+" con "+data["proveedor"]+"!  \n \n Continuar?")) {
 					F.submit();
 				}else{
 					$('#loading').hide();
 				}
 			}else{
-				F.submit();
+				if(data["siFactura"] == 'si'){		
+					if(confirm("El dia "+data["fecha"]+" existe una compra con nro de factura "+data["factura_tipo"]+" "+data["factura_orden"]+"-"+data["factura_nro"]+" con "+data["proveedor"]+"!  \n \n Continuar?")) {
+						F.submit();
+					}else{
+						$('#loading').hide();
+					}
+				}else{
+					F.submit();
+				}
 			}
 			
 		}
@@ -184,13 +200,14 @@ function valida(F) {
 <?php  include_once("config/messages.php"); ?>
 <?php  if(isset($nro_orden)){
 	if($nro_orden==0){
-		echo '<div id="mensaje" class="ok"><p><img src="images/error.gif" align="absmiddle" /> &nbsp; El compra debe ser aprobado por administaci&oacute;n</p></div>';
+		echo '<div id="mensaje" class="ok"><p><img src="images/error.gif" align="absmiddle" /> &nbsp; La compra debe ser aprobado por administaci&oacute;n</p></div>';
 	}else{
-		echo '<div id="mensaje" class="ok"><p><img src="images/ok.gif" align="absmiddle" /> &nbsp; El compra se aprob&oacute; con la orden de pago: '.$nro_orden.'</p></div>';?>
+		echo '<div id="mensaje" class="ok"><p><img src="images/ok.gif" align="absmiddle" /> &nbsp; La compra se aprob&oacute; con la orden de pago: '.$nro_orden.'</p></div>';?>
 
 <?php 
 	}
 }
+
 ?>
 
 <div class="formContainer">
@@ -225,6 +242,18 @@ function valida(F) {
 			<li><label>Descripcion:</label><textarea name="descripcion"></textarea></li>
 			<li><label>Numero de remito:</label><input type="text" name="remito_nro" /></li>
 			<li><label>Numero de recibo:</label><input type="text" name="recibo_nro" /></li>
+			<li><label>Numero de factura:</label>
+				<select size="1" name="factura_tipo">
+					<option value="n">Tipo</option>
+					<option value="A">A</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+				</select> 
+				<select size="1" name="factura_orden">
+					<option value="B">0001</option>
+					<option value="N">0002</option>
+				</select> 
+				<input type="text" name="factura_nro" /></li>
 			<li><label>Monto neto:</label><input name="monto" value="" size="3"/> <img id="loading" src="images/loading.gif" style="display:none" /></li>
 		</ul>
    	</fieldset> 

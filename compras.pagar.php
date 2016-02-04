@@ -295,15 +295,15 @@ if(isset($_POST['datos']) and $result == 1){
 				<li><label>Numero de factura:</label>
 				<select size="1" name="factura_tipo[]">
 					<option value="n">Tipo</option>
-					<option value="A">A</option>
-					<option value="B">B</option>
-					<option value="C">C</option>
+					<option value="A" <?php if($rs['factura_tipo'] == "A"){ ?> selected="selected" <?php } ?>>A</option>
+					<option value="B" <?php if($rs['factura_tipo'] == "B"){ ?> selected="selected" <?php } ?>>B</option>
+					<option value="C" <?php if($rs['factura_tipo'] == "C"){ ?> selected="selected" <?php } ?>>C</option>
 				</select> 
 				<select size="1" name="factura_orden[]">
-					<option value="B">0001</option>
-					<option value="N">0002</option>
+					<option value="B" <?php if($rs['factura_orden'] == "B"){ ?> selected="selected" <?php } ?>>0001</option>
+					<option value="N" <?php if($rs['factura_orden'] == "N"){ ?> selected="selected" <?php } ?>>0002</option>
 				</select> 
-				<input type="text" name="factura_nro[]" /></li>
+				<input type="text" name="factura_nro[]" value="<?php echo $rs['factura_nro']?>"/></li>
 				<li><label>&nbsp;</label></li>
 			<?php  } ?>
 	

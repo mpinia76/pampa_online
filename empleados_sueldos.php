@@ -90,6 +90,55 @@ function pagar(){
 		createWindow('w_<?php echo $tabla?>_pagar','Pago de sueldo','empleado.pagar.php?empleado_id='+dataid+'&mes='+mes+'&ano='+ano,'650','550'); //nombre de los divs
 	}
 }
+function detalle(){
+	var dataid = mygrid.getSelectedRowId();
+	var mes = $('#input_mes').val();
+	var ano = $('#input_ano').val();
+	
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else if(mes == ''){
+		alert('Debe completar con un ano');
+	}else{
+		createWindow('w_<?php echo $tabla?>_detalle','Detalle de sueldo','empleado_sueldo.detalle.php?empleado_id='+dataid+'&mes='+mes+'&ano='+ano,'650','550'); //nombre de los divs
+	}
+}
+function addAdelanto(){
+    dataid = mygrid.getSelectedRowId();
+    var mes = $('#input_mes').val();
+	var ano = $('#input_ano').val();
+    if(!dataid){
+            alert('Debe seleccionar un registro');
+    }else{
+        createWindow('w_empleado_adelanto','Adelanto','empleado.adelanto.php?empleado_id='+dataid+'&mes='+mes+'&ano='+ano,'500','400');
+    }
+}
+function addHoraExtra(){
+    dataid = mygrid.getSelectedRowId();
+    var mes = $('#input_mes').val();
+	var ano = $('#input_ano').val();
+    if(!dataid){
+            alert('Debe seleccionar un registro');
+    }else{
+        createWindow('w_emplado_add_hora_extra','Agregar Horas extras','empleado.horas_extras.php?empleado_id='+dataid+'&mes='+mes+'&ano='+ano,'500','300');
+   }
+}
+
+function borrar_pago(){
+	var dataid = mygrid.getSelectedRowId();
+	var mes = $('#input_mes').val();
+	var ano = $('#input_ano').val();
+	
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else if(mes == ''){
+		alert('Debe completar con un ano');
+	}else{
+		if(confirm("Esta seguro que desea anular el pago ?")){
+			createWindow('w_<?php echo $tabla?>_borrar_pago','Anular Pago de sueldo','borrar_pago_procesa.php?empleado_id='+dataid+'&mes='+mes+'&ano='+ano,'650','550'); //nombre de los divs
+		}
+	}
+}
 </script>
 <script src="js/createWindow.js"></script>
 </head>
@@ -116,6 +165,10 @@ function pagar(){
 	</li>	
 	<li onclick="ver()" class="item">Ver</li>
     <?php  if(ACCION_63){ ?><li onclick="pagar()" class="item">Pagar</li><?php  } ?>
+    <?php  if(ACCION_63){ ?><li onclick="detalle()" class="item">Detalle</li><?php  } ?>
+    <?php  if(ACCION_70){ ?><li onclick="addAdelanto()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Dar Adelanto</li><?php  } ?>
+     <?php  if(ACCION_71){ ?><li onclick="addHoraExtra()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Asignar Hrs. Extras</li><?php  } ?>
+    <?php  if(ACCION_63){ ?><li onclick="borrar_pago()" class="item">Borrar pago</li><?php  } ?>
 </ul>
 <div id="mensaje" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:12px;">Seleccione un mes para ver el detalle</div>
 <div id="mygrid_container" style="width:100%;height:320px; display:none;"></div><!--

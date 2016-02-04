@@ -1,4 +1,4 @@
-<?
+<?php 
 include_once("functions/fechasql.php");
 include_once("functions/date.php");
 include_once("functions/getProveedor.php");
@@ -227,7 +227,7 @@ function valida(F) {
 
 <body>
 
-<? 
+<?php  
 if(isset($_POST['datos']) and $result == 1){ 
 	include_once("config/messages.php");
 ?>
@@ -235,7 +235,7 @@ if(isset($_POST['datos']) and $result == 1){
 	var dhxWins = parent.dhxWins;
 	dhxWins.window('w_gasto').attachURL('/v2/gastos/index');
 	</script>
-<?
+<?php 
 }elseif($total != $registros){ 
 	$result = 'No se pueden abonar los registros seleccionados, verifique los estados';
 	include_once("config/messages.php");
@@ -244,73 +244,73 @@ if(isset($_POST['datos']) and $result == 1){
 ?>
 	
 	<div class="formContainer">
-	<form method="post" name="form" action="gastos.view.php?dataid=<?=$dataid?>" onSubmit="return valida(this);">
-	<input type="hidden" name="datos" value="<?=$_GET['dataid']?>" />
+	<form method="post" name="form" action="gastos.view.php?dataid=<?php echo $dataid?>" onSubmit="return valida(this);">
+	<input type="hidden" name="datos" value="<?php echo $_GET['dataid']?>" />
 		<fieldset>
 			<legend>Detalle de los gastos seleccionados</legend> 
 			<ul class="form">
-			<? while($rs = mysql_fetch_array($rsTemp)){ ?>
-				<input type="hidden" name="gasto_nro_orden[]" value="<?=$rs['nro_orden']?>" />
-				<input type="hidden" name="gasto_id[]" value="<?=$rs['id']?>" />
-				<input type="hidden" name="gasto_monto[]" value="<?=$rs['monto']?>" />
+			<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+				<input type="hidden" name="gasto_nro_orden[]" value="<?php echo $rs['nro_orden']?>" />
+				<input type="hidden" name="gasto_id[]" value="<?php echo $rs['id']?>" />
+				<input type="hidden" name="gasto_monto[]" value="<?php echo $rs['monto']?>" />
 				<li><label>Estado:</label>
 				<span style="background:#FFFF99;">
-				<? if($rs['estado'] == 0 and $rs['nro_orden'] == 0){ ?>
-					<? $subestado = 1; ?>
+				<?php  if($rs['estado'] == 0 and $rs['nro_orden'] == 0){ ?>
+					<?php  $subestado = 1; ?>
 					Pendiente de autorizaci&oacute;n
-				<? }elseif($rs['estado'] == 0 and $rs['nro_orden'] != 0){ ?>
-					<? $subestado = 2; ?>
+				<?php  }elseif($rs['estado'] == 0 and $rs['nro_orden'] != 0){ ?>
+					<?php  $subestado = 2; ?>
 					Gasto autorizado, pendiente de pago
-				<? }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] == ''){ ?>
-					<? $subestado = 3; ?>
+				<?php  }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] == ''){ ?>
+					<?php  $subestado = 3; ?>
 					Gasto autorizado, abonado, falta numero de factura 
-				<? }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] != ''){ ?>
-					<? $subestado = 4; ?>
+				<?php  }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] != ''){ ?>
+					<?php  $subestado = 4; ?>
 					Gasto autorizado, abonado, con numero de factura
-				<? }elseif($rs['estado'] == 2){ ?>
-					<? $subestado = 0; ?>
+				<?php  }elseif($rs['estado'] == 2){ ?>
+					<?php  $subestado = 0; ?>
 					Gasto no autorizado
-				<? } ?>
+				<?php  } ?>
 				</span>
 				</li>
-				<li><label>Responsable:</label><?=$rs['nombre']?> <?=$rs['apellido']?></li>
-				<li><label>Fecha devengado:</label><?=fechavista($rs['fecha'])?></li>
-				<input type="hidden" name="fecha" value="<?=fechavista($rs['fecha'])?>" />
-				<li><label>Rubro:</label><?=$rs['rubro']?></li>
-				<input type="hidden" name="rubro" value="<?=$rs['rubro_id']?>" />
-				<li><label>Sububro:</label><?=$rs['subrubro']?></li>
-				<input type="hidden" name="subrubro_id" value="<?=$rs['subrubro_id']?>" />
-				<li><label>Proveedor:</label><?=getProveedor($rs['proveedor'])?></li>
-				<input type="hidden" name="proveedor" value="<?=getProveedor($rs['proveedor'])?>" />
-				<li><label>Descripcion:</label><?=$rs['descripcion']?></li>
-				<input type="hidden" name="descripcion" value="<?=$rs['descripcion']?>" />
-				<li><label>Monto neto:</label>$<?=$rs['monto']?></li>
-				<li><label>Numero de remito:</label><input type="text" name="remito_nro[]" value="<?=$rs['remito_nro']?>" /></li>
-				<li><label>Numero de recibo:</label><input type="text" name="recibo_nro[]" value="<?=$rs['recibo_nro']?>" /></li>
+				<li><label>Responsable:</label><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></li>
+				<li><label>Fecha devengado:</label><?php echo fechavista($rs['fecha'])?></li>
+				<input type="hidden" name="fecha" value="<?php echo fechavista($rs['fecha'])?>" />
+				<li><label>Rubro:</label><?php echo $rs['rubro']?></li>
+				<input type="hidden" name="rubro" value="<?php echo $rs['rubro_id']?>" />
+				<li><label>Sububro:</label><?php echo $rs['subrubro']?></li>
+				<input type="hidden" name="subrubro_id" value="<?php echo $rs['subrubro_id']?>" />
+				<li><label>Proveedor:</label><?php echo getProveedor($rs['proveedor'])?></li>
+				<input type="hidden" name="proveedor" value="<?php echo getProveedor($rs['proveedor'])?>" />
+				<li><label>Descripcion:</label><?php echo $rs['descripcion']?></li>
+				<input type="hidden" name="descripcion" value="<?php echo $rs['descripcion']?>" />
+				<li><label>Monto neto:</label>$<?php echo $rs['monto']?></li>
+				<li><label>Numero de remito:</label><input type="text" name="remito_nro[]" value="<?php echo $rs['remito_nro']?>" /></li>
+				<li><label>Numero de recibo:</label><input type="text" name="recibo_nro[]" value="<?php echo $rs['recibo_nro']?>" /></li>
 				<li><label>Numero de factura:</label>
 				<select size="1" name="factura_tipo[]">
 					<option value="n">Tipo</option>
-					<option value="A">A</option>
-					<option value="B">B</option>
-					<option value="C">C</option>
+					<option value="A" <?php if($rs['factura_tipo'] == "A"){ ?> selected="selected" <?php } ?>>A</option>
+					<option value="B" <?php if($rs['factura_tipo'] == "B"){ ?> selected="selected" <?php } ?>>B</option>
+					<option value="C" <?php if($rs['factura_tipo'] == "C"){ ?> selected="selected" <?php } ?>>C</option>
 				</select> 
 				<select size="1" name="factura_orden[]">
-					<option value="B">0001</option>
-					<option value="N">0002</option>
+					<option value="B" <?php if($rs['factura_orden'] == "B"){ ?> selected="selected" <?php } ?>>0001</option>
+					<option value="N" <?php if($rs['factura_orden'] == "N"){ ?> selected="selected" <?php } ?>>0002</option>
 				</select> 
-				<input type="text" name="factura_nro[]" /></li>
+				<input type="text" name="factura_nro[]" value="<?php echo $rs['factura_nro']?>"/></li>
 				<li><label>&nbsp;</label></li>
-			<? } ?>
+			<?php  } ?>
 	
 				<li><label>Forma de pago:</label>
 				<select name="forma_pago">
 				<option value="n">Seleccionar...</option>
-				<?
+				<?php 
 				$sql = "SELECT id,forma_pago FROM forma_pago WHERE id != 5 ORDER BY forma_pago ";
 				$rsTemp = mysql_query($sql);
 				while($rs = mysql_fetch_array($rsTemp)){?>
-				<option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-				<? } ?>
+				<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+				<?php  } ?>
 				</select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
 				<div id="forma_de_pago"></div>
 			</ul>
@@ -318,6 +318,6 @@ if(isset($_POST['datos']) and $result == 1){
 		<p align="center"><input type="submit" value="Abonar" name="guardar" /></p> 
 	</form>
 	</div>
-<? } ?> 
+<?php  } ?> 
 </body>
 </html>

@@ -5,7 +5,10 @@ include_once("functions/fechasql.php");
 include_once("config/db.php");
 
 if(isset($_POST['monto'])){
-		
+
+	
+	
+	
 	$sql = "SELECT valor FROM configuracion WHERE id='gasto_aprobado'";
 	$rs = mysql_fetch_array(mysql_query($sql));
 	
@@ -23,8 +26,8 @@ if(isset($_POST['monto'])){
 		
 	}
 	
-	$sql = "INSERT INTO gasto (nro_orden,fecha,fecha_vencimiento,rubro_id,subrubro_id,proveedor,descripcion,remito_nro,recibo_nro,monto,user_id,estado)
-			VALUES ($nro_orden,'".fechasql($_POST['fecha'])."','".fechasql($_POST['fecha_vencimiento'])."',".$_POST['rubro'].",'".$_POST['subrubro_id']."','".$_POST['proveedor']."','".$_POST['descripcion']."','".$_POST['remito_nro']."','".$_POST['recibo_nro']."','".$_POST['monto']."',".$_SESSION['userid'].",$estado)";
+	$sql = "INSERT INTO gasto (nro_orden,fecha,fecha_vencimiento,rubro_id,subrubro_id,proveedor,descripcion,remito_nro,recibo_nro,factura_nro,factura_tipo,factura_orden,monto,user_id,estado)
+			VALUES ($nro_orden,'".fechasql($_POST['fecha'])."','".fechasql($_POST['fecha_vencimiento'])."',".$_POST['rubro'].",'".$_POST['subrubro_id']."','".$_POST['proveedor']."','".$_POST['descripcion']."','".$_POST['remito_nro']."','".$_POST['recibo_nro']."','".$_POST['factura_nro']."','".$_POST['factura_tipo']."','".$_POST['factura_orden']."','".$_POST['monto']."',".$_SESSION['userid'].",$estado)";
 	mysql_query($sql);
 	$result = mysql_error();
 	
@@ -147,6 +150,8 @@ function valida(F) {
 			
 	var datos = ({
 		'monto' : F.monto.value,
+		'proveedor' : F.proveedor.value,
+		'factura_nro' : F.factura_nro.value,
 		'tabla' : 'gasto'
 	});
 	
@@ -155,17 +160,26 @@ function valida(F) {
 			$('#loading').show();
 		},
 		data: datos,
-		url: 'functions/checkMonto.php',
+		url: 'functions/checkFactura.php',
+		dataType:"json",
 		success: function(data) {
 		
-			if(data == 'si'){		
-				if(confirm("Ya existe una compra con ese monto, desea continuar?") ){
+			if(data["siMonto"] == 'si'){		
+				if(confirm("El dia "+data["fecha"]+" existe un gasto por $"+F.monto.value+" con "+data["proveedor"]+"!  \n \n Continuar?")) {
 					F.submit();
 				}else{
 					$('#loading').hide();
 				}
 			}else{
-				F.submit();
+				if(data["siFactura"] == 'si'){		
+					if(confirm("El dia "+data["fecha"]+" existe un gasto con nro de factura "+data["factura_tipo"]+" "+data["factura_orden"]+"-"+data["factura_nro"]+" con "+data["proveedor"]+"!  \n \n Continuar?")) {
+						F.submit();
+					}else{
+						$('#loading').hide();
+					}
+				}else{
+					F.submit();
+				}
 			}
 			
 		}
@@ -228,6 +242,18 @@ function valida(F) {
 			<li><label>Descripcion:</label><textarea name="descripcion"></textarea></li>
 			<li><label>Numero de remito:</label><input type="text" name="remito_nro" /></li>
 			<li><label>Numero de recibo:</label><input type="text" name="recibo_nro" /></li>
+			<li><label>Numero de factura:</label>
+				<select size="1" name="factura_tipo">
+					<option value="n">Tipo</option>
+					<option value="A">A</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+				</select> 
+				<select size="1" name="factura_orden">
+					<option value="B">0001</option>
+					<option value="N">0002</option>
+				</select> 
+				<input type="text" name="factura_nro" /></li>
 			<li><label>Monto neto:</label><input name="monto" value="" size="3"/> <img id="loading" src="images/loading.gif" style="display:none" /></li>
 		</ul>
    	</fieldset> 

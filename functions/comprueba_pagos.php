@@ -128,14 +128,21 @@ if(isset($_POST['transferencia'])){
 if(isset($_POST['debito'])){
 
 	$debito 		 	= $_POST['debito'];
+	$debito_fecha 		= $_POST['debito_fecha'];
 	$debito_monto 		= $_POST['debito_monto'];
 	$debito_descuento 	= $_POST['debito_descuento'];
 	$debito_interes		= $_POST['debito_interes'];
 	
+	
+	
 	foreach($debito as $key=>$value){
+		$fecha[] = is_date($debito_fecha[$key]);
 		$monto_pagado = $monto_pagado + $debito_monto[$key];
 		$monto_descuento = $monto_descuento + $debito_descuento[$key];
 		$monto_interes = $monto_interes + $debito_interes[$key];
+		if(strtotime(fechasql($debito_fecha[$key])) > (time()+(2*60*60)) ){
+			$fecha_hoy = false;
+		}
 	}
 }
 

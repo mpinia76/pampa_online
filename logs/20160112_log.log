@@ -1,0 +1,41 @@
+2016-01-12 20:14:31 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado)
+					VALUES
+						(8,'9560',1,2016,29,NOW())
+2016-01-12 20:14:31 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'9560','0','0','2016-01-12')
+2016-01-12 20:14:31 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(661, 'efectivo', 'sueldo_pago', 661)
+2016-01-12 20:14:32 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha) VALUES 
+				(20,'efectivo_consumo',661,'-9560','2016-01-12')
+2016-01-12 20:36:55 --> DELETE empleado_pago WHERE empleado_id = 8 AND mes = 1 AND ano = 2016
+2016-01-12 20:36:55 --> INSERT INTO caja_movimiento
+						(caja_id,origen,registro_id,monto,fecha,usuario_id)
+					VALUES
+						('','','','0',NOW(),29)
+2016-01-12 20:36:55 --> INSERT INTO efectivo_consumo
+						(caja_id,monto,interes,descuento,operacion_tipo,operacion_id,fecha)
+					VALUES
+						('','0','','','anular_sueldo_pago','',NOW())
+2016-01-12 20:42:05 --> DELETE empleado_pago WHERE empleado_id = 8 AND mes = 1 AND ano = 2016
+2016-01-12 20:42:05 --> INSERT INTO caja_movimiento
+						(caja_id,origen,registro_id,monto,fecha,usuario_id)
+					VALUES
+						('2','efectivo_consumo','661','155.03',NOW(),29)
+2016-01-12 20:42:06 --> INSERT INTO efectivo_consumo
+						(caja_id,monto,interes,descuento,operacion_tipo,operacion_id,fecha)
+					VALUES
+						('2','-155.03','0','0','anular_sueldo_pago','0',NOW())
+2016-01-12 20:46:14 --> SELECT * FROM empleado_pago WHERE empleado_id = 8 AND mes = 1 AND ano = 2016
+2016-01-12 20:46:14 --> DELETE FROM empleado_pago WHERE empleado_id = 8 AND mes = 1 AND ano = 2016
+2016-01-12 20:46:14 --> SELECT * FROM rel_pago_operacion WHERE operacion_id = 661 AND operacion_tipo = 'sueldo_pago'
+2016-01-12 20:46:14 --> SELECT * FROM caja_movimiento WHERE origen = 'efectivo_consumo' AND registro_id = 661
+2016-01-12 20:46:14 --> INSERT INTO caja_movimiento
+						(caja_id,origen,registro_id,monto,fecha,usuario_id)
+					VALUES
+						('2','efectivo_consumo','661','155.03',NOW(),29)
+2016-01-12 20:46:14 --> SELECT * FROM efectivo_consumo WHERE id = 661
+2016-01-12 20:46:14 --> INSERT INTO efectivo_consumo
+						(caja_id,monto,interes,descuento,operacion_tipo,operacion_id,fecha)
+					VALUES
+						('2','-155.03','0','0','anular','0',NOW())

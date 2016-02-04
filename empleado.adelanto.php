@@ -2,7 +2,6 @@
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
-
 include_once("functions/form.class.php");
 include_once("functions/fechasql.php");
 include_once("config/db.php");
@@ -10,7 +9,8 @@ include_once("config/user.php");
 include_once("functions/abm.php");
 
 $empleado_id = $_GET['empleado_id'];
-
+$ano = $_GET['ano'];
+$mes = $_GET['mes'];
 if(isset($_POST['agregar'])){
 	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
 	$rsTemp = mysql_query($sql);
@@ -42,6 +42,8 @@ if(isset($_POST['agregar'])){
 			include("functions/procesa_pagos.php");
 			
 			$result = 1;
+			echo "
+			<script>window.open('reciboPDF.php?id=".$operacion_id[0]."&adelanto=1', 'Adelanto de sueldo');</script>";
 			
 		}else{
 			
@@ -173,6 +175,8 @@ function addFormaDePago(forma_pago_id){
 		}
 	});
 }
+var dhxWins = parent.dhxWins;
+
 </script>
 </head>
 
@@ -202,25 +206,25 @@ function addFormaDePago(forma_pago_id){
         <div class="content">
         <select name="mes">
             <option value="null">Seleccionar...</option>
-            <option value="1">Enero</option>
-            <option value="2">Febrero</option>
-            <option value="3">Marzo</option>
-            <option value="4">Abril</option>
-            <option value="5">Mayo</option>
-            <option value="6">Junio</option>
-            <option value="7">Julio</option>
-            <option value="8">Agosto</option>
-            <option value="9">Septiembre</option>
-            <option value="10">Octubre</option>
-            <option value="11">Noviembre</option>
-            <option value="12">Diciembre</option>
+            <option value="1" <?php if($mes == 1){ ?> selected="selected" <?php } ?> >Enero</option>
+            <option value="2" <?php if($mes == 2){ ?> selected="selected" <?php } ?>>Febrero</option>
+            <option value="3" <?php if($mes == 3){ ?> selected="selected" <?php } ?>>Marzo</option>
+            <option value="4" <?php if($mes == 4){ ?> selected="selected" <?php } ?>>Abril</option>
+            <option value="5" <?php if($mes == 5){ ?> selected="selected" <?php } ?>>Mayo</option>
+            <option value="6" <?php if($mes == 6){ ?> selected="selected" <?php } ?>>Junio</option>
+            <option value="7" <?php if($mes == 7){ ?> selected="selected" <?php } ?>>Julio</option>
+            <option value="8" <?php if($mes == 8){ ?> selected="selected" <?php } ?>>Agosto</option>
+            <option value="9" <?php if($mes == 9){ ?> selected="selected" <?php } ?>>Septiembre</option>
+            <option value="10" <?php if($mes == 10){ ?> selected="selected" <?php } ?>>Octubre</option>
+            <option value="11" <?php if($mes == 11){ ?> selected="selected" <?php } ?>>Noviembre</option>
+            <option value="12" <?php if($mes == 12){ ?> selected="selected" <?php } ?>>Diciembre</option>
         </select>
         </div>
         <div style="clear:both;"></div>
     
     <div class="label">A&ntilde;o</div>
         <div class="content">
-        <input type="text" size="2" name="ano" value="<?php echo date("Y")?>" />
+        <input type="text" size="2" name="ano" value="<?php echo $ano?>" />
         </div>
         <div style="clear:both;"></div>
 

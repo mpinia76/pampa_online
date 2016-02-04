@@ -8,73 +8,12 @@ include_once("functions/fechasql.php");
 include_once("config/db.php");
 include_once("config/user.php");
 include_once("functions/abm.php");
-include_once("functions/util.php");
 
 $empleado_id = $_GET['empleado_id'];
 $ano = $_GET['ano'];
 $mes = $_GET['mes'];
 
-if(isset($_POST['agregar'])){
 
-	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
-		$pagado[$rs['ano']."_".$rs['mes']] = true;
-	}
-	
-                  $today = new DateTime();
-                  $today->modify('-1 month');
-                  $mes_anterior = $today->format('m');
-                  $ano_anterior = $today->format('Y');
-                  
-	if(!$pagado[$_POST['ano']."_".$_POST['mes']] and (($_POST['ano'] == $ano_anterior and $_POST['mes'] == $mes_anterior) or ($_POST['ano'] ==  date('Y') and $_POST['mes'] == date('m')) ) ){
-	
-                        $operacion_monto = $_POST['monto_pendiente'];
-                        include("functions/comprueba_pagos.php");
-		
-		if($procesa){
-		
-			$sql = "INSERT INTO empleado_pago
-						(empleado_id,monto,mes,ano,abonado_por,abonado)
-					VALUES
-						(".$_POST['empleado_id'].",'".$_POST['monto_pendiente']."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW())";
-			mysql_query($sql); 
-			_log($sql);
-			$operacion_id[] = mysql_insert_id();
-			$operacion_tipo = 'sueldo_pago';
-			
-			include("functions/procesa_pagos.php");
-			
-			$result = 1;
-			echo "
-			<script>window.open('reciboPDF.php?id=".$operacion_id[0]."', 'Recibo de sueldo');</script>";
-			
-		}else{
-			
-			if(($operacion_monto+$monto_interes-$monto_descuento) != $monto_pagado){
-				$result = 'Verifique que el sueldo pendiente de pago ('.$operacion_monto.') coincida con el monto que intenta abonar ('.$monto_pagado.')';
-			}elseif($fecha_error != 0){
-				$result = 'La fecha ingresada no es correcta en alguna de las formas de pago';
-			}elseif($error_cheque == true){
-				$result = 'Debe completar el titular del cheque';
-			}elseif($error_cheque_numero == true){
-				$result = 'Ya existe un cheque del banco seleccionado y el numero ingresado';				
-			}elseif($fecha_hoy == false){
-				$result = 'Le fecha de pago no puede ser posterior a hoy';	
-			}else{
-				$result = 'No se pudo procesar la operacion';
-			}
-			
-		}
-	}else{
-                        $result = "El pago no pudo ser realizado, verifique que la fecha no sea posterior al mes acutal";
-                }
-	
-	$empleado_id = $_POST['empleado_id'];
-	$mes = $_POST['mes'];
-	$ano = $_POST['ano'];
-	
-}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -99,6 +38,19 @@ if(isset($_POST['agregar'])){
 <script type="text/javascript" src="library/datepicker/date.js"></script>
 <!--[if IE]><script type="text/javascript" src="library/datepicker/jquery.bgiframe.js"></script><![endif]-->
 <script type="text/javascript" src="library/datepicker/jquery.datePicker.min-2.1.2.js"></script>
+<script>
+var dhxWins = parent.dhxWins;
+
+function borrar_adelanto(id){
+	
+		if(confirm("Esta seguro que desea anular el adelanto ?")){
+			
+			dhxWins.window('w_empleados_sueldos_detalle').attachURL('borrar_adelanto_procesa.php?id='+id);
+			//createWindow('w_borrar_adelanto','Anular Adelanto de sueldo','borrar_adelanto_procesa.php?id='+id,'650','550'); //nombre de los divs
+		}
+	
+}
+</script>
 <link href="library/datepicker/datePicker.css" rel="stylesheet" type="text/css" />
 <style>
 a.dp-choose-date {
@@ -127,46 +79,7 @@ input.dp-applied {
 <!--/JQuery Date Picker-->
 <link href="styles/form.css" rel="stylesheet" type="text/css" />
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript"> 
-function vacio(q) {
-	//funcion que chequea que los campos no sean espacios en blanco
-	for ( i = 0; i < q.length; i++ ) {
-			if ( q.charAt(i) != " " ) {
-					return true
-			}
-	}
-	return false
-}
 
-function valida(F) {
-	if(F.forma_pago.value == 'null') {
-	alert("Debe seleccionar una forma de pago");
-	F.forma_pago.focus();
-	return false
-	}
-}
-</script> 
-<script type="text/javascript">
-function addFormaDePago(forma_pago_id){
-
-	var datos = ({
-		'forma_pago' : forma_pago_id
-	});
-	
-	$.ajax({
-		beforeSend: function(){
-			$('#forma_pago_loading').show();
-		},
-		data: datos,
-		url: 'functions/formadepago.php',
-		success: function(data) {
-			$('#forma_pago_loading').hide();
-			$('#forma_de_pago').append(data);
-			$('.date-pick').datePicker().trigger('change');
-		}
-	});
-}
-</script>
 </head>
 
 <body>
@@ -176,15 +89,9 @@ function addFormaDePago(forma_pago_id){
 <div class="container" style="font-family:arial; font-size:12px;"> 
 
 <?php 
-$sql = "SELECT * FROM empleado_pago WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
-if(mysql_num_rows(mysql_query($sql)) == 0){
-?>
-    <form method="POST" name="form" action="empleado.pagar.php" onSubmit="return valida(this);">
-        <input type="hidden" name="empleado_id" value="<?php echo $empleado_id?>" />
-        <input type="hidden" name="ano" value="<?php echo $ano?>" />
-        <input type="hidden" name="mes" value="<?php echo $mes?>" />
+
         
-        <?php 
+
         $sql = "SELECT * FROM empleado WHERE id = $empleado_id";
         $rs = mysql_fetch_array(mysql_query($sql));
         ?>
@@ -243,42 +150,38 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
         
         <p><strong>Adelantos otorgados:</strong></p>
         <?php 
-            $sql = "SELECT * FROM empleado_adelanto WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
+            $sql = "SELECT empleado_adelanto.id,empleado_adelanto.creado, empleado_adelanto.monto, empleado_adelanto.comentarios, CONCAT(usuario.apellido,', ',usuario.nombre) as user, caja.caja, cuenta.sucursal, cuenta.nombre, banco.banco  FROM empleado_adelanto LEFT JOIN usuario ON empleado_adelanto.creado_por = usuario.id LEFT JOIN rel_pago_operacion rpo ON empleado_adelanto.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_adelanto' LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' LEFT JOIN caja ON cm.caja_id = caja.id LEFT JOIN rel_pago_operacion ON empleado_adelanto.id = rel_pago_operacion.operacion_id AND rel_pago_operacion.operacion_tipo = 'sueldo_adelanto' LEFT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id LEFT JOIN banco ON cuenta.banco_id = banco.id WHERE empleado_adelanto.empleado_id = $empleado_id AND empleado_adelanto.mes = $mes AND empleado_adelanto.ano = $ano";
             $rsTemp = mysql_query($sql);
             if(mysql_num_rows($rsTemp) > 0) {
                 while($rs = mysql_fetch_array($rsTemp)){ ?>
-                <?php echo fechavista($rs['creado'])?> $<?php echo $rs['monto']?> <?php echo $rs['comentarios']?> <br>
+                <?php 
+                $caja = ($rs['caja'])? 'Caja: '.$rs['caja']:'';
+        $cuenta = ($rs['sucursal'])? 'Cuenta: '.$rs['banco'].' ('.$rs['sucursal'].') '.$rs['nombre']:'';
+                echo fechavista($rs['creado'])?> $<?php echo $rs['monto']?> <?php echo $rs['comentarios']?> Abonado por: <?php echo $rs['user'].' '.$caja.' '.$cuenta?>  <button class="button" onClick="window.open('reciboPDF.php?id=<?php echo $rs['id']?>&adelanto=1&copia=1');">Recibo</button><button class="button" onClick="borrar_adelanto('<?php echo $rs['id']?>');">Anular</button><br>
                 <?php  $adelantos = $adelantos + $rs['monto']; ?>
                 <?php  } ?>
             <?php  }else{ ?>
                 No se han otorgado adelantos
             <?php  } ?>
         </p>
-        
+        <?php 
+        $sql = "SELECT empleado_pago.id,empleado_pago.monto, empleado_pago.abonado, CONCAT(usuario.apellido,', ',usuario.nombre) as user, caja.caja, cuenta.sucursal, cuenta.nombre, banco.banco FROM empleado_pago LEFT JOIN usuario ON empleado_pago.abonado_por = usuario.id LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' LEFT JOIN caja ON cm.caja_id = caja.id LEFT JOIN rel_pago_operacion ON empleado_pago.id = rel_pago_operacion.operacion_id AND rel_pago_operacion.operacion_tipo = 'sueldo_pago' LEFT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id LEFT JOIN banco ON cuenta.banco_id = banco.id WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
+        if(mysql_num_rows(mysql_query($sql)) == 0){ ?>
         <p><strong>Pendiente de pago:</strong> $<?php echo $salario+$horas_extras-$adelantos?></p>
-        <input type="hidden" name="monto_pendiente" value="<?php echo $salario+$horas_extras-$adelantos?>"  />
+        <?php  }else{ ?>
+        <p><strong>Sueldo abonado:</strong></p>
+        <?php 
+        $rsSueldo = mysql_fetch_array(mysql_query($sql));
+        $caja = ($rsSueldo['caja'])? 'Caja: '.$rsSueldo['caja']:'';
+        $cuenta = ($rsSueldo['sucursal'])? 'Cuenta: '.$rsSueldo['banco'].' ('.$rsSueldo['sucursal'].') '.$rsSueldo['nombre']:'';
+        echo fechavista($rsSueldo['abonado'])?>  $<?php echo $rsSueldo['monto']?> Abonado por: <?php echo $rsSueldo['user'].' '.$caja.' '.$cuenta?>
+        <br><br><center><button class="button" onClick="window.open('reciboPDF.php?id=<?php echo $rsSueldo['id']?>&copia=1');">Recibo</button></center>
+		<?php  } ?>
+	    
         
-        <div class="label">Forma de pago</div>
-            <div class="content">
-            <select name="forma_pago">
-            <option value="null">Seleccionar...</option>
-            <?php 
-            $sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4,6) ORDER BY forma_pago ";
-            $rsTemp = mysql_query($sql);
-            while($rs = mysql_fetch_array($rsTemp)){?>
-            <option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
-            <?php  } ?>
-            </select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
-            </div>
-            <div style="clear:both;"></div>
-    
-        <div class="form" id="forma_de_pago" style="font-family:arial; font-size:12px; margin-left:-10px; margin-top:-10px;"></div>
         
-        <p align="center"><input type="submit" value="Guardar" name="agregar" /></p> 
-    </form> 
-<?php  }else{ ?>
-	<p>El salario para este periodo ya ha sido abonado</p>
-<?php  } ?>
+       
+
 </div>
 </body>
 </html>

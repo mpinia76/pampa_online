@@ -37,7 +37,7 @@ class CobroTransferencia extends AppModel {
         'ano_mes_acreditado' => 'DATE_FORMAT(CobroTransferencia.fecha_acreditado,"%y%m")'
     );
     
-    public function beforeSave() {
+    public function beforeSave($options = Array()) {
         if (!empty($this->data['CobroTransferencia']['fecha_acreditado'])) {
             $this->data['CobroTransferencia']['fecha_acreditado'] = $this->dateFormatBeforeSave($this->data['CobroTransferencia']['fecha_acreditado']);
         }

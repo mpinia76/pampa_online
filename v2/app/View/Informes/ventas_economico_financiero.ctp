@@ -3,18 +3,18 @@
         <td>&nbsp;</td>
         <td>Ventas Netas</td>
         <?php foreach($cobrado as $tiempo => $monto){ ?>
-        <td><?=$meses[substr($tiempo, 2, 2)];?> 20<?=substr($tiempo, 0, 2)?></td>
-        <? } ?>
+        <td><?php echo $meses[substr($tiempo, 2, 2)];?> 20<?php echo substr($tiempo, 0, 2)?></td>
+        <?php } ?>
         <td>Total Cobrado</td>
         <td>Pendiente</td>
     </tr>
     <tr>
-        <td><?=$meses[$mes]?> <?=$ano?></td>
-        <td><?=$ventas_netas?></td>
+        <td><?php echo $meses[$mes]?> <?php echo $ano?></td>
+        <td><?php echo $ventas_netas?></td>
         <?php foreach($cobrado as $tiempo => $monto){ ?>
-        <td><?=$monto?></td>
-        <? } ?>
-        <td><?=array_sum($cobrado)?></td>
-        <td><?=$ventas_netas - array_sum($cobrado);?></td>
+        <td><?php echo $monto?></td>
+        <?php } ?>
+        <td><?php echo array_sum($cobrado)?></td>
+        <td><?php echo $ventas_netas - array_sum($cobrado);?></td>
     </tr>
 </table>

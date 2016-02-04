@@ -61,7 +61,7 @@ class CobroTarjetaLote extends AppModel {
        }
    }
 
-   public function beforeSave() {
+   public function beforeSave($options = Array()) {
         if (!empty($this->data['CobroTarjetaLote']['fecha_cierre'])) {
             $this->data['CobroTarjetaLote']['fecha_cierre'] = $this->dateFormatBeforeSave($this->data['CobroTarjetaLote']['fecha_cierre']);
         }
@@ -71,7 +71,7 @@ class CobroTarjetaLote extends AppModel {
         return true;
     }
     
-    public function afterFind($results) {
+    public function afterFind($results, $primary = false) {
         foreach ($results as $key => $val) {
             if (!empty($val) and isset($val['CobroTarjetaLote']['fecha_cierre'])) {
                 $results[$key]['CobroTarjetaLote']['fecha_cierre']= $this->dateFormatAfterFind($val['CobroTarjetaLote']['fecha_cierre']);

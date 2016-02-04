@@ -19,8 +19,9 @@ function createWindow(id,titulo,url,w,h) {
 }
 
 function Refresh(w1){
-	if (window.location!=null)
+	if ((w1.getText()=='Debitar cheque')||(w1.getText()=='Debitar ')||(w1.getText()=='Pago de sueldo')||(w1.getText()=='Anular Pago de sueldo')){
 		window.location.reload();
+	}
 	return true;
 	
 }

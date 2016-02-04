@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("../config/db.php");
 
 $tabla 		= $_GET['tabla'];
@@ -7,14 +7,14 @@ $campo 		= $_GET['campo'];
 $value		= $_GET['value'];
 ?>
 
-<select name="<?=$tabla?>_id">
-<?
+<select name="<?php echo $tabla?>_id">
+<?php
 $sql = "SELECT id,$campo FROM $tabla WHERE $campo_id=$value";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){?>
 
-	<option value="<?=$rs['id']?>"><?=$rs[$campo]?></option>
+	<option value="<?php echo $rs['id']?>"><?php echo $rs[$campo]?></option>
 
-<? } ?>
+<?php } ?>
 
 </select>
