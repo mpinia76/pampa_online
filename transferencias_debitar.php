@@ -5,31 +5,36 @@ include_once("functions/form.class.php");
 include_once("functions/fechasql.php");
 include_once("config/db.php");
 include_once("functions/abm.php");
-
+$error=0;
 if(($_POST['agregar'])){
-	$sql	= "SELECT * FROM transferencia_consumo WHERE id=".$_POST['registro'];
-	$rs		= mysql_fetch_array(mysql_query($sql));
-	
-	$cuenta_id	= $rs['cuenta_id'];
-	$origen		= 'transferencia';
-	$registro_id	= $_POST['registro'];
-	
-	
-	$monto		= $rs['monto'] + $rs['interes'] - $rs['descuento'];
+	if((date("Y-m-d")) >= fechasql($_POST['fecha'])){
+		$sql	= "SELECT * FROM transferencia_consumo WHERE id=".$_POST['registro'];
+		$rs		= mysql_fetch_array(mysql_query($sql));
+		
+			$cuenta_id	= $rs['cuenta_id'];
+			$origen		= 'transferencia';
+			$registro_id	= $_POST['registro'];
+			
+			
+			$monto		= $rs['monto'] + $rs['interes'] - $rs['descuento'];
+		
+			$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
+			//echo $insert."<br>";
+			mysql_query($insert);
+			
+			$update = "UPDATE transferencia_consumo SET debitado=1, fecha_debitada='".fechasql($_POST['fecha'])."' WHERE id=$registro_id";
+			mysql_query($update);
+			//echo $update."<br>";
+			
+			$result = 1;
+			echo "<script>
+		    	window.parent.dhxWins.window('w_transferencia_consumo_debitar').close();
+		
+				</script>";
 
-	$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
-	//echo $insert."<br>";
-	mysql_query($insert);
-	
-	$update = "UPDATE transferencia_consumo SET debitado=1, fecha_debitada='".fechasql($_POST['fecha'])."' WHERE id=$registro_id";
-	mysql_query($update);
-	//echo $update."<br>";
-	
-	$result = 1;
-	echo "<script>
-    	window.parent.dhxWins.window('w_transferencia_consumo_debitar').close();
-
-		</script>";
+	}else{
+		$error = 2;
+	}
 }
 
 ?>
@@ -102,22 +107,51 @@ function valida(F) {
 	$('#agregar').val('1');
 	
 }
-					
+
+
+function inicializarCalendario() {
+
+	var ToEndDate = new Date();	
+
+	var fullDate = new Date()
+	var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+	 
+	var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+
+	$('.fecha').datePicker({
+	
+	    weekStart: 1,
+	    startDate: '01/01/2010',
+	    endDate: currentDate, 
+	    autoclose: true
+	})
+}				
 </script>
 
 
 
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
 </head>
-<body onload="$('.fecha').datePicker({startDate:'01/01/2010'});">
+<body onload="inicializarCalendario()">
+<?php 
+switch ($error) {
 
+	case 2:
+		echo '<script>
+	alert("La fecha de debito debe ser inferior o igual a la fecha de hoy");
+	</script>';
+	break;
+
+
+}
+if ($error) {$registro = $_POST['registro']; } else $registro = $_GET['dataid'];?>
 <?php  include_once("config/messages.php"); ?>
 
 <div class="container">
 
 <form method="POST" name="form" action="transferencias_debitar.php" onSubmit="return valida(this);">
 <input name="agregar" id="agregar" type="hidden" value="0">
-<input name="registro" id="registro" type="hidden" value="<?php echo $_GET['dataid']?>">
+<input name="registro" id="registro" type="hidden" value="<?php echo $registro?>">
 <div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" name="fecha" value="<?php echo date("d/m/Y")?>" /></div><div style="clear:both;"></div>
 
 

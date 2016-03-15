@@ -74,7 +74,7 @@ if ((isset($_GET['hasta_mask']))&&($_GET['hasta_mask']!=''))  {
 	$hasta = fechasql($_GET['hasta_mask']);
 	$sql .=" AND caja_movimiento.fecha <= '".$hasta."'";
 }
-$sql .=" ORDER BY caja_movimiento.fecha DESC";
+$sql .=" ORDER BY caja_movimiento.fecha DESC, caja_movimiento.id DESC";
 $rsTemp = mysql_query($sql);
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){

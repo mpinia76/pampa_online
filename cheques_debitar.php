@@ -8,33 +8,39 @@ include_once("functions/fechasql.php");
 include_once("config/db.php");
 include_once("functions/abm.php");
 include_once("config/user.php");
+$error=0;
 if(($_POST['agregar'])){
-	$sql	= "SELECT * FROM cheque_consumo WHERE id=".$_POST['registro'];
-	$rs		= mysql_fetch_array(mysql_query($sql));
 	
-	if(($rs['fecha']) <= fechasql($_POST['fecha'])){ //la fecha de pago es menor o igual a la fecha de hoy
-		$cuenta_id	= $rs['cuenta_id'];
-		$origen		= 'cheque';
-		$registro_id	= $_POST['registro'];
+	if((date("Y-m-d")) >= fechasql($_POST['fecha'])){
+		$sql	= "SELECT * FROM cheque_consumo WHERE id=".$_POST['registro'];
+		$rs		= mysql_fetch_array(mysql_query($sql));
+	
+		if(($rs['fecha']) <= fechasql($_POST['fecha'])){ //la fecha de pago es menor o igual a la fecha de hoy
+			$cuenta_id	= $rs['cuenta_id'];
+			$origen		= 'cheque';
+			$registro_id	= $_POST['registro'];
+			
+			$monto		= $rs['monto'];
 		
-		$monto		= $rs['monto'];
-	
-		$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
-		mysql_query($insert);
-		//echo $insert."<br>";
-		$update = "UPDATE cheque_consumo SET debitado=1, fecha_debitado='".fechasql($_POST['fecha'])."', debitado_por=$user_id  WHERE id=".$rs['id'];
-		mysql_query($update);
+			$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
+			mysql_query($insert);
+			//echo $insert."<br>";
+			$update = "UPDATE cheque_consumo SET debitado=1, fecha_debitado='".fechasql($_POST['fecha'])."', debitado_por=$user_id  WHERE id=".$rs['id'];
+			mysql_query($update);
+			//echo $update."<br>";
+			$result = 1;
+			echo "<script>
+		    	window.parent.dhxWins.window('w_cheque_consumo_debitar').close();
+		
+				</script>";
+		}else{
+			$error = 1;
+		}
+		
 		//echo $update."<br>";
-		$result = 1;
-		echo "<script>
-	    	window.parent.dhxWins.window('w_cheque_consumo_debitar').close();
-	
-			</script>";
 	}else{
-		$error = true;
+		$error = 2;
 	}
-	//echo $update."<br>";
-	
 	
 }
 
@@ -108,6 +114,24 @@ function valida(F) {
 	$('#agregar').val('1');
 
 }
+
+function inicializarCalendario() {
+
+	var ToEndDate = new Date();	
+
+	var fullDate = new Date()
+	var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+	 
+	var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+
+	$('.fecha').datePicker({
+	
+	    weekStart: 1,
+	    startDate: '01/01/2010',
+	    endDate: currentDate, 
+	    autoclose: true
+	})
+}
 					
 </script>
 
@@ -115,14 +139,25 @@ function valida(F) {
 
 <link href="styles/form2.css" rel="stylesheet" type="text/css" />
 </head>
-<body onload="$('.fecha').datePicker({startDate:'01/01/2010'});">
+<body onload="inicializarCalendario()">
 
-<?php  if($error){ ?>
-	<script>
+
+<?php 
+switch ($error) {
+	case 1:
+		echo '<script>
 	alert("La fecha de pago del cheque debe ser inferior o igual a la fecha de hoy");
-	</script>
+	</script>';
+	break;
+	case 2:
+		echo '<script>
+	alert("La fecha de debito debe ser inferior o igual a la fecha de hoy");
+	</script>';
+	break;
 	
-<?php $registro = $_POST['registro']; } else $registro = $_GET['dataid'];?>
+
+}
+if ($error) {$registro = $_POST['registro']; } else $registro = $_GET['dataid'];?>
 
 <?php  include_once("config/messages.php"); ?>
 

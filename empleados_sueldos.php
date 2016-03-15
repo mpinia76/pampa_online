@@ -168,7 +168,7 @@ function borrar_pago(){
     <?php  if(ACCION_63){ ?><li onclick="detalle()" class="item">Detalle</li><?php  } ?>
     <?php  if(ACCION_70){ ?><li onclick="addAdelanto()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Dar Adelanto</li><?php  } ?>
      <?php  if(ACCION_71){ ?><li onclick="addHoraExtra()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Asignar Hrs. Extras</li><?php  } ?>
-    <?php  if(ACCION_63){ ?><li onclick="borrar_pago()" class="item">Borrar pago</li><?php  } ?>
+    <?php  if(ACCION_63){ ?><li onclick="borrar_pago()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Borrar pago</li><?php  } ?>
 </ul>
 <div id="mensaje" style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:12px;">Seleccione un mes para ver el detalle</div>
 <div id="mygrid_container" style="width:100%;height:320px; display:none;"></div><!--

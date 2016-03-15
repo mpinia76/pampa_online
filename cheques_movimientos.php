@@ -102,12 +102,40 @@ function aprobar_viejo(){
 	}
 }
 
+
+
 function aprobar(){
+	
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','cheques_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+		var datos = ({
+			'id' : dataid,
+			'tabla' : 'cheque_consumo'
+		});
+		
+		$.ajax({
+			beforeSend: function(){
+				$('#loading').show();
+			},
+			data: datos,
+			url: 'functions/checkDebitado.php',
+			success: function(data) {
+			
+				if(data == 'si'){		
+					if(confirm("El cheque ya fue debitado  \n \n Continuar?")) {
+						createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','cheques_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+					}
+				}else{
+					createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','cheques_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+					
+				}
+				$('#loading').hide();
+				
+			}
+		});
+		
 	}
 }
 
@@ -185,7 +213,7 @@ input.dp-applied {
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
 	<?php  if(ACCION_37){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li><?php  } ?>
     <?php  if(ACCION_49){ ?><li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li><?php  } ?>
-	<?php  if(ACCION_36){ ?><li onclick="aprobar()" class="item"><img src="images/ok.gif" align="absmiddle" />  Confirmar d&eacute;bito</li><?php  } ?>
+	<?php  if(ACCION_36){ ?><li onclick="aprobar()" class="item"><img src="images/ok.gif" align="absmiddle" />  Confirmar d&eacute;bito</li><img id="loading" src="images/loading.gif" style="display:none" /><?php  } ?>
 	<li class="item">Ver desde: </li>
 	<li class="item"><input id="fecha_desde" type="text" class="fecha"> </li>
 	<li class="item">hasta: </li>

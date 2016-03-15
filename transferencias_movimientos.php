@@ -110,7 +110,32 @@ function aprobar(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','transferencias_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+		var datos = ({
+			'id' : dataid,
+			'tabla' : 'transferencia_consumo'
+		});
+		
+		$.ajax({
+			beforeSend: function(){
+				$('#loading').show();
+			},
+			data: datos,
+			url: 'functions/checkDebitado.php',
+			success: function(data) {
+			
+				if(data == 'si'){		
+					if(confirm("La transferencia ya fue debitada  \n \n Continuar?")) {
+						createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','transferencias_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+					}
+				}else{
+					createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','transferencias_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+					
+				}
+				$('#loading').hide();
+				
+			}
+		});
+		
 	}
 }
 function edit(){
