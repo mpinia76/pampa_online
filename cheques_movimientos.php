@@ -124,8 +124,8 @@ function aprobar(){
 			success: function(data) {
 			
 				if(data == 'si'){		
-					if(confirm("El cheque ya fue debitado  \n \n Continuar?")) {
-						createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','cheques_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs
+					if(confirm("El cheque ya fue debitado  \n \n Desea continuar para cambiar la fecha de debito del cheque?")) {
+						createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','cheques_debitar.php?actualizar=1&dataid='+dataid,'600','200'); //nombre de los divs
 					}
 				}else{
 					createWindow('w_<?php echo $tabla?>_debitar','Debitar <?php echo $label?>','cheques_debitar.php?dataid='+dataid,'600','200'); //nombre de los divs

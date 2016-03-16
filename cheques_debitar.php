@@ -21,6 +21,9 @@ if(($_POST['agregar'])){
 			$registro_id	= $_POST['registro'];
 			
 			$monto		= $rs['monto'];
+			if ($_POST['actualizar']) {
+				mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+			}
 		
 			$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
 			mysql_query($insert);
@@ -157,7 +160,8 @@ switch ($error) {
 	
 
 }
-if ($error) {$registro = $_POST['registro']; } else $registro = $_GET['dataid'];?>
+if ($error) {$registro = $_POST['registro']; } else $registro = $_GET['dataid'];
+if ($error) {$actualizar = $_POST['actualizar']; } else $actualizar = $_GET['actualizar'];?>
 
 <?php  include_once("config/messages.php"); ?>
 
@@ -166,6 +170,7 @@ if ($error) {$registro = $_POST['registro']; } else $registro = $_GET['dataid'];
 <form method="POST" name="form" action="cheques_debitar.php" onSubmit="return valida(this);">
 <input name="agregar" id="agregar" type="hidden" value="0">
 <input name="registro" id="registro" type="hidden" value="<?php echo $registro?>">
+<input name="actualizar" id="actualizar" type="hidden" value="<?php echo $actualizar?>">
 <div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" name="fecha" value="<?php echo date("d/m/Y")?>" /></div><div style="clear:both;"></div>
 
 

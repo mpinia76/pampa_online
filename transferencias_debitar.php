@@ -17,7 +17,9 @@ if(($_POST['agregar'])){
 			
 			
 			$monto		= $rs['monto'] + $rs['interes'] - $rs['descuento'];
-		
+			if ($_POST['actualizar']) {
+				mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+			}
 			$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
 			//echo $insert."<br>";
 			mysql_query($insert);
@@ -144,7 +146,8 @@ switch ($error) {
 
 
 }
-if ($error) {$registro = $_POST['registro']; } else $registro = $_GET['dataid'];?>
+if ($error) {$registro = $_POST['registro']; } else $registro = $_GET['dataid'];
+if ($error) {$actualizar = $_POST['actualizar']; } else $actualizar = $_GET['actualizar'];?>
 <?php  include_once("config/messages.php"); ?>
 
 <div class="container">
