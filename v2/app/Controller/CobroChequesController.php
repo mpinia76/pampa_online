@@ -72,6 +72,7 @@ class CobroChequesController extends AppController {
     
     public function acreditar(){
         $cobro = $this->CobroCheque->read(null, $this->request->data['id']);
+        $acreditado = $this->request->data['acreditado'];
         $this->CobroCheque->set(array(
             'fecha_acreditado' => $this->request->data['fecha'],
             'cuenta_acreditado' => $this->request->data['cuenta'],
@@ -86,6 +87,12 @@ class CobroChequesController extends AppController {
             
             //agrego el movimiento a la cuenta
             $this->loadModel('CuentaMovimiento');
+            $acreditado = $this->request->data['acreditado'];
+        	//elimino el movimiento anterior si ya estaba acreditado
+        	if ($acreditado) {
+				//mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+				$this->CuentaMovimiento->deleteAll(array('origen' => 'reservacheque_'.$this->CobroCheque->id), false);
+			}
             $this->CuentaMovimiento->set(array(
                 'cuenta_id' => $this->request->data['cuenta'],
                 'origen' => 'reservacheque_'.$this->CobroCheque->id,

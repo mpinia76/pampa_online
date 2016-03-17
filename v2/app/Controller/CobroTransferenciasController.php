@@ -41,6 +41,7 @@ class CobroTransferenciasController extends AppController {
     }
     public function acreditar(){
         $cobro = $this->CobroTransferencia->read(null, $this->request->data['id']);
+        
         $this->CobroTransferencia->set(array(
             'fecha_acreditado' => $this->request->data['fecha'],
             'acreditado' => 1,
@@ -51,9 +52,15 @@ class CobroTransferenciasController extends AppController {
             $this->set('detalle',$this->CobroTransferencia->validationErrors);
         }else{
             $this->CobroTransferencia->save();
-
-            //agrego el movimiento a la cuenta
             $this->loadModel('CuentaMovimiento');
+            $acreditado = $this->request->data['acreditado'];
+            //elimino el movimiento anterior si ya estaba acreditado
+        	if ($acreditado) {
+				//mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+				$this->CuentaMovimiento->deleteAll(array('cuenta_id' => $cobro['CobroTransferencia']['cuenta_id'], 'origen' => 'reservatransferencia_'.$this->CobroTransferencia->id), false);
+			}
+            //agrego el movimiento a la cuenta
+            
             $this->CuentaMovimiento->set(array(
                 'cuenta_id' => $cobro['CobroTransferencia']['cuenta_id'],
                 'origen' => 'reservatransferencia_'.$this->CobroTransferencia->id,

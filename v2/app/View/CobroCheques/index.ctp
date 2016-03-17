@@ -55,7 +55,7 @@ $this->Js->buffer('
     Fecha de acreditacion: &nbsp; <input class="datepicker" id="fecha_acreditado" value="<?php echo date('d/m/Y'); ?>" /> 
     <div class="error-message error_fecha_acreditado"></div>
     Cuenta donde se deposito: &nbsp; <?php echo $this->Form->input('cuenta',array('type' => 'select', 'options' => $cuentas, 'empty' => 'Seleccionar...', 'div' => false, 'label' => false)); ?>
-    <div class="error-message error_cuenta"></div>
+    <div class="error-message error_cuenta_acreditado"></div>
     <span onclick="acreditar();" class="boton guardar">Confirmar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>
     <p align="center"><a onclick="location.reload();">cancelar</a></p>
 </div>
@@ -107,7 +107,9 @@ function open_confirm_box(){
     }else{
         var data = oTable.fnGetData(row[0]);
         if(data[10] == 'Acreditado'){
-            alert('Este cheque ya se encuentra acreditado');
+            if(confirm("El cheque ya fue acreditado  \n \n Desea continuar para cambiar la fecha de acreditacion del cheque?")) {
+            	$('#confirm_box').jqmShow();
+            }
         }else if(data[10] == 'Asociado a pago'){
             alert('Este cheque esta asociado a un pago');
         }else{
@@ -118,11 +120,12 @@ function open_confirm_box(){
 function acreditar(){
     var row = $("#dataTable tr.row_selected");
     var data = oTable.fnGetData(row[0]);
+    var acreditado = (data[10] == 'Acreditado')?1:0;
     $('#loading_save').show();
     $('.error-message').html('');
     $.ajax({
         url : '<?php echo $this->Html->url('/cobro_cheques/acreditar', true);?>',
-        data: {'data' : {'id' : data[0], 'fecha' : $('#fecha_acreditado').val(), 'usuario' : <?php echo $usuario['Usuario']['id']; ?>, 'cuenta' : $('#cuenta').val()}},
+        data: {'data' : {'id' : data[0], 'fecha' : $('#fecha_acreditado').val(), 'usuario' : <?php echo $usuario['Usuario']['id']; ?>, 'cuenta' : $('#cuenta').val(),'acreditado' : acreditado}},
         type: 'POST',
         dataType: 'json',
         success: function(data){

@@ -103,7 +103,9 @@ function open_confirm_box(){
     }else{
         var data = oTable.fnGetData(row[0]);
         if(data[9] == 'Acreditado'){
-            alert('Esta transferencia ya se encuentra acreditada');
+        	if(confirm("La transferencia ya fue acreditada  \n \n Desea continuar para cambiar la fecha de acreditacion de la transferencia?")) {
+            	$('#confirm_box').jqmShow();
+            }
         }else{
             $('#confirm_box').jqmShow();
         }
@@ -112,10 +114,11 @@ function open_confirm_box(){
 function acreditar(){
     var row = $("#dataTable tr.row_selected");
     var data = oTable.fnGetData(row[0]);
+    var acreditado = (data[9] == 'Acreditado')?1:0;
     $('#loading_save').show();
     $.ajax({
         url : '<?php echo $this->Html->url('/cobro_transferencias/acreditar', true);?>',
-        data: {'data' : {'id' : data[0], 'fecha' : $('#fecha_acreditado').val(), 'usuario' : <?php echo $usuario['Usuario']['id']; ?>}},
+        data: {'data' : {'id' : data[0], 'fecha' : $('#fecha_acreditado').val(), 'usuario' : <?php echo $usuario['Usuario']['id']; ?>,'acreditado' : acreditado}},
         type: 'POST',
         dataType: 'json',
         success: function(data){

@@ -25,10 +25,16 @@ class CobroTransferencia extends AppModel {
             'message' => 'Ingrese un numero mayor o igaul a 0'
         ),
         'fecha_acreditado' => array(
-            'rule'     => array('date','dmy'),
-            'required' => false,
-            'message' => 'Ingrese una fecha valida'
+            'format_fecha' => array(
+                'rule'     => array('date','dmy'),
+                'message' => 'Ingrese una fecha valida'
+            ),
+            'fecha_anterior' => array(
+                'rule' => 'fecha_acreditado_menor_hoy',
+                'message' => 'La fecha no puede ser posterior a hoy'
+            )
         )
+        
     );
     
     public $virtualFields = array(
@@ -36,6 +42,17 @@ class CobroTransferencia extends AppModel {
         'mes_acreditado' => 'MONTH(CobroTransferencia.fecha_acreditado)',
         'ano_mes_acreditado' => 'DATE_FORMAT(CobroTransferencia.fecha_acreditado,"%y%m")'
     );
+    
+	public  function fecha_acreditado_menor_hoy(){
+       $fecha_hoy = mktime(0, 0, 0, date('m'), date('d'), date('Y')); //echo $fecha_hoy." ]] ";
+       if(isset($this->data['CobroTransferencia']['fecha_acreditado'])){ 
+           $parts = explode("/",$this->data['CobroTransferencia']['fecha_acreditado']);
+           $fecha_acreditado = mktime(0,0,0, $parts[1], $parts[0], $parts[2]); //echo $fecha_acreditado;
+           if($fecha_acreditado <= $fecha_hoy){
+               return true;
+           }
+       }
+   }
     
     public function beforeSave($options = Array()) {
         if (!empty($this->data['CobroTransferencia']['fecha_acreditado'])) {
