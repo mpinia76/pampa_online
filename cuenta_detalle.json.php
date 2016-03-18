@@ -53,10 +53,10 @@ while($rs = mysql_fetch_array($rsTemp)){
 }
 
 //cobro de reservas con transferencia
-$sql = "SELECT reservas.numero,ct.id as cobro_transferencia_id, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM cobro_transferencias ct INNER JOIN reserva_cobros rc ON ct.reserva_cobro_id = rc.id INNER JOIN reservas ON reservas.id = rc.reserva_id LEFT JOIN usuario ON ct.acreditado_por = usuario.id";
+$sql = "SELECT reservas.numero,ct.id as cobro_transferencia_id, CONCAT(usuario.apellido,', ',usuario.nombre) as user, ct.quien_transfiere FROM cobro_transferencias ct INNER JOIN reserva_cobros rc ON ct.reserva_cobro_id = rc.id INNER JOIN reservas ON reservas.id = rc.reserva_id LEFT JOIN usuario ON ct.acreditado_por = usuario.id";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
-    $reserva_cobro_transferencia[$rs['cobro_transferencia_id']] = $rs['numero'].'-'.$rs['user'];
+    $reserva_cobro_transferencia[$rs['cobro_transferencia_id']] = $rs['numero'].'-'.$rs['user'].'-'.$rs['quien_transfiere'];
 }
 
 //devoluciones de reserva con transferencia
@@ -119,8 +119,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 		}elseif($es_cuenta[0] == 'desdecaja'){
 			$detalle = "Deposito desde caja ".$cajas[$es_cuenta[1]];
 		}elseif($es_cuenta[0] == 'reservatransferencia'){
-                                        $detalle = "Transferencia";
-                                        $arrayDevolucion = split('-', $reserva_cobro_transferencia[$es_cuenta[1]]);
+										$arrayDevolucion = split('-', $reserva_cobro_transferencia[$es_cuenta[1]]);
+                                        $detalle = "Transferencia realizada por ".$arrayDevolucion[2];
+                                        
 								           
 								            $orden = 'Res. '.$arrayDevolucion[0];
 								            $rs['user'] = $arrayDevolucion[1];
