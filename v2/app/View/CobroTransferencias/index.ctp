@@ -52,12 +52,13 @@ $this->Js->buffer('
     Seleccione la fecha de acreditacion: &nbsp; <input class="datepicker" id="fecha_acreditado" value="<?php echo date('d/m/Y'); ?>" />
     <div class="error-message"></div>
     <span onclick="acreditar();" class="boton guardar">Confirmar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>
-    <p align="center"><a onclick="location.reload();">cancelar</a></p>
+    <p align="center"><a onclick="$('#confirm_box').jqmHide();">cancelar</a></p>
 </div>
 
 <ul class="action_bar">
     <li class="boton editar"><a onclick="editar();">Editar</a></li>
     <li onclick="open_confirm_box();" class="boton autorizar">Confirmar acreditacion</li>
+    <li class="boton anular"><a onclick="anular();">Anular acreditacion</a></li>
     <li class="filtro">Estado<select id="filter_estado">
             <option value="">Todos</option>
             <option value="pendiente" selected="selected">Pendiente</option>
@@ -126,9 +127,41 @@ function acreditar(){
             if(data.resultado == 'ERROR'){
                 $('.error-message').html(data.detalle.fecha_acreditado[0]);
             }else{
-                document.location.reload();
+            	$('#confirm_box').jqmHide();
+                $("#filter_estado").change();	
             }
         }
     })
+}
+
+function anular(){
+    var row = $("#dataTable tr.row_selected");
+   if(row.length == 0){
+        alert('Debe seleccionar un registro');
+    }else{
+        var data = oTable.fnGetData(row[0]);
+        if(data[9] == 'Acreditado'){
+        	if(confirm("Anular acreditacion?")) {
+			    $('#loading_save').show();
+			    $.ajax({
+			        url : '<?php echo $this->Html->url('/cobro_transferencias/anular', true);?>',
+			        data: {'data' : {'id' : data[0]}},
+			        type: 'POST',
+			        dataType: 'json',
+			        success: function(data){
+			            $('#loading_save').hide();
+			            if(data.resultado == 'ERROR'){
+			                //$('.error-message').html(data.detalle.fecha_acreditado[0]);
+			            }else{
+			                $("#filter_estado").change();
+			            }
+			        }
+			    })
+			 }
+		}
+		else{
+			alert('La transferencia no fue acreditada');
+		}
+	}
 }
 </script>

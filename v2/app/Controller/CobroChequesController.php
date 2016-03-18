@@ -110,6 +110,32 @@ class CobroChequesController extends AppController {
         ));
     }
     
+	public function anular(){
+        $cobro = $this->CobroCheque->read(null, $this->request->data['id']);
+        
+        $this->CobroCheque->set(array(
+            'fecha_acreditado' => '01/01/1970',
+            'cuenta_acreditado' => 0,
+            'acreditado' => 0,
+            'acreditado_por' => 0
+        ));
+      
+	    $this->CobroCheque->save();
+	    $this->loadModel('CuentaMovimiento');
+	           
+		$this->CuentaMovimiento->deleteAll(array('origen' => 'reservacheque_'.$this->CobroCheque->id), false);
+				
+	            
+	    $this->set('resultado','OK');
+	    $this->set('detalle','');
+      
+       
+        $this->set('_serialize', array(
+            'resultado',
+            'detalle' 
+        ));
+    }
+    
     public  function agregar(){
         $this->layout = 'ajax';
         

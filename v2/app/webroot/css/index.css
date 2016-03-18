@@ -37,6 +37,12 @@ ul.action_bar li.abonar{
     background-repeat: no-repeat ;
     background-position:center left;
 }
+ul.action_bar li.anular{
+    padding-left: 20px;
+    background-image: url("../img/bt_anular.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
 ul.action_bar li.autorizar{
     padding-left: 20px;
     background-image: url("../img/bt_autorice.png");

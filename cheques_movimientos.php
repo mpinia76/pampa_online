@@ -139,6 +139,53 @@ function aprobar(){
 	}
 }
 
+function anular(){
+	
+	dataid = mygrid.getSelectedRowId();
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else{
+		var datos = ({
+			'id' : dataid,
+			'tabla' : 'cheque_consumo'
+		});
+		
+		$.ajax({
+			beforeSend: function(){
+				$('#loading').show();
+			},
+			data: datos,
+			url: 'functions/checkDebitado.php',
+			success: function(data) {
+			
+				if(data == 'si'){		
+					if(confirm("Anular el debito?")) {
+						
+						$.ajax({
+							data: datos,
+							url: 'cheque_anular_debito.php',
+							success: function(data) {
+								mygrid.clearAll();
+								mygrid.load("<?php echo $json?>?debitado="+estado,"json");
+					
+								
+								
+							}
+						});
+					}
+				}else{
+					alert('No fue debitado');
+					
+				}
+				
+				$('#loading').hide();	
+			}
+		});
+		
+		
+	}
+}
+
 function filterByFecha(){
 	inicio = $('#fecha_desde').val();
 	fin = $('#fecha_hasta').val();
@@ -214,6 +261,7 @@ input.dp-applied {
 	<?php  if(ACCION_37){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li><?php  } ?>
     <?php  if(ACCION_49){ ?><li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li><?php  } ?>
 	<?php  if(ACCION_36){ ?><li onclick="aprobar()" class="item"><img src="images/ok.gif" align="absmiddle" />  Confirmar d&eacute;bito</li><img id="loading" src="images/loading.gif" style="display:none" /><?php  } ?>
+	<?php  if(ACCION_36){ ?><li onclick="anular()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Anular d&eacute;bito</li><?php  } ?>
 	<li class="item">Ver desde: </li>
 	<li class="item"><input id="fecha_desde" type="text" class="fecha"> </li>
 	<li class="item">hasta: </li>

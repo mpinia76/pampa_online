@@ -77,6 +77,33 @@ class CobroTransferenciasController extends AppController {
             'detalle' 
         ));
     }
+    
+	public function anular(){
+        $cobro = $this->CobroTransferencia->read(null, $this->request->data['id']);
+        
+        $this->CobroTransferencia->set(array(
+            'fecha_acreditado' => '01/01/1970',
+            'acreditado' => 0,
+        	'acreditado_por' => 0
+        ));
+      
+	    $this->CobroTransferencia->save();
+	    $this->loadModel('CuentaMovimiento');
+	           
+		$this->CuentaMovimiento->deleteAll(array('cuenta_id' => $cobro['CobroTransferencia']['cuenta_id'], 'origen' => 'reservatransferencia_'.$this->CobroTransferencia->id), false);
+				
+	            
+	    $this->set('resultado','OK');
+	    $this->set('detalle','');
+      
+       
+        $this->set('_serialize', array(
+            'resultado',
+            'detalle' 
+        ));
+    }
+    
+    
     public function agregar($user_id){
         $this->layout = 'ajax';
         
