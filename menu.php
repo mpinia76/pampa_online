@@ -165,7 +165,11 @@
             Gastos y Compras: Montos Aprobaci&oacute;n
         </div>
         <?php } ?>
-        
+        <?php if(MENU_1){?>
+        <div class="configuracion item" onclick="createWindow('w_documentos','Carga de documentacion de sistema','documentos.php','600','400'); $('#menu').hide();">
+            Carga de documentacion de sistema
+        </div>
+        <?php } ?>
         <?php if(MENU_9){?>
         <div class="title" onclick="$('.informes').toggle();"><img width="30" src="images/ico_informes.png" align="absmiddle" /> Informes</div>
         <div class="informes item" onclick="createWindow('w_informe','Informe economico','informe.economico.php','1230','400'); $('#menu').hide();">
