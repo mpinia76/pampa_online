@@ -152,7 +152,7 @@ function anular(){
 		
 		$.ajax({
 			beforeSend: function(){
-				$('#loading').show();
+				$('#loading1').show();
 			},
 			data: datos,
 			url: 'functions/checkDebitado.php',
@@ -178,7 +178,7 @@ function anular(){
 					
 				}
 				
-				$('#loading').hide();	
+				$('#loading1').hide();	
 			}
 		});
 		
@@ -260,8 +260,8 @@ input.dp-applied {
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
 	<?php  if(ACCION_37){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li><?php  } ?>
     <?php  if(ACCION_49){ ?><li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li><?php  } ?>
-	<?php  if(ACCION_36){ ?><li onclick="aprobar()" class="item"><img src="images/ok.gif" align="absmiddle" />  Confirmar d&eacute;bito</li><img id="loading" src="images/loading.gif" style="display:none" /><?php  } ?>
-	<?php  if(ACCION_36){ ?><li onclick="anular()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Anular d&eacute;bito</li><?php  } ?>
+	<?php  if(ACCION_36){ ?><li onclick="aprobar()" class="item"><img src="images/ok.gif" align="absmiddle" />  Confirmar d&eacute;bito<img id="loading" src="images/loading.gif" style="display:none" /></li><?php  } ?>
+	<?php  if(ACCION_36){ ?><li onclick="anular()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Anular d&eacute;bito<img id="loading1" src="images/loading.gif" style="display:none" /></li><?php  } ?>
 	<li class="item">Ver desde: </li>
 	<li class="item"><input id="fecha_desde" type="text" class="fecha"> </li>
 	<li class="item">hasta: </li>

@@ -9,11 +9,11 @@ $sql = "SELECT * FROM documento";
 $rsTemp = mysql_query($sql);
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){
-
+	$path = "<a href=\"documentos/".$rs['path']."\" target=\"_blank\">".$rs['path']."</a>" ;
 	$data = array(
 		"id" => $rs['id'],
 		"data" => array(
-			$rs['path']
+			$path
 		)
 	);
 	array_push($rows,$data);

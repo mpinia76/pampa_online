@@ -520,6 +520,42 @@ if(mysql_num_rows($rsTemp) > 0){
 No se ha otorgado ningun adelanto
 <?php  } ?>
 <p><a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="addAdelanto()">Otorgar adelanto</a></p>
+<p><strong>Hist&oacute;rico</strong></p>
+<?php 
+$sql = "SELECT 
+			*
+			
+		FROM 
+			empleado_historico
+		WHERE 
+			empleado_id = ".$_GET['empleado_id'];
+			
+$rsTemp = mysql_query($sql);
+if(mysql_num_rows($rsTemp) > 0){ 
+?>
+<table cellpadding="0" cellspacing="0">
+	<tr style="font-weight:bold;">
+    	
+        <td width="80">Alta</td>
+        <td width="80">Baja</td>
+        
+   	</tr>
+<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+	<tr>
+    	
+        <td><?php 
+        $alta = ((fechavista($rs['alta'])=="//")||(fechavista($rs['alta'])=="00/00/0000"))?'':fechavista($rs['alta']);
+        echo $alta;
+        ?></td>
+        <td><?php 
+        $baja = ((fechavista($rs['baja'])=="//")||(fechavista($rs['baja'])=="00/00/0000"))?'':fechavista($rs['baja']);
+        echo $baja;
+        ?></td>
+        
+   	</tr>
+<?php  } ?>
+</table>
+<?php  } ?>
 </div>
 </body>
 </html>

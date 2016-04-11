@@ -309,7 +309,7 @@ class Form{
 	}
 	
 	public function createFile($name, $atr){
-	
+		
 //		$atr['infotext']	el texto a mostrar cuando selecciona el archivo
 //		$atr['extensions']	lista de extensiones asi *.jpg;*.jpeg;*.png;*.gif
 //		$atr['label'] 		el nombre para mostrar del campo
@@ -321,7 +321,7 @@ class Form{
 			$(\"#".$name."\").uploadify({
 				'uploader'       : 'library/uploadify/uploadify.swf',
 				'script'         : 'library/uploadify/uploadify.php',
-				'cancelImg'      : 'images/cancel.png',
+				'cancelImg'      : 'images/bt_delete.png',
 				'folder'         : '".$atr['folder']."',
 				'queueID'        : 'uploader_".$name."',
 				'auto'           : true,
@@ -329,13 +329,14 @@ class Form{
 				'fileExt'		 : '".$atr['extensions']."',
 				'onComplete'	 : 
 					function(event, queueID, fileObj, response, data) {
-						html = \"<input type=hidden name=".$name." value=\" + fileObj.name + \" /> \" + fileObj.name;
+						cadena= fileObj.name.replace(/\s/g,\"_\");
+						html = \"<input type=hidden name=".$name." value=\" + cadena + \" /> \" + cadena;
 						$('#uploader_".$name."').html(html);
+						 $(\"input[type=submit]\").removeAttr(\"disabled\");
 					}
 			});
 		});
 		</script>";
-		
 		$this->js .= $js;
 		
 		$html .= '<div class="label">'.$atr['label'].'</div>';	
@@ -429,7 +430,7 @@ class Form{
 		return $this->js;
 	}
 	
-	public function printHTML(){
+	public function printHTML($submitDisabled=0){
 		
 		echo '
 		<div class="container">
@@ -450,9 +451,9 @@ class Form{
 			include_once($this->extra_file_end);
 		
 		}
-		
+		$disabled = ($submitDisabled)?'disabled="disabled"':'';
 		echo '
-		<p align="center"><input type="submit" value="'.$this->boton_value.'" name="'.$this->boton_name.'" id="'.$this->boton_name.'"/></p>
+		<p align="center"><input type="submit" value="'.$this->boton_value.'" name="'.$this->boton_name.'" id="'.$this->boton_name.'" '.$disabled.'/></p>
 		</form>
 		</div>
 		<script type="text/javascript">

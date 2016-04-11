@@ -23,7 +23,13 @@ if(isset($_POST['agregar'])){
 	}	
 	$result = mysql_insert($tabla,$datos);
 	$usuario_id = mysql_insert_id();
-	
+	//creo el histórico de empleados
+	if ($tabla == 'empleado' ) {
+		$alta = fechasql($_POST['fecha_alta']);
+		$sql = "INSERT INTO empleado_historico (empleado_id,alta) VALUES ($usuario_id,'$alta')";
+		//echo $sql;
+		mysql_query($sql);
+	}
 	//guardo si hay permisos actualizados
 	if(isset($_POST['permisos'])){
 	

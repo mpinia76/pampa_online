@@ -50,6 +50,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 }
 
 if($_GET['espacio'] == 'todos'){
+	//$sql = "SELECT * FROM empleado e WHERE fecha_alta <= '".date('Y-m-d',mktime(0,0,0,$mes,1,$ano))."'";
 	$sql = "SELECT * FROM empleado e WHERE fecha_alta <= '".date('Y-m-d',mktime(0,0,0,$mes,1,$ano))."'";
 }elseif($_GET['espacio'] == 'oficina'){
 	foreach($espacio_id as $empleado_id => $sector){
@@ -68,7 +69,7 @@ if($_GET['espacio'] == 'todos'){
 	$list = implode(",",$empleados);
 	$sql = "SELECT * FROM empleado e WHERE e.id IN ($list) and fecha_alta <= '".date('Y-m-d',mktime(0,0,0,$mes,1,$ano))."'";
 }
-
+//echo $sql."<br>";
 $rsTemp = mysql_query($sql);
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){

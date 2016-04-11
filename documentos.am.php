@@ -12,9 +12,8 @@ $campos['id'] 				= array(
 								'input_type'		=> 'hidden'
 							);
 $campos['path'] 			= array(
-								'type'				=> 'text',
-								'input_type'		=> 'file',
-								'label' 			=> 'Nombre',
+								'type'			=> 'file',
+								'label' 		=> 'Archivo',
 								'infotext'		=> 'Seleccione un archivo',
 								'extensions' 	=> '*.pdf;*.doc;*.docx;*.rtf',
 								'folder'		=> 'documentos',
@@ -120,7 +119,7 @@ input.dp-applied {
 
 <?php include_once("config/messages.php"); ?>
 
-<?php echo $form->printHTML()?>
+<?php echo $form->printHTML(1)?>
 
 </body>
 </html>

@@ -25,8 +25,11 @@ THE SOFTWARE.
 */
 if (!empty($_FILES)) {
 	$tempFile = $_FILES['Filedata']['tmp_name'];
+	$tempFile = preg_replace('/[^a-z0-9-_\-\.]/i','_',$tempFile);
+	$fileName = $_FILES['Filedata']['name'];
+	$fileName= preg_replace('/[^a-z0-9-_\-\.]/i','_',$fileName);
 	$targetPath = $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['folder'] . '/';
-	$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
+	$targetFile =  str_replace('//','/',$targetPath) . $fileName;
 	
 	// $fileTypes  = str_replace('*.','',$_REQUEST['fileext']);
 	// $fileTypes  = str_replace(';','|',$fileTypes);

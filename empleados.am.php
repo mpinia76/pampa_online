@@ -193,7 +193,22 @@ $form->setCampos($campos);
 <script type="text/javascript" src="library/datepicker/date.js"></script>
 <!--[if IE]><script type="text/javascript" src="library/datepicker/jquery.bgiframe.js"></script><![endif]-->
 <script type="text/javascript" src="library/datepicker/jquery.datePicker.min-2.1.2.js"></script>
+<script src="library/dhtml/js/dhtmlxcommon.js"></script>
+<script src="js/createWindow.js"></script>
+<script>
+var dhxWins = parent.dhxWins;
+
+var position = dhxWins.window('w_empleado').getPosition(); //id de la ventana
+
+var xpos = position[0];
+var ypos = position[1];
+function documentos(){
+	createWindow('w_documentos','Imprimir documentos','documentos.php?sinBarra=1','600','400'); //botones
+}
+
+</script>
 <link href="library/datepicker/datePicker.css" rel="stylesheet" type="text/css" />
+<link rel="STYLESHEET" type="text/css" href="styles/toolbar.css">
 <style>
 a.dp-choose-date {
 	float: left;
@@ -228,8 +243,15 @@ input.dp-applied {
 <body>
 
 <?php include_once("config/messages.php"); ?>
+<ul id="menu">
+	
+	<li onclick="documentos()" class="item"><img src="images/bt_print.png" align="absmiddle" />  Imprimir documentos</li>
+	
+</ul>
+<?php 
+$form->printHTML()
 
-<?php $form->printHTML()?>
+?>
 
 </body>
 </html>

@@ -54,7 +54,7 @@ function doInitGrid(){
 	mygrid.setColTypes("ro,ro");				//editable o no
 	mygrid.enableEditEvents(false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?php echo $json?>?espacio=<?php echo $espacio?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>?espacio=<?php echo $espacio?>&activo=1","json");	//ruta al json con datos
 	mygrid.init();
 }
 function dar_baja(){
@@ -71,9 +71,30 @@ function dar_baja(){
 				success: function(){
 					$('#baja_loading').hide();
 					mygrid.clearAll();
-					mygrid.load("<?php echo $json?>?espacio=<?php echo $espacio?>","json");
+					mygrid.load("<?php echo $json?>?espacio=<?php echo $espacio?>&activo=1","json");
 				}
 			});
+		}
+	}
+}
+
+function dar_baja(){
+	dataid = mygrid.getSelectedRowId();
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else{
+		if(confirm('¿Seguro desea dar de baja al empleado?')){
+			createWindow('w_<?php echo $tabla?>_bajar','Dar de baja <?php echo $label?>','empleado_baja.php?dataid='+dataid,'600','200'); //nombre de los divs
+		}
+	}
+}
+function dar_alta(){
+	dataid = mygrid.getSelectedRowId();
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else{
+		if(confirm('¿Seguro desea dar de alta al empleado?')){
+			createWindow('w_<?php echo $tabla?>_subir','Dar de alta <?php echo $label?>','empleado_alta.php?dataid='+dataid,'600','200'); //nombre de los divs
 		}
 	}
 }
@@ -134,6 +155,15 @@ function addHoraExtra(){
    }
 }
 
+function filtroActivo(select){
+		
+		$('#mygrid_container').show();
+		$('#mensaje').hide();
+		mygrid.clearAll();	
+		mygrid.load("<?php echo $json?>?espacio=<?php echo $espacio?>&activo="+select.value,"json");
+	
+}
+
 </script>
 <script src="js/createWindow.js"></script>
 </head>
@@ -141,11 +171,19 @@ function addHoraExtra(){
 <body onload="doInitGrid();">
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
+	<li class="item"> 
+	<select id="selectActivo" name="selectActivo" onChange="filtroActivo(this)">
+    <option value="1" >Activos</option>
+	<option value="0" >Inactivos</option>
+	</select>
+	</li>	
 	<?php  if(ACCION_13){ ?><li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li><?php  } ?>
     <?php  if(ACCION_14){ ?><li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li><?php  } ?>
 	<?php  if(ACCION_60){ ?><li onclick="view()" class="item"><img src="images/bt_view.png" align="absmiddle" />  Consultar</li><?php  } ?>
     <?php  if(ACCION_69){ ?><li onclick="dar_baja()" class="item"><img src="images/bt_baja.png" align="absmiddle" />  Dar de baja &nbsp; 
+    <li onclick="dar_alta()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Dar de alta &nbsp; 
     	<img align="absmiddle" src="images/loading.gif" height="15" style="display:none;" id="baja_loading" /> </li><?php  } ?>
+    
      <?php  if(ACCION_70){ ?><li onclick="addAdelanto()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Dar Adelanto</li><?php  } ?>
      <?php  if(ACCION_71){ ?><li onclick="addHoraExtra()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Asignar Hrs. Extras</li><?php  } ?>
 	<!--<li onclick="eliminar()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Eliminar</li>-->

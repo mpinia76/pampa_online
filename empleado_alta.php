@@ -9,7 +9,9 @@ include_once("config/db.php");
 include_once("functions/abm.php");
 $error=0;
 if(($_POST['agregar'])){
-	//if((date("Y-m-d")) >= fechasql($_POST['fecha'])){
+	$sql	= "SELECT * FROM empleado WHERE id=".$_POST['registro']." and estado = 0";
+		$rs		= mysql_fetch_array(mysql_query($sql));
+	if($rs['id']){
 		
 			$registro_id	= $_POST['registro'];
 			
@@ -17,22 +19,22 @@ if(($_POST['agregar'])){
 			
 			
 			
-			$sql = "UPDATE empleado SET estado = 0, fecha_baja = '".fechasql($_POST['fecha'])."', baja_por = $user_id WHERE id = ".$registro_id;
+			$sql = "UPDATE empleado SET estado = 1, fecha_baja = '0000-00-00' WHERE id = ".$registro_id;
 			mysql_query($sql);
-			$sql = "UPDATE empleado_historico SET baja = '".fechasql($_POST['fecha'])."' WHERE empleado_id = ".$registro_id." AND (baja IS NULL OR baja = '0000-00-00')";
+			$sql = "INSERT INTO empleado_historico (empleado_id, alta) VALUES ($registro_id, '".fechasql($_POST['fecha'])."')";
 			mysql_query($sql);
 			//echo $update."<br>";
 			
 			$result = 1;
 			echo "<script>
 				window.parent.dhxWins.window('w_empleado').attachURL('empleados.php');
-		    	window.parent.dhxWins.window('w_empleado_bajar').close();
+		    	window.parent.dhxWins.window('w_empleado_subir').close();
 		
 				</script>";
 
-	/*}else{
+	}else{
 		$error = 2;
-	}*/
+	}
 }
 
 ?>
@@ -136,7 +138,7 @@ switch ($error) {
 
 	case 2:
 		echo '<script>
-	alert("La fecha de debito debe ser inferior o igual a la fecha de hoy");
+	alert("El empleado esta activo");
 	</script>';
 	break;
 
@@ -148,7 +150,7 @@ if ($error) {$actualizar = $_POST['actualizar']; } else $actualizar = $_GET['act
 
 <div class="container">
 
-<form method="POST" name="form" action="empleado_baja.php" onSubmit="return valida(this);">
+<form method="POST" name="form" action="empleado_alta.php" onSubmit="return valida(this);">
 <input name="agregar" id="agregar" type="hidden" value="0">
 <input name="registro" id="registro" type="hidden" value="<?php echo $registro?>">
 <div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" name="fecha" value="<?php echo date("d/m/Y")?>" /></div><div style="clear:both;"></div>
@@ -161,7 +163,7 @@ if ($error) {$actualizar = $_POST['actualizar']; } else $actualizar = $_GET['act
 
 </div>
 
-<p align="center"><input type="submit" value="Confirmar baja" name="agregarSubmit" id="agregarSubmit" /></p>
+<p align="center"><input type="submit" value="Confirmar alta" name="agregarSubmit" id="agregarSubmit" /></p>
 
 </form>
  

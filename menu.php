@@ -38,7 +38,7 @@
         </div>
         <?php } ?>
         <?php if(MENU_6){?>
-        <div class="administracion item" onclick="createWindow('w_empleado','Administrador de empleados','empleados.php','700','400'); $('#menu').hide();">
+        <div class="administracion item" onclick="createWindow('w_empleado','Administrador de empleados','empleados.php','900','400'); $('#menu').hide();">
             Administrador de Empleados
         </div>
         <?php } ?>

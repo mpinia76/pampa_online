@@ -5,9 +5,19 @@ $file 	= "documentos.php"; //archivo
 $json	= "documentos.json.php"; //json
 $abm 	= "documentos.am.php"; //agregar o modificar
 
-//resta modificar los datos del grid
 
+//resta modificar los datos del grid
+if(isset($_GET['dataid']) and isset($_GET['delete'])){
+	include_once("config/db.php");
+	$sql = "SELECT * FROM $tabla WHERE id=".$_GET['dataid'];
+	$rsTemp = mysql_query($sql);
+	$rs = mysql_fetch_array($rsTemp);
+	unlink('documentos/'.$rs['path']);
+	
+	
+}
 include_once("functions/delete.php");
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -64,11 +74,14 @@ function add(){
 </head>
 
 <body onload="doInitGrid();">
-<ul id="menu">
-	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
-	<li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li>
-	<li onclick="eliminar()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Eliminar</li>
-</ul>
+<?php if (!$_GET['sinBarra']) {?>
+	<ul id="menu">
+		<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
+		<li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li>
+		<li onclick="eliminar()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Eliminar</li>
+	</ul>
+<?php }?>
+
 <div id="mygrid_container" style="width:100%;height:280px;"></div>
 </body>
 </html>
