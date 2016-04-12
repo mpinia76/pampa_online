@@ -1,0 +1,30 @@
+2016-04-12 18:33:30 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'20000',4,2016,29,NOW(),'2000','por la edad')
+2016-04-12 18:39:25 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'18000',4,2016,29,NOW(),'2000','por la edad')
+2016-04-12 18:47:05 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(68,'10000',3,2016,29,NOW(),'1500','')
+2016-04-12 18:47:37 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 2063
+2016-04-12 18:47:37 --> DELETE FROM cheque_consumo WHERE id = 2063
+2016-04-12 18:54:59 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(68,'10000',3,2016,29,NOW(),'1500','')
+2016-04-12 19:02:49 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(68,'11500',3,2016,29,NOW(),'0','')
+2016-04-12 19:03:33 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(68,'11500',3,2016,29,NOW(),'0','')
+2016-04-12 19:05:52 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(68,'10000',3,2016,29,NOW(),'1500','')

@@ -48,14 +48,14 @@ var dataid;
 function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
-    mygrid.setHeader("Legajo, Nombre y Apellido, Espacio, Sector, Salario + Asig., Adelantos, Hrs. Extras, Pendiente, Pagado, Estado"); 		//nombre de las columnas
-   	mygrid.attachHeader("#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter");
-	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},&nbsp;");
-	mygrid.setInitWidths("80,*,*,*,60,60,60,60,60,80"); 				//ancho de las columnas
-    mygrid.setColAlign("left,left,left,left,right,right,right,right,right,left");			//alineacion de las columnas
-	mygrid.setColSorting("str,str,str,str,int,int,int,int,int,str");			//tipo datos para ordenar
-	mygrid.setColTypes("ro,ro,ro,ro,price,price,price,price,price,ro");				//editable o no
-	mygrid.enableEditEvents(false,false,false,false,false,false,false,false,false,false);
+    mygrid.setHeader("Legajo, Nombre y Apellido, Espacio, Sector, Salario Acordado, Aguinaldo, Hrs. Extras, Descuentos, Total a pagar, Adelantos, Saldo a cobrar, Pagado, Estado"); 		//nombre de las columnas
+   	mygrid.attachHeader("#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#select_filter");
+	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},&nbsp;");
+	mygrid.setInitWidths("80,*,*,*,60,60,60,*,60,60,60,60,80"); 				//ancho de las columnas
+    mygrid.setColAlign("left,left,left,left,right,right,right,right,right,right,right,right,left");			//alineacion de las columnas
+	mygrid.setColSorting("str,str,str,str,int,int,int,int,int,int,int,int,str");			//tipo datos para ordenar
+	mygrid.setColTypes("ro,ro,ro,ro,price,price,price,price,price,price,price,price,ro");				//editable o no
+	mygrid.enableEditEvents(false,false,false,false,false,false,false,false,false,false,false,false,false);
 	mygrid.enableMultiselect(true);
     mygrid.setSkin("dhx_skyblue");
 	//mygrid.load("<?php echo $json?>?ano=<?php echo date('Y')?>&mes=<?php echo date('n')?>&espacio=<?php echo $espacio?>","json");	//ruta al json con datos

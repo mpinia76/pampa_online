@@ -25,7 +25,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 $sql = "SELECT * FROM empleado_sueldo WHERE ano = $ano AND mes = $mes ORDER BY id ASC";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
-	$sueldo[$rs['empleado_id']] = $rs['sueldo'] + $rs['viaticos'] + $rs['asignaciones'] + $rs['presentismo'] + $rs['aguinaldo'];
+	$sueldo[$rs['empleado_id']] = $rs['sueldo'] + $rs['viaticos'] + $rs['asignaciones'] + $rs['presentismo'] ;
+	$aguinaldo[$rs['empleado_id']]=$rs['aguinaldo'];
+	
 }
 
 //adelantos
@@ -47,6 +49,7 @@ $sql = "SELECT * FROM empleado_pago WHERE ano = $ano AND mes = $mes";
 $rsTemp = mysql_query($sql);
 while($rs = mysql_fetch_array($rsTemp)){
 	$pago[$rs['empleado_id']] = $rs['monto'];
+	$descuento[$rs['empleado_id']]=$rs['descuentos'].'('.$rs['motivo_descuentos'].')';
 }
 
 if($_GET['espacio'] == 'todos'){
@@ -99,9 +102,13 @@ while($rs = mysql_fetch_array($rsTemp)){
 			$espacio[$rs['id']],
 			$sector[$rs['id']],
 			$sueldo[$rs['id']],
-			$adelanto[$rs['id']],
+			$aguinaldo[$rs['id']],
 			$hora_extra[$rs['id']],
-			round($sueldo[$rs['id']]+$hora_extra[$rs['id']]-$adelanto[$rs['id']]-$pago[$rs['id']],2),
+			$descuento[$rs['id']],
+			round($sueldo[$rs['id']]+$aguinaldo[$rs['id']]+$hora_extra[$rs['id']]-$descuento[$rs['id']],2),
+			$adelanto[$rs['id']],
+			
+			round($sueldo[$rs['id']]+$aguinaldo[$rs['id']]+$hora_extra[$rs['id']]-$descuento[$rs['id']]-$adelanto[$rs['id']],2),
 			$pago[$rs['id']],
 			$estado
 		)

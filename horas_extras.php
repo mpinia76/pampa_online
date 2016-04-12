@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -10,6 +10,7 @@ $json	= "horas_extras.json.php"; //json
 $abm 	= "horas_extras.am.php"; //agregar o modificar
 
 $empleado_id  = $_GET['empleado_id'];
+
 
 //resta modificar los datos del grid
 
@@ -32,7 +33,7 @@ include_once("config/db.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -51,7 +52,7 @@ function doInitGrid(){
 	mygrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro");				//editable o no
 	mygrid.enableEditEvents(false,false,false,false,false,false,false,false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?=$json?>?empleado_id=<?=$empleado_id?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>?empleado_id=<?php echo $empleado_id?>","json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -73,7 +74,7 @@ function desaprobar(){
 	}else if(mygrid.cellById(dataid, 7).getValue() != 'Pendiente'){
 		alert('La hora extra debe estar pendiente de aprobacion');
 	}else{
-		window.location.href='horas_extras.php?hora_extra_id='+dataid+'&estado=2&empleado_id=<?=$empleado_id?>';
+		window.location.href='horas_extras.php?hora_extra_id='+dataid+'&estado=2&empleado_id=<?php echo $empleado_id?>';
 	}
 }
 

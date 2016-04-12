@@ -9,30 +9,33 @@ include_once("config/db.php");
 include_once("functions/abm.php");
 $error=0;
 if(($_POST['agregar'])){
-	//if((date("Y-m-d")) >= fechasql($_POST['fecha'])){
+	$registro_id	= $_POST['registro'];
+	$sql	= "SELECT * FROM empleado_historico WHERE empleado_id = ".$registro_id." AND (baja IS NULL OR baja = '0000-00-00')";
+	$rs		= mysql_fetch_array(mysql_query($sql));
+	if($rs['alta'] <= fechasql($_POST['fecha'])){
 		
-			$registro_id	= $_POST['registro'];
-			
-			
-			
-			
-			
-			$sql = "UPDATE empleado SET estado = 0, fecha_baja = '".fechasql($_POST['fecha'])."', baja_por = $user_id WHERE id = ".$registro_id;
-			mysql_query($sql);
-			$sql = "UPDATE empleado_historico SET baja = '".fechasql($_POST['fecha'])."' WHERE empleado_id = ".$registro_id." AND (baja IS NULL OR baja = '0000-00-00')";
-			mysql_query($sql);
-			//echo $update."<br>";
-			
-			$result = 1;
-			echo "<script>
-				window.parent.dhxWins.window('w_empleado').attachURL('empleados.php');
-		    	window.parent.dhxWins.window('w_empleado_bajar').close();
 		
-				</script>";
+		
+		
+		
+		
+		
+		$sql = "UPDATE empleado SET estado = 0, fecha_baja = '".fechasql($_POST['fecha'])."', baja_por = $user_id WHERE id = ".$registro_id;
+		mysql_query($sql);
+		$sql = "UPDATE empleado_historico SET baja = '".fechasql($_POST['fecha'])."' WHERE empleado_id = ".$registro_id." AND (baja IS NULL OR baja = '0000-00-00')";
+		mysql_query($sql);
+		//echo $update."<br>";
+		
+		$result = 1;
+		echo "<script>
+			window.parent.dhxWins.window('w_empleado').attachURL('empleados.php');
+	    	window.parent.dhxWins.window('w_empleado_bajar').close();
+	
+			</script>";
 
-	/*}else{
+	}else{
 		$error = 2;
-	}*/
+	}
 }
 
 ?>
@@ -136,7 +139,7 @@ switch ($error) {
 
 	case 2:
 		echo '<script>
-	alert("La fecha de debito debe ser inferior o igual a la fecha de hoy");
+	alert("La fecha de baja debe ser superior o igual a la fecha de alta");
 	</script>';
 	break;
 

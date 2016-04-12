@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 $user_id = $_SESSION['userid'];
 if($user_id == '') { header("Location: index.php"); }
@@ -31,7 +31,7 @@ body{
 </style>
 </head>
 
-<?
+<?php
 if(isset($_POST['id'])){
 	$sql = "UPDATE empleado_hora_extra SET estado = 1, cantidad_aprobada = ".$_POST['horas_aprobadas'].", aprobado_por = $user_id, aprobado = NOW()  WHERE id = ".$_POST['id'];
 	mysql_query($sql);
@@ -39,22 +39,22 @@ if(isset($_POST['id'])){
 ?>
 	<script>
 	var dhxWins = parent.dhxWins;
-	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?=$_POST['empleado_id']?>');
-	dhxWins.window('w_empleado_hora_extra').attachURL('horas_extras.php?empleado_id=<?=$_POST['empleado_id']?>');
+	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?php echo $_POST['empleado_id']?>');
+	dhxWins.window('w_empleado_hora_extra').attachURL('horas_extras.php?empleado_id=<?php echo $_POST['empleado_id']?>');
 	dhxWins.window('w_empleado_hora_extra_aprobar').close();
 	</script>
-<? } ?>
+<?php } ?>
 
 <body>
-<?
+<?php
 $sql = "SELECT * FROM empleado_hora_extra WHERE id=".$_GET['id'];
 $rs = mysql_fetch_array(mysql_query($sql));
 ?>
 
 <form method="POST" action="horas_extras_aprobar.php">
-<input type="hidden" value="<?=$rs['id']?>" name="id" />
-<input type="hidden" value="<?=$rs['empleado_id']?>" name="empleado_id" />
-<p><b>Horas extras aprobadas:</b> <input type="text" size="5" name="horas_aprobadas" value="<?=$rs['cantidad_solicitada']?>" /><p>
+<input type="hidden" value="<?php echo $rs['id']?>" name="id" />
+<input type="hidden" value="<?php echo $rs['empleado_id']?>" name="empleado_id" />
+<p><b>Horas extras aprobadas:</b> <input type="text" size="5" name="horas_aprobadas" value="<?php echo $rs['cantidad_solicitada']?>" /><p>
 <p align="center"><input type="submit" value="Guardar"></p>
 </form>
 

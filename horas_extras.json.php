@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 
 include_once("config/db.php");
@@ -11,7 +11,7 @@ $sql = "SELECT ehe.id, CONCAT(u.nombre,' ',u.apellido) as usuario,CONCAT(e.nombr
 			INNER JOIN usuario u ON u.id = ehe.creado_por
 			INNER JOIN sector s ON she.sector_id = s.id
 		WHERE empleado_id = ".$_GET['empleado_id'];
-
+//echo $sql;
 $rsTemp = mysql_query($sql); echo mysql_error();
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){
