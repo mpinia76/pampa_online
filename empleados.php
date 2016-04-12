@@ -47,12 +47,12 @@ var dataid;
 function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
-    mygrid.setHeader("Nombre,Apellido"); 		//nombre de las columnas
+    mygrid.setHeader("Nombre,Apellido,Estado"); 		//nombre de las columnas
     mygrid.setInitWidths("*,*"); 				//ancho de las columnas
-    mygrid.setColAlign("left,left");			//alineacion de las columnas
-	mygrid.setColSorting("str,str");			//tipo datos para ordenar
-	mygrid.setColTypes("ro,ro");				//editable o no
-	mygrid.enableEditEvents(false,false);
+    mygrid.setColAlign("left,left,left");			//alineacion de las columnas
+	mygrid.setColSorting("str,str,str");			//tipo datos para ordenar
+	mygrid.setColTypes("ro,ro,ro");				//editable o no
+	mygrid.enableEditEvents(false,false,false);
     mygrid.setSkin("dhx_skyblue");		
 	mygrid.load("<?php echo $json?>?espacio=<?php echo $espacio?>&activo=1","json");	//ruta al json con datos
 	mygrid.init();

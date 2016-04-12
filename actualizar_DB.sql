@@ -433,4 +433,6 @@ INSERT INTO empleado_historico (empleado_id, alta, baja)
 SELECT id, fecha_alta, fecha_baja FROM empleado 
 
 
-SELECT max(eh.id),alta, baja, e.* FROM empleado e INNER JOIN empleado_historico eh ON e.id = eh.empleado_id  WHERE alta <= '2016-05-01' GROUP BY eh.empleado_id
+SELECT alta, baja, e.* 
+FROM empleado e INNER JOIN empleado_historico eh ON e.id = eh.empleado_id  
+WHERE alta <= '2016-05-01' AND eh.id=(SELECT max(eh2.id) FROM empleado_historico eh2 GROUP BY e2.empleado_id)

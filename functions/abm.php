@@ -1,42 +1,64 @@
 <?php
+function validar($tabla,$campos){
+	switch ($tabla) {
+		case 'empleado':
+			$sql="SELECT id FROM $tabla WHERE dni = '".$campos['dni']."'";
+			$rs = mysql_fetch_array(mysql_query($sql));
+			//echo $sql;
+			if ($rs['id']) {
+				$msg="El DNI ya se encuentra cargado";
+				return $msg;
+			}
+		break;
+		
+		default:
+			
+		break;
+	}
+	return 0;
+}
 function mysql_insert($tabla,$campos){
-$query='INSERT INTO `'.$tabla.'` (';
-$count=0;
-foreach($campos as $campo => $valor){
-	$campo = str_replace("\'","`",$campo);
-		if($count==0)
-		{
-		$query.=$campo;
-		}else{
-		$query.=','.$campo;
-		
-		}
-$count++;
-}
-$query.=') VALUES (';
+$msg=validar($tabla, $campos);	
+if (!$msg) {
+	$query='INSERT INTO `'.$tabla.'` (';
 	$count=0;
-foreach($campos as $campo => $valor){
-if (strcmp ($valor,'NOW()') == 0){
-$valor="".$valor."";
-}else{
-$valor="'".$valor."'";}
-		if($count==0)
-		{
-		$query.=$valor;
-		}else{
-		$query.=",".$valor;
-		
-		}
-$count++;
+	foreach($campos as $campo => $valor){
+		$campo = str_replace("\'","`",$campo);
+			if($count==0)
+			{
+			$query.=$campo;
+			}else{
+			$query.=','.$campo;
+			
+			}
+	$count++;
+	}
+	$query.=') VALUES (';
+		$count=0;
+	foreach($campos as $campo => $valor){
+	if (strcmp ($valor,'NOW()') == 0){
+	$valor="".$valor."";
+	}else{
+	$valor="'".$valor."'";}
+			if($count==0)
+			{
+			$query.=$valor;
+			}else{
+			$query.=",".$valor;
+			
+			}
+	$count++;
+	}
+	$query.=')';
+	//echo $query;
+	mysql_query($query);
+	$result=mysql_affected_rows();
+	if($result=="-1"){
+	$msg="No se pudieron cargar los datos: ".mysql_error();}
+	else{
+	$msg=1;}
 }
-$query.=')';
-//echo $query;
-mysql_query($query);
-$result=mysql_affected_rows();
-if($result=="-1"){
-$msg="No se pudieron cargar los datos: ".mysql_error();}
-else{
-$msg=1;}
+
 return $msg;
 }
 

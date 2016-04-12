@@ -131,7 +131,6 @@ class Form{
 					F.'.$name.'.focus();
 					return false
 					}';
-			
 			$this->js_valida .= $js;
 			
 		}
@@ -389,9 +388,9 @@ class Form{
 		
 		$this->html .= $html;
 		
-		if($required){
+		if($atr['requerid']){
 		
-			$js .= '
+			$js = '
 					if(vacio(F.'.$name.'.value) == false) {
 					alert("'.$atr['label'].' es obligatorio")
 					F.'.$name.'.focus();
@@ -406,6 +405,7 @@ class Form{
 		
 	
 	public function printJS(){
+		
 		$js .= '
 		<script language="javascript" type="text/javascript">
 		function vacio(q) {
@@ -417,7 +417,6 @@ class Form{
 			}
         return false
 		}';
-		
 		$js .= 'function valida(F) {';
 		$js .= $this->js_valida;
 		$js .= "$('#agregarSubmit').val('Procesando...');";
@@ -427,7 +426,7 @@ class Form{
 		
 		$this->js .= $js;
 		
-		return $this->js;
+		echo $this->js;
 	}
 	
 	public function printHTML($submitDisabled=0){

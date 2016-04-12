@@ -9,7 +9,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$sector[$rs['id']] = $rs['espacio_trabajo_id'];
 }
 if($_GET['espacio'] == 'todos'){
-	$sql = "SELECT id,nombre,apellido FROM empleado WHERE estado = ".$_GET['activo'];
+	$sql = "SELECT id,nombre,apellido, CASE estado WHEN '0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM empleado WHERE estado = ".$_GET['activo'];
 }elseif($_GET['espacio'] == 'oficina'){
 	foreach($sector as $empleado_id => $sector){
 		if($sector == 2 or $sector == ''){
@@ -17,7 +17,7 @@ if($_GET['espacio'] == 'todos'){
 		}
 	}
 	$list = implode(",",$empleados);
-	$sql = "SELECT id,nombre,apellido FROM empleado WHERE id IN ($list) AND estado = ".$_GET['activo'];
+	$sql = "SELECT id,nombre,apellido, CASE estado WHEN '0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM empleado WHERE id IN ($list) AND estado = ".$_GET['activo'];
 }elseif($_GET['espacio'] == 'hotel'){
 	foreach($sector as $empleado_id => $sector){
 		if($sector == 1 or $sector == ''){
@@ -25,7 +25,7 @@ if($_GET['espacio'] == 'todos'){
 		}
 	}
 	$list = implode(",",$empleados);
-	$sql = "SELECT id,nombre,apellido FROM empleado WHERE id IN ($list) AND estado = ".$_GET['activo'];
+	$sql = "SELECT id,nombre,apellido, CASE estado WHEN '0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM empleado WHERE id IN ($list) AND estado = ".$_GET['activo'];
 }
 $rsTemp = mysql_query($sql);
 $rows = array();
@@ -35,7 +35,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 		"id" => $rs['id'],
 		"data" => array(
 			$rs['nombre'],
-			$rs['apellido']
+			$rs['apellido'],
+			$rs['estado']
 		)
 	);
 	array_push($rows,$data);

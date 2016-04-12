@@ -121,7 +121,8 @@ $campos['foto'] 			= array(
 							);
 $campos['fecha_alta'] 		= array(
 								'type'		=> 'date',
-								'label'		=> 'Fecha de alta'
+								'label'		=> 'Fecha de alta',
+								'requerid' 	=> true
 							);
 $campos['inicio_actividades'] = array(
 								'type'		=> 'date',
