@@ -239,7 +239,7 @@ var dhxWins = parent.dhxWins;
         <select name="forma_pago">
 		<option value="null">Seleccionar...</option>
 		<?php 
-		$sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4) ORDER BY forma_pago ";
+		$sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4,6) ORDER BY forma_pago ";
 		$rsTemp = mysql_query($sql);
 		while($rs = mysql_fetch_array($rsTemp)){?>
 		<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>

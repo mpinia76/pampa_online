@@ -48,7 +48,7 @@ function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
     mygrid.setHeader("Nombre,Apellido,Estado"); 		//nombre de las columnas
-    mygrid.setInitWidths("*,*"); 				//ancho de las columnas
+    mygrid.setInitWidths("*,*,*"); 				//ancho de las columnas
     mygrid.setColAlign("left,left,left");			//alineacion de las columnas
 	mygrid.setColSorting("str,str,str");			//tipo datos para ordenar
 	mygrid.setColTypes("ro,ro,ro");				//editable o no
