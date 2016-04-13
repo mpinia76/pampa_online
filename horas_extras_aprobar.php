@@ -33,7 +33,7 @@ body{
 
 <?php
 if(isset($_POST['id'])){
-	$sql = "UPDATE empleado_hora_extra SET estado = 1, cantidad_aprobada = ".$_POST['horas_aprobadas'].", aprobado_por = $user_id, aprobado = NOW()  WHERE id = ".$_POST['id'];
+	$sql = "UPDATE empleado_hora_extra SET estado = 1, cantidad_aprobada = ".$_POST['horas_aprobadas'].", hora_extra_id = ".$_POST['hora_extra_activa'].", aprobado_por = $user_id, aprobado = NOW()  WHERE id = ".$_POST['id'];
 	mysql_query($sql);
 	echo mysql_error();
 ?>
@@ -47,11 +47,12 @@ if(isset($_POST['id'])){
 
 <body>
 <?php
-$sql = "SELECT * FROM empleado_hora_extra WHERE id=".$_GET['id'];
+$sql = "SELECT ehe.id, s.hora_extra_activa FROM empleado_hora_extra ehe INNER JOIN sector_horas_extras she ON ehe.hora_extra_id = she.id INNER JOIN sector s ON she.sector_id = s.id  WHERE ehe.id=".$_GET['id'];
 $rs = mysql_fetch_array(mysql_query($sql));
 ?>
 
 <form method="POST" action="horas_extras_aprobar.php">
+<input type="hidden" value="<?php echo $rs['hora_extra_activa']?>" name="hora_extra_activa" />
 <input type="hidden" value="<?php echo $rs['id']?>" name="id" />
 <input type="hidden" value="<?php echo $rs['empleado_id']?>" name="empleado_id" />
 <p><b>Horas extras aprobadas:</b> <input type="text" size="5" name="horas_aprobadas" value="<?php echo $rs['cantidad_solicitada']?>" /><p>
