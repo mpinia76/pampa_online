@@ -29,11 +29,12 @@ if(isset($_POST['agregar'])){
                   
 	if(!$pagado[$_POST['ano']."_".$_POST['mes']] and (($_POST['ano'] == $ano_anterior and $_POST['mes'] == $mes_anterior) or ($_POST['ano'] ==  date('Y') and $_POST['mes'] == date('m')) ) ){
 	
-                        $operacion_monto = $_POST['monto_pendiente'];
+                        $operacion_monto = $_POST['monto_pendiente']-$_POST['descuentos'];
+                   
                         include("functions/comprueba_pagos.php");
 		
 		if($procesa){
-			if ($_POST['efectivo_descuento']) {
+			/*if ($_POST['efectivo_descuento']) {
 				$descuentos = $_POST['efectivo_descuento'][0];
 			}
 			if ($_POST['efectivo_monto']) {
@@ -56,11 +57,11 @@ if(isset($_POST['agregar'])){
 			}
 			if ($_POST['debito_monto']) {
 				$monto = $_POST['debito_monto'][0];
-			}
+			}*/
 			$sql = "INSERT INTO empleado_pago
 						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
 					VALUES
-						(".$_POST['empleado_id'].",'".$monto."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW(),'".$descuentos."','".$_POST['motivo_descuentos']."')";
+						(".$_POST['empleado_id'].",'".$_POST['monto_pendiente']."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW(),'".$descuentos."','".$_POST['motivo_descuentos']."')";
 			mysql_query($sql); 
 			_log($sql);
 			$operacion_id[] = mysql_insert_id();
@@ -167,56 +168,27 @@ function valida(F) {
 		F.forma_pago.focus();
 		return false;
 	}
-	switch(F.forma_pago.value) {
-	    case '1':
-	    	var descuento = $('#efectivo_descuento').val();
-	    	if((descuento != '0')&&(F.motivo_descuentos.value == '')) {
-	    		alert("Debe indicar el motivo del descuento");
-	    		F.motivo_descuentos.focus();
-	    		return false;
-	    	}
-	        break;
-	    case '3':
-	    	var descuento = $('#cheque_descuento').val();
-	    	if((descuento != '0')&&(F.motivo_descuentos.value == '')) {
-	    		alert("Debe indicar el motivo del descuento");
-	    		F.motivo_descuentos.focus();
-	    		return false;
-	    	}
-	        break;
-	    case '4':
-	    	var descuento = $('#transferencia_descuento').val();
-	    	if((descuento != '0')&&(F.motivo_descuentos.value == '')) {
-	    		alert("Debe indicar el motivo del descuento");
-	    		F.motivo_descuentos.focus();
-	    		return false;
-	    	}
-	        break;
-	    case '6':
-	    	var descuento = $('#debito_descuento').val();
-	    	if((descuento != '0')&&(F.motivo_descuentos.value == '')) {
-	    		alert("Debe indicar el motivo del descuento");
-	    		F.motivo_descuentos.focus();
-	    		return false;
-	    	}
-	        break;
-	   
-	        
-	} 
+	
+    	var descuento = $('#descuentos').val();
+    	if((descuento != '0')&&(F.motivo_descuentos.value == '')) {
+    		alert("Debe indicar el motivo del descuento");
+    		F.motivo_descuentos.focus();
+    		return false;
+    	}
+	       
 }
-function montoTotal(campo, totalName) {
+function montoTotal(campo) {
 	
 	var total = $('#monto_pendiente').val();
 	total = total - campo;
-	$('#'+totalName).val(total);
+	$('#spanMonto').html('$'+total);
 }
 </script> 
 <script type="text/javascript">
 function addFormaDePago(forma_pago_id){
 
 	var datos = ({
-		'forma_pago' : forma_pago_id,
-		'monto_pendiente':$('#monto_pendiente').val()
+		'forma_pago' : forma_pago_id
 	});
 	
 	$.ajax({
@@ -320,8 +292,9 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
                 No se han otorgado adelantos
             <?php  } ?>
         </p>
-        
-        <p><strong>Pendiente de pago:</strong> $<?php echo $salario+$horas_extras-$adelantos?></p>
+        <li><label>Descuentos:</label><input type="text" name="descuentos" id="descuentos" size="3" onblur="if(this.value==''){this.value='0';};montoTotal(this.value)"" value="0" /></li>
+        <li><label>Motivos:</label><input type="text" name="motivo_descuentos" id="motivo_descuentos" size="40"/></li>
+        <p><strong>Pendiente de pago:</strong><span id="spanMonto">$<?php echo $salario+$horas_extras-$adelantos?></span></p>
         <input type="hidden" id="monto_pendiente" name="monto_pendiente" value="<?php echo $salario+$horas_extras-$adelantos?>"  />
         
         <div class="label">Forma de pago</div>

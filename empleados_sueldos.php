@@ -51,7 +51,7 @@ function doInitGrid(){
     mygrid.setHeader("Legajo, Nombre y Apellido, Espacio, Sector, Salario Acordado, Aguinaldo, Hrs. Extras, Descuentos, Total a pagar, Adelantos, Saldo a cobrar, Pagado, Estado"); 		//nombre de las columnas
    	mygrid.attachHeader("#text_filter,#text_filter,#select_filter,#select_filter,#text_filter,#text_filter,#text_filter,#text_filter,#text_filter,#select_filter,#text_filter,#text_filter,#select_filter");
 	mygrid.attachHeader("&nbsp;,&nbsp;,&nbsp;,&nbsp;,${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},${#stat_total},&nbsp;");
-	mygrid.setInitWidths("80,*,*,*,60,60,60,*,60,60,60,60,80"); 				//ancho de las columnas
+	mygrid.setInitWidths("80,*,*,*,60,60,60,60,60,60,60,60,80"); 				//ancho de las columnas
     mygrid.setColAlign("left,left,left,left,right,right,right,right,right,right,right,right,left");			//alineacion de las columnas
 	mygrid.setColSorting("str,str,str,str,int,int,int,int,int,int,int,int,str");			//tipo datos para ordenar
 	mygrid.setColTypes("ro,ro,ro,ro,price,price,price,price,price,price,price,price,ro");				//editable o no

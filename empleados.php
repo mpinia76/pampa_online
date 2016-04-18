@@ -31,6 +31,7 @@ include_once("functions/delete.php");
 <script src="library/dhtml/js/dhtmlxcommon.js"></script>
 <script src="library/dhtml/js/dhtmlxgrid.js"></script>
 <script src="library/dhtml/js/dhtmlxgridcell.js"></script>
+<script src="library/dhtml/js/dhtmlxgrid_filter.js"></script>
 <script type="text/javascript" src="library/jquery/jquery-1.4.2.min.js"></script>
 <script>
 var dhxWins = parent.dhxWins;
@@ -48,6 +49,7 @@ function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
     mygrid.setHeader("Nombre,Apellido,Estado"); 		//nombre de las columnas
+    mygrid.attachHeader("#text_filter,#text_filter,&nbsp;");
     mygrid.setInitWidths("*,*,*"); 				//ancho de las columnas
     mygrid.setColAlign("left,left,left");			//alineacion de las columnas
 	mygrid.setColSorting("str,str,str");			//tipo datos para ordenar

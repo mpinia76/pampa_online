@@ -11,6 +11,7 @@ $user_id = $_SESSION['userid'];
 include_once("../config/db.php");
 
 $forma_pago = $_GET['forma_pago'];
+$monto_pendiente = $_GET['monto_pendiente'];
 $div_id 	= rand(1000,9999);
 ?>
 <div id="<?php echo $div_id?>">
@@ -30,8 +31,10 @@ switch($forma_pago){
 	<?php } ?>
 	</select></li>
 	<li><label>Fecha:</label><input type="text" name="efectivo_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
-	<li><label>Monto:</label><input type="text" name="efectivo_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="efectivo_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Interes:</label><input type="text" name="efectivo_interes[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Descuento:</label><input type="text" id="efectivo_descuento" name="efectivo_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};montoTotal(this.value, 'efectivo_monto')" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Motivo:</label><input type="text" name="motivo_descuentos" size="40" value="" /></li>
+	<li><label>Monto:</label><input type="text" id="efectivo_monto" name="efectivo_monto[]" size="3" value="<?php echo $monto_pendiente?>"/><span class="leftNote">$</span></li>
 <?php
 	break;
 	
@@ -50,6 +53,7 @@ switch($forma_pago){
 	<li><label>Fecha de la operacion:</label><input type="text" name="tarjeta_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
 	<li><label>Comprobante:</label><input type="text" name="tarjeta_comprobante[]" size="10" /></li>
 	<li><label>Monto:</label><input type="text" name="tarjeta_monto[]" size="3" /><span class="leftNote">$</span></li>
+	<li><label>Interes:</label><input type="text" name="tarjeta_interes[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
 	<li><label>Descuento:</label><input type="text" name="tarjeta_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
 	<li><label>Cantidad de cuotas:</label><input type="text" name="tarjeta_cuotas[]" size="3" onblur="if(this.value==''){this.value='1';};" value="1" /></li>
 <?php
@@ -70,8 +74,9 @@ switch($forma_pago){
 	<li><label>Numero:</label><input type="text" name="cheque_numero[]" /></li>
 	<li><label>Paguese a:</label><input type="text" name="cheque_titular[]" /></li>
 	<li><label>En la fecha:</label><input type="text" name="cheque_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
-	<li><label>Monto:</label><input type="text" name="cheque_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="cheque_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Interes:</label><input type="text" name="cheque_interes[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Descuento:</label><input type="text" id="cheque_descuento" name="cheque_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};montoTotal(this.value, 'cheque_monto')" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Monto:</label><input type="text" id="cheque_monto" name="cheque_monto[]" size="3" value="<?php echo $monto_pendiente?>"/><span class="leftNote">$</span></li>
 <?php
 	break;
 
@@ -89,8 +94,9 @@ switch($forma_pago){
 	</select></li>
 	<li><label>Cuenta destino:</label><textarea name="transferencia_cuenta_destino[]"></textarea></li>
 	<li><label>A la fecha:</label><input type="text" name="transferencia_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
-	<li><label>Monto:</label><input type="text" name="transferencia_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="transferencia_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Interes:</label><input type="text" name="transferencia_interes[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Descuento:</label><input type="text" id="transferencia_descuento" name="transferencia_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};montoTotal(this.value, 'transferencia_monto')" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Monto:</label><input type="text" id="transferencia_monto" name="transferencia_monto[]" size="3" value="<?php echo $monto_pendiente?>"/><span class="leftNote">$</span></li>
 <?php
 	break;
 	
@@ -115,8 +121,9 @@ switch($forma_pago){
 	<?php } ?>
 	</select></li>
 	<li><label>Fecha:</label><input type="text" name="debito_fecha[]" class="fecha date-pick dp-applied" value="<?php echo   date("d/m/Y")?>" /></li>
-	<li><label>Monto:</label><input type="text" name="debito_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="debito_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Interes:</label><input type="text" name="debito_interes[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Descuento:</label><input type="text" id="debito_descuento" name="debito_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};montoTotal(this.value, 'debito_monto')" value="0" /><span class="leftNote">$</span></li>
+	<li><label>Monto:</label><input type="text" id="debito_monto" name="debito_monto[]" size="3" value="<?php echo $monto_pendiente?>"/><span class="leftNote">$</span></li>
 <?php
 	break;
                 
