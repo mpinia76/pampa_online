@@ -98,6 +98,7 @@ $campos['dni'] 				= array(
 								'type' 				=> 'text',
 								'input_type'		=> 'text',
 								'label' 			=> 'DNI',
+								'maxlength' 			=> '8',	
 								'requerid' 			=> true
 							);
 $campos['cuil'] 			= array(
@@ -109,8 +110,7 @@ $campos['cuil'] 			= array(
 $campos['email'] 			= array(
 								'type' 				=> 'text',
 								'input_type'		=> 'text',
-								'label' 			=> 'Email',
-								'requerid' 			=> true
+								'label' 			=> 'Email'
 							);
 $campos['foto'] 			= array(
 								'type'			=> 'file',

@@ -110,7 +110,7 @@ class Form{
 		
 		$html .='<div class="label">'.$atr['label'].'</div>';	
 		$html .='<div class="content">';	
-		$html .='<input '.$atr['disabled'].' size="'.$atr['size'].'" type="'.$atr['input_type'].'" value="'.$atr['value'].'" name="'.$name.'" />';
+		$html .='<input '.$atr['disabled'].' size="'.$atr['size'].'" maxlength="'.$atr['maxlength'].'" type="'.$atr['input_type'].'" value="'.$atr['value'].'" name="'.$name.'" />';
 		
 		if(isset($atr['comment'])){
 		
@@ -128,6 +128,18 @@ class Form{
 			$js .= '
 					if(vacio(F.'.$name.'.value) == false) {
 					alert("'.$atr['label'].' es obligatorio")
+					F.'.$name.'.focus();
+					return false
+					}';
+			$this->js_valida .= $js;
+			
+		}
+		
+		if($atr['maxlength']){
+		
+			$js .= '
+					if(F.'.$name.'.value.length != '.$atr['maxlength'].') {
+					alert("'.$atr['label'].' debe tener '.$atr['maxlength'].' digitos")
 					F.'.$name.'.focus();
 					return false
 					}';

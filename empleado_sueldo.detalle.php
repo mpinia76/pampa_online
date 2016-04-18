@@ -165,13 +165,16 @@ input.dp-applied {
             <?php  } ?>
         </p>
         <?php 
-        $sql = "SELECT empleado_pago.id,empleado_pago.monto, empleado_pago.abonado, CONCAT(usuario.apellido,', ',usuario.nombre) as user, caja.caja, cuenta.sucursal, cuenta.nombre, banco.banco FROM empleado_pago LEFT JOIN usuario ON empleado_pago.abonado_por = usuario.id LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' LEFT JOIN caja ON cm.caja_id = caja.id LEFT JOIN rel_pago_operacion ON empleado_pago.id = rel_pago_operacion.operacion_id AND rel_pago_operacion.operacion_tipo = 'sueldo_pago' LEFT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id LEFT JOIN banco ON cuenta.banco_id = banco.id WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
+        $sql = "SELECT empleado_pago.id,empleado_pago.monto, empleado_pago.abonado, CONCAT(usuario.apellido,', ',usuario.nombre) as user, caja.caja, cuenta.sucursal, cuenta.nombre, banco.banco, empleado_pago.descuentos, empleado_pago.motivo_descuentos FROM empleado_pago LEFT JOIN usuario ON empleado_pago.abonado_por = usuario.id LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' LEFT JOIN caja ON cm.caja_id = caja.id LEFT JOIN rel_pago_operacion ON empleado_pago.id = rel_pago_operacion.operacion_id AND rel_pago_operacion.operacion_tipo = 'sueldo_pago' LEFT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id LEFT JOIN banco ON cuenta.banco_id = banco.id WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
         if(mysql_num_rows(mysql_query($sql)) == 0){ ?>
         <p><strong>Pendiente de pago:</strong> $<?php echo $salario+$horas_extras-$adelantos?></p>
-        <?php  }else{ ?>
+        <?php  }else{ 
+         $rsSueldo = mysql_fetch_array(mysql_query($sql));?>
+        <p><strong>Descuentos:</strong></p>
+        <?php  echo '$'.$rsSueldo['descuentos'].' Motivo:'.$rsSueldo['motivo_descuentos']  ?>
         <p><strong>Sueldo abonado:</strong></p>
         <?php 
-        $rsSueldo = mysql_fetch_array(mysql_query($sql));
+       
         $caja = ($rsSueldo['caja'])? 'Caja: '.$rsSueldo['caja']:'';
         $cuenta = ($rsSueldo['sucursal'])? 'Cuenta: '.$rsSueldo['banco'].' ('.$rsSueldo['sucursal'].') '.$rsSueldo['nombre']:'';
         echo fechavista($rsSueldo['abonado'])?>  $<?php echo $rsSueldo['monto']?> Abonado por: <?php echo $rsSueldo['user'].' '.$caja.' '.$cuenta?>

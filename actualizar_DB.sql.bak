@@ -434,4 +434,5 @@ SELECT id, fecha_alta, fecha_baja FROM empleado
 
 
 ALTER TABLE `empleado_pago`
-	ADD COLUMN `motivo_descuentos` VARCHAR(255) NULL AFTER `abonado`;
+	ADD COLUMN `descuentos` DECIMAL(10,2) NULL AFTER `abonado`,
+	ADD COLUMN `motivo_descuentos` VARCHAR(255) NULL AFTER `descuentos`;

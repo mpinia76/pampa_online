@@ -59,6 +59,14 @@ function doInitGrid(){
 	mygrid.enableMultiselect(true);
     mygrid.setSkin("dhx_skyblue");
 	//mygrid.load("<?php echo $json?>?ano=<?php echo date('Y')?>&mes=<?php echo date('n')?>&espacio=<?php echo $espacio?>","json");	//ruta al json con datos
+	
+	mygrid.attachEvent("onXLS",function(){
+				$('#mensaje').text('Cargando...')
+				document.getElementById('mensaje').style.display='block';
+			});
+	mygrid.attachEvent("onXLE",function(){
+		document.getElementById('mensaje').style.display='none';
+	});
 	mygrid.init();
 }
 function ver(){
@@ -71,8 +79,9 @@ function ver(){
 	}else if(mes == 'n'){
 		alert('Debe seleccionar un mes');
 	}else{
+		
 		$('#mygrid_container').show();
-		$('#mensaje').hide();
+		//$('#mensaje').hide();
 		mygrid.clearAll();	
 		mygrid.load("<?php echo $json?>?ano="+ano+"&mes="+mes+"&espacio=<?php echo $espacio?>","json");
 	}

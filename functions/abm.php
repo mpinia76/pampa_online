@@ -2,11 +2,11 @@
 function validar($tabla,$campos){
 	switch ($tabla) {
 		case 'empleado':
-			$sql="SELECT id FROM $tabla WHERE dni = '".$campos['dni']."'";
+			$sql="SELECT id, CONCAT(nombre,' ',apellido) as empleado, CASE WHEN estado ='0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM $tabla WHERE dni = '".$campos['dni']."'";
 			$rs = mysql_fetch_array(mysql_query($sql));
 			//echo $sql;
 			if ($rs['id']) {
-				$msg="El DNI ya se encuentra cargado";
+				$msg=" El DNI ya se encuentra registrado para ".$rs['empleado']." - ".$rs['estado'];
 				return $msg;
 			}
 		break;

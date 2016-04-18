@@ -430,7 +430,7 @@ COLLATE='utf8_unicode_ci'
 ENGINE=MyISAM;
 
 INSERT INTO empleado_historico (empleado_id, alta, baja)
-SELECT id, fecha_alta, fecha_baja FROM empleado 
+SELECT id, fecha_alta, fecha_baja FROM empleado; 
 
 
 ALTER TABLE `empleado_pago`
