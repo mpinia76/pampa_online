@@ -292,8 +292,10 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
                 No se han otorgado adelantos
             <?php  } ?>
         </p>
-        <li><label>Descuentos:</label><input type="text" name="descuentos" id="descuentos" size="3" onblur="if(this.value==''){this.value='0';};montoTotal(this.value)"" value="0" /></li>
-        <li><label>Motivos:</label><input type="text" name="motivo_descuentos" id="motivo_descuentos" size="40"/></li>
+        <p><strong>Descuentos:</strong></p>
+        <label>Monto:</label><input type="text" name="descuentos" id="descuentos" size="3" onblur="if(this.value==''){this.value='0';};montoTotal(this.value)"" value="0" />
+        <br><br>
+        <label>Motivos:</label><input type="text" name="motivo_descuentos" id="motivo_descuentos" size="40"/>
         <p><strong>Pendiente de pago:</strong><span id="spanMonto">$<?php echo $salario+$horas_extras-$adelantos?></span></p>
         <input type="hidden" id="monto_pendiente" name="monto_pendiente" value="<?php echo $salario+$horas_extras-$adelantos?>"  />
         

@@ -50,7 +50,6 @@ switch($forma_pago){
 	<li><label>Fecha de la operacion:</label><input type="text" name="tarjeta_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
 	<li><label>Comprobante:</label><input type="text" name="tarjeta_comprobante[]" size="10" /></li>
 	<li><label>Monto:</label><input type="text" name="tarjeta_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="tarjeta_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
 	<li><label>Cantidad de cuotas:</label><input type="text" name="tarjeta_cuotas[]" size="3" onblur="if(this.value==''){this.value='1';};" value="1" /></li>
 <?php
 	break;
@@ -71,7 +70,6 @@ switch($forma_pago){
 	<li><label>Paguese a:</label><input type="text" name="cheque_titular[]" /></li>
 	<li><label>En la fecha:</label><input type="text" name="cheque_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
 	<li><label>Monto:</label><input type="text" name="cheque_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="cheque_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
 <?php
 	break;
 
@@ -90,7 +88,6 @@ switch($forma_pago){
 	<li><label>Cuenta destino:</label><textarea name="transferencia_cuenta_destino[]"></textarea></li>
 	<li><label>A la fecha:</label><input type="text" name="transferencia_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
 	<li><label>Monto:</label><input type="text" name="transferencia_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="transferencia_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
 <?php
 	break;
 	
@@ -116,7 +113,6 @@ switch($forma_pago){
 	</select></li>
 	<li><label>Fecha:</label><input type="text" name="debito_fecha[]" class="fecha date-pick dp-applied" value="<?php echo   date("d/m/Y")?>" /></li>
 	<li><label>Monto:</label><input type="text" name="debito_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="debito_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
 <?php
 	break;
                 
