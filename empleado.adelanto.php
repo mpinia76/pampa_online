@@ -133,6 +133,7 @@ function vacio(q) {
 }
 
 function valida(F) {
+	
 	if(F.forma_pago.value == 'null') {
 	alert("Debe seleccionar una forma de pago");
 	F.forma_pago.focus();
@@ -153,6 +154,14 @@ function valida(F) {
 	F.mes.focus();
 	return false
 	}
+	var fecha = new Date();
+	if((fecha.getFullYear()+'-'+(fecha.getMonth() +1))<(F.ano.value+'-'+F.mes.value)){
+		alert("Mes y año no pueden ser posteriores a hoy");
+		F.mes.focus();
+		return false
+	}
+	
+	
 }
 </script> 
 <script type="text/javascript">

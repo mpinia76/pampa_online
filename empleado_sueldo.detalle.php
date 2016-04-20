@@ -165,7 +165,10 @@ input.dp-applied {
             <?php  } ?>
         </p>
         <?php 
-        $sql = "SELECT empleado_pago.id,empleado_pago.monto, empleado_pago.abonado, CONCAT(usuario.apellido,', ',usuario.nombre) as user, caja.caja, cuenta.sucursal, cuenta.nombre, banco.banco, empleado_pago.descuentos, empleado_pago.motivo_descuentos FROM empleado_pago LEFT JOIN usuario ON empleado_pago.abonado_por = usuario.id LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' LEFT JOIN caja ON cm.caja_id = caja.id LEFT JOIN rel_pago_operacion ON empleado_pago.id = rel_pago_operacion.operacion_id AND rel_pago_operacion.operacion_tipo = 'sueldo_pago' LEFT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id LEFT JOIN banco ON cuenta.banco_id = banco.id WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
+        $sql = "SELECT empleado_pago.id, empleado_pago.abonado, empleado_pago.descuentos, 
+empleado_pago.motivo_descuentos, empleado_pago.monto, CONCAT(usuario.apellido,', ',usuario.nombre) as user
+FROM empleado_pago LEFT JOIN usuario ON empleado_pago.abonado_por = usuario.id 
+WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
         if(mysql_num_rows(mysql_query($sql)) == 0){ ?>
         <p><strong>Pendiente de pago:</strong> $<?php echo $salario+$horas_extras-$adelantos?></p>
         <?php  }else{ 
@@ -174,10 +177,59 @@ input.dp-applied {
         <?php  echo '$'.$rsSueldo['descuentos'].' Motivo:'.$rsSueldo['motivo_descuentos']  ?>
         <p><strong>Sueldo abonado:</strong></p>
         <?php 
-       
-        $caja = ($rsSueldo['caja'])? 'Caja: '.$rsSueldo['caja']:'';
-        $cuenta = ($rsSueldo['sucursal'])? 'Cuenta: '.$rsSueldo['banco'].' ('.$rsSueldo['sucursal'].') '.$rsSueldo['nombre']:'';
-        echo fechavista($rsSueldo['abonado'])?>  $<?php echo $rsSueldo['monto']?> Abonado por: <?php echo $rsSueldo['user'].' '.$caja.' '.$cuenta?>
+        echo fechavista($rsSueldo['abonado'])?> $<?php echo $rsSueldo['monto']?> Abonado por: <?php echo $rsSueldo['user'];
+       $sql = "SELECT empleado_pago.id, empleado_pago.abonado, 
+ caja.caja, empleado_pago.descuentos, 
+empleado_pago.motivo_descuentos, ec.monto
+FROM empleado_pago
+LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' AND rpo.forma_pago = 'efectivo'  
+LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id 
+LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' 
+LEFT JOIN caja ON cm.caja_id = caja.id 
+WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
+       if(mysql_num_rows(mysql_query($sql)) != 0){ 
+	       	$rsSueldo = mysql_fetch_array(mysql_query($sql));
+	        $caja = ($rsSueldo['caja'])? 'Caja: '.$rsSueldo['caja']:'';
+	        $cuenta = ($rsSueldo['sucursal'])? 'Cuenta: '.$rsSueldo['banco'].' ('.$rsSueldo['sucursal'].') '.$rsSueldo['nombre']:'';
+	        ?><br> En efectivo $<?php echo $rsSueldo['monto'].' '.$caja.' '.$cuenta;
+       }
+        $sql = "SELECT empleado_pago.id, empleado_pago.abonado, empleado_pago.descuentos, 
+empleado_pago.motivo_descuentos, ec.monto
+FROM empleado_pago 
+LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' AND rpo.forma_pago = 'cheque'  
+LEFT JOIN cheque_consumo ec ON rpo.forma_pago_id = ec.id 
+WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
+       if(mysql_num_rows(mysql_query($sql)) != 0){ 
+	       	$rsSueldo = mysql_fetch_array(mysql_query($sql));
+	        
+	        echo "<br>"?> Con cheque $<?php echo $rsSueldo['monto'];
+       }
+        $sql = "SELECT empleado_pago.id, empleado_pago.abonado, empleado_pago.descuentos, 
+empleado_pago.motivo_descuentos, ec.monto
+FROM empleado_pago 
+LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' AND rpo.forma_pago = 'transferencia'  
+LEFT JOIN transferencia_consumo ec ON rpo.forma_pago_id = ec.id 
+WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
+       if(mysql_num_rows(mysql_query($sql)) != 0){ 
+	       	$rsSueldo = mysql_fetch_array(mysql_query($sql));
+	        
+	        echo "<br>"?> Con transferencia $<?php echo $rsSueldo['monto'];
+       }
+        $sql = "SELECT empleado_pago.id, empleado_pago.abonado, empleado_pago.descuentos, 
+empleado_pago.motivo_descuentos, (-1)*cuenta_movimiento.monto as monto, cuenta.sucursal, cuenta.nombre, banco.banco
+FROM empleado_pago 
+LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' AND rpo.forma_pago = 'debito' LEFT JOIN cuenta_movimiento ON  rpo.forma_pago_id = cuenta_movimiento.id 
+LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id
+LEFT JOIN banco ON cuenta.banco_id = banco.id
+WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
+      
+       if(mysql_num_rows(mysql_query($sql)) != 0){ 
+	       	$rsSueldo = mysql_fetch_array(mysql_query($sql));
+	        $caja = ($rsSueldo['caja'])? 'Caja: '.$rsSueldo['caja']:'';
+	        $cuenta = ($rsSueldo['sucursal'])? 'Cuenta: '.$rsSueldo['banco'].' ('.$rsSueldo['sucursal'].') '.$rsSueldo['nombre']:'';
+	        echo "<br>"?> Con debito $<?php echo $rsSueldo['monto'].' '.$caja.' '.$cuenta;
+       }
+       ?>
         <br><br><center><button class="button" onClick="window.open('reciboPDF.php?id=<?php echo $rsSueldo['id']?>&copia=1');">Recibo</button></center>
 		<?php  } ?>
 	    

@@ -31,7 +31,6 @@ switch($forma_pago){
 	</select></li>
 	<li><label>Fecha:</label><input type="text" name="efectivo_fecha[]" class="date-pick dp-applied" value="<?php echo date("d/m/Y")?>" /></li>
 	<li><label>Monto:</label><input type="text" name="efectivo_monto[]" size="3" /><span class="leftNote">$</span></li>
-	<li><label>Descuento:</label><input type="text" name="efectivo_descuento[]" size="3" onblur="if(this.value==''){this.value='0';};" value="0" /><span class="leftNote">$</span></li>
 <?php
 	break;
 	

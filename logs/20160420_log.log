@@ -1,0 +1,116 @@
+2016-04-20 14:38:47 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'19000',3,2016,29,NOW(),'1000','IOMA')
+2016-04-20 16:50:11 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 0
+2016-04-20 16:50:11 --> DELETE FROM cheque_consumo WHERE id = 0
+2016-04-20 16:51:08 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'19000',3,2016,29,NOW(),'1000','IOMA')
+2016-04-20 16:51:08 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'10000','','','2016-04-20')
+2016-04-20 16:51:08 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(0, 'efectivo', 'sueldo_pago', 690)
+2016-04-20 16:51:08 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha) VALUES 
+				(20,'efectivo_consumo',0,'-10000','2016-04-20')
+2016-04-20 16:56:20 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 0
+2016-04-20 16:56:20 --> DELETE FROM cheque_consumo WHERE id = 0
+2016-04-20 16:56:56 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'19000',3,2016,29,NOW(),'1000','IOMA')
+2016-04-20 16:56:56 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'10000','','','2016-04-20')
+2016-04-20 16:56:56 --> 0
+2016-04-20 16:56:56 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(0, 'efectivo', 'sueldo_pago', 691)
+2016-04-20 16:56:56 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha) VALUES 
+				(20,'efectivo_consumo',0,'-10000','2016-04-20')
+2016-04-20 16:56:56 --> INSERT INTO cheque_consumo (numero,titular,fecha,monto,interes,descuento,cuenta_id) VALUES 
+					('2222','Gallinal','2016-04-20','9000','','','7')
+2016-04-20 16:56:56 --> 0
+2016-04-20 16:56:56 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(0, 'cheque', 'sueldo_pago', 691)
+2016-04-20 17:09:04 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 0
+2016-04-20 17:09:04 --> DELETE FROM cheque_consumo WHERE id = 0
+2016-04-20 17:09:39 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'19000',3,2016,29,NOW(),'1000','IOMA')
+2016-04-20 17:13:33 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 0
+2016-04-20 17:13:33 --> DELETE FROM cheque_consumo WHERE id = 0
+2016-04-20 17:14:01 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'19000',3,2016,29,NOW(),'1000','IOMA')
+2016-04-20 17:14:01 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'10000','0','0','2016-04-20')
+2016-04-20 17:14:01 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(7817, 'efectivo', 'sueldo_pago', 693)
+2016-04-20 17:31:11 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 2064
+2016-04-20 17:31:11 --> DELETE FROM cheque_consumo WHERE id = 2064
+2016-04-20 17:32:36 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'19000',3,2016,29,NOW(),'1000','IOMA')
+2016-04-20 17:32:36 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'5000','0','0','2016-04-20')
+2016-04-20 17:32:36 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(7818, 'efectivo', 'sueldo_pago', 694)
+2016-04-20 17:38:41 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 2065
+2016-04-20 17:38:41 --> DELETE FROM cheque_consumo WHERE id = 2065
+2016-04-20 17:39:34 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'20000',3,2016,29,NOW(),'0','')
+2016-04-20 17:39:34 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'5000','0','0','2016-04-20')
+2016-04-20 17:39:34 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(7819, 'efectivo', 'sueldo_pago', 695)
+2016-04-20 17:39:34 --> INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
+					('7','Galli','5000','0','0','2016-04-20')
+2016-04-20 17:39:34 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(0, 'transferencia', 'sueldo_pago', 695)
+2016-04-20 17:40:54 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 2066
+2016-04-20 17:40:54 --> DELETE FROM cheque_consumo WHERE id = 2066
+2016-04-20 17:41:43 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'20000',3,2016,29,NOW(),'0','')
+2016-04-20 17:41:43 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'5000','0','0','2016-04-20')
+2016-04-20 17:41:43 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(7820, 'efectivo', 'sueldo_pago', 696)
+2016-04-20 17:41:43 --> INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
+					('7','Galli','5000','0','0','2016-04-20')
+2016-04-20 17:41:43 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(0, 'transferencia', 'sueldo_pago', 696)
+2016-04-20 17:42:58 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 2067
+2016-04-20 17:42:58 --> DELETE FROM cheque_consumo WHERE id = 2067
+2016-04-20 17:43:37 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'20000',3,2016,29,NOW(),'0','')
+2016-04-20 17:43:37 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'5000','0','0','2016-04-20')
+2016-04-20 17:43:37 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(7821, 'efectivo', 'sueldo_pago', 697)
+2016-04-20 17:43:37 --> INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
+					('7','Galli','5000','0','0','2016-04-20')
+2016-04-20 17:43:37 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(0, 'transferencia', 'sueldo_pago', 697)
+2016-04-20 17:44:52 --> DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = 2068
+2016-04-20 17:44:52 --> DELETE FROM cheque_consumo WHERE id = 2068
+2016-04-20 17:45:30 --> INSERT INTO empleado_pago
+						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
+					VALUES
+						(152,'20000',3,2016,29,NOW(),'0','')
+2016-04-20 17:45:30 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+				(20,'5000','0','0','2016-04-20')
+2016-04-20 17:45:30 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(7822, 'efectivo', 'sueldo_pago', 698)
+2016-04-20 17:45:30 --> INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
+					('7','Galli','5000','0','0','2016-04-20')
+2016-04-20 17:45:30 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+					(454, 'transferencia', 'sueldo_pago', 698)
