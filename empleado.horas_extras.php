@@ -124,8 +124,9 @@ function valida(F) {
 	return false
 	}
 	var fecha = new Date();
-	if((fecha.getFullYear()+'-'+(fecha.getMonth() +1))<(F.ano.value+'-'+F.mes.value)){
-		alert("Mes y año no pueden ser posteriores a hoy");
+	var fecha2 = new Date(F.ano.value,(F.mes.value-1),1);
+	if(fecha.getTime()<fecha2.getTime()){
+		alert("Mes y ano no pueden ser posteriores a hoy");
 		F.mes.focus();
 		return false
 	}

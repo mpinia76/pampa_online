@@ -46,6 +46,7 @@ var estado;
 var dataid;
 	
 function doInitGrid(){
+	$("#input_ano").change();
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
     mygrid.setHeader("Legajo, Nombre y Apellido, Espacio, Sector, Salario Acordado, Aguinaldo, Hrs. Extras, Descuentos, Total a pagar, Adelantos, Saldo a cobrar, Pagado, Estado"); 		//nombre de las columnas
@@ -148,6 +149,36 @@ function borrar_pago(){
 		}
 	}
 }
+
+function cargarMeses(year){
+	$("#input_mes").empty();
+	$("#input_mes").append("<option value=\"n\">Seleccione...</option>");
+	var hoy = new Date();
+	
+	var meses={
+			  1:"Enero",
+			  2:"Febrero",
+			  3:"Marzo",
+			  4:"Abril",
+			  5:"Mayo",
+			  6:"Junio",
+			  7:"Julio",
+			  8:"Agosto",
+			  9:"Septiembre",
+			  10:"Octubre",
+			  11:"Noviembre",
+			  12:"Diciembre",
+			};
+	$.each(meses, function(k,v){
+		
+		fecha2 = new Date(year.value,(k-1),1);
+		if(hoy.getTime()>=fecha2.getTime()){
+			$("#input_mes").append("<option value=\""+k+"\">"+v+"</option>");
+		}
+	});
+	
+}
+
 </script>
 <script src="js/createWindow.js"></script>
 </head>
@@ -155,7 +186,7 @@ function borrar_pago(){
 <body onload="doInitGrid();">
 <ul id="menu" style="height:28px;">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
-	<li class="item" style="width:190px; text-align:right;"> &nbsp; <input type="test" size="5" id="input_ano" value="<?php echo date('Y');?>"> 
+	<li class="item" style="width:190px; text-align:right;"> &nbsp; <input type="test" size="5" id="input_ano" value="<?php echo date('Y');?>" onChange="cargarMeses(this)"> 
 	<select id="input_mes">
     <option value="n" >Seleccione...</option>
 	<option value="1" >Enero</option>
