@@ -131,10 +131,42 @@ function valida(F) {
 		return false
 	}
 }
+
+function cargarMeses(year, mes){
+	$("#input_mes").empty();
+	$("#input_mes").append("<option value=\"n\">Seleccione...</option>");
+	var hoy = new Date();
+	var select ='';
+	var meses={
+			  1:"Enero",
+			  2:"Febrero",
+			  3:"Marzo",
+			  4:"Abril",
+			  5:"Mayo",
+			  6:"Junio",
+			  7:"Julio",
+			  8:"Agosto",
+			  9:"Septiembre",
+			  10:"Octubre",
+			  11:"Noviembre",
+			  12:"Diciembre",
+			};
+	$.each(meses, function(k,v){
+		
+		fecha2 = new Date(year.value,(k-1),1);
+		if(hoy.getTime()>=fecha2.getTime()){
+			
+			select = (mes==k)?"selected=\"selected\"":"";
+			
+			$("#input_mes").append("<option value=\""+k+"\"  "+select+">"+v+"</option>");
+		}
+	});
+	
+}
 </script> 
 </head>
 
-<body>
+<body onLoad="$('#input_ano').change();">
 
 <?php  if(isset($_POST['agregar'])){ ?>
 	<script>
@@ -180,32 +212,20 @@ function valida(F) {
         <input type="text" size="2" name="horas" />
         </div>
         <div style="clear:both;"></div>
-        
+     <div class="label">A&ntilde;o</div>
+        <div class="content">
+        <input type="text" size="2" id="input_ano" name="ano" value="<?php echo $ano?>" onChange="cargarMeses(this,<?php echo $mes?>)"/>
+        </div>
+        <div style="clear:both;"></div>   
     <div class="label">Mes</div>
         <div class="content">
-        <select name="mes">
-            <option value="null">Seleccionar...</option>
-             <option value="1" <?php if($mes == 1){ ?> selected="selected" <?php } ?> >Enero</option>
-            <option value="2" <?php if($mes == 2){ ?> selected="selected" <?php } ?>>Febrero</option>
-            <option value="3" <?php if($mes == 3){ ?> selected="selected" <?php } ?>>Marzo</option>
-            <option value="4" <?php if($mes == 4){ ?> selected="selected" <?php } ?>>Abril</option>
-            <option value="5" <?php if($mes == 5){ ?> selected="selected" <?php } ?>>Mayo</option>
-            <option value="6" <?php if($mes == 6){ ?> selected="selected" <?php } ?>>Junio</option>
-            <option value="7" <?php if($mes == 7){ ?> selected="selected" <?php } ?>>Julio</option>
-            <option value="8" <?php if($mes == 8){ ?> selected="selected" <?php } ?>>Agosto</option>
-            <option value="9" <?php if($mes == 9){ ?> selected="selected" <?php } ?>>Septiembre</option>
-            <option value="10" <?php if($mes == 10){ ?> selected="selected" <?php } ?>>Octubre</option>
-            <option value="11" <?php if($mes == 11){ ?> selected="selected" <?php } ?>>Noviembre</option>
-            <option value="12" <?php if($mes == 12){ ?> selected="selected" <?php } ?>>Diciembre</option>
+        <select name="mes" id="input_mes">
+            
         </select>
         </div>
         <div style="clear:both;"></div>
     
-    <div class="label">A&ntilde;o</div>
-        <div class="content">
-        <input type="text" size="2" name="ano" value="<?php echo $ano?>" />
-        </div>
-        <div style="clear:both;"></div>
+    
 	
     <p align="center"><input type="submit" value="Guardar" name="agregar" /></p> 
 </form> 
