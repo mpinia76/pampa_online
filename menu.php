@@ -165,7 +165,7 @@
             Gastos y Compras: Montos Aprobaci&oacute;n
         </div>
         <?php } ?>
-        <?php if(MENU_1){?>
+        <?php if(ACCION_99){?>
         <div class="configuracion item" onclick="createWindow('w_documentos','Carga de documentacion de sistema','documentos.php','600','400'); $('#menu').hide();">
             Carga de documentacion de sistema
         </div>

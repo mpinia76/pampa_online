@@ -9,8 +9,8 @@ include_once("config/user.php");
 include_once("functions/abm.php");
 
 $empleado_id = $_GET['empleado_id'];
-$ano = $_GET['ano'];
-$mes = $_GET['mes'];
+$ano = ($_GET['ano'])?$_GET['ano']:date('Y');
+$mes = ($_GET['mes'])?$_GET['mes']:'0';
 if(isset($_POST['agregar'])){
 	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
 	$rsTemp = mysql_query($sql);

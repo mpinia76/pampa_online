@@ -8,8 +8,8 @@ include_once("functions/fechasql.php");
 include_once("config/db.php");
 include_once("config/user.php");
 include_once("functions/abm.php");
-$ano = $_GET['ano'];
-$mes = $_GET['mes'];
+$ano = ($_GET['ano'])?$_GET['ano']:date('Y');
+$mes = ($_GET['mes'])?$_GET['mes']:'0';
 if(isset($_POST['agregar'])){
 	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
 	$rsTemp = mysql_query($sql);
@@ -123,13 +123,7 @@ function valida(F) {
 	F.mes.focus();
 	return false
 	}
-	var fecha = new Date();
-	var fecha2 = new Date(F.ano.value,(F.mes.value-1),1);
-	if(fecha.getTime()<fecha2.getTime()){
-		alert("Mes y ano no pueden ser posteriores a hoy");
-		F.mes.focus();
-		return false
-	}
+	
 }
 
 function cargarMeses(year, mes){
@@ -214,6 +208,7 @@ function cargarMeses(year, mes){
         <div style="clear:both;"></div>
      <div class="label">A&ntilde;o</div>
         <div class="content">
+        
         <input type="text" size="2" id="input_ano" name="ano" value="<?php echo $ano?>" onChange="cargarMeses(this,<?php echo $mes?>)"/>
         </div>
         <div style="clear:both;"></div>   
