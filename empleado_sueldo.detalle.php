@@ -173,8 +173,17 @@ WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND 
         <p><strong>Pendiente de pago:</strong> $<?php echo $salario+$horas_extras-$adelantos?></p>
         <?php  }else{ 
          $rsSueldo = mysql_fetch_array(mysql_query($sql));?>
-        <p><strong>Descuentos:</strong></p>
-        <?php  echo '$'.$rsSueldo['descuentos'].' Motivo:'.$rsSueldo['motivo_descuentos']  ?>
+         <p><strong>Descuentos:</strong></p>
+         <?php if ($rsSueldo['descuentos']) {?>
+         	
+        		<?php  echo '$'.$rsSueldo['descuentos'].' Motivo:'.$rsSueldo['motivo_descuentos'] ; 
+         }
+         else{ ?>
+                No se han realizado descuentos
+            <?php  } ?>
+         
+         
+        
         <p><strong>Sueldo abonado:</strong></p>
         <?php 
         echo fechavista($rsSueldo['abonado'])?> $<?php echo $rsSueldo['monto']?> Abonado por: <?php echo $rsSueldo['user'];
