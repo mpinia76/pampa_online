@@ -57,7 +57,7 @@ if(isset($_POST['efectivo'])){
 			//agrego el registro de gasto de efectivo
 			$sql = "INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
 				(".$efectivo_caja_id[$key].",'".$efectivo_monto[$key]."','".$efectivo_interes[$key]."','".$efectivo_descuento[$key]."','".fechasql($efectivo_fecha[$key])."')";
-			_log($sql);
+			//_log($sql);
 			mysql_query($sql);
 			$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 			//_log($registro_id);
@@ -65,7 +65,7 @@ if(isset($_POST['efectivo'])){
 			foreach($operacion_id as $clave=>$valor){
 				$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 					($registro_id, 'efectivo', '$operacion_tipo', $valor)";
-				_log($sql);
+				//_log($sql);
 				mysql_query($sql);
 			} 
 				
@@ -213,7 +213,7 @@ if(isset($_POST['transferencia'])){
 			$transferencia_descuento[$key]=($transferencia_descuento[$key])?$transferencia_descuento[$key]:0;
 			$sql = "INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
 					('".$transferencia_cuenta_id[$key]."','".$transferencia_destino[$key]."','".$transferencia_monto[$key]."','".$transferencia_interes[$key]."','".$transferencia_descuento[$key]."','".fechasql($transferencia_fecha[$key])."')";
-			_log($sql);
+			//_log($sql);
 			mysql_query($sql);
 			
 			$registro_id = mysql_insert_id(); //numero id en el tipo de pago

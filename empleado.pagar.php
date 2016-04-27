@@ -63,7 +63,7 @@ if(isset($_POST['agregar'])){
 					VALUES
 						(".$_POST['empleado_id'].",'".$operacion_monto."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW(),'".$_POST['descuentos']."','".$_POST['motivo_descuentos']."')";
 			mysql_query($sql); 
-			_log($sql);
+			//_log($sql);
 			$operacion_id[] = mysql_insert_id();
 			$operacion_tipo = 'sueldo_pago';
 			

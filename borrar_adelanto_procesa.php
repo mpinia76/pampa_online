@@ -25,7 +25,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 			case 'cheque':
 			$sql = "DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = ".$rs['forma_pago_id']; 
 			mysql_query($sql);
-			_log($sql);
+			//_log($sql);
 			if(mysql_affected_rows() > 0){
 				echo "<br>Forma de pago: cheque";
 				echo "<br>&nbsp; &nbsp; Eliminando el movimiento de cuenta";
@@ -33,7 +33,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 			
 			$sql = "DELETE FROM cheque_consumo WHERE id = ".$rs['forma_pago_id'];
 			mysql_query($sql);
-			_log($sql);
+			//_log($sql);
 			if(mysql_affected_rows() > 0){
 				echo "<br>&nbsp; &nbsp; Eliminando el cheque emitido";
 			}

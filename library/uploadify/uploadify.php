@@ -48,7 +48,7 @@ if (!empty($_FILES)) {
 		}
 		
 		else {
-			_log($_FILES["Filedata"]["error"]);
+			//_log($_FILES["Filedata"]["error"]);
 		}
 	// } else {
 	// 	echo 'Invalid file type.';
