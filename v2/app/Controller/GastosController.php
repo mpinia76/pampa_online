@@ -25,8 +25,19 @@ class GastosController extends AppController {
         $user_id = $_SESSION['userid'];
         $user = $this->Usuario->find('first',array('conditions'=>array('Usuario.id'=>$_SESSION['userid'])));
         $espacioTrabajo = $user['EspacioTrabajo']['id'];        
-
-        if ($user['Usuario']['admin'] == '1'){
+		
+        if ($user['Usuario']['admin'] != '1'){
+	        $this->loadModel('UsuarioPermiso');
+	        $permisos = $this->UsuarioPermiso->findAllByUsuarioId($user_id);
+	        $tienePermiso=0;
+	    	foreach($permisos as $permiso){
+	               if ($permiso['UsuarioPermiso']['permiso_id']==100) {
+	               		$tienePermiso=1;
+	               		continue;
+	               }
+	        }
+        }
+        if (($user['Usuario']['admin'] == '1')||($tienePermiso)){
             $gastos = $this->get_gastos();
         }else{
 			$gastos = $this->Gasto->find('all',array('conditions'=>array('Usuario.espacio_trabajo_id'=>$espacioTrabajo,

@@ -222,7 +222,7 @@ if(isset($_POST['transferencia'])){
 			foreach($operacion_id as $clave=>$valor){
 				$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 					($registro_id, 'transferencia', '$operacion_tipo', $valor)";
-				_log($sql);
+				//_log($sql);
 				mysql_query($sql);
 			} 
 			

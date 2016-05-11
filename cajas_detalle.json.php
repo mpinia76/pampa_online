@@ -99,7 +99,7 @@ while($rs = mysql_fetch_array($rsTemp)){
                                     }elseif($es_caja[0] == 'reservacobro'){
                                             $detalle = 'Cobro de Reserva';
                                             
-                                            $arrayDevolucion = split('-', $reserva_cobro[$es_caja[1]]);
+                                            $arrayDevolucion = explode('-', $reserva_cobro[$es_caja[1]]);
 								           
 								            $orden = 'Nro: '.$arrayDevolucion[0];
 								            $rs['user'] = $arrayDevolucion[1];
@@ -117,7 +117,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 			$detalle = $salario[$rs['id']];
 			$rs['user'] = $salarioAbonado[$rs['id']];
 		}elseif($detalle == 'reserva_devolucion'){
-			$arrayDevolucion = split('-', $devoluciones[$rs['operacion_id']]);
+			$arrayDevolucion = explode('-', $devoluciones[$rs['operacion_id']]);
             $detalle = $arrayDevolucion[0];
             $rs['user'] = $arrayDevolucion[1];
                                     }
