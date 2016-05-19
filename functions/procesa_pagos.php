@@ -255,7 +255,7 @@ if(isset($_POST['debito'])){
 		foreach($debito as $key=>$value){
 		
 			$monto = $debito_monto[$key] + $debito_interes[$key] - $debito_descuento[$key];
-			$insert = "INSERT INTO cuenta_movimiento (fecha,cuenta_id,origen,monto) VALUES ('".fechasql($fecha[$key])."','$debito_cuenta_id[$key]','$detalle','-$monto')";
+			$insert = "INSERT INTO cuenta_movimiento (fecha,cuenta_id,origen,monto, usuario_id) VALUES ('".fechasql($fecha[$key])."','$debito_cuenta_id[$key]','$detalle','-$monto', '$user_id')";
 			//echo $insert."<br>";
 			mysql_query($insert);
 		

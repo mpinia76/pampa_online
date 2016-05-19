@@ -22,6 +22,7 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 	include_once("functions/date.php");
 	include_once("functions/getProveedor.php");
 	include_once("config/db.php");
+	include_once("config/user.php");
 	
 	if(isset($_POST['guardar'])){ //guardo los datos extras del gasto
 	
