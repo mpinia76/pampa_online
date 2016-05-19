@@ -186,15 +186,15 @@ function valida(F) {
 
 <body>
 
-<? include_once("config/messages.php"); ?>
+<?php include_once("config/messages.php"); ?>
 
-<? if(isset($_POST['agregar'])){ ?>
+<?php if(isset($_POST['agregar'])){ ?>
 	<script>
 	var dhxWins = parent.dhxWins;
 	dhxWins.window('w_empleado_view').attachURL('empleados.ficha.php?empleado_id=<?php echo $_POST['empleado_id']?>');
 	dhxWins.window('w_emplado_add_jornada').close();
 	</script>
-<? } ?>
+<?php } ?>
 <div class="container">
 
 	<form method="POST" name="form" action="empleados.trabajo.php" onSubmit="return valida(this);">
@@ -224,11 +224,11 @@ function valida(F) {
 		<div class="content">
 			<select name="espacio_trabajo">
 			<option value="null">Seleccionar...</option>
-			<? $sql = "SELECT * FROM espacio_trabajo ORDER BY espacio ASC";
+			<?php $sql = "SELECT * FROM espacio_trabajo ORDER BY espacio ASC";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){ ?>
 			<option value="<?php echo $rs['id']?>"><?php echo $rs['espacio']?></option>
-			<? } ?>
+			<?php } ?>
 			</select>
 		</div>
 		<div style="clear:both;"></div>
@@ -237,11 +237,11 @@ function valida(F) {
 		<div class="content">
 			<select name="sector_1_id">
 			<option value="null">Seleccionar...</option>
-			<? $sql = "SELECT * FROM sector ORDER BY sector ASC";
+			<?php $sql = "SELECT * FROM sector ORDER BY sector ASC";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){ ?>
 			<option value="<?php echo $rs['id']?>"><?php echo $rs['sector']?></option>
-			<? } ?>
+			<?php } ?>
 			</select>
 		</div>
 		<div style="clear:both;"></div>
@@ -250,11 +250,11 @@ function valida(F) {
 		<div class="content">
 			<select name="sector_2_id">
 			<option value="null">Seleccionar...</option>
-			<? $sql = "SELECT * FROM sector ORDER BY sector ASC";
+			<?php $sql = "SELECT * FROM sector ORDER BY sector ASC";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){ ?>
 			<option value="<?php echo $rs['id']?>"><?php echo $rs['sector']?></option>
-			<? } ?>
+			<?php } ?>
 			</select>
 		</div>
 		<div style="clear:both;"></div>

@@ -119,7 +119,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 		}elseif($es_cuenta[0] == 'desdecaja'){
 			$detalle = "Deposito desde caja ".$cajas[$es_cuenta[1]];
 		}elseif($es_cuenta[0] == 'reservatransferencia'){
-										$arrayDevolucion = split('-', $reserva_cobro_transferencia[$es_cuenta[1]]);
+										$arrayDevolucion = explode('-', $reserva_cobro_transferencia[$es_cuenta[1]]);
                                         $detalle = "Transferencia realizada por ".$arrayDevolucion[2];
                                         
 								           
@@ -128,7 +128,7 @@ while($rs = mysql_fetch_array($rsTemp)){
                                        
 		}elseif($es_cuenta[0] == 'reservacheque'){
                                         $detalle = "Cheque";
-                                        $arrayDevolucion = split('-', $reserva_cobro_cheque[$es_cuenta[1]]);
+                                        $arrayDevolucion = explode('-', $reserva_cobro_cheque[$es_cuenta[1]]);
 								           
 								            $orden = 'Res. '.$arrayDevolucion[0];
 								            $rs['user'] = $arrayDevolucion[1];
@@ -137,8 +137,41 @@ while($rs = mysql_fetch_array($rsTemp)){
                                         $detalle = $lotes[$es_cuenta[1]];
 		}
 		elseif($es_cuenta[0] == 'debitocuenta'){
-			$detalle = "Debito de cuenta";
-			$orden = $es_cuenta[1];
+			
+			$orden = "";
+			$sql1 = "SELECT G.id as id_gasto, G.nro_orden, ES.id as id_sueldo, CONCAT(E.nombre,' ',E.apellido) as empleadoSueldo, EA.id as id_adelanto, CONCAT(E1.nombre,' ',E1.apellido) as empleadoAdelanto, TR.id as id_tarjeta, TR.nombre as tarjetaNombre,C.id as id_compra, C.nro_orden as ordenCompra
+					FROM rel_pago_operacion RPO
+					LEFT JOIN gasto G ON RPO.operacion_id = G.id AND RPO.operacion_tipo = 'gasto'
+					LEFT JOIN empleado_sueldo ES ON RPO.operacion_id = ES.id AND RPO.operacion_tipo = 'sueldo_pago'
+					LEFT JOIN empleado E ON ES.empleado_id = E.id
+					LEFT JOIN empleado_adelanto EA ON RPO.operacion_id = EA.id AND RPO.operacion_tipo = 'sueldo_adelanto'
+					LEFT JOIN empleado E1 ON EA.empleado_id = E1.id
+					LEFT JOIN tarjeta_resumen TR ON RPO.operacion_id = TR.id AND RPO.operacion_tipo = 'tarjeta_resumen'
+					LEFT JOIN compra C ON RPO.operacion_id = C.id AND RPO.operacion_tipo = 'compra'
+					WHERE RPO.forma_pago = 'debito' AND operacion_id = ".$es_cuenta[1];
+			$rsTemp1 = mysql_query($sql1);
+			while($rs1 = mysql_fetch_array($rsTemp1)){
+				if ($rs1['id_gasto']) {
+					$detalle = "Debito de cuenta (gasto)";
+					$orden .= $rs1['nro_orden'].' - ';
+				}
+				if ($rs1['id_sueldo']) {
+					$detalle = "Debito de cuenta (haberes ".$rs1['empleadoSueldo'].")";
+				}
+				if ($rs1['id_adelanto']) {
+					$detalle = "Debito de cuenta (adelanto ".$rs1['empleadoAdelanto'].")";
+				}
+				if ($rs1['id_compra']) {
+					$detalle = "Debito de cuenta (compra)";
+					$orden .= $rs1['ordenCompra'].' - ';
+				}
+				
+				if ($rs1['id_tarjeta']) {
+					$detalle = "Debito de cuenta (Tarjeta ".$rs1['tarjetaNombre'].")";
+				}
+				
+			}
+			$orden = substr( $orden, 0, strlen($orden)-3);
 		}
 	
 	}elseif($rs['operacion_tipo'] == 'sueldo_pago'){

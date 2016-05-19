@@ -144,6 +144,16 @@ function abonar(){
     createWindow('w_gastos_pagar','Agregar gasto','gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
 
 }
+function borrar(){
+    var selected = new Array();
+    $('.row_selected').each(function(e,i){
+        var data = oTable.fnGetData(e);
+        selected.push(data[0]);
+    });
+
+    createWindow('w_gastos_anular','Anular pago','gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
+
+}
 function action(action){
     var row = $('.row_selected');
     if(row.length > 1){
@@ -166,6 +176,7 @@ function action(action){
     <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <?php  } ?>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('abonar');"  class="boton abonar">Abonar</li><?php  } ?>
     <?php if(isset($usuario_accion['20'])){ ?><li onclick="action('autorizar');" class="boton autorizar">Autorizar</li> <?php  } ?>
+    <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('borrar');"  class="boton anular">Aular Pago</li><?php  } ?>
     <li class="filtro">Buscar <input id="data_search" type="text"/></li>
 </ul>
 

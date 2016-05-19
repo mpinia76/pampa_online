@@ -91,7 +91,7 @@ if(isset($_POST['agregar'])){
 			
 		}
 	}else{
-                        $result = "El pago no pudo ser realizado, verifique que la fecha no sea posterior al mes acutal";
+                        $result = "El pago no pudo ser realizado, verifique que la fecha no sea posterior al mes actual";
                 }
 	
 	$empleado_id = $_POST['empleado_id'];
