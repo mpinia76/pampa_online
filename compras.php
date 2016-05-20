@@ -101,6 +101,15 @@ function add(){
 	createWindow('w_<?php echo $tabla?>_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 
+function anular(){
+	dataid = mygrid.getSelectedRowId();
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else{
+		if(confirm('¿Seguro desea anular el pago?'))createWindow('w_<?php echo $tabla?>_anular','Anular <?php echo $label?>','anular_compra_procesa.php?dataid='+dataid,'600','400'); //botones
+	}
+}
+
 </script>
 <script src="js/createWindow.js"></script>
 </head>
@@ -113,7 +122,9 @@ function add(){
 	<?php  if(ACCION_35){ ?><li onclick="edit('editar')" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li><?php  } ?>
 	<?php  if(ACCION_31){ ?><li onclick="edit('autorizar')" class="item"><img src="images/bt_autorice.png" align="absmiddle" />  Autorizar</li><?php  } ?>
 	<?php  if(ACCION_32){ ?><li onclick="edit('abonar')" class="item"><img src="images/bt_pay.png" align="absmiddle" />  Abonar</li> <?php  } ?>
-	<li onclick="eliminar()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Eliminar</li>
+	<?php  if(ACCION_29){ ?><li onclick="eliminar()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Eliminar</li> <?php  } ?>
+	<?php  if(ACCION_29){ ?><li onclick="anular()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Anular pago</li> <?php  } ?>
+	
 </ul>
 <div id="mygrid_container" style="width:100%;height:330px;"></div>
 <ul id="menu">

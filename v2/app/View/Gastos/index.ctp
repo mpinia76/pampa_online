@@ -140,8 +140,9 @@ function abonar(){
         var data = oTable.fnGetData(e);
         selected.push(data[0]);
     });
-
-    createWindow('w_gastos_pagar','Agregar gasto','gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
+	if(confirm('¿Seguro desea anular el pago?')){
+    	createWindow('w_gastos_pagar','Agregar gasto','gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
+    }
 
 }
 function borrar(){
@@ -151,7 +152,7 @@ function borrar(){
         selected.push(data[0]);
     });
 
-    createWindow('w_gastos_anular','Anular pago','gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
+    createWindow('w_gastos_anular','Anular pago','anular_gasto_procesa.php?dataid='+selected.join(','),'600','400');
 
 }
 function action(action){
@@ -176,7 +177,7 @@ function action(action){
     <?php if(isset($usuario_accion['34'])){ ?><li onclick="action('editar');" class="boton editar">Editar</li> <?php  } ?>
     <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('abonar');"  class="boton abonar">Abonar</li><?php  } ?>
     <?php if(isset($usuario_accion['20'])){ ?><li onclick="action('autorizar');" class="boton autorizar">Autorizar</li> <?php  } ?>
-    <?php if(isset($usuario_accion['21'])){ ?><li onclick="action('borrar');"  class="boton anular">Aular Pago</li><?php  } ?>
+    <?php if(isset($usuario_accion['21'])){ ?><li onclick="borrar();"  class="boton anular">Aular Pago</li><?php  } ?>
     <li class="filtro">Buscar <input id="data_search" type="text"/></li>
 </ul>
 

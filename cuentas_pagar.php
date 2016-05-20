@@ -77,6 +77,16 @@ function eliminar(){
 		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?php echo $file?>?delete=on&dataid='+dataid; //ruta
 	}
 }
+
+function anular(){
+	dataid = mygrid.getSelectedRowId();
+	if(!dataid){
+		alert('Debe seleccionar un registro');
+	}else{
+		if(confirm('¿Seguro desea anular el pago?'))createWindow('w_<?php echo $tabla?>_anular','Anular <?php echo $label?>','anular_cuenta_procesa.php?dataid='+dataid,'600','400'); //botones
+	}
+}
+
 function add(){
 	createWindow('w_subrubros_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }function addFilter(){	$('#estado_filter').html('<select id="estado" onchange="makeFilter();"><option selected="selected" value="no">Pendiente</option><option value="si">Pagada</option><option value="t">Todas</option></select>');}
@@ -90,6 +100,7 @@ function makeFilter(){	estado = $('#estado').val();	mygrid.clearAll();	mygrid.lo
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
 	<li onclick="edit('consultar')" class="item"><img src="images/bt_view.png" align="absmiddle" />  Consultar</li>
 	<li onclick="edit('abonar')" class="item"><img src="images/bt_pay.png" align="absmiddle" />  Abonar</li>
+	<li onclick="anular()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Anular pago</li>
 </ul>
 <div id="mygrid_container" style="width:100%;height:320px;"></div>
 <ul id="menu">

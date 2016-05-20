@@ -1,36 +1,28 @@
 <?php
 include_once("config/db.php");
 include_once("functions/util.php");
-$data 	= explode(",",$_GET['dataid']);
 
-if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_GET['action'] == 'editar' or $_GET['action'] == 'autorizar') ){ ?>
 
-	<p align="center">Seleccione un s&oacute;lo registro</p>
-
-<?php 
-
-}elseif(is_array($data) and count($data)==1){
-
-	$gasto_id = $data[0];
+	$compra_id = $_GET['dataid'];
 
 
 
-$sql = "SELECT * FROM gasto WHERE id = ".$gasto_id;
+$sql = "SELECT * FROM cuenta_a_pagar WHERE id = ".$cuenta_a_pagar_id;
 
 if(mysql_num_rows(mysql_query($sql)) != 0){
-	$rsGasto = mysql_fetch_array(mysql_query($sql));
-	if ($rsGasto['estado']==1) {
+	$rsCompra = mysql_fetch_array(mysql_query($sql));
+	if ($rsCompra['estado']==1) {
 		
 		//vemos si esta en cuentas a pagar
-		$sql = "UPDATE gasto SET 
+		$sql = "UPDATE cuenta_a_pagar SET 
 								estado=0
-							WHERE id=".$gasto_id;
+							WHERE id=".$cuenta_a_pagar_id;
 					mysql_query($sql);
 		
 		mysql_query($sql);
-		echo "<br>Actualizando a NO pagado";
+		echo "<br>Actualizando a NO pagada";
 		
-		$sql = "SELECT * FROM rel_pago_operacion WHERE operacion_id = ".$rsGasto['id']." AND operacion_tipo = 'gasto'";
+		$sql = "SELECT * FROM rel_pago_operacion WHERE operacion_id = ".$rsCompra['id']." AND operacion_tipo = 'compra'";
 		
 		$rsTemp = mysql_query($sql);
 		while($rs = mysql_fetch_array($rsTemp)){
@@ -110,7 +102,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 				break;
 			}
 			echo "<br>Eliminando datos de tabla relacional";
-			$sql = "DELETE FROM rel_pago_operacion WHERE operacion_id = ".$rsGasto['id']." AND operacion_tipo = 'gasto'";
+			$sql = "DELETE FROM rel_pago_operacion WHERE operacion_id = ".$rsCompra['id']." AND operacion_tipo = 'compra'";
 			
 			mysql_query($sql); 	
 		}
@@ -118,13 +110,13 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 		
 		echo "<br>Listo!";
 	}else{
-		echo "El gasto debe estar en estado procesado";
+		echo "La cuenta debe estar en estado pagada";
 	}
 	
 	
 	
 }else{
-	echo "No hay gasto";
+	echo "No hay compra";
 }
-}
+
 ?>
