@@ -1,17 +1,9 @@
 <?php
 include_once("config/db.php");
 include_once("functions/util.php");
-$data 	= explode(",",$_GET['dataid']);
 
-if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_GET['action'] == 'editar' or $_GET['action'] == 'autorizar') ){ ?>
 
-	<p align="center">Seleccione un s&oacute;lo registro</p>
-
-<?php 
-
-}elseif(is_array($data) and count($data)==1){
-
-	$gasto_id = $data[0];
+	$gasto_id = $_GET['dataid'];
 
 
 
@@ -25,7 +17,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 		$sql = "UPDATE gasto SET 
 								estado=0
 							WHERE id=".$gasto_id;
-					mysql_query($sql);
+					
 		
 		mysql_query($sql);
 		echo "<br>Actualizando a NO pagado";
@@ -126,5 +118,5 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 }else{
 	echo "No hay gasto";
 }
-}
+
 ?>

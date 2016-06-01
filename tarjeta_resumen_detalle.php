@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("config/db.php");
 $sql = "SELECT tarjeta_resumen.*, CONCAT(banco.banco,' ',tarjeta_marca.marca,' ',tarjeta.titular) AS tarjeta FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id INNER JOIN tarjeta_resumen ON tarjeta_resumen.tarjeta_id=tarjeta.id WHERE tarjeta_resumen.id=".$_GET['resumen_id'];
 $resumen = mysql_fetch_array(mysql_query($sql));
@@ -30,7 +30,7 @@ include_once("functions/delete.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -52,26 +52,26 @@ function doInitGrid(){
 	mygrid.setColTypes("ro,ro,ro,price");				//editable o no
 	mygrid.enableEditEvents(false,false,false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?=$json?>?resumen_id=<?=$_GET['resumen_id']?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>?resumen_id=<?php echo $_GET['resumen_id']?>","json");	//ruta al json con datos
 	mygrid.init();
 }
 
 function pagar(){
-	createWindow('w_<?=$tabla?>_pagar','Abonar resumen','tarjeta_resumen.pagar.php?resumen_id=<?=$_GET['resumen_id']?>','600','400'); //nombre de los divs
+	createWindow('w_<?php echo $tabla?>_pagar','Abonar resumen','tarjeta_resumen.pagar.php?resumen_id=<?php echo $_GET['resumen_id']?>','600','400'); //nombre de los divs
 }
 function eliminar(){
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?=$file?>?delete=on&dataid='+dataid; //ruta
+		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?php echo $file?>?delete=on&dataid='+dataid; //ruta
 	}
 }
 function add(){
-	createWindow('w_subrubros_add','Agregar <?=$label?>','<?=$abm?>','600','400'); //botones
+	createWindow('w_subrubros_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 function add_movimiento(){
-	createWindow('w_<?=$tabla?>_detalle','Agregar movimiento','tarjeta_movimiento.am.php?resumen_id=<?=$_GET['resumen_id']?>','610','240'); //nombre de los divs
+	createWindow('w_<?php echo $tabla?>_detalle','Agregar movimiento','tarjeta_movimiento.am.php?resumen_id=<?php echo $_GET['resumen_id']?>','610','240'); //nombre de los divs
 }
 
 </script>
@@ -81,12 +81,12 @@ function add_movimiento(){
 <body onload="doInitGrid();">
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
-	<? if($resumen['estado'] == 0){ ?>
+	<?php if($resumen['estado'] == 0){ ?>
 	<li onclick="add_movimiento()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar movimiento</li>
 	<li onclick="pagar()" class="item"><img src="images/bt_pay.png" align="absmiddle" />  Abonar</li>
-	<? }else{ ?>
+	<?php }else{ ?>
 	<li onclick="pagar()" class="item"><img src="images/bt_pay.png" align="absmiddle" />  Consultar el pago</li>
-	<? } ?>
+	<?php } ?>
 </ul>
 <div id="mygrid_container" style="width:100%;height:370px;"></div>
 <!--

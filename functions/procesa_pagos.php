@@ -113,7 +113,7 @@ if(isset($_POST['tarjeta'])){
 			$sql = "INSERT INTO tarjeta_consumo (tarjeta_id,monto,interes,descuento,cuotas,fecha,comprobante_nro) VALUES 
 					(".$tarjeta_id[$key].",'".$tarjeta_monto[$key]."','".$tarjeta_interes[$key]."','".$tarjeta_descuento[$key]."','".$tarjeta_cuotas[$key]."','".fechasql($tarjeta_fecha[$key])."','".$tarjeta_comprobante[$key]."')";
 			mysql_query($sql);
-			
+		
 			$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 			
 			//guardo la relacion de pago y operacion

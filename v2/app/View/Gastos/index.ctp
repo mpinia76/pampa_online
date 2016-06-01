@@ -140,20 +140,23 @@ function abonar(){
         var data = oTable.fnGetData(e);
         selected.push(data[0]);
     });
-	if(confirm('¿Seguro desea anular el pago?')){
+	
     	createWindow('w_gastos_pagar','Agregar gasto','gastos.view.php?action=abonar&dataid='+selected.join(','),'600','400');
-    }
+    
 
 }
 function borrar(){
-    var selected = new Array();
-    $('.row_selected').each(function(e,i){
-        var data = oTable.fnGetData(e);
-        selected.push(data[0]);
-    });
-
-    createWindow('w_gastos_anular','Anular pago','anular_gasto_procesa.php?dataid='+selected.join(','),'600','400');
-
+    var row = $('.row_selected');
+    if(row.length > 1){
+        alert('Debe seleccionar un solo registro');
+    }else if(row.length == 0){
+        alert('Debe seleecionar un registro');
+    }else{
+        var data = oTable.fnGetData(row[0]);
+		if(confirm('¿Seguro desea anular el pago?')){
+    		createWindow('w_gastos_anular','Anular pago','anular_gasto_procesa.php?dataid='+data[0],'600','400');
+    	}
+	}
 }
 function action(action){
     var row = $('.row_selected');

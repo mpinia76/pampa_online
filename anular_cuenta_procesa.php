@@ -3,26 +3,26 @@ include_once("config/db.php");
 include_once("functions/util.php");
 
 
-	$compra_id = $_GET['dataid'];
+	$cuenta_a_pagar_id = $_GET['dataid'];
 
 
 
 $sql = "SELECT * FROM cuenta_a_pagar WHERE id = ".$cuenta_a_pagar_id;
 
 if(mysql_num_rows(mysql_query($sql)) != 0){
-	$rsCompra = mysql_fetch_array(mysql_query($sql));
-	if ($rsCompra['estado']==1) {
+	$rsCuentaAPagar = mysql_fetch_array(mysql_query($sql));
+	if ($rsCuentaAPagar['estado']==1) {
 		
 		//vemos si esta en cuentas a pagar
 		$sql = "UPDATE cuenta_a_pagar SET 
-								estado=0
+								estado=0,fecha_pago=null
 							WHERE id=".$cuenta_a_pagar_id;
-					mysql_query($sql);
-		
+					
+		//echo $sql;
 		mysql_query($sql);
 		echo "<br>Actualizando a NO pagada";
 		
-		$sql = "SELECT * FROM rel_pago_operacion WHERE operacion_id = ".$rsCompra['id']." AND operacion_tipo = 'compra'";
+		$sql = "SELECT * FROM rel_pago_operacion WHERE operacion_id = ".$rsCuentaAPagar['id']." AND operacion_tipo = '".$rsCuentaAPagar['operacion_tipo']."'";
 		
 		$rsTemp = mysql_query($sql);
 		while($rs = mysql_fetch_array($rsTemp)){
@@ -102,7 +102,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 				break;
 			}
 			echo "<br>Eliminando datos de tabla relacional";
-			$sql = "DELETE FROM rel_pago_operacion WHERE operacion_id = ".$rsCompra['id']." AND operacion_tipo = 'compra'";
+			$sql = "DELETE FROM rel_pago_operacion WHERE operacion_id = ".$rsCuentaAPagar['id']." AND operacion_tipo = '".$rsCuentaAPagar['operacion_tipo']."'";
 			
 			mysql_query($sql); 	
 		}
@@ -116,7 +116,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 	
 	
 }else{
-	echo "No hay compra";
+	echo "No hay registro";
 }
 
 ?>

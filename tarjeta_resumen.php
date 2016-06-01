@@ -1,4 +1,4 @@
-<?
+<?php
 $tabla 	= "tarjeta_resumen"; //tabla
 $label 	= "resumen de tarjeta"; //nombre para el editar y agregar
 $file 	= "tarjeta_resumen.php"; //archivo
@@ -24,7 +24,7 @@ include_once("functions/delete.php");
 <script>
 var dhxWins = parent.dhxWins;
 
-var position = dhxWins.window('w_<?=$tabla?>').getPosition(); //id de la ventana
+var position = dhxWins.window('w_<?php echo $tabla?>').getPosition(); //id de la ventana
 
 var xpos = position[0];
 var ypos = position[1];
@@ -42,7 +42,7 @@ function doInitGrid(){
 	mygrid.setColSorting("str,str,str,str");			//tipo datos para ordenar
 	mygrid.setColTypes("ro,ro,ro,ro");				//editable o no 
     mygrid.setSkin("dhx_skyblue");	
-	mygrid.load("<?=$json?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>","json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -51,7 +51,7 @@ function edit(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_edit','Editar <?=$label?>','<?=$abm?>?dataid='+dataid,'600','400'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_edit','Editar <?php echo $label?>','<?php echo $abm?>?dataid='+dataid,'600','400'); //nombre de los divs
 	}
 }
 function eliminar(){
@@ -59,7 +59,7 @@ function eliminar(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?=$file?>?delete=on&dataid='+dataid; //ruta
+		if(confirm('¿Seguro desea eliminar el registro?'))window.location.href='<?php echo $file?>?delete=on&dataid='+dataid; //ruta
 	}
 }
 function add_movimiento(){
@@ -67,18 +67,18 @@ function add_movimiento(){
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_detalle','Agregar movimiento','tarjeta_movimiento.am.php?resumen_id='+dataid,'610','220'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_detalle','Agregar movimiento','tarjeta_movimiento.am.php?resumen_id='+dataid,'610','220'); //nombre de los divs
 	}
 }
 function add(){
-	createWindow('w_subrubros_add','Agregar <?=$label?>','<?=$abm?>','600','400'); //botones
+	createWindow('w_subrubros_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 function ver_detalle(){
 	dataid = mygrid.getSelectedRowId();
 	if(!dataid){
 		alert('Debe seleccionar un registro');
 	}else{
-		createWindow('w_<?=$tabla?>_detalle','Detalle del resumen','tarjeta_resumen_detalle.php?resumen_id='+dataid,'610','500'); //nombre de los divs
+		createWindow('w_<?php echo $tabla?>_detalle','Detalle del resumen','tarjeta_resumen_detalle.php?resumen_id='+dataid,'610','500'); //nombre de los divs
 	}
 }
 

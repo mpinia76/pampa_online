@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("functions/fechasql.php");
 include_once("functions/date.php");
 include_once("functions/getProveedor.php");
@@ -165,48 +165,48 @@ function addFormaDePago(forma_pago_id){
 </head>
 
 <body>
-<? if(isset($_POST['guardar'])){ ?>
+<?php if(isset($_POST['guardar'])){ ?>
 <script>
 var dhxWins = parent.dhxWins;
-dhxWins.window('w_tarjeta_resumen_detalle').attachURL('tarjeta_resumen_detalle.php?resumen_id=<?=$_POST['resumen_id']?>');
+dhxWins.window('w_tarjeta_resumen_detalle').attachURL('tarjeta_resumen_detalle.php?resumen_id=<?php echo $_POST['resumen_id']?>');
 </script>
-<? } ?>
+<?php } ?>
 
-<? include_once("config/messages.php"); ?>
+<?php include_once("config/messages.php"); ?>
 <div class="formContainer">
-<form method="post" name="form" action="tarjeta_resumen.pagar.php?resumen_id=<?=$resumen_id?>" >
-<input type="hidden" name="resumen_id" value="<?=$resumen['id']?>" />
-<input type="hidden" name="resumen_monto" value="<?=$monto_total?>"  />
+<form method="post" name="form" action="tarjeta_resumen.pagar.php?resumen_id=<?php echo $resumen_id?>" >
+<input type="hidden" name="resumen_id" value="<?php echo $resumen['id']?>" />
+<input type="hidden" name="resumen_monto" value="<?php echo $monto_total?>"  />
 	<fieldset>
-		<legend><?=$resumen['tarjeta']?></legend> 
+		<legend><?php echo $resumen['tarjeta']?></legend> 
 		<ul class="form">
-			<li><label>Periodo:</label><?=$resumen['nombre']?></li>
-			<li><label>Monto:</label>$<?=$monto_total?></li>
-		<? if($resumen['estado'] == 0){ ?>
+			<li><label>Periodo:</label><?php echo $resumen['nombre']?></li>
+			<li><label>Monto:</label>$<?php echo $monto_total?></li>
+		<?php if($resumen['estado'] == 0){ ?>
 			<li><label>Forma de pago:</label>
 			<select name="forma_pago">
 			<option value="n">Seleccionar...</option>
-			<?
+			<?php
 			$sql = "SELECT id,forma_pago FROM forma_pago where id!=4 ORDER BY forma_pago";
 			$rsTemp = mysql_query($sql);
 			while($rs = mysql_fetch_array($rsTemp)){?>
-			<option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-			<? } ?>
+			<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+			<?php } ?>
 			</select> &nbsp; <a href="#" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
 			<div id="forma_de_pago"></div>
-		<? }else{ ?>
-			<li><label>Fecha de pago:</label><?=fechavista($resumen['fecha_pago'])?></li>
-			<?
+		<?php }else{ ?>
+			<li><label>Fecha de pago:</label><?php echo fechavista($resumen['fecha_pago'])?></li>
+			<?php
 			$operacion_tipo = 'tarjeta_resumen';
 			$operacion_id = $resumen['id']; 
 			include("pagos.view.php") 
 			?>
-		<? } ?>
+		<?php } ?>
 		</ul>
 	</fieldset> 
-	<? if($resumen['estado'] == 0){ ?>
+	<?php if($resumen['estado'] == 0){ ?>
 	<p align="center"><input type="submit" value="Abonar resumen" name="guardar" /></p> 
-	<? } ?>
+	<?php } ?>
 </form>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("functions/form.class.php");
 include_once("functions/fechasql.php");
 include_once("config/db.php");
@@ -152,34 +152,34 @@ function valida(F) {
 
 <body>
 
-<? include_once("config/messages.php"); ?>
-<? if(isset($_POST['agregar'])){ ?>
+<?php include_once("config/messages.php"); ?>
+<?php if(isset($_POST['agregar'])){ ?>
 <script>
 var dhxWins = parent.dhxWins;
-dhxWins.window('w_tarjeta_resumen_detalle').attachURL('tarjeta_resumen_detalle.php?resumen_id=<?=$_POST['resumen_id']?>');
+dhxWins.window('w_tarjeta_resumen_detalle').attachURL('tarjeta_resumen_detalle.php?resumen_id=<?php echo $_POST['resumen_id']?>');
 </script>
-<? } ?>
+<?php } ?>
 
 <div class="container">
 
 <form method="POST" name="form" action="tarjeta_movimiento.am.php" onSubmit="return valida(this);">
 
 <div class="label"></div><div class="content"><input type="hidden" name="id" /></div><div style="clear:both;"></div>
-<div class="label"></div><div class="content"><input type="hidden" value="<?=$_GET['resumen_id']?>"  name="resumen_id" /></div><div style="clear:both;"></div>
-<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" value="<?=date("d/m/Y")?>" name="fecha" /></div><div style="clear:both;"></div>
+<div class="label"></div><div class="content"><input type="hidden" value="<?php echo $_GET['resumen_id']?>"  name="resumen_id" /></div><div style="clear:both;"></div>
+<div class="label">Fecha</div><div class="content"><input type="text" class="fecha dp-applied" value="<?php echo date("d/m/Y")?>" name="fecha" /></div><div style="clear:both;"></div>
 
 <div style="clear:both;"></div>
 <div class="label">Detalle</div>
 <div class="content">
 	<select name="motivo_id" onchange="if($(this).val() == 'otro'){ $('#otro_motivo').show(); }else{ $('#otro_motivo').hide(); } ">
 	<option value="null">Seleccionar...</option>
-	<?
+	<?php
 	$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 3";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){ ?>
 	?>
-	<option value="<?=$rs['id']?>"><?=$rs['nombre']?></option>
-	<? } ?>
+	<option value="<?php echo $rs['id']?>"><?php echo$rs['nombre']?></option>
+	<?php } ?>
 	<option value="otro">Otro</option> 
 	</select><br />	
 	<input id="otro_motivo" style="display:none; " type="text" name="otro_motivo" value="" />

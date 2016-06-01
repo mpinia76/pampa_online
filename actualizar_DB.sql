@@ -440,5 +440,9 @@ ALTER TABLE `empleado_pago`
 ##############################################21/04/2016#######################################################
 INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (11, 'Carga de documentacion en sistema');
 
-##############################################11/25/2016#######################################################
+##############################################11/05/2016#######################################################
 INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (7, 'Administrador de gastos');
+
+##############################################23/05/2016#######################################################
+ALTER TABLE `cuenta_a_pagar`
+	CHANGE COLUMN `fecha_pago` `fecha_pago` DATE NULL AFTER `monto`;

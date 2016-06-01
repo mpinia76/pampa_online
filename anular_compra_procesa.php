@@ -17,7 +17,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 		$sql = "UPDATE compra SET 
 								estado=0
 							WHERE id=".$compra_id;
-					mysql_query($sql);
+					
 		
 		mysql_query($sql);
 		echo "<br>Actualizando a NO pagada";
