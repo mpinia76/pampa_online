@@ -13,14 +13,8 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 	$rsCompra = mysql_fetch_array(mysql_query($sql));
 	if ($rsCompra['estado']==1) {
 		
-		//vemos si esta en cuentas a pagar
-		$sql = "UPDATE compra SET 
-								estado=0
-							WHERE id=".$compra_id;
-					
 		
-		mysql_query($sql);
-		echo "<br>Actualizando a NO pagada";
+		$ok=1;
 		
 		$sql = "SELECT * FROM rel_pago_operacion WHERE operacion_id = ".$rsCompra['id']." AND operacion_tipo = 'compra'";
 		
@@ -71,7 +65,12 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 	
 				break;
 				
-				case 'tarjeta':
+				case 'tarjeta':	
+				$sql = "SELECT * FROM tarjeta_consumo WHERE id = ".$rs['forma_pago_id'];
+				$rsTempTarjeta = mysql_query($sql);
+				if($rsTarjeta = mysql_fetch_array($rsTempTarjeta)){
+					
+				}
 				$sql = "DELETE FROM tarjeta_consumo_cuota WHERE tarjeta_consumo_id = ".$rs['forma_pago_id']; 
 				mysql_query($sql);
 				if(mysql_affected_rows() > 0){
@@ -105,6 +104,14 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 			$sql = "DELETE FROM rel_pago_operacion WHERE operacion_id = ".$rsCompra['id']." AND operacion_tipo = 'compra'";
 			
 			mysql_query($sql); 	
+			
+			$sql = "UPDATE compra SET 
+								estado=0
+							WHERE id=".$compra_id;
+					
+		
+			mysql_query($sql);
+			echo "<br>Actualizando a NO pagada";
 		}
 		
 		
