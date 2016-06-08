@@ -78,21 +78,25 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 			
 			if($procesa){
 			
-				$result = 1;
-				$sql = "UPDATE compra SET 
-							estado=1,
-							factura_nro='".$_POST['factura_nro']."',
-							factura_tipo='".$_POST['factura_tipo']."',
-							factura_orden='".$_POST['factura_orden']."',
-							remito_nro='".$_POST['remito_nro']."',
-							recibo_nro='".$_POST['recibo_nro']."'
-						WHERE id=".$_POST['compra_id'];
-				mysql_query($sql);
-				echo mysql_error();
+				
 				$operacion_id[] = $dataid;
 				$operacion_tipo = 'compra';
 				
 				include("functions/procesa_pagos.php");	
+				if (!$error) {
+					$result = 1;
+					$sql = "UPDATE compra SET 
+								estado=1,
+								factura_nro='".$_POST['factura_nro']."',
+								factura_tipo='".$_POST['factura_tipo']."',
+								factura_orden='".$_POST['factura_orden']."',
+								remito_nro='".$_POST['remito_nro']."',
+								recibo_nro='".$_POST['recibo_nro']."'
+							WHERE id=".$_POST['compra_id'];
+					mysql_query($sql);
+					echo mysql_error();
+				}
+				
 				
 			}else{
 				if(($operacion_monto+$monto_interes-$monto_descuento) != $monto_pagado){

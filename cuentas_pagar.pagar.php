@@ -33,18 +33,21 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del gasto
 		if($procesa){
 		
 			for($i=0; $i<count($cuentas_id); $i++){
-	
-				$result = 1;
-				$sql = "UPDATE cuenta_a_pagar SET estado=1,fecha_pago=NOW() WHERE id=".$cuentas_id[$i];
-				mysql_query($sql);
-				
-				$sql = "UPDATE $operacion_tipo SET nro_orden='".$operacion_orden[0]."' WHERE id=".$cuentas_operacion[$i];
-				mysql_query($sql);
 				
 				$operacion_id[] = $cuentas_operacion[$i];
 			}
 			
 			include("functions/procesa_pagos.php");
+			if (!$error) {
+				for($i=0; $i<count($cuentas_id); $i++){
+					$result = 1;
+					$sql = "UPDATE cuenta_a_pagar SET estado=1,fecha_pago=NOW() WHERE id=".$cuentas_id[$i];
+					mysql_query($sql);
+					
+					$sql = "UPDATE $operacion_tipo SET nro_orden='".$operacion_orden[0]."' WHERE id=".$cuentas_operacion[$i];
+					mysql_query($sql);
+				}
+			}
 			
 		}else{
 		

@@ -57,28 +57,28 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del compra
 		if($procesa){
 		
 			for($i=0; $i<count($compras_id); $i++){
-			
-				$result = 1;
-				$sql = "UPDATE compra SET 
-							estado=1,
-							nro_orden='".$compras_orden[0]."',
-							factura_nro='".$facturas[$i]."',
-							factura_tipo='".$facturas_tipo[$i]."',
-							factura_orden='".$facturas_orden[$i]."',
-							remito_nro='".$remitos_nro[$i]."',
-							recibo_nro='".$recibos_nro[$i]."'
-						WHERE id=".$compras_id[$i];
-				mysql_query($sql);
+				include("functions/procesa_pagos.php");	
+				echo $error;
+				if($error){
+					$result = "No se pudo abonar la orden";
+				}else{
+					$result = 1;
+					$sql = "UPDATE compra SET 
+								estado=1,
+								nro_orden='".$compras_orden[0]."',
+								factura_nro='".$facturas[$i]."',
+								factura_tipo='".$facturas_tipo[$i]."',
+								factura_orden='".$facturas_orden[$i]."',
+								remito_nro='".$remitos_nro[$i]."',
+								recibo_nro='".$recibos_nro[$i]."'
+							WHERE id=".$compras_id[$i];
+					mysql_query($sql);
+				}
 
 			}
 
-			include("functions/procesa_pagos.php");	
 			
-			if($error){
-				$result = "No se pudo abonar la orden";
-			}else{
-				$result = 1;
-			}
+				
 			
 		}else{
 			if(($operacion_monto+$monto_interes-$monto_descuento) != $monto_pagado){

@@ -56,7 +56,7 @@ $sql = "SELECT
 		FROM tarjeta_movimiento
 		WHERE tarjeta_movimiento.tarjeta_resumen_id=$resumen_id
 		";
-
+//echo $sql;
 $rsTemp = mysql_query($sql); echo mysql_error();
 $rows = array();
 while($rs = mysql_fetch_array($rsTemp)){

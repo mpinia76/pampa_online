@@ -34,16 +34,20 @@ if(isset($_POST['agregar'])){
 						(empleado_id,monto,comentarios,mes,ano,creado_por,creado)
 					VALUES
 						(".$_POST['empleado_id'].",'".$_POST['monto']."','".$_POST['comentarios']."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW())";
-			mysql_query($sql); 
+				mysql_query($sql); 
 		
 			$operacion_id[] = mysql_insert_id();
 			$operacion_tipo = 'sueldo_adelanto';
 			
 			include("functions/procesa_pagos.php");
 			
-			$result = 1;
-			echo "
-			<script>window.open('reciboPDF.php?id=".$operacion_id[0]."&adelanto=1', 'Adelanto de sueldo');</script>";
+				
+			
+			
+				$result = 1;
+				echo "
+				<script>window.open('reciboPDF.php?id=".$operacion_id[0]."&adelanto=1', 'Adelanto de sueldo');</script>";
+			
 			
 		}else{
 			

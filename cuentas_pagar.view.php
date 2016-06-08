@@ -30,10 +30,6 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 		include("functions/comprueba_pagos.php");
 		
 		if($procesa){
-	
-			$result = 1;
-			$sql = "UPDATE cuenta_a_pagar SET estado=1,fecha_pago=NOW() WHERE id=".$_POST['cuenta_id'];
-			mysql_query($sql);
 			
 			$dataid			= $_POST['cuenta_id'];
 			$sql 			= "SELECT * FROM cuenta_a_pagar WHERE id=$dataid";
@@ -42,6 +38,11 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 			$operacion_tipo = $rs_cuenta['operacion_tipo'];
 			
 			include("functions/procesa_pagos.php");
+			if (!$error) {
+				$result = 1;
+				$sql = "UPDATE cuenta_a_pagar SET estado=1,fecha_pago=NOW() WHERE id=".$_POST['cuenta_id'];
+				mysql_query($sql);
+			}
 			
 		}else{
 		//if( ($operacion_monto+$monto_interes-$monto_descuento) == $monto_pagado and $fecha_error == 0 and $error_cheque == false and $error_cheque_numero == false){ $procesa = true; }

@@ -28,7 +28,7 @@ if(isset($_POST['guardar'])){
     if($monto > $cobrado){
         $result = "El monto de devolucion ($monto) no puede ser mayor al monto cobrado ($cobrado)";
     }else{
-        $sql = sprintf("INSERT INTO reserva_devoluciones (reserva_id,usuario_id,forma_pago,fecha,monto,motivo) VALUES (%d,%d,'%s','%s',%d,'%s')",
+       $sql = sprintf("INSERT INTO reserva_devoluciones (reserva_id,usuario_id,forma_pago,fecha,monto,motivo) VALUES (%d,%d,'%s','%s',%d,'%s')",
                 $_POST['reserva_id'],
                 $_POST['usuario_id'],
                 $forma_pago_texto[$_POST['forma_pago']],
@@ -36,11 +36,15 @@ if(isset($_POST['guardar'])){
                 $monto,
                 $_POST['motivo']);
 
-        mysql_query($sql); //echo mysql_error();
+       	 	mysql_query($sql); //echo mysql_error();
         $operacion_tipo = 'reserva_devolucion';
         $operacion_id[] = mysql_insert_id();
         include("functions/procesa_pagos.php");
-        $result = 1;
+        
+        	 
+     	$result = 1;
+        
+        
     }
 }
 ?>

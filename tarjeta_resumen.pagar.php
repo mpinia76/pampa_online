@@ -12,15 +12,16 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del gasto
 	include("functions/comprueba_pagos.php");
 	
 	if($procesa){
-
-		$result = 1;
-		$sql = "UPDATE tarjeta_resumen SET estado=1,fecha_pago=NOW(),monto=$monto_pagado WHERE id=".$_POST['resumen_id'];
-		mysql_query($sql);
 		
 		$operacion_id[] = $_POST['resumen_id'];
 		$operacion_tipo = 'tarjeta_resumen';
 		
 		include("functions/procesa_pagos.php");
+		if (!$error) {
+			$result = 1;
+			$sql = "UPDATE tarjeta_resumen SET estado=1,fecha_pago=NOW(),monto=$monto_pagado WHERE id=".$_POST['resumen_id'];
+			mysql_query($sql);
+		}
 		
 		$resumen_id = $_POST['resumen_id'];
 		
