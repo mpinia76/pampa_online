@@ -11,7 +11,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><label>Cuenta:</label><?php echo $rs['banco']?> <?php echo $rs['cuenta_tipo']?></li>
 <li><label>Numero:</label><?php echo $rs['numero']?></li>
 <li><label>Titular:</label><?php echo $rs['titular']?></li>
-<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_cheque[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_cheque_id[]" value="<?php echo ($rs['id'])?>" /></li>
+<!--  <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_cheque[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_cheque_id[]" value="<?php echo ($rs['id'])?>" /></li>-->
+<li><label>A la fecha:</label><?=fechavista($rs['fecha'])?></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>
 <li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
@@ -27,7 +28,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><h3>Transferencia</h3></li>
 <li><label>Cuenta origen:</label><?php echo $rs['banco']?> <?php echo $rs['cuenta_tipo']?></li>
 <li><label>Cuenta destino:</label><?php echo $rs['cuenta_destino']?></li>
-<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_transferencia[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_transferencia_id[]" value="<?php echo ($rs['id'])?>" /></li>
+<!--  <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_transferencia[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_transferencia_id[]" value="<?php echo ($rs['id'])?>" /></li>-->
+<li><label>A la fecha:</label><?=fechavista($rs['fecha'])?></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>
 <li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
@@ -88,7 +90,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 ?>
 <li><h3>Tarjeta</h3></li>
 <li><label>Tarjeta:</label><?php echo $rs['banco']?> <?php echo $rs['marca']?> <?php echo $rs['titular']?></li>
-<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_tarjeta[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_tarjeta_id[]" value="<?php echo ($rs['id'])?>" /></li>
+<!--  <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_tarjeta[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_tarjeta_id[]" value="<?php echo ($rs['id'])?>" /></li>-->
 <li><label>Comprobante:</label><?php echo $rs['comprobante_nro']?></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>

@@ -60,6 +60,40 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 
 		mysql_query($sql);
 
+	$fecha_cheque 			= $_POST['fecha_cheque'];
+		$fecha_cheque_id 		= $_POST['fecha_cheque_id'];
+		foreach($fecha_cheque as $key=>$valor){
+			$sql = "UPDATE cheque_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_cheque_id[$key];
+	        mysql_query($sql);
+		}
+		
+		$fecha_transferencia 			= $_POST['fecha_transferencia'];
+		$fecha_transferencia_id 		= $_POST['fecha_transferencia_id'];
+		foreach($fecha_transferencia as $key=>$valor){
+			$sql = "UPDATE transferencia_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_transferencia_id[$key];
+	        mysql_query($sql);
+		}
+		
+		$fecha_debito 			= $_POST['fecha_debito'];
+		$fecha_debito_id 		= $_POST['fecha_debito_id'];
+		foreach($fecha_debito as $key=>$valor){
+			$sql = "UPDATE cuenta_movimiento SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_debito_id[$key];
+	        mysql_query($sql);
+		}
+		
+		$fecha_efectivo 			= $_POST['fecha_efectivo'];
+		$fecha_efectivo_id 		= $_POST['fecha_efectivo_id'];
+		foreach($fecha_efectivo as $key=>$valor){
+			$sql = "UPDATE efectivo_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_efectivo_id[$key];
+	        mysql_query($sql);
+		}
+		
+		$fecha_tarjeta 			= $_POST['fecha_tarjeta'];
+		$fecha_tarjeta_id 		= $_POST['fecha_tarjeta_id'];
+		foreach($fecha_tarjeta as $key=>$valor){
+			$sql = "UPDATE tarjeta_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_tarjeta_id[$key];
+	        mysql_query($sql);
+		}
 		
 		$dataid = $_POST['gasto_id'];
 		$_GET['action'] = 'editar';

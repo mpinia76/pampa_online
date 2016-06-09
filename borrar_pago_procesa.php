@@ -28,7 +28,7 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 				$rsTempTarjetaResumen = mysql_query($sql);
 				if(mysql_fetch_array($rsTempTarjetaResumen)){
 					$ok=0;
-					echo "<br>No es posible borrar este pago. Se encuentra incluido en un resumen de tarjeta de cr&eacute;dito que ya se encuentra pago";
+					echo "<br>No es posible borrar este pago. Se encuentra incluido en un resumen de tarjeta de cr&eacute;dito que ya se encuentra ABONADO";
 					break;
 				}
 			}
