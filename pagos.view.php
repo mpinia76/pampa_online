@@ -11,7 +11,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><label>Cuenta:</label><?php echo $rs['banco']?> <?php echo $rs['cuenta_tipo']?></li>
 <li><label>Numero:</label><?php echo $rs['numero']?></li>
 <li><label>Titular:</label><?php echo $rs['titular']?></li>
-<li><label>A la fecha:</label><?php echo fechavista($rs['fecha'])?></li>
+<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_cheque[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_cheque_id[]" value="<?php echo ($rs['id'])?>" /></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>
 <li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
@@ -27,7 +27,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><h3>Transferencia</h3></li>
 <li><label>Cuenta origen:</label><?php echo $rs['banco']?> <?php echo $rs['cuenta_tipo']?></li>
 <li><label>Cuenta destino:</label><?php echo $rs['cuenta_destino']?></li>
-<li><label>A la fecha:</label><?php echo fechavista($rs['fecha'])?></li>
+<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_transferencia[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_transferencia_id[]" value="<?php echo ($rs['id'])?>" /></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>
 <li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
@@ -55,6 +55,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 ?>
 <li><h3>Debito</h3></li>
 <li><label>Cuenta:</label><?php echo $rs['banco']?> <?php echo $rs['cuenta_tipo']?></li>
+<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_debito[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_debito_id[]" value="<?php echo ($rs['id'])?>" /></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>
 <li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
@@ -63,13 +64,15 @@ while($rs = mysql_fetch_array($rsTemp)){
 <!--EFECIVO-->
 <?php 
 $sql = "SELECT caja.caja,efectivo_consumo.* FROM efectivo_consumo INNER JOIN caja ON efectivo_consumo.caja_id = caja.id INNER JOIN rel_pago_operacion ON efectivo_consumo.id=rel_pago_operacion.forma_pago_id AND rel_pago_operacion.forma_pago='efectivo' WHERE rel_pago_operacion.operacion_tipo='$operacion_tipo' AND rel_pago_operacion.operacion_id=$operacion_id";
+//echo $sql;
 $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
 <li><h3>Efectivo</h3></li>
 <li><label>Caja origen:</label><?php echo $rs['caja']?></li>
-<li><label>A la fecha:</label><?php echo fechavista($rs['fecha'])?></li>
+<!--  <li><label>A la fecha:</label><?php echo fechavista($rs['fecha'])?></li>-->
+<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_efectivo[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_efectivo_id[]" value="<?php echo ($rs['id'])?>" /></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>
 <li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
@@ -78,12 +81,14 @@ while($rs = mysql_fetch_array($rsTemp)){
 <!--TARJETA-->
 <?php 
 $sql = "SELECT banco.banco,tarjeta_marca.marca,tarjeta.titular,tarjeta_consumo.* FROM tarjeta_consumo INNER JOIN tarjeta ON tarjeta_consumo.tarjeta_id=tarjeta.id INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id INNER JOIN rel_pago_operacion ON tarjeta_consumo.id=rel_pago_operacion.forma_pago_id AND rel_pago_operacion.forma_pago='tarjeta' WHERE rel_pago_operacion.operacion_tipo='$operacion_tipo' AND rel_pago_operacion.operacion_id=$operacion_id";
+//echo $sql;
 $rsTemp = mysql_query($sql);
 if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
 <li><h3>Tarjeta</h3></li>
 <li><label>Tarjeta:</label><?php echo $rs['banco']?> <?php echo $rs['marca']?> <?php echo $rs['titular']?></li>
+<li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_tarjeta[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_tarjeta_id[]" value="<?php echo ($rs['id'])?>" /></li>
 <li><label>Comprobante:</label><?php echo $rs['comprobante_nro']?></li>
 <li><label>Monto:</label>$<?php echo $rs['monto']?></li>
 <li><label>Interes:</label>$<?php echo $rs['interes']?></li>

@@ -19,8 +19,9 @@ if(isset($_POST['tarjeta'])){
 	if( is_array($operacion_id) and count($operacion_id)>0 ){
 	
 		foreach($tarjeta as $key=>$valor){
-			$sql = "SELECT id FROM tarjeta_resumen WHERE estado = 1 AND CONCAT(ano,'-',mes) >= '".fechasql($tarjeta_fecha[$key])."' AND tarjeta_id = ".$tarjeta_id[$key];
-			echo "<br>".$sql;
+			$part=explode("/",$tarjeta_fecha[$key]);
+			$sql = "SELECT id FROM tarjeta_resumen WHERE estado = 1 AND CONCAT(ano,mes) >= '".$part[2].intval($part[1])."' AND tarjeta_id = ".$tarjeta_id[$key];
+			//echo "<br>".$sql;
 			$rsTempTarjetaResumen = mysql_query($sql);
 			if(mysql_fetch_array($rsTempTarjetaResumen)){
 				$ok=0;

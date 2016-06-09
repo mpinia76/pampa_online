@@ -59,6 +59,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				WHERE id=".$_POST['compra_id'];
 		mysql_query($sql);
 		
+		$tarjeta 			= $_POST['tarjeta'];
+		$tarjeta_id 		= $_POST['tarjeta_tarjeta_id'];
+		
 		$dataid = $_POST['compra_id'];
 		$_GET['action'] = 'editar';
 		

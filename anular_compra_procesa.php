@@ -25,7 +25,9 @@ if(mysql_num_rows(mysql_query($sql)) != 0){
 				$sql = "SELECT fecha FROM tarjeta_consumo_cuota WHERE tarjeta_consumo_id = ".$rsTarjeta['id'];
 				$rsTempTarjetaCuota = mysql_query($sql);
 				while($rsTarjetaCuota = mysql_fetch_array($rsTempTarjetaCuota)){
-					$sql = "SELECT id FROM tarjeta_resumen WHERE estado = 1 AND CONCAT(ano,'-',mes) >= '".$rsTarjetaCuota['fecha']."' AND tarjeta_id = ".$rsTarjeta['tarjeta_id'];
+					$part=explode("-",$rsTarjetaCuota['fecha']);
+					$sql = "SELECT id FROM tarjeta_resumen WHERE estado = 1 AND CONCAT(ano,mes) >= '".$part[0].intval($part[1])."' AND tarjeta_id = ".$rsTarjeta['tarjeta_id'];
+					//echo $sql;
 					$rsTempTarjetaResumen = mysql_query($sql);
 					if(mysql_fetch_array($rsTempTarjetaResumen)){
 						$ok=0;
