@@ -96,6 +96,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 			if((date("Y-m-d")) >= fechasql($valor)){
 				$sql = "UPDATE efectivo_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_efectivo_id[$key];
 		        mysql_query($sql);
+		        $sql = "UPDATE caja_movimiento SET fecha = '".fechasql($valor)."' WHERE registro_id = ".$fecha_efectivo_id[$key];
+		        mysql_query($sql);
 		    }
 			else $result .= 'La fecha del/los pago/s en efectivo debe ser inferior o igual a la fecha de hoy<br>';
 		}
