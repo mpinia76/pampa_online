@@ -58,41 +58,57 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					monto='".$_POST['monto']."'
 				WHERE id=".$_POST['compra_id'];
 		mysql_query($sql);
-		
+		$result = '';
 		$fecha_cheque 			= $_POST['fecha_cheque'];
 		$fecha_cheque_id 		= $_POST['fecha_cheque_id'];
 		foreach($fecha_cheque as $key=>$valor){
-			$sql = "UPDATE cheque_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_cheque_id[$key];
-	        mysql_query($sql);
+			if((date("Y-m-d")) >= fechasql($valor)){
+				$sql = "UPDATE cheque_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_cheque_id[$key];
+		        mysql_query($sql);
+			}
+			else $result .= 'La fecha del/los cheque/s debe ser inferior o igual a la fecha de hoy<br>';
 		}
 		
 		$fecha_transferencia 			= $_POST['fecha_transferencia'];
 		$fecha_transferencia_id 		= $_POST['fecha_transferencia_id'];
 		foreach($fecha_transferencia as $key=>$valor){
-			$sql = "UPDATE transferencia_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_transferencia_id[$key];
-	        mysql_query($sql);
+			if((date("Y-m-d")) >= fechasql($valor)){
+				$sql = "UPDATE transferencia_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_transferencia_id[$key];
+		        mysql_query($sql);
+		    }
+			else $result .= 'La fecha de la/s transferencia/s debe ser inferior o igual a la fecha de hoy<br>';
 		}
 		
 		$fecha_debito 			= $_POST['fecha_debito'];
 		$fecha_debito_id 		= $_POST['fecha_debito_id'];
 		foreach($fecha_debito as $key=>$valor){
-			$sql = "UPDATE cuenta_movimiento SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_debito_id[$key];
-	        mysql_query($sql);
+			if((date("Y-m-d")) >= fechasql($valor)){
+				$sql = "UPDATE cuenta_movimiento SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_debito_id[$key];
+		        mysql_query($sql);
+		    }
+			else $result .= 'La fecha del/los debito/s debe ser inferior o igual a la fecha de hoy<br>';
 		}
 		
 		$fecha_efectivo 			= $_POST['fecha_efectivo'];
 		$fecha_efectivo_id 		= $_POST['fecha_efectivo_id'];
 		foreach($fecha_efectivo as $key=>$valor){
-			$sql = "UPDATE efectivo_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_efectivo_id[$key];
-	        mysql_query($sql);
+			if((date("Y-m-d")) >= fechasql($valor)){
+				$sql = "UPDATE efectivo_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_efectivo_id[$key];
+		        mysql_query($sql);
+		    }
+			else $result .= 'La fecha del/los pago/s en efectivo debe ser inferior o igual a la fecha de hoy<br>';
 		}
 		
 		$fecha_tarjeta 			= $_POST['fecha_tarjeta'];
 		$fecha_tarjeta_id 		= $_POST['fecha_tarjeta_id'];
 		foreach($fecha_tarjeta as $key=>$valor){
-			$sql = "UPDATE tarjeta_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_tarjeta_id[$key];
-	        mysql_query($sql);
+			if((date("Y-m-d")) >= fechasql($valor)){
+				$sql = "UPDATE tarjeta_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_tarjeta_id[$key];
+		        mysql_query($sql);
+		    }
+			else $result .= 'La fecha del/los pago/s con tarjeta debe ser inferior o igual a la fecha de hoy<br>';
 		}
+		$result = ($result=='')?1:$result;
 		
 		$dataid = $_POST['compra_id'];
 		$_GET['action'] = 'editar';
@@ -240,6 +256,23 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 			}
 		});
 	}
+	function inicializarCalendario() {
+
+		var ToEndDate = new Date();	
+
+		var fullDate = new Date()
+		var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+		 
+		var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+
+		$('.dp-applied').datePicker({
+		
+		    weekStart: 1,
+		    startDate: '01/01/2010',
+		    endDate: currentDate, 
+		    autoclose: true
+		})
+	}	
 	</script>
 	<script type="text/javascript">
 	function addFormaDePago(forma_pago_id){
@@ -292,7 +325,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	</script>
 	</head>
 	
-	<body>
+	<body onload="inicializarCalendario()">
 	<?php  if( isset($_POST['guardar']) or isset($_POST['actualizar']) or isset($_POST['aprobar']) or isset($_POST['desaprobar']) ) { ?>
 	<script>
 	var dhxWins = parent.dhxWins;
