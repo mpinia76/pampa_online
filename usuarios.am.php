@@ -41,28 +41,35 @@ $campos['password'] 		= array(
 								'label' 			=> 'Password',
 								'requerid' 			=> true
 							);
-$campos['espacio_trabajo_id'] = array(
-								'type'				=> 'combo',
-								'label'				=> 'Espacio de Trabajo',
-								'tabla'				=> 'espacio_trabajo',
-								'campo_id'			=> 'id',
-								'campo'				=> 'espacio',
-								'requerid' 			=> true
-							);
-
-
-$campos['admin']            = array(
-								'type'				=> 'checkbox',
-								'label'				=> 'Administrador',
-								'requerid' 			=> true
-							);
+if(!$_GET['comun']){
+	$campos['espacio_trabajo_id'] = array(
+									'type'				=> 'combo',
+									'label'				=> 'Espacio de Trabajo',
+									'tabla'				=> 'espacio_trabajo',
+									'campo_id'			=> 'id',
+									'campo'				=> 'espacio',
+									'requerid' 			=> true
+								);
+	
+	
+	$campos['admin']            = array(
+									'type'				=> 'checkbox',
+									'label'				=> 'Administrador',
+									'requerid' 			=> true
+								);
+}
 			
 
 include_once("functions/common.php");
 
 $form = new Form();
 $form->setLegend('Datos del usuario'); //nombre del form
-$form->setAction('usuarios.am.php'); //a donde hacer el post
+if(!$_GET['comun']){
+	$form->setAction('usuarios.am.php'); //a donde hacer el post
+}
+else{
+	$form->setAction('usuarios.am.php?comun=1&extras=off'); //a donde hacer el post
+}
 
 if(isset($dataid)){
 
