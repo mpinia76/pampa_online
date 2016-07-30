@@ -235,7 +235,9 @@ function agregar_descuento(){
 
 function agregar_cobro(){ 
     $('.error-message').remove();
+    $('#btn_agregar_cobro').hide();
     $.ajax({
+    	
         url : '<?php echo $this->Html->url('/reserva_cobros/validar.json', true);?>',
         dataType: 'json',
         type: 'post',
@@ -271,6 +273,7 @@ function agregar_cobro(){
                         var aurl = '<?php echo $this->Html->url('/cobro_transferencias/agregar/'.$usuario['Usuario']['id'], true);?>';
                         break;
                 }
+                
                 $.ajax({
                     url : aurl,
                     type: 'post',
@@ -280,9 +283,11 @@ function agregar_cobro(){
                         $('#forma_cobro').hide();
                         $('#descuento').hide();
                         $('#cobro_tipos').html(data);
+                        
                     }
                 })
             }
+            $('#btn_agregar_cobro').show();
         }
     })
 }
