@@ -198,11 +198,11 @@ LEFT JOIN caja ON cm.caja_id = caja.id
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
        $rsTemp = mysql_query($sql);
        if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo = mysql_fetch_array($rsTemp)){ 
-       			if ($rsSueldo['monto']) {
-			        $caja = ($rsSueldo['caja'])? 'Caja: '.$rsSueldo['caja']:'';
-			        $cuenta = ($rsSueldo['sucursal'])? 'Cuenta: '.$rsSueldo['banco'].' ('.$rsSueldo['sucursal'].') '.$rsSueldo['nombre']:'';
-			        ?><br> En efectivo $<?php echo $rsSueldo['monto'].' '.$caja.' '.$cuenta;
+       		while($rsSueldo1 = mysql_fetch_array($rsTemp)){ 
+       			if ($rsSueldo1['monto']) {
+			        $caja = ($rsSueldo1['caja'])? 'Caja: '.$rsSueldo1['caja']:'';
+			        $cuenta = ($rsSueldo1['sucursal'])? 'Cuenta: '.$rsSueldo1['banco'].' ('.$rsSueldo1['sucursal'].') '.$rsSueldo1['nombre']:'';
+			        ?><br> En efectivo $<?php echo $rsSueldo1['monto'].' '.$caja.' '.$cuenta;
        			}
        		}
        }
@@ -215,9 +215,9 @@ WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND 
         
         $rsTemp = mysql_query($sql);
        if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo = mysql_fetch_array($rsTemp)){ 
-	        if ($rsSueldo['monto']) {
-	        	echo "<br>"?> Con cheque $<?php echo $rsSueldo['monto'];
+       		while($rsSueldo2 = mysql_fetch_array($rsTemp)){ 
+	        if ($rsSueldo2['monto']) {
+	        	echo "<br>"?> Con cheque $<?php echo $rsSueldo2['monto'];
 	        }
 	        
        		}
@@ -230,9 +230,9 @@ LEFT JOIN transferencia_consumo ec ON rpo.forma_pago_id = ec.id
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
         $rsTemp = mysql_query($sql);
        if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo = mysql_fetch_array($rsTemp)){ 
-       			if ($rsSueldo['monto']) {
-	        		echo "<br>"?> Con transferencia $<?php echo $rsSueldo['monto'];
+       		while($rsSueldo3 = mysql_fetch_array($rsTemp)){ 
+       			if ($rsSueldo3['monto']) {
+	        		echo "<br>"?> Con transferencia $<?php echo $rsSueldo3['monto'];
        			}
 	       	}
        }
@@ -245,11 +245,11 @@ LEFT JOIN banco ON cuenta.banco_id = banco.id
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
        $rsTemp = mysql_query($sql);
        if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo = mysql_fetch_array($rsTemp)){ 
-       			if ($rsSueldo['monto']) {
-			        $caja = ($rsSueldo['caja'])? 'Caja: '.$rsSueldo['caja']:'';
-			        $cuenta = ($rsSueldo['sucursal'])? 'Cuenta: '.$rsSueldo['banco'].' ('.$rsSueldo['sucursal'].') '.$rsSueldo['nombre']:'';
-			        echo "<br>"?> Con debito $<?php echo $rsSueldo['monto'].' '.$caja.' '.$cuenta;
+       		while($rsSueldo4 = mysql_fetch_array($rsTemp)){ 
+       			if ($rsSueldo4['monto']) {
+			        $caja = ($rsSueldo4['caja'])? 'Caja: '.$rsSueldo4['caja']:'';
+			        $cuenta = ($rsSueldo4['sucursal'])? 'Cuenta: '.$rsSueldo4['banco'].' ('.$rsSueldo4['sucursal'].') '.$rsSueldo4['nombre']:'';
+			        echo "<br>"?> Con debito $<?php echo $rsSueldo4['monto'].' '.$caja.' '.$cuenta;
        			}
 	       	}
        }

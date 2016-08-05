@@ -29,10 +29,10 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
     <div class="ym-g25 ym-gl"><?php echo $this->Form->input('Extra.extra_rubro_id',array('label' => 'Seleccione un rubro', 'options' => $extra_rubros, 'empty' => 'Rubro', 'type'=>'select')); ?></div>
     <div class="ym-g75 ym-gl" id="extra_detalle"></div>
 </div>
-<? } ?>
+<?php  } ?>
 <div class="ym-gbox">
     <table width="100%" id="reserva_extras">
-            <?$total_extras = 0; 
+            <?php $total_extras = 0; 
                 if(count($extras) > 0){ 
                     foreach($extras as $extra){ 
                         if($extra['Extra']['id'] != ''){
@@ -57,10 +57,10 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
                                 <?php } ?>
                             </tr>
                        <?php } ?>
-            <? }} ?>
+            <?php  }} ?>
     </table>
 </div>
-<div id="reserva_extras" class="ym-gbox extras_totales"  style="<? if(count($extras) == 0){  ?> display: none; <? } ?> text-align: right;">
+<div id="reserva_extras" class="ym-gbox extras_totales"  style="<?php  if(count($extras) == 0){  ?> display: none; <?php  } ?> text-align: right;">
     <strong>Total extras $<span class="extra_total"><?php echo $total_extras;?></span></strong></td>
 </div>
 <div class="sectionTitle">Cobros</div>
@@ -91,7 +91,8 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
                     <td><a onclick="createWindow('w_reservas_view_cobro','Detalles','<?php echo $this->Html->url('/reserva_cobros/detalle/'.$cobro['ReservaCobro']['id'], true);?>','430','400');"><?php echo $tarjetas_tipo[$cobro['CobroTarjeta']['cobro_tarjeta_tipo_id']]?> - <?php echo $cobro['CobroTarjeta']['tarjeta_numero']?> <?php echo $cobro['CobroTarjeta']['cuotas']?> cuota/s</a></td>
                     <td align="right">$<?php echo $cobro['CobroTarjeta']['monto_neto']?></td>
                     <td align="right">$<?php echo $cobro['CobroTarjeta']['interes']?></td>
-                    <td align="right">$<?php echo $cobro['CobroTarjeta']['monto_neto'] + $cobro['CobroTarjeta']['interes']?></td>                    
+                    <td align="right">$<?php echo $cobro['CobroTarjeta']['monto_neto'] + $cobro['CobroTarjeta']['interes']?></td>   
+                                     
                 </tr>
                 <?php $pagado = $pagado + $cobro['CobroTarjeta']['monto_neto']; $intereses = $intereses + $cobro['CobroTarjeta']['interes']; break; 
                 
@@ -116,6 +117,7 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
                     <td align="right">$<?php echo $cobro['CobroEfectivo']['monto_neto']?></td>
                     <td align="right">$0</td>
                     <td align="right">$<?php echo $cobro['CobroEfectivo']['monto_neto']?></td>
+                    <td><a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
                 </tr>
                 <?php $pagado = $pagado + $cobro['CobroEfectivo']['monto_neto']; break; 
             

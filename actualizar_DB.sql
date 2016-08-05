@@ -446,3 +446,6 @@ INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (7, 'Administrador d
 ##############################################23/05/2016#######################################################
 ALTER TABLE `cuenta_a_pagar`
 	CHANGE COLUMN `fecha_pago` `fecha_pago` DATE NULL AFTER `monto`;
+	
+##############################################05/08/2016#######################################################
+INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (21, 'Borrado de cobros');

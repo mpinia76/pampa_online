@@ -102,6 +102,7 @@ if(count($reserva_descuentos) > 0){  ?>
     </div>
     <div class="ym-g25 ym-gl">
         <span id="btn_agregar_cobro" style="margin-top: 15px;" class="boton agregar" onclick="agregar_cobro();">+ agregar</span>
+        <span id="btn_agregar_cobro2" style="margin-top: 15px;display:none" class="boton agregar" >Procesando...</span>
     </div>
 </div>
 <?php } ?>
@@ -236,6 +237,7 @@ function agregar_descuento(){
 function agregar_cobro(){ 
     $('.error-message').remove();
     $('#btn_agregar_cobro').hide();
+    $('#btn_agregar_cobro2').show();
     $.ajax({
     	
         url : '<?php echo $this->Html->url('/reserva_cobros/validar.json', true);?>',
@@ -288,6 +290,7 @@ function agregar_cobro(){
                 })
             }
             $('#btn_agregar_cobro').show();
+            $('#btn_agregar_cobro2').hide();
         }
     })
 }
