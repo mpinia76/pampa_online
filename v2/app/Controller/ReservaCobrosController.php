@@ -1,4 +1,5 @@
 <?php
+session_start();
 class ReservaCobrosController extends AppController {
     
     public $components = array('Mpdf'); 
@@ -243,8 +244,44 @@ class ReservaCobrosController extends AppController {
         $this->ReservaCobro->delete($this->request->data['cobro_id'],true);
         
         $this->set('resultado','OK');
-        $this->set('mensaje','Cobro eliminado');
+        $this->set('mensaje','Descuento eliminado');
         $this->set('detalle','');
+        
+        $this->set('_serialize', array(
+            'resultado',
+            'mensaje' ,
+            'detalle' 
+        ));
+    }
+    
+	public function eliminarCobro(){
+		$user_id = $_SESSION['userid'];
+        $user = $this->Usuario->find('first',array('conditions'=>array('Usuario.id'=>$_SESSION['userid'])));
+       	$tienePermiso=1;	
+        if ($user['Usuario']['admin'] != '1'){
+	        $this->loadModel('UsuarioPermiso');
+	        $permisos = $this->UsuarioPermiso->findAllByUsuarioId($user_id);
+	        $tienePermiso=0;
+	    	foreach($permisos as $permiso){
+	               if ($permiso['UsuarioPermiso']['permiso_id']==101) {
+	               		$tienePermiso=1;
+	               		continue;
+	               }
+	        }
+        }
+        if ($tienePermiso) {
+        	$this->ReservaCobro->delete($this->request->data['cobro_id'],true);
+        
+	        $this->set('resultado','OK');
+	        $this->set('mensaje','Cobro eliminado');
+	        $this->set('detalle','');
+        }
+        else{
+        	$this->set('resultado','ERROR');
+	        $this->set('mensaje','Cobro no eliminado');
+	        $this->set('detalle','No tiene permiso');
+        }
+        
         
         $this->set('_serialize', array(
             'resultado',

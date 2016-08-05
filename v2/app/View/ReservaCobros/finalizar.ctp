@@ -85,7 +85,7 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
             switch($cobro['ReservaCobro']['tipo']){
                 case  'TARJETA': ?>
                 <tr>
-                    <td><a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
+                    <td><a onclick="eliminarCobro('<?php echo $cobro['ReservaCobro']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;<a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
                     <td><?php echo $cobro['ReservaCobro']['fecha']?></td>
                     <td><?php echo $cobro['ReservaCobro']['tipo']?></td>
                     <td><a onclick="createWindow('w_reservas_view_cobro','Detalles','<?php echo $this->Html->url('/reserva_cobros/detalle/'.$cobro['ReservaCobro']['id'], true);?>','430','400');"><?php echo $tarjetas_tipo[$cobro['CobroTarjeta']['cobro_tarjeta_tipo_id']]?> - <?php echo $cobro['CobroTarjeta']['tarjeta_numero']?> <?php echo $cobro['CobroTarjeta']['cuotas']?> cuota/s</a></td>
@@ -98,7 +98,7 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
                 
                 case 'CHEQUE': ?>
                 <tr>
-                    <td><a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
+                    <td><a onclick="eliminarCobro('<?php echo $cobro['ReservaCobro']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;<a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
                     <td><?php echo $cobro['ReservaCobro']['fecha']?></td>
                     <td><?php echo $cobro['ReservaCobro']['tipo']?></td>
                     <td><a onclick="createWindow('w_reservas_view_cobro','Detalles','<?php echo $this->Html->url('/reserva_cobros/detalle/'.$cobro['ReservaCobro']['id'], true);?>','430','400');"><?php echo $cobro['CobroCheque']['banco']?> <?php echo substr($cobro['CobroCheque']['numero'],strlen($cobro['CobroCheque']['numero'])-4);?> </a></td>
@@ -110,20 +110,20 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
             
                 case 'EFECTIVO': ?>
                 <tr>
-                    <td ><a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
+                    <td ><a onclick="eliminarCobro('<?php echo $cobro['ReservaCobro']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;<a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
                     <td><?php echo $cobro['ReservaCobro']['fecha']?></td>
                     <td><?php echo $cobro['ReservaCobro']['tipo']?></td>
                     <td> a <?php echo $cajas[$cobro['CobroEfectivo']['caja_id']]?> </td>
                     <td align="right">$<?php echo $cobro['CobroEfectivo']['monto_neto']?></td>
                     <td align="right">$0</td>
                     <td align="right">$<?php echo $cobro['CobroEfectivo']['monto_neto']?></td>
-                    <td><a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
+                 
                 </tr>
                 <?php $pagado = $pagado + $cobro['CobroEfectivo']['monto_neto']; break; 
             
                 case 'TRANSFERENCIA': ?>
                 <tr>
-                    <td><a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
+                    <td><a onclick="eliminarCobro('<?php echo $cobro['ReservaCobro']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;<a href="<?php echo $this->Html->url('/reserva_cobros/recibo/'.$cobro['ReservaCobro']['id'], true);?>">recibo</a></td>
                     <td><?php echo $cobro['ReservaCobro']['fecha']?></td>
                     <td><?php echo $cobro['ReservaCobro']['tipo']?></td>
                     <td><a onclick="createWindow('w_reservas_view_cobro','Detalles','<?php echo $this->Html->url('/reserva_cobros/detalle/'.$cobro['ReservaCobro']['id'], true);?>','430','400');"> a <?php echo $cuentas[$cobro['CobroTransferencia']['cuenta_id']]?></a></td>
@@ -176,6 +176,7 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
     </div>
     <div class="ym-g25 ym-gl">
         <span id="btn_agregar_cobro" style="margin-top: 15px;" class="boton agregar" onclick="agregar_cobro();">+ agregar</span>
+        <span id="btn_agregar_cobro2" style="margin-top: 15px;display:none" class="boton agregar" >Procesando...</span>
     </div>
 </div>
 <div id="cobro_tipos"></div>
@@ -312,8 +313,27 @@ function quitarExtra(reserva_extra_id){
     location.reload();
 }
 
+function eliminarCobro(cobro_id){
+    if(confirm('Seguro desea eliminar el cobro?')){
+        $.ajax({
+            url : '<?php echo $this->Html->url('/reserva_cobros/eliminarCobro', true);?>',
+            type : 'POST',
+            dataType: 'json',
+            data: {'cobro_id' : cobro_id},
+            success : function(data){
+            	if(data.resultado == 'ERROR'){
+                        alert(data.mensaje+' '+data.detalle);
+                }
+                location.reload();
+            }
+        });
+    }
+}
+
 function agregar_cobro(){ 
     $('.error-message').remove();
+     $('#btn_agregar_cobro').hide();
+    $('#btn_agregar_cobro2').show();
     $.ajax({
         url : '<?php echo $this->Html->url('/reserva_cobros/validar.json', true);?>',
         dataType: 'json',
@@ -362,6 +382,8 @@ function agregar_cobro(){
                     }
                 })
             }
+            $('#btn_agregar_cobro').show();
+            $('#btn_agregar_cobro2').hide();
         }
     })
 }

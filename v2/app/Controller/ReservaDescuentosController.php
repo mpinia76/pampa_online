@@ -39,5 +39,19 @@ class ReservaDescuentosController extends AppController {
             'detalle' 
         ));
     }
+    
+	public function eliminar(){
+        $this->ReservaDescuento->delete($this->request->data['cobro_id'],true);
+        
+        $this->set('resultado','OK');
+        $this->set('mensaje','Cobro eliminado');
+        $this->set('detalle','');
+        
+        $this->set('_serialize', array(
+            'resultado',
+            'mensaje' ,
+            'detalle' 
+        ));
+    }
 }
 ?>

@@ -25,7 +25,7 @@ class ReservasController extends AppController {
     public function index_restringido(){
 	   $this->layout = 'index';
 	   $_SESSION['restricted'] = 'true';
-	   if(sizeof($this->data['year'])>0){
+	   if((isset($this->data['year']))&&(sizeof($this->data['year']))>0){
           $_SESSION['year'] = array_pop($this->data['year']);
           $_SESSION['month'] = $this->data['month'];
 		}else{
