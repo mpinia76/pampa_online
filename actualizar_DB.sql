@@ -449,3 +449,4 @@ ALTER TABLE `cuenta_a_pagar`
 	
 ##############################################05/08/2016#######################################################
 INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (20, 'Borrado de cobros');
+INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (19, 'Pagar meses atrasados');

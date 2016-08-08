@@ -27,7 +27,7 @@ if(isset($_POST['agregar'])){
                   $mes_anterior = $today->format('m');
                   $ano_anterior = $today->format('Y');
                   
-	if(!$pagado[$_POST['ano']."_".$_POST['mes']] and (($_POST['ano'] == $ano_anterior and $_POST['mes'] == $mes_anterior) or ($_POST['ano'] ==  date('Y') and $_POST['mes'] == date('m')) ) ){
+	if(!$pagado[$_POST['ano']."_".$_POST['mes']] and ((ACCION_102) or (($_POST['ano'] == $ano_anterior and $_POST['mes'] == $mes_anterior) or ($_POST['ano'] ==  date('Y') and $_POST['mes'] == date('m')) ) )){
 	
                         $operacion_monto = $_POST['monto_pendiente']-$_POST['descuentos'];
                    
