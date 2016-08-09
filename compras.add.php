@@ -149,7 +149,7 @@ function valida(F) {
 			
 	var datos = ({
 		'monto' : F.monto.value,
-		'proveedor' : F.proveedor.value,
+		'fecha' : F.fecha.value,
 		'factura_nro' : F.factura_nro.value,
 		'tabla' : 'compra'
 	});
@@ -164,14 +164,14 @@ function valida(F) {
 		success: function(data) {
 		
 			if(data["siMonto"] == 'si'){		
-				if(confirm("El dia "+data["fecha"]+" existe una compra por $"+F.monto.value+" con "+data["proveedor"]+"!  \n \n Continuar?")) {
+				if(confirm("En el dia "+F.fecha.value+" ya existe una compra por $"+F.monto.value+"!  \n \n Continuar?")) {
 					F.submit();
 				}else{
 					$('#loading').hide();
 				}
 			}else{
 				if(data["siFactura"] == 'si'){		
-					if(confirm("El dia "+data["fecha"]+" existe una compra con nro de factura "+data["factura_tipo"]+" "+data["factura_orden"]+"-"+data["factura_nro"]+" con "+data["proveedor"]+"!  \n \n Continuar?")) {
+					if(confirm("En el dia "+F.fecha.value+" ya existe una compra con nro de factura "+data["factura_tipo"]+" "+data["factura_orden"]+"-"+data["factura_nro"]+"!  \n \n Continuar?")) {
 						F.submit();
 					}else{
 						$('#loading').hide();

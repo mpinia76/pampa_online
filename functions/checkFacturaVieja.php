@@ -1,12 +1,12 @@
 <?php
 $monto 	= $_GET['monto'];
 $tabla	= $_GET['tabla'];
-$fecha	= $_GET['fecha'];
+$proveedor	= $_GET['proveedor'];
 $factura_nro	= $_GET['factura_nro'];
 $result = "";
 include_once("../config/db.php");
-include_once("fechasql.php");
-$sql = "SELECT p.nombre as proveedor, c.id as id, c.fecha FROM $tabla c LEFT JOIN proveedor p ON c.proveedor = p.id WHERE c.fecha='".fechasql($fecha)."' AND c.monto ='".$monto."'";
+
+$sql = "SELECT p.nombre as proveedor, c.id as id, c.fecha FROM $tabla c LEFT JOIN proveedor p ON c.proveedor = p.id WHERE c.proveedor='".$proveedor."' AND c.monto ='".$monto."'";
 	$rs = mysql_fetch_array(mysql_query($sql));
 	//echo $sql;
 	if ($rs['id']) {
@@ -18,7 +18,7 @@ $sql = "SELECT p.nombre as proveedor, c.id as id, c.fecha FROM $tabla c LEFT JOI
 	}
 	else{
 		$result['siMonto']='no';
-		$sql = "SELECT p.nombre as proveedor, c.id as id, c.fecha, c.factura_tipo, case c.factura_orden  when 'B' then '0001' ELSE '0002' end as factura_orden, c.factura_nro FROM $tabla c LEFT JOIN proveedor p ON c.proveedor = p.id WHERE c.fecha='".fechasql($fecha)."' AND c.factura_nro LIKE '%".$factura_nro."%'";
+		$sql = "SELECT p.nombre as proveedor, c.id as id, c.fecha, c.factura_tipo, case c.factura_orden  when 'B' then '0001' ELSE '0002' end as factura_orden, c.factura_nro FROM $tabla c LEFT JOIN proveedor p ON c.proveedor = p.id WHERE c.proveedor='".$proveedor."' AND c.factura_nro LIKE '%".$factura_nro."%'";
 		$rs = mysql_fetch_array(mysql_query($sql));
 		if ($rs['id']) {
 			$result['siFactura']='si';
