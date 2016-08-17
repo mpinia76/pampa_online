@@ -165,14 +165,15 @@ function valida(F) {
 		success: function(data) {
 		
 			if(data["siMonto"] == 'si'){		
-				if(confirm("En el dia "+F.fecha.value+" ya existe un gasto por $"+F.monto.value+"!  \n \n Continuar?")) {
+				//if(confirm("Para la fecha de devengado "+F.fecha.value+", existe un gasto de id&eacute;ntico monto ($"+F.monto.value+"), para el proveedor ("+data["proveedor"]+")!  \n \n Continuar?")) {
+				if(confirm("Para la fecha de devengado "+F.fecha.value+", existe un gasto de identico monto ($"+F.monto.value+"), para el proveedor ("+data["proveedor"]+") con nro. de factura "+data["factura_tipo"]+" "+data["factura_orden"]+"-"+data["factura_nro"]+". Controle que no este intentando cargar nuevamente la factura detallada en este mensaje!  \n \n Continuar?")) {
 					F.submit();
 				}else{
 					$('#loading').hide();
 				}
 			}else{
 				if(data["siFactura"] == 'si'){		
-					if(confirm("En el dia "+F.fecha.value+" ya existe un gasto con nro de factura "+data["factura_tipo"]+" "+data["factura_orden"]+"-"+data["factura_nro"]+"!  \n \n Continuar?")) {
+					if(confirm("Para la fecha de devengado "+data["fecha"]+", existe un gasto para el proveedor ("+data["proveedor"]+") con nro de factura "+data["factura_tipo"]+" "+data["factura_orden"]+"-"+data["factura_nro"]+". Controle que no este intentando cargar nuevamente la factura detallada en este mensaje!  \n \n Continuar?")) {
 						F.submit();
 					}else{
 						$('#loading').hide();
