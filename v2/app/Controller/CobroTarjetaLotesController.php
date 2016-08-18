@@ -14,7 +14,7 @@ class CobroTarjetaLotesController extends AppController {
      public function get_lotes_cobro_tarjetas() {
 
         $result = Cache::read('get_lotes_cobro_tarjetas', 'long');
-            if (!$lotes) {
+            if (!$result) {
                 $lotes = $this->CobroTarjeta->find('all',array('fields'=>array('CobroTarjeta.*', 'CobroTarjetaTipo.*','CobroTarjetaLote.*', 'sum(CobroTarjeta.interes + CobroTarjeta.monto_neto) as monto_total, count(CobroTarjeta.id) as operaciones'), 'group' => array('CobroTarjeta.cobro_tarjeta_tipo_id', 'CobroTarjeta.lote'), 'conditions' => array( 'CobroTarjeta.lote !=' => '' ), 'recursive' => 2));
                 Cache::write('get_lotes_cobro_tarjetas', $lotes, 'long');
             }

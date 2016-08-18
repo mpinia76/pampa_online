@@ -54,18 +54,7 @@ class CobroTransferencia extends AppModel {
        }
    }
    
-//aplicar en movimiento de cajas
-    public function afterSave($created){
-        if($created){
-            $CuentaMovimiento = ClassRegistry::init('CuentaMovimiento');
-            $cobroTransferencia = $this->read();
-            $CuentaMovimiento->set('origen','reservatransferencia_'.$cobroTransferencia['CobroTransferencia']['id']);
-            $CuentaMovimiento->set('cuenta_id',$cobroTransferencia['CobroTransferencia']['cuenta_id']);
-            $CuentaMovimiento->set('monto',$cobroTransferencia['CobroTransferencia']['monto_neto']);
-            $CuentaMovimiento->set('fecha',$cobroTransferencia['ReservaCobro']['fecha']);
-            $CuentaMovimiento->save();
-        }
-    }
+
     
     public function beforeSave($options = Array()) {
         if (!empty($this->data['CobroTransferencia']['fecha_acreditado'])) {

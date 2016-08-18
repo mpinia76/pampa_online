@@ -284,7 +284,7 @@ class ReservaCobrosController extends AppController {
 	            case 'TRANSFERENCIA':
 	            	//print_r($cobro['CobroTransferencia']);
 	               $this->loadModel('CuentaMovimiento');
-	           		$this->CuentaMovimiento->deleteAll(array('origen' => 'reservatransferencia_'.$cobro['CobroTransferencia']['id']), false);
+	           		$this->CuentaMovimiento->deleteAll(array('cuenta_id' => $cobro['CobroTransferencia']['cuenta_id'],'origen' => 'reservatransferencia_'.$cobro['CobroTransferencia']['id']), false);
 	                break;
 	        }
         	$this->ReservaCobro->delete($this->request->data['cobro_id'],true);
