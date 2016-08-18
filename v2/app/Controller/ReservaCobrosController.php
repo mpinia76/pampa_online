@@ -277,30 +277,14 @@ class ReservaCobrosController extends AppController {
 	                //print_r($cobro['CobroEfectivo']);
 	                $this->loadModel('CajaMovimiento');
 	           		$this->CajaMovimiento->deleteAll(array('origen' => 'reservacobro_'.$cobro['CobroEfectivo']['id']), false);
-					$this->loadModel('CobroEfectivo');
-	                $this->CobroEfectivo->delete($cobro['CobroEfectivo']['id'],true);
+					
 	                break;
-	            case 'TARJETA':
-	                $this->loadModel('CobroTarjetaTipo');
-	                $this->CobroTarjetaTipo->id = $cobro['CobroTarjeta']['cobro_tarjeta_tipo_id'];
-	                $this->set('tarjeta_tipo',$this->CobroTarjetaTipo->read());
-	                break;
-	            case 'CHEQUE':
-	                $this->set('tipos',array('COMUN' => 'Comun','DIFERIDO' => 'Diferido'));
-	                break;
+	            
+	           
 	            case 'TRANSFERENCIA':
-	                $this->loadModel('Usuario');
-	                $this->Usuario->id = $_COOKIE['userid'];
-	                $usuario = $this->Usuario->read();
-	
-	                $this->loadModel('Banco');
-	                $bancos = $this->Banco->find('list');
-	
-	                $cuentas = array();
-	                foreach($usuario['Cuentas'] as $cuenta){
-	                    $cuentas[$cuenta['id']] = $bancos[$cuenta['banco_id']]." ".$cuenta['nombre'];
-	                }
-	                $this->set('cuentas',$cuentas);
+	            	//print_r($cobro['CobroTransferencia']);
+	               $this->loadModel('CuentaMovimiento');
+	           		$this->CuentaMovimiento->deleteAll(array('origen' => 'reservatransferencia_'.$cobro['CobroTransferencia']['id']), false);
 	                break;
 	        }
         	$this->ReservaCobro->delete($this->request->data['cobro_id'],true);

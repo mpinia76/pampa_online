@@ -141,6 +141,11 @@ function valida(F) {
 	F.proveedor.focus();
 	return false
 	}
+	if(F.factura_nro.value.length < 4) {
+	alert("Ingrese al menos 4 digitos en el nro de factura")
+	F.factura_nro.focus();
+	return false
+	}
 	if(vacio(F.monto.value) == false) {
 	alert("El monto es obligatorio")
 	F.monto.focus();
