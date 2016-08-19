@@ -121,7 +121,8 @@ class ReservasController extends AppController {
                     $facturado += $factura['monto'];
                 }
             }
-            $pendiente = round($reserva['Reserva']['total'] + $no_adelantadas - $descontado - $pagado + $devoluciones,2);
+            $pendiente = round(round($reserva['Reserva']['total'],2) + round($no_adelantadas,2) - round($descontado,2) - round($pagado,2) + round($devoluciones,2),2);
+            $pendiente = ($pendiente==-0)?0:$pendiente;
             $total = $reserva['Reserva']['total'] + $no_adelantadas - $descontado;
 
             switch($reserva['Reserva']['estado']){
