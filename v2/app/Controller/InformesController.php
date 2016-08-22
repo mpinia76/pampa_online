@@ -362,8 +362,8 @@ class InformesController extends AppController {
         $meses = array('01'=>'Enero', '02'=> 'Febrero','03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto', '09' => 'Septiembre', 10=>'Octubre', 11=> 'Noviembre', 12=>'Diciembre');
         $this->set('meses',$meses);
         
-        $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
-
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
+		$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '521'), 'recursive' => 2));
         if(count($reservas) > 0){
             
             foreach($reservas as $reserva){
@@ -379,6 +379,7 @@ class InformesController extends AppController {
                 
                 if(count($reserva['ReservaCobro']) > 0){
                     foreach($reserva['ReservaCobro'] as $cobro){
+                    	
                         if($cobro['tipo'] == 'DESCUENTO'){
                             $ventas_netas -= $cobro['monto_neto'];
                         }else{
@@ -392,6 +393,7 @@ class InformesController extends AppController {
                         switch($cobro['tipo']){
                             case 'TARJETA':
                                 $cobro_tarjeta = $this->CobroTarjeta->findById($cobro['CobroTarjeta']['id']);
+                                echo $cobro_tarjeta['CobroTarjeta']['total']."<br>";
                                 if($cobro_tarjeta['CobroTarjetaLote']['acreditado_por'] != 0){
                                     $ventas_netas -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $cobrado[$cobro_tarjeta['CobroTarjetaLote']['ano_mes_acreditado']] += $cobro_tarjeta['CobroTarjeta']['total'];
@@ -401,7 +403,7 @@ class InformesController extends AppController {
                                 break;
                                 
                             case 'EFECTIVO':
-                                $cobrado[$cobro['ano_mes']] += $cobro['CobroEfectivo']['monto_neto'];
+                                //$cobrado[$cobro['ano_mes']] += $cobro['CobroEfectivo']['monto_neto'];
                                 break;
                             
                             case 'TRANSFERENCIA':
