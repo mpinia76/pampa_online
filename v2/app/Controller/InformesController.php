@@ -363,7 +363,7 @@ class InformesController extends AppController {
         $this->set('meses',$meses);
         
         $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
-
+		//$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '521'), 'recursive' => 2));
         if(count($reservas) > 0){
             
             foreach($reservas as $reserva){
@@ -379,6 +379,7 @@ class InformesController extends AppController {
                 
                 if(count($reserva['ReservaCobro']) > 0){
                     foreach($reserva['ReservaCobro'] as $cobro){
+                    	
                         if($cobro['tipo'] == 'DESCUENTO'){
                             $ventas_netas -= $cobro['monto_neto'];
                         }else{
@@ -392,6 +393,7 @@ class InformesController extends AppController {
                         switch($cobro['tipo']){
                             case 'TARJETA':
                                 $cobro_tarjeta = $this->CobroTarjeta->findById($cobro['CobroTarjeta']['id']);
+                                //echo $cobro_tarjeta['CobroTarjeta']['total']."<br>";
                                 if($cobro_tarjeta['CobroTarjetaLote']['acreditado_por'] != 0){
                                     $ventas_netas -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $cobrado[$cobro_tarjeta['CobroTarjetaLote']['ano_mes_acreditado']] += $cobro_tarjeta['CobroTarjeta']['total'];
@@ -427,7 +429,7 @@ class InformesController extends AppController {
                 
                 if(count($reserva['ReservaDevolucion'])>0){
                     foreach($reserva['ReservaDevolucion'] as $devolucion){
-                        $ventas_netas -= $devolucion['monto'];
+                        //$ventas_netas -= $devolucion['monto'];
                         $cobrado[$devolucion['ano_mes']] -= $devolucion['monto'];
                     }
                 }
