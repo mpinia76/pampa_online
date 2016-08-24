@@ -11,19 +11,77 @@ class ReservaExtrasController extends AppController {
         $id = $this->request->data['reserva_extra_id'];
         $this->ReservaExtra->id = $id;
         $reserva_extra = $this->ReservaExtra->read();
-        print_r($reserva_extra);
-        /*if($reserva_extra['ReservaExtra']['extra_id']){
-            $this->ReservaExtra->delete($id);
-        }else if($reserva_extra['ReservaExtra']['extra_variable_id']){
-            $this->loadModel('ExtraVariable');
-            $this->ExtraVariable->delete($reserva_extra['ReservaExtra']['extra_variable_id']);
-            $this->ReservaExtra->delete($id);
-        }*/
-        $this->autoRender = false;
-        $this->set('resultado','ERROR');
-        $this->set('mensaje','Cobro no eliminado');
-        $this->set('detalle','No tiene permiso');
+        $this->loadModel('Reserva');
+        $this->Reserva->id = $reserva_extra['ReservaExtra']['reserva_id'];
+        $reserva = $this->Reserva->read();
+        //print_r($reserva);
+        $adelantadas = 0;
+            $no_adelantadas = 0;
+            $pagado = 0;
+            $fiscal = 0;
+            $descontado = 0;
+            if(count($reserva['ReservaCobro'])>0){
+                foreach($reserva['ReservaCobro'] as $cobro){
+                    if($cobro['tipo'] == 'DESCUENTO'){
+                        $descontado += $cobro['monto_neto'];
+                    }else{
+                        if($cobro['tipo'] == 'TARJETA' or $cobro['tipo'] == 'TRANSFERENCIA'){
+                            $fiscal += $cobro['monto_cobrado'];
+                        }
+                        $pagado += $cobro['monto_neto'];
+                    }
+                }
+            }
+            if(count($reserva['ReservaExtra']>0)){
+                foreach($reserva['ReservaExtra'] as $extra){
+                    if($extra['adelantada'] == 1){
+                        $adelantadas = $adelantadas + $extra['cantidad'] * $extra['precio'];
+                    }else{
+                        $no_adelantadas = $no_adelantadas + $extra['cantidad'] * $extra['precio'];
+                    }
+                }
+            }
+
+            $devoluciones = 0;
+            if(count($reserva['ReservaDevolucion']) > 0){
+                foreach($reserva['ReservaDevolucion'] as $devolucion){
+                    $devoluciones += $devolucion['monto'];
+                }
+            }
+
+            $facturado = 0;
+            if(count($reserva['ReservaFactura']) > 0){
+                foreach($reserva['ReservaFactura'] as $factura){
+                    $facturado += $factura['monto'];
+                }
+            }
+            $pendiente = round(round($reserva['Reserva']['total'],2) + round($no_adelantadas,2) - round($descontado,2) - round($pagado,2) + round($devoluciones,2),2);
+            $pendiente = ($pendiente==-0)?0:$pendiente;
+        if ($pendiente > 0) {
+	        if($reserva_extra['ReservaExtra']['extra_id']){
+	            $this->ReservaExtra->delete($id);
+	        }else if($reserva_extra['ReservaExtra']['extra_variable_id']){
+	            $this->loadModel('ExtraVariable');
+	            $this->ExtraVariable->delete($reserva_extra['ReservaExtra']['extra_variable_id']);
+	            $this->ReservaExtra->delete($id);
+	        }
+	        $this->set('resultado','OK');
+	        $this->set('mensaje','Extra eliminada');
+	        $this->set('detalle','');
+        }    
+        else{    
         
+	        $this->set('resultado','ERROR');
+	        $this->set('mensaje','Extra no eliminado');
+	        $this->set('detalle','ya se cobro la reserva');    
+        }
+        
+        $this->set('_serialize', array(
+            'resultado',
+            'mensaje' ,
+            'detalle' 
+        ));
+       // $this->autoRender = false;
         
     }
     
