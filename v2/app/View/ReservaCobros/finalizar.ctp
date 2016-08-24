@@ -304,13 +304,21 @@ function updateTotal(){
     }
 }
 function quitarExtra(reserva_extra_id){
-    $('#ReservaExtra' + reserva_extra_id).remove();
-    $.ajax({
-        url : '<?php echo $this->Html->url('/reserva_extras/eliminar.json', true);?>',
-        type: 'post',
-        data: { 'reserva_extra_id' : reserva_extra_id}
-    })
-    location.reload();
+    
+    if(confirm('Seguro desea eliminar el extra?')){
+        $.ajax({
+            url : '<?php echo $this->Html->url('/reserva_extras/eliminar', true);?>',
+            type : 'POST',
+            dataType: 'json',
+            data: { 'reserva_extra_id' : reserva_extra_id},
+            success : function(data){
+            	if(data.resultado == 'ERROR'){
+                        alert(data.mensaje+' '+data.detalle);
+                }
+                location.reload();
+            }
+        });
+    }
 }
 
 function eliminarCobro(cobro_id){

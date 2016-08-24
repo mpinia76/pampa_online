@@ -429,7 +429,7 @@ class InformesController extends AppController {
                 
                 if(count($reserva['ReservaDevolucion'])>0){
                     foreach($reserva['ReservaDevolucion'] as $devolucion){
-                        //$ventas_netas -= $devolucion['monto'];
+                        $ventas_netas -= $devolucion['monto'];
                         $cobrado[$devolucion['ano_mes']] -= $devolucion['monto'];
                     }
                 }
