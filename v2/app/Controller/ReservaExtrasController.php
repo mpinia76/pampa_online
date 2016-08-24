@@ -11,17 +11,20 @@ class ReservaExtrasController extends AppController {
         $id = $this->request->data['reserva_extra_id'];
         $this->ReservaExtra->id = $id;
         $reserva_extra = $this->ReservaExtra->read();
+        print_r($reserva_extra);
         /*if($reserva_extra['ReservaExtra']['extra_id']){
             $this->ReservaExtra->delete($id);
         }else if($reserva_extra['ReservaExtra']['extra_variable_id']){
             $this->loadModel('ExtraVariable');
             $this->ExtraVariable->delete($reserva_extra['ReservaExtra']['extra_variable_id']);
             $this->ReservaExtra->delete($id);
-        }
-        $this->autoRender = false;*/
+        }*/
+        $this->autoRender = false;
         $this->set('resultado','ERROR');
         $this->set('mensaje','Cobro no eliminado');
         $this->set('detalle','No tiene permiso');
+        
+        
     }
     
     public function getRow(){
