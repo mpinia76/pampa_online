@@ -367,9 +367,9 @@ class InformesController extends AppController {
         $meses = array('01'=>'Enero', '02'=> 'Febrero','03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto', '09' => 'Septiembre', 10=>'Octubre', 11=> 'Noviembre', 12=>'Diciembre');
         $this->set('meses',$meses);
         
-        $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
         //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2013-03-17'), 'recursive' => 2));
-		//$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '521'), 'recursive' => 2));
+		$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '394'), 'recursive' => 2));
         if(count($reservas) > 0){
             
             foreach($reservas as $reserva){
