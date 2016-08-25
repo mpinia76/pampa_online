@@ -30,6 +30,7 @@ class InformesController extends AppController {
         $this->set('meses',$meses);
         
         $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano), 'recursive' => 2));
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => 1), 'recursive' => 2));
 
         for($i=1; $i<=12; $i++){
             $alojamientos[$i] = 0;
@@ -127,7 +128,8 @@ class InformesController extends AppController {
                             $descuentos[$reserva['Reserva']['mes']] += $cobro['monto_neto'];
                             $ventas_netas[$reserva['Reserva']['mes']] -= $cobro['monto_neto'];
                         }else{
-                            $intereses[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
+                        	
+                            //$intereses[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
                             
                             //si se cancelo la reserva y existieron pagos se transoforma en venta neta el total de los cobros
                             if($reserva['Reserva']['estado'] == 2){
@@ -144,6 +146,7 @@ class InformesController extends AppController {
                                     $ventas_netas[$reserva['Reserva']['mes']] -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $descuentos_tarjetas[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $cobro_posnet[$cobro_tarjeta['CobroTarjetaTipo']['cobro_tarjeta_posnet_id']][$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['total'];
+                                    $intereses[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['total'];
                                 }
@@ -158,6 +161,7 @@ class InformesController extends AppController {
                                 if($cobro['CobroTransferencia']['acreditado']){
                                     $cobro_cuenta[$cobro['CobroTransferencia']['cuenta_id']][$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
                                     $cobrado[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
+                                    $intereses[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
                                 }
@@ -167,6 +171,7 @@ class InformesController extends AppController {
                                 if($cobro['CobroCheque']['acreditado'] or $cobro['CobroCheque']['asociado_a_pagos']){
                                     $cobro_cheque[$cobro['CobroCheque']['tipo']][$reserva['Reserva']['mes']] += $cobro['CobroCheque']['monto_neto'];
                                     $cobrado[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['total'];
+                                    $intereses[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['total'];
                                 }
@@ -179,7 +184,7 @@ class InformesController extends AppController {
                     foreach($reserva['ReservaDevolucion'] as $devolucion){
                         $devoluciones[$reserva['Reserva']['mes']] += $devolucion['monto'];
                         $devoluciones_pago[$devolucion['forma_pago']][$reserva['Reserva']['mes']] -= $devolucion['monto'];
-                        $ventas_netas[$reserva['Reserva']['mes']] -= $devolucion['monto'];
+                        //$ventas_netas[$reserva['Reserva']['mes']] -= $devolucion['monto'];
                     }
                 }
                 
@@ -363,6 +368,7 @@ class InformesController extends AppController {
         $this->set('meses',$meses);
         
         $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2013-03-17'), 'recursive' => 2));
 		//$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '521'), 'recursive' => 2));
         if(count($reservas) > 0){
             
@@ -429,7 +435,7 @@ class InformesController extends AppController {
                 
                 if(count($reserva['ReservaDevolucion'])>0){
                     foreach($reserva['ReservaDevolucion'] as $devolucion){
-                        $ventas_netas -= $devolucion['monto'];
+                        //$ventas_netas -= $devolucion['monto'];
                         $cobrado[$devolucion['ano_mes']] -= $devolucion['monto'];
                     }
                 }

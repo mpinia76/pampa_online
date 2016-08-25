@@ -15,6 +15,6 @@
         <td><?php echo $monto?></td>
         <?php } ?>
         <td><?php echo array_sum($cobrado)?></td>
-        <td><?php echo $ventas_netas - array_sum($cobrado);?></td>
+        <td><?php echo round($ventas_netas,2) - round(array_sum($cobrado),2);?></td>
     </tr>
 </table>
