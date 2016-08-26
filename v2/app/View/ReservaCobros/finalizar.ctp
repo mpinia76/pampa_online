@@ -18,7 +18,7 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
     </div>
     <div class="ym-g50 ym-gl" style="text-align: right; margin-top: 30px;">
         <div class="ym-gbox">
-            <strong>Saldo pendiente previo extas:  $ <?php echo $pendiente_previo; ?> </strong>
+            <strong>Saldo pendiente previo extras:  $ <?php echo $pendiente_previo; ?> </strong>
         </div>
     </div>
 </div>
