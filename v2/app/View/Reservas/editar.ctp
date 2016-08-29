@@ -85,7 +85,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
     <div class="ym-g25 ym-gl"><div id="btn_add_extra" class="ym-gbox" style="margin-top:5px; display:none;"><span onclick="addExtra();" class="boton agregar">+ agregar</span></div></div>
 </div>
 <table width="100%" id="reserva_extras">
-        <?$i = 0;
+        <?php $i = 0;
             $total_extras = 0;
             if(count($extras) > 0){ 
                 foreach($extras as $extra){ 
@@ -100,11 +100,11 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
                         <td><?php echo $extra['Extra']['ExtraSubrubro']['subrubro'];?> <?php echo $extra['Extra']['detalle']; ?></td>
                         <td align="right" width="100"><span class="extra_cantidad"><?php echo $extra['ReservaExtra']['cantidad']?> x $<span class="extra_tarifa"><?php echo $extra['ReservaExtra']['precio']?></span></td>
                         <td align="right" width="50">$<?php echo $extra['ReservaExtra']['cantidad']*$extra['ReservaExtra']['precio']?></td>
-                        <td align="right" width="50"><a onclick="$('#Extra<?php echo $i?>').remove(); updateTotal();">quitar</a></td>
+                        <td align="right" width="50"><a onclick="quitarExtra('<?php echo $extra['ReservaExtra']['id']?>', <?php echo $i?>);">quitar</a></td>
                     </tr>
-        <? }} ?>
+        <?php  }} ?>
 </table>
-<table width="100%" id="reserva_extras" class="extras_totales" <? if($i == 0){  ?> style="display: none;" <? } ?>>
+<table width="100%" id="reserva_extras" class="extras_totales" <?php  if($i == 0){  ?> style="display: none;" <?php  } ?>>
     <tr>
         <td colspan="3" align="right"><strong>Total extras</strong></td>
         <td width="50" align="right">$<span class="extra_total"><?php echo $total_extras;?></span></td>
@@ -174,6 +174,27 @@ function updateTotal(){
     $('.extra_total').html(extra_total);
     if(extra_total == 0){
         $('.extras_totales').hide();
+    }
+}
+
+function quitarExtra(reserva_extra_id, item){
+    
+    if(confirm('Seguro desea eliminar el extra?')){
+        $.ajax({
+            url : '<?php echo $this->Html->url('/reserva_extras/controlarEliminacion', true);?>',
+            type : 'POST',
+            dataType: 'json',
+            data: { 'reserva_extra_id' : reserva_extra_id},
+            success : function(data){
+            	if(data.resultado == 'ERROR'){
+                        alert(data.mensaje+' '+data.detalle);
+                }
+                else{
+                $('#Extra'+item).remove();
+                updateTotal();
+                }
+            }
+        });
     }
 }
 </script>

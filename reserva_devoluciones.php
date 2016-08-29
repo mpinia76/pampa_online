@@ -84,9 +84,9 @@ $sql = "SELECT reservas.*, clientes.*, apartamentos.* FROM reservas INNER JOIN c
 $reserva = mysql_fetch_array(mysql_query($sql));
 ?>
 <div class="info">
-    <strong>Titular: </strong> <?=$reserva['nombre_apellido']?> <br/>
-    <strong>Apartamento: </strong> <?=$reserva['apartamento']?> <br/>
-    <strong>Check In: </strong> <?=fechavista($reserva['check_in'])?> 15:00 hs. <strong>Check Out: </strong> <?=fechavista($reserva['check_out']);?> <?=$reserva['late_check_out']?> hs.
+    <strong>Titular: </strong> <?php echo $reserva['nombre_apellido']?> <br/>
+    <strong>Apartamento: </strong> <?php echo $reserva['apartamento']?> <br/>
+    <strong>Check In: </strong> <?php echo fechavista($reserva['check_in'])?> 15:00 hs. <strong>Check Out: </strong> <?php echo fechavista($reserva['check_out']);?> <?php echo $reserva['late_check_out']?> hs.
 </div>
 <div class="formContainer">
 <form method="post" name="form" action="reserva_devoluciones.php?reserva_id=<?php echo $_GET['reserva_id']; ?>" onsubmit="return valida_form();">
@@ -132,21 +132,21 @@ $reserva = mysql_fetch_array(mysql_query($sql));
                 break;
         } ?>
         <tr>
-            <td><?=fechavista($rs['fecha'])?></td>
-            <td><?=$rs['forma_pago']?></td>
-            <td><?=$detalle?></td>
-            <td><?=$rs['motivo']?></td>
-            <td align="right">$<?=$rs['monto']?></td>
+            <td><?php echo fechavista($rs['fecha'])?></td>
+            <td><?php echo $rs['forma_pago']?></td>
+            <td><?php echo $detalle?></td>
+            <td><?php echo $rs['motivo']?></td>
+            <td align="right">$<?php echo $rs['monto']?></td>
         </tr>
-        <? $total = $total + $rs['monto']; } ?>
+        <?php $total = $total + $rs['monto']; } ?>
         <tr>
-            <td align="right" colspan="5"><strong>Total: $<?=  number_format($total,2)?></strong></td>
+            <td align="right" colspan="5"><strong>Total: $<?php echo number_format($total,2);?></strong></td>
         </tr>
     </table>
-   <? }else{ ?>
+   <?php  }else{ ?>
             <p style="background: #ff;">No se ha registrado ninguna devolucion todavia</p>
-    <? } ?>
-            <? if($reserva['estado'] != 2){ ?>
+    <?php  } ?>
+            <?php  if($reserva['estado'] != 2){ ?>
             <li><label>Fecha:</label><input class="datepicker" name="fecha" type="text" value="<?php echo date('d/m/Y'); ?>"  /></li>
             <li><label>Motivo:</label><input name="motivo" type="text" size="60" /></li>
             <li><label>Forma de pago:</label><select id="forma_pago" name="forma_pago">
@@ -155,21 +155,21 @@ $reserva = mysql_fetch_array(mysql_query($sql));
                 $sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4) ORDER BY forma_pago ";
                 $rsTemp = mysql_query($sql);
                 while($rs = mysql_fetch_array($rsTemp)){?>
-                    <option value="<?=$rs['id']?>"><?=$rs['forma_pago']?></option>
-                <? } ?>
+                    <option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
+                <?php  } ?>
             </select> &nbsp; <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
             <div id="forma_de_pago"></div>
             </ul>
             </fieldset>
             <p align="center"><input type="submit" name="guardar" value="Guardar"/></p>
-            <? }else{?> 
+            <?php  }else{?> 
             </ul>
             </fieldset>
-            <? } ?>
+            <?php  } ?>
         </form>
      </div>
     <script>
-    $.datepicker.regional[ "es" ]
+    $.datepicker.regional[ "es" ];
     $(".datepicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd" });
     $('.datepicker').datepicker();
     $('#forma_pago').change(function(){
