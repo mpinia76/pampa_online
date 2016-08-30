@@ -116,7 +116,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
 
 <div class="ym-grid">
     <div class="ym-g100 ym-gr" class="total_estadia">
-        <div class="ym-gbox"><strong>Total $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total]" id="ReservaTotal" value="<?php echo $reserva['Reserva']['total'];?>" /></div>
+        <div class="ym-gbox"><strong>Tarifa bruta (total estad&iacute;a+extras) $</strong> <input style="width: 100px;" type="hidden" name="data[Reserva][total]" id="ReservaTotal" value="<?php echo $reserva['Reserva']['total'];?>" /><span id="reservaTotalSpan"><?php echo $reserva['Reserva']['total'];?></span></div>
     </div>
 </div>
 
@@ -126,6 +126,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
 </div>
 
 <span id="botonGuardar" onclick="guardar('<?php echo $this->Html->url('/reservas/guardar.json', true);?>',$('form').serialize(),{id:'w_reservas',url:'/v2/reservas/index'});" class="boton guardar">Guardar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>
+<span id="botonGuardarError" class="boton guardar" style="display:none">Realice antes la devolucion correspondiente</span>
 <?php echo $this->Form->end(); ?>
 
 <script>
@@ -172,10 +173,20 @@ function updateTotal(){
         extra_total += parseFloat($('#'+$(obj).parent().parent().parent().attr('id') + ' .extra_cantidad').text()) * parseFloat($(obj).text()); 
     });
     $('#ReservaTotal').val(result);
+    $('#reservaTotalSpan').html(result);
     $('.extra_total').html(extra_total);
     if(extra_total == 0){
         $('.extras_totales').hide();
     }
+    if(parseFloat($('#ReservaTotalEstadia').val())<parseFloat($('#ReservaTotalEstadiaAnt').val())){
+    	 $("#botonGuardar").hide();
+    	 $("#botonGuardarError").show();
+    	//alert("Realice antes la devolucion correspondiente y luego modifique la tarifa de la estadia por el monto de la devolucion");
+    }
+    else {
+    	$("#botonGuardar").show();
+    	 $("#botonGuardarError").hide();
+    	}
    
 }
 
@@ -200,13 +211,5 @@ function quitarExtra(reserva_extra_id, item){
     }
 }
 
-$('#ReservaTotalEstadia').on("blur",function () { 
-    if($('#ReservaTotalEstadia').val()<$('#ReservaTotalEstadiaAnt').val()){
-    	 $("#botonGuardar").attr("disabled", "disabled");
-    	alert("Realice antes la devolucion correspondiente y luego modifique la tarifa de la estadia por el monto de la devolucion");
-    }
-    else {
-    	$("#botonGuardar").removeAttr("disabled", "disabled");
-    	}
-});
+
 </script>

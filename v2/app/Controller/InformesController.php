@@ -128,7 +128,8 @@ class InformesController extends AppController {
                             $descuentos[$reserva['Reserva']['mes']] += $cobro['monto_neto'];
                             $ventas_netas[$reserva['Reserva']['mes']] -= $cobro['monto_neto'];
                         }else{
-                        	
+                        	/*$INT = $cobro['monto_cobrado'] - $cobro['monto_neto'];
+                        	echo $reserva['Reserva']['numero']." - ".$INT."<br>";*/
                             //$intereses[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
                             
                             //si se cancelo la reserva y existieron pagos se transoforma en venta neta el total de los cobros
