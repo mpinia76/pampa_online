@@ -4,6 +4,7 @@ $this->Js->buffer('$.datepicker.regional[ "es" ]');
 $this->Js->buffer('$(".datepicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd" });');
 $this->Js->buffer('$("#ReservaTotalEstadia").keyup(updateTotal)');
 
+
 //formulario
 echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' => (array('div' => 'ym-gbox'))));
 
@@ -72,7 +73,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
 </div>
 <div class="ym-grid">
     <div class="ym-g100 ym-gr" class="total_estadia">
-        <div class="ym-gbox"><strong>Total Estadia $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total_estadia]" id="ReservaTotalEstadia" value="<?php echo $reserva['Reserva']['total_estadia']?>" /></div>
+        <div class="ym-gbox"><strong>Total Estadia $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total_estadia]" id="ReservaTotalEstadia" value="<?php echo $reserva['Reserva']['total_estadia']?>" /><input type="hidden" id="ReservaTotalEstadiaAnt" name="ReservaTotalEstadiaAnt" value="<?php echo $reserva['Reserva']['total_estadia']?>"/></div>
     </div>
 </div>
 
@@ -124,7 +125,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
     <?php echo $this->Form->input('Reserva.comentarios',array('label' => false, 'type' => 'textarea')); ?>
 </div>
 
-<span onclick="guardar('<?php echo $this->Html->url('/reservas/guardar.json', true);?>',$('form').serialize(),{id:'w_reservas',url:'/v2/reservas/index'});" class="boton guardar">Guardar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>
+<span id="botonGuardar" onclick="guardar('<?php echo $this->Html->url('/reservas/guardar.json', true);?>',$('form').serialize(),{id:'w_reservas',url:'/v2/reservas/index'});" class="boton guardar">Guardar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>
 <?php echo $this->Form->end(); ?>
 
 <script>
@@ -175,6 +176,7 @@ function updateTotal(){
     if(extra_total == 0){
         $('.extras_totales').hide();
     }
+   
 }
 
 function quitarExtra(reserva_extra_id, item){
@@ -197,4 +199,14 @@ function quitarExtra(reserva_extra_id, item){
         });
     }
 }
+
+$('#ReservaTotalEstadia').on("blur",function () { 
+    if($('#ReservaTotalEstadia').val()<$('#ReservaTotalEstadiaAnt').val()){
+    	 $("#botonGuardar").attr("disabled", "disabled");
+    	alert("Realice antes la devolucion correspondiente y luego modifique la tarifa de la estadia por el monto de la devolucion");
+    }
+    else {
+    	$("#botonGuardar").removeAttr("disabled", "disabled");
+    	}
+});
 </script>
