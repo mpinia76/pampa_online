@@ -130,7 +130,7 @@ class InformesController extends AppController {
                         }else{
                         	/*$INT = $cobro['monto_cobrado'] - $cobro['monto_neto'];
                         	echo $reserva['Reserva']['numero']." - ".$INT."<br>";*/
-                            //$intereses[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
+                            $intereses[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
                             
                             //si se cancelo la reserva y existieron pagos se transoforma en venta neta el total de los cobros
                             if($reserva['Reserva']['estado'] == 2){
@@ -147,7 +147,7 @@ class InformesController extends AppController {
                                     $ventas_netas[$reserva['Reserva']['mes']] -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $descuentos_tarjetas[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $cobro_posnet[$cobro_tarjeta['CobroTarjetaTipo']['cobro_tarjeta_posnet_id']][$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['total'];
-                                    $intereses[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['interes'];
+                                    //$intereses[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['total'];
                                 }
@@ -162,7 +162,7 @@ class InformesController extends AppController {
                                 if($cobro['CobroTransferencia']['acreditado']){
                                     $cobro_cuenta[$cobro['CobroTransferencia']['cuenta_id']][$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
                                     $cobrado[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
-                                    $intereses[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['interes'];
+                                    //$intereses[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
                                 }
@@ -172,7 +172,7 @@ class InformesController extends AppController {
                                 if($cobro['CobroCheque']['acreditado'] or $cobro['CobroCheque']['asociado_a_pagos']){
                                     $cobro_cheque[$cobro['CobroCheque']['tipo']][$reserva['Reserva']['mes']] += $cobro['CobroCheque']['monto_neto'];
                                     $cobrado[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['total'];
-                                    $intereses[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['interes'];
+                                    //$intereses[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['total'];
                                 }
@@ -217,7 +217,7 @@ class InformesController extends AppController {
             'adelantadas' => $adelantadas,
             'descuentos' => $descuentos,
             'intereses' => $intereses,
-            'devoluciones' => $devoluciones,
+            //'devoluciones' => $devoluciones,
             'descuentos_tarjetas' => $descuentos_tarjetas,
             'descuentos_tarjeta_posnets' => $descuentos_tarjeta_posnets,
             'capacidad_total' => $capacidad_total,
@@ -368,9 +368,9 @@ class InformesController extends AppController {
         $meses = array('01'=>'Enero', '02'=> 'Febrero','03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto', '09' => 'Septiembre', 10=>'Octubre', 11=> 'Noviembre', 12=>'Diciembre');
         $this->set('meses',$meses);
         
-        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
+        $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
         //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2013-03-17'), 'recursive' => 2));
-		$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '394'), 'recursive' => 2));
+		//$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '394'), 'recursive' => 2));
         if(count($reservas) > 0){
             
             foreach($reservas as $reserva){
@@ -404,6 +404,7 @@ class InformesController extends AppController {
                                 if($cobro_tarjeta['CobroTarjetaLote']['acreditado_por'] != 0){
                                     $ventas_netas -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $cobrado[$cobro_tarjeta['CobroTarjetaLote']['ano_mes_acreditado']] += $cobro_tarjeta['CobroTarjeta']['total'];
+                                    //$ventas_netas += $cobro_tarjeta['CobroTarjeta']['interes'];
                                 }else{
                                     $pendiente_cobro += $cobro_tarjeta['CobroTarjeta']['total'];
                                 }
@@ -416,6 +417,7 @@ class InformesController extends AppController {
                             case 'TRANSFERENCIA':
                                 if($cobro['CobroTransferencia']['acreditado']){
                                     $cobrado[$cobro['CobroTransferencia']['ano_mes_acreditado']] += $cobro['CobroTransferencia']['total'];
+                                    //$ventas_netas += $cobro['CobroTransferencia']['interes'];
                                 }else{
                                     $pendiente_cobro += $cobro['CobroTransferencia']['total'];
                                 }
@@ -424,8 +426,10 @@ class InformesController extends AppController {
                             case 'CHEQUE':
                                 if($cobro['CobroCheque']['acreditado'] ){
                                     $cobrado[$cobro['CobroCheque']['ano_mes_acreditado']] += $cobro['CobroCheque']['total'];
+                                    //$ventas_netas += $cobro['CobroCheque']['interes'];
                                 }elseif($cobro['CobroCheque']['asociado_a_pagos']){
                                     $cobrado[$cobro['CobroCheque']['ano_mes_asociado_a_pagos']] += $cobro['CobroCheque']['total'];
+                                    //$ventas_netas += $cobro['CobroCheque']['interes'];
                                 }else{
                                     $pendiente_cobro += $cobro['CobroCheque']['total'];
                                 }
