@@ -29,8 +29,8 @@ class InformesController extends AppController {
         $meses = array(1=>'Enero', 2=> 'Febrero', 3=> 'Marzo', 4=> 'Abril', 5=> 'Mayo', 6=> 'Junio', 7=> 'Julio', 8=> 'Agosto', 9=> 'Septiembre', 10=>'Octubre', 11=> 'Noviembre', 12=>'Diciembre');
         $this->set('meses',$meses);
         
-        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano), 'recursive' => 2));
-        $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => 3), 'recursive' => 2));
+        $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano), 'recursive' => 2));
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => 3), 'recursive' => 2));
 		//$reservas = $this->Reserva->find('all',array('conditions' => array('check_out <=' => '2014-02-28', 'check_out >=' => '2014-02-01'), 'recursive' => 2));
 		//$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2014-03-31'), 'recursive' => 2));
 		
@@ -484,7 +484,8 @@ class InformesController extends AppController {
                 	$veAux += $cobroCancelado;
                 	//echo $reserva['Reserva']['numero'].' - '.$cobroCancelado."<br>";
                 }
-			//echo $reserva['Reserva']['numero'].' - '.$veAux."<br>";
+            $total = $veAux - $cobroCancelado;   
+			//echo $reserva['Reserva']['numero'].' - '.$veAux.'-'.$cobroCancelado.'='.$total."<br>";
             }// foreach reservas
         }// if count reservas > 0
         
