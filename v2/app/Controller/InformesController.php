@@ -29,9 +29,11 @@ class InformesController extends AppController {
         $meses = array(1=>'Enero', 2=> 'Febrero', 3=> 'Marzo', 4=> 'Abril', 5=> 'Mayo', 6=> 'Junio', 7=> 'Julio', 8=> 'Agosto', 9=> 'Septiembre', 10=>'Octubre', 11=> 'Noviembre', 12=>'Diciembre');
         $this->set('meses',$meses);
         
-        $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano), 'recursive' => 2));
-        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => 1), 'recursive' => 2));
-
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano), 'recursive' => 2));
+        $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => 3), 'recursive' => 2));
+		//$reservas = $this->Reserva->find('all',array('conditions' => array('check_out <=' => '2014-02-28', 'check_out >=' => '2014-02-01'), 'recursive' => 2));
+		//$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2014-03-31'), 'recursive' => 2));
+		
         for($i=1; $i<=12; $i++){
             $alojamientos[$i] = 0;
             $adelantadas[$i] = 0;
@@ -98,7 +100,7 @@ class InformesController extends AppController {
                 if($reserva['Reserva']['estado'] != 2){
                     $alojamientos[$reserva['Reserva']['mes']] += $reserva['Reserva']['total_estadia'];
                     $ventas_netas[$reserva['Reserva']['mes']] += $reserva['Reserva']['total_estadia'];
-
+					
                     if(count($reserva['ReservaExtra']>0)){ 
                         foreach($reserva['ReservaExtra'] as $extra){
                             if($extra['adelantada'] == 1){
@@ -121,30 +123,36 @@ class InformesController extends AppController {
                         }
                     }
                 }
-                
+                $cobroCancelado = 0;
                 if(count($reserva['ReservaCobro'])>0){
+                	
                     foreach($reserva['ReservaCobro'] as $cobro){
                         if($cobro['tipo'] == 'DESCUENTO' and $reserva['Reserva']['estado'] != 2){ //no listamos los descuentos comerciales si se cancelo
                             $descuentos[$reserva['Reserva']['mes']] += $cobro['monto_neto'];
                             $ventas_netas[$reserva['Reserva']['mes']] -= $cobro['monto_neto'];
                         }else{
-                        	/*$INT = $cobro['monto_cobrado'] - $cobro['monto_neto'];
-                        	echo $reserva['Reserva']['numero']." - ".$INT."<br>";*/
-                            $intereses[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
-                            
-                            //si se cancelo la reserva y existieron pagos se transoforma en venta neta el total de los cobros
-                            if($reserva['Reserva']['estado'] == 2){
-                                $ventas_netas[$reserva['Reserva']['mes']] += $cobro['monto_neto'];
-                            }
-                            
-                            $ventas_netas[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
+                        	if($reserva['Reserva']['estado'] != 2){
+	                        	/*$INT = $cobro['monto_cobrado'] - $cobro['monto_neto'];
+	                        	echo $reserva['Reserva']['numero']." - ".$INT."<br>";*/
+	                            $intereses[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
+	                            
+	                            //si se cancelo la reserva y existieron pagos se transoforma en venta neta el total de los cobros
+	                            /*if($reserva['Reserva']['estado'] == 2){
+	                                $ventas_netas[$reserva['Reserva']['mes']] += $cobro['monto_neto'];
+	                            }*/
+	                            
+	                            $ventas_netas[$reserva['Reserva']['mes']] += $cobro['monto_cobrado'] - $cobro['monto_neto'];
+                        	}
                         }
                         switch($cobro['tipo']){
                             case 'TARJETA':
                                 $cobro_tarjeta = $this->CobroTarjeta->findById($cobro['CobroTarjeta']['id']);
                                 if($cobro_tarjeta['CobroTarjetaLote']['acreditado_por'] != 0){
                                     $cobrado[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['total'];
-                                    $ventas_netas[$reserva['Reserva']['mes']] -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
+                                    $cobroCancelado += $cobro_tarjeta['CobroTarjeta']['total'];
+                                    if($reserva['Reserva']['estado'] != 2){
+                                    	$ventas_netas[$reserva['Reserva']['mes']] -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
+                                    }
                                     $descuentos_tarjetas[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
                                     $cobro_posnet[$cobro_tarjeta['CobroTarjetaTipo']['cobro_tarjeta_posnet_id']][$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['total'];
                                     //$intereses[$reserva['Reserva']['mes']] += $cobro_tarjeta['CobroTarjeta']['interes'];
@@ -156,12 +164,14 @@ class InformesController extends AppController {
                             case 'EFECTIVO':
                                 $cobro_caja[$cobro['CobroEfectivo']['caja_id']][$reserva['Reserva']['mes']] += $cobro['CobroEfectivo']['monto_neto'];
                                 $cobrado[$reserva['Reserva']['mes']] += $cobro['CobroEfectivo']['monto_neto'];
+                                $cobroCancelado += $cobro['CobroEfectivo']['monto_neto'];
                                 break;
                             
                             case 'TRANSFERENCIA':
                                 if($cobro['CobroTransferencia']['acreditado']){
                                     $cobro_cuenta[$cobro['CobroTransferencia']['cuenta_id']][$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
                                     $cobrado[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
+                                    $cobroCancelado += $cobro['CobroTransferencia']['total'];
                                     //$intereses[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro['CobroTransferencia']['total'];
@@ -172,6 +182,7 @@ class InformesController extends AppController {
                                 if($cobro['CobroCheque']['acreditado'] or $cobro['CobroCheque']['asociado_a_pagos']){
                                     $cobro_cheque[$cobro['CobroCheque']['tipo']][$reserva['Reserva']['mes']] += $cobro['CobroCheque']['monto_neto'];
                                     $cobrado[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['total'];
+                                    $cobroCancelado += $cobro['CobroCheque']['total'];
                                     //$intereses[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['interes'];
                                 }else{
                                     $pendiente_cobro[$reserva['Reserva']['mes']] += $cobro['CobroCheque']['total'];
@@ -185,12 +196,18 @@ class InformesController extends AppController {
                     foreach($reserva['ReservaDevolucion'] as $devolucion){
                         $devoluciones[$reserva['Reserva']['mes']] += $devolucion['monto'];
                         $devoluciones_pago[$devolucion['forma_pago']][$reserva['Reserva']['mes']] -= $devolucion['monto'];
+                        $cobroCancelado -= $devolucion['monto'];
                         //$ventas_netas[$reserva['Reserva']['mes']] -= $devolucion['monto'];
                     }
                 }
                 
                 $capacidad_ocupada[$reserva['Reserva']['mes']]  += ($reserva['Reserva']['pax_adultos'] + $reserva['Reserva']['pax_menores'] + $reserva['Reserva']['pax_bebes']) * $reserva['Reserva']['noches'];
-
+				
+            	if($reserva['Reserva']['estado'] == 2){
+            		$alojamientos[$reserva['Reserva']['mes']] += $cobroCancelado;
+	        		$ventas_netas[$reserva['Reserva']['mes']] += $cobroCancelado;
+	             }
+	             //echo $reserva['Reserva']['mes']." - ".$ventas_netas[$reserva['Reserva']['mes']]."<br>";
             }// foreach reservas
         }// if count reservas > 0
         
@@ -217,7 +234,7 @@ class InformesController extends AppController {
             'adelantadas' => $adelantadas,
             'descuentos' => $descuentos,
             'intereses' => $intereses,
-            //'devoluciones' => $devoluciones,
+            'devoluciones' => $devoluciones,
             'descuentos_tarjetas' => $descuentos_tarjetas,
             'descuentos_tarjeta_posnets' => $descuentos_tarjeta_posnets,
             'capacidad_total' => $capacidad_total,
@@ -369,41 +386,54 @@ class InformesController extends AppController {
         $this->set('meses',$meses);
         
         $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
-        //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2013-03-17'), 'recursive' => 2));
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out <=' => '2014-03-31', 'check_out >=' => '2014-03-01'), 'recursive' => 2));
+        //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2014-03-31'), 'recursive' => 2));
 		//$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '394'), 'recursive' => 2));
         if(count($reservas) > 0){
             
             foreach($reservas as $reserva){
+            	$veAux = 0;
                 if($reserva['Reserva']['estado'] != 2){
                     $ventas_netas += $reserva['Reserva']['total_estadia'];
-
+					$veAux += $reserva['Reserva']['total_estadia'];
                     if(count($reserva['ReservaExtra']>0)){ 
                         foreach($reserva['ReservaExtra'] as $extra){
                             $ventas_netas += $extra['cantidad'] * $extra['precio'];
+                            $veAux += $extra['cantidad'] * $extra['precio'];
                         }
                     }
                 }
-                
+                $cobroCancelado = 0;
                 if(count($reserva['ReservaCobro']) > 0){
+                	
                     foreach($reserva['ReservaCobro'] as $cobro){
                     	
-                        if($cobro['tipo'] == 'DESCUENTO'){
-                            $ventas_netas -= $cobro['monto_neto'];
-                        }else{
-                            
-                            if($reserva['Reserva']['estado'] == 2){
-                                $ventas_netas += $cobro['monto_neto'];
-                            }
-                            
-                            $ventas_netas += $cobro['monto_cobrado'] - $cobro['monto_neto'];
-                        }
+                    	if($reserva['Reserva']['estado'] != 2){
+	                        if($cobro['tipo'] == 'DESCUENTO'){
+	                            $ventas_netas -= $cobro['monto_neto'];
+	                            $veAux -= $cobro['monto_neto'];
+	                        }else{
+	                        	
+	                            /*if($reserva['Reserva']['estado'] == 2){
+	                                $ventas_netas += $cobro['monto_neto'];
+	                            }*/
+	                            
+	                            $ventas_netas += $cobro['monto_cobrado'] - $cobro['monto_neto'];
+	                            $veAux += $cobro['monto_cobrado'] - $cobro['monto_neto'];
+	                        	
+	                        }
+                    	}
                         switch($cobro['tipo']){
                             case 'TARJETA':
                                 $cobro_tarjeta = $this->CobroTarjeta->findById($cobro['CobroTarjeta']['id']);
                                 //echo $cobro_tarjeta['CobroTarjeta']['total']."<br>";
                                 if($cobro_tarjeta['CobroTarjetaLote']['acreditado_por'] != 0){
-                                    $ventas_netas -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
+                                	if($reserva['Reserva']['estado'] != 2){
+                                		$ventas_netas -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
+                                		$veAux -= $cobro_tarjeta['CobroTarjeta']['descuento_lote'];
+                                	}
                                     $cobrado[$cobro_tarjeta['CobroTarjetaLote']['ano_mes_acreditado']] += $cobro_tarjeta['CobroTarjeta']['total'];
+                                    $cobroCancelado += $cobro_tarjeta['CobroTarjeta']['total'];
                                     //$ventas_netas += $cobro_tarjeta['CobroTarjeta']['interes'];
                                 }else{
                                     $pendiente_cobro += $cobro_tarjeta['CobroTarjeta']['total'];
@@ -412,11 +442,13 @@ class InformesController extends AppController {
                                 
                             case 'EFECTIVO':
                                 $cobrado[$cobro['ano_mes']] += $cobro['CobroEfectivo']['monto_neto'];
+                                $cobroCancelado += $cobro['CobroEfectivo']['monto_neto'];
                                 break;
                             
                             case 'TRANSFERENCIA':
                                 if($cobro['CobroTransferencia']['acreditado']){
                                     $cobrado[$cobro['CobroTransferencia']['ano_mes_acreditado']] += $cobro['CobroTransferencia']['total'];
+                                    $cobroCancelado += $cobro['CobroTransferencia']['total'];
                                     //$ventas_netas += $cobro['CobroTransferencia']['interes'];
                                 }else{
                                     $pendiente_cobro += $cobro['CobroTransferencia']['total'];
@@ -426,9 +458,11 @@ class InformesController extends AppController {
                             case 'CHEQUE':
                                 if($cobro['CobroCheque']['acreditado'] ){
                                     $cobrado[$cobro['CobroCheque']['ano_mes_acreditado']] += $cobro['CobroCheque']['total'];
+                                    $cobroCancelado += $cobro['CobroCheque']['total'];
                                     //$ventas_netas += $cobro['CobroCheque']['interes'];
                                 }elseif($cobro['CobroCheque']['asociado_a_pagos']){
                                     $cobrado[$cobro['CobroCheque']['ano_mes_asociado_a_pagos']] += $cobro['CobroCheque']['total'];
+                                    $cobroCancelado += $cobro['CobroCheque']['total'];
                                     //$ventas_netas += $cobro['CobroCheque']['interes'];
                                 }else{
                                     $pendiente_cobro += $cobro['CobroCheque']['total'];
@@ -442,10 +476,15 @@ class InformesController extends AppController {
                     foreach($reserva['ReservaDevolucion'] as $devolucion){
                         //$ventas_netas -= $devolucion['monto'];
                         $cobrado[$devolucion['ano_mes']] -= $devolucion['monto'];
+                        $cobroCancelado -= $devolucion['monto'];
                     }
                 }
-               
-
+            	if($reserva['Reserva']['estado'] == 2){
+                	$ventas_netas += $cobroCancelado;
+                	$veAux += $cobroCancelado;
+                	//echo $reserva['Reserva']['numero'].' - '.$cobroCancelado."<br>";
+                }
+			//echo $reserva['Reserva']['numero'].' - '.$veAux."<br>";
             }// foreach reservas
         }// if count reservas > 0
         

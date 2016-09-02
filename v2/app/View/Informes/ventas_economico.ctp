@@ -82,13 +82,13 @@
         <?php } ?>
         <td><?php echo array_sum($descuentos_tarjetas);?></td>
     </tr>
-    <tr class="contenido">
+    <!--<tr class="contenido">
         <td class="mes">Devoluciones</td>
         <?php for($i=1; $i<=12; $i++){ ?>
         <td><?php echo $devoluciones[$i]?></td>
         <?php } ?>
         <td><?php echo array_sum($devoluciones);?></td>
-    </tr>
+    </tr> -->
     <tr class="contenido">
         <td class="total" align="left">Ventas netas</td>
         <?php for($i=1; $i<=12; $i++){ ?>
