@@ -328,6 +328,52 @@ class ReservasController extends AppController {
 
         $this->Reserva->id = $id;
         $this->request->data = $this->Reserva->read();
+        $reserva = $this->request->data;
+        //print_r($reserva);
+        $adelantadas = 0;
+        $no_adelantadas = 0;
+            $pagado = 0;
+            $fiscal = 0;
+            $descontado = 0;
+            if(count($reserva['ReservaCobro'])>0){
+                foreach($reserva['ReservaCobro'] as $cobro){
+                    if($cobro['tipo'] == 'DESCUENTO'){
+                        $descontado += $cobro['monto_neto'];
+                    }else{
+                        if($cobro['tipo'] == 'TARJETA' or $cobro['tipo'] == 'TRANSFERENCIA'){
+                            $fiscal += $cobro['monto_cobrado'];
+                        }
+                        $pagado += $cobro['monto_neto'];
+                    }
+                }
+            }
+            if(count($reserva['ReservaExtra']>0)){
+                foreach($reserva['ReservaExtra'] as $extra){
+                    if($extra['adelantada'] == 1){
+                        $adelantadas = $adelantadas + $extra['cantidad'] * $extra['precio'];
+                    }else{
+                        $no_adelantadas = $no_adelantadas + $extra['cantidad'] * $extra['precio'];
+                    }
+                }
+            }
+
+            $devoluciones = 0;
+            if(count($reserva['ReservaDevolucion']) > 0){
+                foreach($reserva['ReservaDevolucion'] as $devolucion){
+                    $devoluciones += $devolucion['monto'];
+                }
+            }
+
+            $facturado = 0;
+            if(count($reserva['ReservaFactura']) > 0){
+                foreach($reserva['ReservaFactura'] as $factura){
+                    $facturado += $factura['monto'];
+                }
+            }
+            $pendiente = round(round($reserva['Reserva']['total'],2) + round($no_adelantadas,2) - round($descontado,2) - round($pagado,2) + round($devoluciones,2),2);
+            $pendiente = ($pendiente==-0)?0:$pendiente;
+            
+        $this->set('pendiente', $pendiente);
         $this->set('reserva', $this->Reserva->read());
     }
 

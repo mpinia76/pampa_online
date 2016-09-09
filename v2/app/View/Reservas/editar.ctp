@@ -73,7 +73,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
 </div>
 <div class="ym-grid">
     <div class="ym-g100 ym-gr" class="total_estadia">
-        <div class="ym-gbox"><strong>Total Estadia $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total_estadia]" id="ReservaTotalEstadia" value="<?php echo $reserva['Reserva']['total_estadia']?>" /><input type="hidden" id="ReservaTotalEstadiaAnt" name="ReservaTotalEstadiaAnt" value="<?php echo $reserva['Reserva']['total_estadia']?>"/></div>
+        <div class="ym-gbox"><strong>Total Estadia $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total_estadia]" id="ReservaTotalEstadia" value="<?php echo $reserva['Reserva']['total_estadia']?>" /><input type="hidden" id="ReservaTotalEstadiaAnt" name="ReservaTotalEstadiaAnt" value="<?php echo $reserva['Reserva']['total_estadia']?>"/><input type="hidden" id="ReservaPendiente" name="ReservaPendiente" value="<?php echo $pendiente;?>"/></div>
     </div>
 </div>
 
@@ -178,7 +178,7 @@ function updateTotal(){
     if(extra_total == 0){
         $('.extras_totales').hide();
     }
-    if(parseFloat($('#ReservaTotalEstadia').val())<parseFloat($('#ReservaTotalEstadiaAnt').val())){
+    if(($('#ReservaPendiente').val()==0)&&(parseFloat($('#ReservaTotalEstadia').val())<parseFloat($('#ReservaTotalEstadiaAnt').val()))){
     	 $("#botonGuardar").hide();
     	 $("#botonGuardarError").show();
     	//alert("Realice antes la devolucion correspondiente y luego modifique la tarifa de la estadia por el monto de la devolucion");
