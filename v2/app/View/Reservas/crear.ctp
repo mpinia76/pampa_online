@@ -96,7 +96,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
 
 <div class="ym-grid">
     <div class="ym-g100 ym-gr" class="total_estadia">
-        <div class="ym-gbox"><strong>Total $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total]" id="ReservaTotal" value="0" /></div>
+        <div class="ym-gbox"><strong>Tarifa bruta inicial (total estad&iacute;a+extras no adelantados) $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total]" id="ReservaTotal" value="0" /></div>
     </div>
 </div>
 

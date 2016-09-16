@@ -25,10 +25,11 @@ echo $this->Form->hidden('ReservaCobro.reserva_id',array('value' => $reserva['Re
     </div>
     <div class="ym-g50 ym-gl" style="text-align: right;">
         <div class="ym-gbox">
-            <strong>Monto total de la estadia:  $<?php echo $reserva['Reserva']['total_estadia']; ?> </strong> <br/>
-            <strong>Extras adelantados:  $<?php echo $adelantadas; ?> </strong> <br/>
-            <strong>Monto bruto de la reserva:  $<?php echo $reserva['Reserva']['total']; ?> </strong> <br/>
-            <strong>Extras no adelantados:  $<?php echo $no_adelantadas; ?> </strong>
+            Monto total de la estadia:  $<?php echo $reserva['Reserva']['total_estadia']; ?><br/>
+            Extras adelantados:  $<?php echo $adelantadas; ?>  <br/>
+            <strong>Tarifa bruta inicial:  $<?php echo $reserva['Reserva']['total']; ?> </strong> <br/>
+            Extras no adelantados:  $<?php echo $no_adelantadas; ?> <br/>
+            <strong>Tarifa bruta final:  $<?php echo ROUND($reserva['Reserva']['total']+$no_adelantadas,2); ?> </strong>
         </div>
     </div>
 </div>
