@@ -128,26 +128,28 @@ function cancelar(){
     if(row.length == 0){
         alert('Debe seleccionar un registro');
     }else{
-        var data = oTable.fnGetData(row[0]);
-        if(data[15] == 'FINALIZA' || data[15] == 0){
-            $('#loading_cancelar').show();
-            $.ajax({
-                url: "<?php echo $this->Html->url('/reservas/cancelar', true);?>",
-                data: {'reserva_id' : data[0]},
-                type: 'POST',
-                dataType: 'json',
-                success: function(data){
-                    $('#loading_cancelar').hide();
-                    if(data.resultado == 'ERROR'){
-                        alert(data.mensaje);
-                    }else{
-                        document.location.reload();
-                    }
-                }
-            })
-        }else{
-            alert('No se puede cancelar esta reserva');
-        }
+    	if(confirm("Esta seguro que desea cancelar la reserva?")){
+	        var data = oTable.fnGetData(row[0]);
+	        if(data[15] == 'FINALIZA' || data[15] == 0){
+	            $('#loading_cancelar').show();
+	            $.ajax({
+	                url: "<?php echo $this->Html->url('/reservas/cancelar', true);?>",
+	                data: {'reserva_id' : data[0]},
+	                type: 'POST',
+	                dataType: 'json',
+	                success: function(data){
+	                    $('#loading_cancelar').hide();
+	                    if(data.resultado == 'ERROR'){
+	                        alert(data.mensaje);
+	                    }else{
+	                        document.location.reload();
+	                    }
+	                }
+	            })
+	        }else{
+	            alert('No se puede cancelar esta reserva');
+	        }
+	    }
     }
 }
 function finalizar(){

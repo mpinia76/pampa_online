@@ -219,7 +219,9 @@ class ReservaCobrosController extends AppController {
             $this->ReservaCobro->set('monto_cobrado',$data['monto_neto'] + $data['interes']);
             $this->ReservaCobro->set('monto_pendiente',$this->request->data['ReservaCobro']['pendiente'] - $data['monto_neto']);
             $this->ReservaCobro->save();
+            
             $this->$model->set('reserva_cobro_id',$this->ReservaCobro->id);
+           
             $this->$model->save();
         }
 
