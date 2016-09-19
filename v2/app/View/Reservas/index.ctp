@@ -45,7 +45,7 @@ $this->Js->buffer('
         ]
     });
     $(".date_filter").change(function(){ oTable.fnDraw(); })
-    $("#data_search").keyup( function () { oTable.fnFilter(this.value); });
+    $("#data_search").keyup( function () { Table.fnFilter(this.value); });
 	
 ');
 //extra libreria para agregar filtro de fecha
@@ -190,8 +190,8 @@ function finalizar(){
     <li class="boton pdf"><a onclick="voucher();">Voucher</a></li>
     <li class="boton pdf"><a onclick="plantilla();">Planilla</a></li>
 
-    <li class="filtro">Hasta <input placeholder="check-out" class="datepicker date_filter"  id="ffin" type="text" /> <input type="hidden" id="ffin_col" value="4"/></li>
-    <li class="filtro">Desde <input placeholder="check-in" class="datepicker date_filter" id="fini" type="text" /> <input type="hidden" id="fini_col" value="3"/></li>
+    <li class="filtro">Hasta <input class="datepicker date_filter"  id="ffin" type="text" /> <input type="hidden" id="ffin_col" value="4"/></li>
+    <li class="filtro">Desde <input class="datepicker date_filter" id="fini" type="text" /> <input type="hidden" id="fini_col" value="3"/></li>
     <li class="filtro">Buscar <input id="data_search" type="text" with="10"/></li>
 </ul>
   

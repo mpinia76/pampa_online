@@ -3,7 +3,8 @@ $.fn.dataTableExt.afnFiltering.push(
         var iFini = document.getElementById('fini2').value;
         var iFfin = document.getElementById('ffin2').value;
         var iStartDateCol = document.getElementById('fini_col2').value;
-        var iEndDateCol = document.getElementById('ffin_col2').value;;
+        var iEndDateCol = document.getElementById('ffin_col2').value;
+        
          
         iFini=iFini.substring(6,10) + iFini.substring(3,5)+ iFini.substring(0,2)
         iFfin=iFfin.substring(6,10) + iFfin.substring(3,5)+ iFfin.substring(0,2)       

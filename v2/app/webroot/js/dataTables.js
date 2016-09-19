@@ -2032,7 +2032,7 @@
 				oPrevSearch.bSmart = oFilter.bSmart;
 				oPrevSearch.bCaseInsensitive = oFilter.bCaseInsensitive;
 			};
-		
+			
 			/* In server-side processing all filtering is done by the server, so no point hanging around here */
 			if ( !oSettings.oFeatures.bServerSide )
 			{
