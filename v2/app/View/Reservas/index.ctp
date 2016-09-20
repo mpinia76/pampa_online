@@ -45,7 +45,7 @@ $this->Js->buffer('
         ]
     });
     $(".date_filter").change(function(){ oTable.fnDraw(); })
-    $("#data_search").keyup( function () { Table.fnFilter(this.value); });
+    $("#data_search").keyup( function () { oTable.fnFilter(this.value); });
 	
 ');
 //extra libreria para agregar filtro de fecha
@@ -190,8 +190,8 @@ function finalizar(){
     <li class="boton pdf"><a onclick="voucher();">Voucher</a></li>
     <li class="boton pdf"><a onclick="plantilla();">Planilla</a></li>
 
-    <li class="filtro">Hasta <input class="datepicker date_filter"  id="ffin" type="text" /> <input type="hidden" id="ffin_col" value="4"/></li>
-    <li class="filtro">Desde <input class="datepicker date_filter" id="fini" type="text" /> <input type="hidden" id="fini_col" value="3"/></li>
+    <li class="filtro"> <input class="datepicker date_filter"  id="ffin" type="hidden" /> <input type="hidden" id="ffin_col" value="5"/></li>
+    <li class="filtro"> <input class="datepicker date_filter" id="fini" type="hidden" /> <input type="hidden" id="fini_col" value="6"/></li>
     <li class="filtro">Buscar <input id="data_search" type="text" with="10"/></li>
 </ul>
   
@@ -216,6 +216,9 @@ function finalizar(){
    'options' => array('Todos'=>'Todos','01'=>'Enero','02'=>'Febrero','03'=>'Marzo','04'=>'Abril','05'=>'Mayo', '06'=>'Junio','07'=>'Julio','08'=>'Agosto','09'=>'Septiembre','10'=>'Octubre','11'=>'Noviembre','12'=>'Diciembre'), 'default'=>'Todos',
    'style' => 'float: left; display:inline;'
    ));
+   
+   echo $this->Form->input('desde',array('label' => false,'placeholder' => 'Fecha Desde', 'class' => 'datepicker', 'type' => 'text','style' => 'float: left; display:inline;'));
+   echo $this->Form->input('hasta',array('label' => false,'placeholder' => 'Fecha Hasta', 'class' => 'datepicker', 'type' => 'text','style' => 'float: left; display:inline;'));
    
 echo $this->Form->end('Cargar');
 ?>

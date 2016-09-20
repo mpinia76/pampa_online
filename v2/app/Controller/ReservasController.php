@@ -5,13 +5,17 @@ class ReservasController extends AppController {
 	public $scaffold;
     public $components = array('Mpdf');
 
+	public function dateFormatSQL($dateString) {
+        $date_parts = explode("/",$dateString);
+        return $date_parts[2]."-".$date_parts[1]."-".$date_parts[0];
+    }
 
     public function index(){
 	    $this->layout = 'index';
 
 		$_SESSION['restricted'] = 'false';
-	
-
+		$_SESSION['desde'] = '';
+		$_SESSION['hasta'] = '';
 	    if((isset($this->data['year']))&&(sizeof($this->data['year']))>0){
           $_SESSION['year'] = array_pop($this->data['year']);
 		  $_SESSION['month'] = $this->data['month'];
@@ -19,7 +23,12 @@ class ReservasController extends AppController {
           $_SESSION['year'] = date('Y');
 		  $_SESSION['month'] = 'Todos';
 		}
-
+		if (isset($this->data['desde'])) {
+			$_SESSION['desde'] = $this->data['desde'];
+		}
+    	if (isset($this->data['hasta'])) {
+			$_SESSION['hasta'] = $this->data['hasta'];
+		}
     }
 
     public function index_restringido(){
@@ -46,7 +55,7 @@ class ReservasController extends AppController {
     }
 
 
-      public function get_reservas($year, $month) {
+      public function get_reservas($year, $month, $desde, $hasta) {
 
 		if($month == 'Todos'){
 		    $from = $year .'-01-01';
@@ -55,10 +64,14 @@ class ReservasController extends AppController {
 		    $from = $year .'-'. $month .'-01';
 		    $to = $year .'-'. $month .'-31';
 		}
-
+		
+		if (($desde!='')&&($hasta!='')) {
+			$condicion=array('Reserva.check_in between ? and ?' => array($from, $to),'Reserva.creado between ? and ?' => array($this->dateFormatSQL($desde), $this->dateFormatSQL($hasta)));
+		}
+		else $condicion=array('Reserva.check_in between ? and ?' => array($from, $to));
 		$result = Cache::read('get_reservas', 'long');
                 if (!$result) {
-	         $result = $this->Reserva->find('all',array('order' => 'Reserva.id desc', 'conditions' => array('Reserva.check_in between ? and ?' => array($from, $to))));
+	         $result = $this->Reserva->find('all',array('order' => 'Reserva.id desc', 'conditions' => $condicion));
 	       Cache::write('get_reservas', $result, 'long');
 	       }
           return $result;
@@ -71,11 +84,15 @@ class ReservasController extends AppController {
 	    $year = $_SESSION['year'];
 	    $month = $_SESSION['month'];
 	    $restricted = $_SESSION['restricted'];
+	    
+	    $desde = $_SESSION['desde'];
+	    $hasta = $_SESSION['hasta'];
+	    
 
 	    if ($restricted == 'true') {
 	       $reservas = $this->get_reservas_restringidas($year, $month);
 	    } else {
-               $reservas = $this->get_reservas($year, $month);
+               $reservas = $this->get_reservas($year, $month, $desde, $hasta);
 	    }
 
 
@@ -191,6 +208,7 @@ class ReservasController extends AppController {
             $rows[] = $row_data;
         }
         $this->set('aaData',$rows);
+        //print_r($rows);
         $this->set('_serialize', array(
             'aaData'
         ));
