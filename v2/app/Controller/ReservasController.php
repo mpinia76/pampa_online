@@ -192,7 +192,7 @@ class ReservasController extends AppController {
                 '$'.$reserva['Reserva']['total_estadia'],
                 '$'.$adelantadas,
                 '$'.$no_adelantadas,
-                '$'.$reserva['Reserva']['total'],
+                '$'.round($reserva['Reserva']['total']+$no_adelantadas,2),
                 '$'.$descontado,
                 '$'.$total,
                 '$'.$pendiente,

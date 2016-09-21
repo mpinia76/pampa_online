@@ -152,6 +152,12 @@ function cancelar(){
 	    }
     }
 }
+
+function limpiarFechas(){
+	$('#desde').val('');
+	$('#hasta').val('');
+}
+
 function finalizar(){
     var row = $("#dataTable tr.row_selected");
     if(row.length == 0){
@@ -203,6 +209,7 @@ function finalizar(){
     echo $this->Form->input('year' ,array(
                                             'type' => 'date',
                                             'label' => false,
+                                            'onChange' => 'limpiarFechas()',
                                             'minYear' => '2012', 
                                             'maxYear' => date('Y') + 2,
                                             'dateFormat'=> 'Y',
@@ -213,6 +220,7 @@ function finalizar(){
     echo $this->Form->input('month' ,array(
    'type' => 'select',
    'label' => false,
+   'onChange' => 'limpiarFechas()',
    'options' => array('Todos'=>'Todos','01'=>'Enero','02'=>'Febrero','03'=>'Marzo','04'=>'Abril','05'=>'Mayo', '06'=>'Junio','07'=>'Julio','08'=>'Agosto','09'=>'Septiembre','10'=>'Octubre','11'=>'Noviembre','12'=>'Diciembre'), 'default'=>'Todos',
    'style' => 'float: left; display:inline;'
    ));
@@ -240,7 +248,7 @@ echo $this->Form->end('Cargar');
             <th width="100">Alojamiento</th>
             <th width="100">Extras Ad.</th>
             <th width="100">Extras No Ad.</th>
-            <th width="100">Tarifa bruta</th>
+            <th width="100">Tarifa bruta final</th>
             <th width="100">Descuento</th>
             <th width="100">Neto</th>
             <th width="100">Pendiente</th>
