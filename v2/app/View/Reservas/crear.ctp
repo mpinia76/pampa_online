@@ -96,7 +96,7 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
 
 <div class="ym-grid">
     <div class="ym-g100 ym-gr" class="total_estadia">
-        <div class="ym-gbox"><strong>Tarifa bruta inicial (total estad&iacute;a+extras adelantados) $</strong> <input style="width: 100px;" type="text" name="data[Reserva][total]" id="ReservaTotal" value="0" /></div>
+        <div class="ym-gbox"><strong>Tarifa bruta inicial (total estad&iacute;a+extras adelantados) $</strong> <input style="width: 100px;" type="hidden" name="data[Reserva][total]" id="ReservaTotal" value="<?php echo $reserva['Reserva']['total'];?>" /><span id="reservaTotalSpan"><?php echo $reserva['Reserva']['total'];?></span></div>
     </div>
 </div>
 
@@ -153,6 +153,7 @@ function updateTotal(){
         extra_total += parseFloat($('#'+$(obj).parent().parent().parent().attr('id') + ' .extra_cantidad').text()) * parseFloat($(obj).text()); 
     });
     $('#ReservaTotal').val(result);
+    $('#reservaTotalSpan').html(result);
     $('.extra_total').html(extra_total);
     if(extra_total == 0){
         $('.extras_totales').hide();

@@ -208,7 +208,12 @@ if(count($reserva['ReservaDevolucion']) > 0){
 <div class="ym-gbox saldo_pendiente">
     Cobro neto de intereses: $<?php echo $pagado?><br/>
     <?php if($devoluciones > 0){ ?> Devoluciones: $<?php echo $devoluciones?><br/> <?php } ?>
-    Saldo pendiente: $<?php echo $reserva['Reserva']['total'] + $no_adelantadas - $pagado - $descuentos + $devoluciones?>
+    <?php 
+    $pendiente = Round($reserva['Reserva']['total'] + $no_adelantadas - $pagado - $descuentos + $devoluciones,2);
+    $pendiente = ($pendiente==-0)?0:$pendiente;
+    
+    echo "Saldo pendiente: $".$pendiente;
+    ?>
 </div>
 
 <?php echo $this->Form->hidden('pendiente',array('value' => $reserva['Reserva']['total'] + $no_adelantadas - $pagado - $descuentos + $devoluciones)); ?>
