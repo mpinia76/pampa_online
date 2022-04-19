@@ -1,0 +1,62 @@
+2020-07-12 21:55:42 --> INSERT INTO cheque_consumo (numero,titular,fecha,monto,interes,descuento,cuenta_id) VALUES 
+						('00000048','Al portador','2020-07-13','500','0','0','5')
+2020-07-12 21:55:42 --> UPDATE chequeras_cheques SET estado = 1 WHERE id = 198
+2020-07-12 21:55:42 --> 0
+2020-07-12 21:55:42 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(0, 'cheque', 'gasto', 19050)
+2020-07-12 21:55:42 --> INSERT INTO cheque_consumo (numero,titular,fecha,monto,interes,descuento,cuenta_id) VALUES 
+						('00000050','Al portador','2020-07-13','500','0','0','5')
+2020-07-12 21:55:42 --> UPDATE chequeras_cheques SET estado = 1 WHERE id = 200
+2020-07-12 21:55:42 --> 0
+2020-07-12 21:55:42 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(0, 'cheque', 'gasto', 19050)
+2020-07-12 21:55:42 --> UPDATE gasto SET 
+								estado=1,
+								orden_pago=nro_orden,
+								factura_nro='00000006',
+								factura_punto_venta='0003',
+								factura_tipo='B',
+								factura_orden='B',
+								remito_nro='',
+								recibo_nro='',
+								iva_27='0',
+								iva_21='0',
+								iva_10_5='0',
+								otra_alicuota='0',
+								perc_iva='0',
+								perc_iibb_bsas='0',
+								perc_iibb_caba='0',
+								exento='0'
+								
+							WHERE id=19050
+2020-07-12 22:09:43 --> INSERT INTO cheque_consumo (numero,titular,fecha,monto,interes,descuento,cuenta_id) VALUES 
+						('00000047','Al portador','2020-07-13','500','0','0','5')
+2020-07-12 22:09:43 --> 4464
+2020-07-12 22:09:43 --> UPDATE chequera_cheques SET estado = 1 WHERE id = 197
+2020-07-12 22:09:43 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(4464, 'cheque', 'gasto', 19050)
+2020-07-12 22:09:43 --> INSERT INTO cheque_consumo (numero,titular,fecha,monto,interes,descuento,cuenta_id) VALUES 
+						('00000046','Al portador','2020-07-13','500','0','0','5')
+2020-07-12 22:09:43 --> 4465
+2020-07-12 22:09:43 --> UPDATE chequera_cheques SET estado = 1 WHERE id = 196
+2020-07-12 22:09:43 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(4465, 'cheque', 'gasto', 19050)
+2020-07-12 22:09:43 --> UPDATE gasto SET 
+								estado=1,
+								orden_pago=nro_orden,
+								factura_nro='00000006',
+								factura_punto_venta='0003',
+								factura_tipo='B',
+								factura_orden='B',
+								remito_nro='',
+								recibo_nro='',
+								iva_27='0',
+								iva_21='0',
+								iva_10_5='0',
+								otra_alicuota='0',
+								perc_iva='0',
+								perc_iibb_bsas='0',
+								perc_iibb_caba='0',
+								exento='0'
+								
+							WHERE id=19050

@@ -1,0 +1,18 @@
+2019-08-02 2:52:18 --> UPDATE caja_movimiento SET usados = 50 WHERE id = 26216
+2019-08-02 2:52:18 --> UPDATE caja_movimiento SET usados = 25.00 WHERE id = 26216
+2019-08-02 2:53:48 --> UPDATE caja_movimiento SET usados = 35 WHERE id = 26216
+2019-08-02 2:53:48 --> INSERT INTO caja_movimiento (fecha,origen,caja_id,monto,usuario_id,moneda_id,monto_moneda,cambio) 
+					VALUES 
+					('2019-08-02','caja_1','7','430',1,'2','10','43')
+2019-08-02 2:53:48 --> INSERT INTO caja_movimiento (fecha,origen,caja_id,monto,usuario_id,moneda_id,monto_moneda,cambio) 
+					VALUES 
+					('2019-08-02','hacia_7','1','-430',1,'2','-10','43')
+2019-08-02 17:50:13 --> UPDATE caja_movimiento SET usados = 5 WHERE id = 26258
+2019-08-02 17:50:13 --> UPDATE caja_movimiento SET usados = 0.00 WHERE id = 26258
+2019-08-02 17:50:53 --> UPDATE caja_movimiento SET usados = 3 WHERE id = 26258
+2019-08-02 17:50:53 --> INSERT INTO caja_movimiento (fecha,origen,caja_id,monto,usuario_id,moneda_id,monto_moneda,cambio) 
+					VALUES 
+					('2019-08-02','cajacambio_12_3_50','5','150',1,'1','0','0')
+2019-08-02 17:50:53 --> INSERT INTO caja_movimiento (fecha,origen,caja_id,monto,usuario_id,moneda_id,monto_moneda,cambio) 
+					VALUES 
+					('2019-08-02','haciacambio_5','12','-150',1,'3','-3','50')

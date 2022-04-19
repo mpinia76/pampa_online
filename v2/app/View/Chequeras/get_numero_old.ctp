@@ -1,0 +1,1 @@
+<?php echo $this->Form->input('Chequera.numero',array('value'=>$ultimo_nro, 'div' => false));?> <?php echo $this->Form->input('cambiar',array('label'=>false, 'div' => false,'type'=>'checkbox')); ?> <strong>Cambiar</strong>

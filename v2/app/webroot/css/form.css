@@ -1,0 +1,190 @@
+.ym-wrapper {
+    width: 400px;
+}
+.extras_crear{
+    width: 300px;
+}
+.reservas_crear, .reservas_editar{
+    width: 600px;
+}
+
+.chequera_cheques_agregar{
+    width: 820px;
+}
+.reserva_cobros_agregar, .reserva_cobros_finalizar{
+    width: 770px;
+}
+.reserva_cobros_detalle{
+    width: 400px;
+}
+.vouchers_actualizar{
+    width: 800px;
+}
+.ym-gbox{
+    padding: 5px;
+}
+body{
+    font-family: arial;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+a{
+    color: #5C9CCC;
+    cursor: pointer;
+    text-decoration: underline;
+}
+a:hover{
+    text-decoration: underline;
+}
+input{
+    background: #f9f9f9;
+    border: solid 1px #aaa;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+textarea{
+    background: #f9f9f9;
+    border: solid 1px #aaa;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    width: 100%;
+}
+input[type=text]{
+    width: 100%;
+    height: 20px;
+}
+input[type=number]{
+    height: 20px;
+    width: 100px;
+}
+input[type=radio]{
+    float:left;
+}
+input[type=text].number{
+    width: 50px;
+}
+.ym-gbox input[type=checkbox]{
+    float:left;
+    margin-right: 3px;
+}
+span.fieldName{
+    display: block;
+    font-weight: bold;
+}
+select{
+    width: 100%;
+    background: #f9f9f9;
+    border: solid 1px #aaa;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    height: 20px;
+}
+.sectionTitle{
+    background:url('../img/bg_title.gif') right top;
+    display: block;
+    margin: 5px;
+    padding: 5px;
+    color: #fff;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+}
+.sectionSubtitle{
+    background: #F0F9FF;
+    display: block;
+    margin: 5px;
+    padding: 5px;
+    color: #5B7091;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: #F0F9FF solid 1px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+label{
+    display: block;
+    font-weight: bold;
+}
+.error-message{
+    color: red;
+}
+.boton{
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    margin: 5px;
+}
+.boton .loading{
+    float: right;
+    vertical-align: middle;
+    margin-top: 2px;
+    display: none;
+}
+.agregar{
+    background: #A8A8A8;
+    color: #fff;
+    
+}
+.guardar{
+    font-size: 16px;
+    color: #fff;
+    background: #589B13;
+}
+.volver{
+    font-size: 16px;
+    color: #fff;
+    background: #2E2EFE;
+}
+.bloquear{
+    font-size: 16px;
+    color: #fff;
+    background: #FE2E2E;
+}
+input[type=submit]{
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+    background: #589B13;
+    width: 100%;
+}
+.border_bottom{
+    border-bottom: solid 1px #aaa;
+}
+
+.reserva_cobros_agregar .saldo_pendiente{
+    font-weight: bold;
+    font-size: 12px;
+    text-align: right;
+    line-height: 20px;
+}
+.reserva_cobros_agregar table tr{
+    height: 25px;
+}
+.reserva_cobros_finalizar .saldo_pendiente{
+    font-weight: bold;
+    font-size: 12px;
+    text-align: right;
+    line-height: 20px;
+}
+.reserva_cobros_finalizar table tr{
+    height: 25px;
+}
+table#reserva_extras td{
+    padding: 5px;
+}

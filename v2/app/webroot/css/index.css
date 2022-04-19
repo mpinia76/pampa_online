@@ -1,0 +1,112 @@
+body{
+    font-size: 12px;
+    font-family: arial;
+}
+.datepicker{
+    width: 70px;
+}
+ul.action_bar{
+    list-style-type: none;
+    background-image: url("../img/table_header.jpg");
+    background-repeat: repeat-x ;
+    background-position: top left ;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-top: 10px;
+    height: 25px;
+}
+ul.action_bar li.boton{
+    float: left;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+ul.action_bar li.extra{
+    display:none;
+}
+ul.action_bar li.agregar{
+    padding-left: 20px;
+    background-image: url("../img/bt_add.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.abonar{
+    padding-left: 20px;
+    background-image: url("../img/bt_pay.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.torta{
+    padding-left: 20px;
+    background-image: url("../img/if_Cake_206472.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.users{
+    padding-left: 20px;
+    background-image: url("../img/ico_users.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.anular{
+    padding-left: 20px;
+    background-image: url("../img/bt_anular.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.autorizar{
+    padding-left: 20px;
+    background-image: url("../img/bt_autorice.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.editar{
+    padding-left: 20px;
+    background-image: url("../img/bt_edit.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.consultar{
+    padding-left: 20px;
+    background-image: url("../img/bt_view.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+ul.action_bar li.pdf{
+    padding-left: 20px;
+    background-image: url("../img/bt_pdf.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+
+ul.action_bar li.excel{
+    padding-left: 20px;
+    background-image: url("../img/bt_excel.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+}
+
+ul.action_bar li.filtro{
+    float: right;
+    margin-left: 5px;
+    margin-top: -5px;
+}
+ul.action_bar li.actualizar{
+    padding-left: 23px;
+    background-image: url("../img/bt_reload.png");
+    background-repeat: no-repeat ;
+    background-position:center left;
+    height: 16px;
+}
+a{
+    cursor: pointer;
+    text-decoration: none;
+    color: blue;
+}
+li a{
+    color: black;
+}
+.loading{
+    display: none;
+}

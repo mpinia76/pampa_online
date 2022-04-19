@@ -1,0 +1,16 @@
+{ 
+   "data":[
+      {
+          "id":"1",
+          "start_date":"2018-08-10 10:00:00",
+          "end_date":"2018-08-12 10:00:00",
+          "text":"<b>Titular:</b>Marcos Piñero<br /> <b>Reserva Nro.:</b> 6876<br /><b>Check IN:</b> 10/08/2018 10:00<br /><b>Check OUT:</b>12/08/2018 10:00<br /> <b>Total:</b> 500.00<b> Cobrado:</b> 0.00<b> A Cobrar:</b> 500.00<br /><b> Comentarios:</b>",
+          "idReserva":	6935,
+	"section_id":	1,
+	"color":"#ff0033",
+	"idCliente":	7016,
+	"readonly":	false
+      }
+   ]
+}
+

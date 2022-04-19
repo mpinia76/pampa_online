@@ -1,0 +1,6 @@
+2019-01-23 15:04:28 --> INSERT INTO cuenta_a_pagar (operacion_tipo,operacion_id,monto,estado) VALUES 
+				('compra',2999,1000,0)
+2019-01-23 15:27:38 --> INSERT INTO cuenta_a_pagar (operacion_tipo,operacion_id,monto,estado) VALUES 
+				('compra',2999,1000,0)
+2019-01-23 15:35:46 --> INSERT INTO cuenta_a_pagar (operacion_tipo,operacion_id,monto,estado) VALUES 
+				('compra',2999,1000,0)

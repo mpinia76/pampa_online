@@ -1,0 +1,4 @@
+RewriteEngine on
+ 
+
+RewriteRule ^encuesta/(\w+)/?$ encuesta.php?id=$1

@@ -1,0 +1,65 @@
+/* Estilos del editor */
+body{
+background:#EFEFEF
+}
+
+.container{
+padding:5px;
+background:#FFFFFF;
+border:#DADADA solid 1px;
+}
+
+.container fieldset legend{
+font-family:Arial, Helvetica, sans-serif;
+font-size:20px;
+font-weight:bold;
+}
+
+.container .label{
+font-family:Arial, Helvetica, sans-serif;
+font-size:12px;
+font-weight:bold;
+width:150px;
+float:left;
+padding:2px;
+}
+
+.container .content{
+float:left;
+font-family:Arial, Helvetica, sans-serif;
+font-size:12px;
+padding:2px;
+}
+
+.container .comment{
+color:#FF0000;
+}
+
+#mensaje{
+border:#000000 solid 1px;
+height:30px;
+width:99%;
+background:#FFFFCC;
+font-family:Arial, Helvetica, sans-serif;
+font-size:12px;
+margin-bottom:5px;
+margin-top:5px;
+}
+
+#mensaje p{
+position:relative;
+top:-7px;
+left:10px;
+}
+
+.flexigrid div.fbutton .add{
+	background: url(../images/add.png) no-repeat center left;
+}	
+
+.flexigrid div.fbutton .delete{
+	background: url(../images/close.png) no-repeat center left;
+}
+
+.flexigrid div.fbutton .edit{
+	background: url(../images/edit.png) no-repeat center left;
+}	

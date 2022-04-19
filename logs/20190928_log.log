@@ -1,0 +1,13 @@
+2019-09-28 15:07:08 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+					(17,'264','0','0','2019-09-28')
+2019-09-28 15:07:08 --> 12272
+2019-09-28 15:07:08 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(12272, 'efectivo', 'cuota_plan', 1)
+2019-09-28 15:07:08 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha) VALUES 
+					(17,'efectivo_consumo',12272,'-264','2019-09-28')
+2019-09-28 15:42:59 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(0, 'transferencia', 'cuota_plan', 2)
+2019-09-28 15:46:15 --> INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
+						('7','99999','264','0','0','2019-09-28')
+2019-09-28 15:46:15 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(935, 'transferencia', 'cuota_plan', 2)

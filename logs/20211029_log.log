@@ -1,0 +1,28 @@
+2021-10-29 9:36:19 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+					(5,'50','0','0','2021-10-29')
+2021-10-29 9:36:20 --> 12831
+2021-10-29 9:36:20 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(12831, 'efectivo', 'sueldo_adelanto', 2578)
+2021-10-29 9:36:20 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha,usuario_id) VALUES 
+					(5,'efectivo_consumo',12831,'-50','2021-10-29 09:36:20','1')
+2021-10-29 9:50:15 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+					(5,'51','0','0','2021-10-29')
+2021-10-29 9:50:15 --> 12832
+2021-10-29 9:50:15 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(12832, 'efectivo', 'sueldo_adelanto', 2579)
+2021-10-29 9:50:15 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha,usuario_id) VALUES 
+					(5,'efectivo_consumo',12832,'-51','2021-10-29 09:50:15','1')
+2021-10-29 9:53:36 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+					(5,'100','0','0','2021-10-29')
+2021-10-29 9:53:36 --> 12833
+2021-10-29 9:53:36 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(12833, 'efectivo', 'sueldo_adelanto', 2580)
+2021-10-29 9:53:37 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha,usuario_id) VALUES 
+					(5,'efectivo_consumo',12833,'-100','2021-10-29 09:53:37','1')
+2021-10-29 9:59:03 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
+					(0,'201','0','0','2021-10-29')
+2021-10-29 9:59:03 --> 12834
+2021-10-29 9:59:03 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
+						(12834, 'efectivo', 'sueldo_adelanto', 2581)
+2021-10-29 9:59:03 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha,usuario_id) VALUES 
+					(0,'efectivo_consumo',12834,'-201','2021-10-29 09:59:03','1')

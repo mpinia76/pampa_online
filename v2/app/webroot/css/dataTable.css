@@ -1,0 +1,189 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables features
+ */
+
+.dataTables_wrapper {
+    position: relative;
+    clear: both;
+    zoom: 1; /* Feeling sorry for IE */
+    font-family: arial;
+    font-size: 12px;
+}
+.dataTables_processing {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    height: 30px;
+    margin-left: -125px;
+    margin-top: -15px;
+    padding: 14px 0 2px 0;
+    border: 1px solid #ddd;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    background-color: white;
+}
+.dataTables_bottom{
+    background-image: url("../img/table_footer.gif");
+    margin-top: 20px;
+    padding: 5px 10px;
+    height: 21px;
+}
+.dataTables_length {
+    width: auto;
+    float: left;
+}
+.dataTables_top{
+    height: 25px;
+}
+.dataTable{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.dataTables_info {
+    width: auto;
+    float: right;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+.dataTables_filter {
+    width: auto;
+    float: right;
+    text-align: right;
+}
+.dataTables_paginate {
+    float: right;
+    text-align: right;
+    margin-top: 3px;
+}
+.dataTable tr{
+    cursor:default;
+}
+.dataTable tr.row_selected{
+    background: #FFFBD4;
+}
+.dataTable tr:hover{
+    background: #FEFFE0
+}
+
+
+/* Pagination nested */
+.paginate_disabled_previous, .paginate_enabled_previous,
+.paginate_disabled_next, .paginate_enabled_next {
+    height: 19px;
+    float: left;
+    cursor: pointer;
+    cursor: pointer;
+    color: #111 !important;
+}
+.paginate_disabled_previous:hover, .paginate_enabled_previous:hover,
+.paginate_disabled_next:hover, .paginate_enabled_next:hover {
+    text-decoration: none !important;
+}
+.paginate_disabled_previous:active, .paginate_enabled_previous:active,
+.paginate_disabled_next:active, .paginate_enabled_next:active {
+    outline: none;
+}
+
+.paginate_disabled_previous,
+.paginate_disabled_next {
+    color: #666 !important;
+}
+.paginate_disabled_previous, .paginate_enabled_previous {
+    padding-left: 23px;
+}
+.paginate_disabled_next, .paginate_enabled_next {
+    padding-right: 23px;
+    margin-left: 10px;
+}
+
+.paginate_disabled_previous {
+    background: url('../images/back_disabled.png') no-repeat top left;
+}
+
+.paginate_enabled_previous {
+    background: url('../images/back_enabled.png') no-repeat top left;
+}
+.paginate_enabled_previous:hover {
+    background: url('../images/back_enabled_hover.png') no-repeat top left;
+}
+
+.paginate_disabled_next {
+    background: url('../images/forward_disabled.png') no-repeat top right;
+}
+
+.paginate_enabled_next {
+    background: url('../images/forward_enabled.png') no-repeat top right;
+}
+.paginate_enabled_next:hover {
+    background: url('../images/forward_enabled_hover.png') no-repeat top right;
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables display
+ */
+table.display {
+    margin: 0 auto;
+    clear: both;
+    width: 100%;
+    background-color: white;
+}
+table.display thead th {
+    background-color: #D3E9F7;
+    border-top: 1px solid #D2E7F8;
+    border-bottom: 1px solid #C0DAE7;
+    padding: 9px 14px 8px 4px;
+    font-size: 12px;
+    color: #6194B8;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .65);
+    text-align: left;
+}
+th a{
+    text-decoration: none;
+    font-size: 12px;
+    color: #6194B8;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .65);
+}
+table.display tfoot th {
+    padding: 9px 14px 8px 4px;
+    font-weight: bold;
+}
+table.display tr.heading2 td {
+    border-bottom: 1px solid #aaa;
+}
+table.display td {
+    padding: 9px 14px 8px 4px;
+    border-bottom: #ccc solid 1px;
+}
+table.display td.center {
+    text-align: center;
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables sorting
+ */
+.sorting_asc {
+    background-image: url('../img/sort_asc.png'), url("../img/table_header.jpg");
+    background-repeat: no-repeat, repeat-x ;
+    background-position: center right, top left ;
+}
+.sorting_desc {
+    background-image: url('../img/sort_desc.png'), url("../img/table_header.jpg");
+    background-repeat: no-repeat, repeat-x ;
+    background-position: center right, top left ;
+}
+.sorting {
+    background-image: url('../img/sort_both.png'), url("../img/table_header.jpg");
+    background-repeat: no-repeat, repeat-x ;
+    background-position: center right, top left ;
+}
+th:active {
+    outline: none;
+}

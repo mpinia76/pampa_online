@@ -1,0 +1,18 @@
+//CAMBIOS 24-06
+
+- editar gastos,compras
+- no ordena por fecha!
+- orden por estado
+- numero de comprobante en tarjeta
+- en informe financiero lo que se agrupa por rubro, detectar forma de pago
+- dos columnas en gastos (fecha craecion, fecha devengado)
+- fecha de pago en cheques y el nombre del mes
+- alerta que no te deje confirmar cheque antes de que sea la fecha de presentacion
+- cambio de datos de cheques
+- proveedor 
+	numero de cliente
+	cuit
+	email
+	contacto
+- numero de remito en gastos y compras
+- proveedores filtrados por rubro de la compra
