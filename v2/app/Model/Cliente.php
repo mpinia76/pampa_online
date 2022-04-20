@@ -7,13 +7,13 @@ class Cliente extends AppModel {
             'rule' => 'notEmpty',
             'message' => 'Ingrese un nombre y apellido valido'
         ),
-        'dni' => array(
+        /*'dni' => array(
             'rule'     => 'numeric',
             //'required' => true,
             'allowEmpty' => true,
             'message' => 'Ingrese solo numeros'
         ),
-        /*'telefono' => array(
+        'telefono' => array(
             'rule' => 'telefono_o_celular',
             'message' => 'Ingrese un telefono o celular valido'
         ),

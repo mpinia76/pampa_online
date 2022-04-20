@@ -93,7 +93,7 @@ $meses = array('01'=>'ENERO', '02'=> 'FEBRERO', '03'=> 'MARZO', '04'=> 'ABRIL', 
 
 $ids = substr( $_GET['ids'], 0, strlen($_GET['ids'])-1); //se le quita la �ltima , (coma)
 //print_r($_GET['ids']);
-$sql = "SELECT R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado
+$sql = "SELECT R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.nombre_apellido, C.cuit, C.dni, C.sexo, C.tipoDocumento, C.tipoPersona, C.titular_factura, C.razon_social, C.iva
 FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id 
 
 WHERE R.id IN (".$ids.") ORDER BY check_out, C.nombre_apellido ASC";
@@ -141,7 +141,7 @@ while($rs = mysql_fetch_array($rsTemp)){
         $sql = "SELECT reserva_cobros.*, concepto_facturacions.nombre as concepto_facturacion FROM reserva_cobros LEFT JOIN concepto_facturacions ON reserva_cobros.concepto_facturacion_id = concepto_facturacions.id  WHERE fecha LIKE '".$_GET["ano"]."-".$_GET["mes"]."%' AND reserva_id = ".$rs['id']." AND reserva_cobros.tipo <> 'DESCUENTO' ORDER BY reserva_cobros.id";
 
         $rsTempCobros = mysqli_query($conn,$sql);
-
+        $detalle = '';
         while($rsCobros = mysqli_fetch_array($rsTempCobros)){
             $detalle = $rsCobros['concepto_facturacion'];
         }

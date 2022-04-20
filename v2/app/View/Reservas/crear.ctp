@@ -283,10 +283,9 @@ $(document).ready(function(){
 function modificarFacturacion(){
     if ($('#ClienteTipoDocumento').val()=='DNI'){
         $('#ClienteIva').prop( "disabled", false );
-        $('#ClienteTipoPersona').prop( "disabled", false );
+        /*$('#ClienteTipoPersona').prop( "disabled", false );*/
         $('#ClienteRazonSocial').prop( "disabled", false );
-        $('#ClienteCuitAux').val('');
-        $('#ClienteCuitAux').prop( "disabled", true );
+
     }
     else{
         $('#ClienteIva').val('');
@@ -295,6 +294,10 @@ function modificarFacturacion(){
         $('#ClienteTipoPersona').prop( "disabled", true );
         $('#ClienteRazonSocial').val('');
         $('#ClienteRazonSocial').prop( "disabled", true );
+        $('#ClienteCuitAux').val('');
+        $('#ClienteCuitAux').prop( "disabled", true );
+        $('#ClienteTitularFactura').prop( "disabled", true );
+        $("#ClienteTitularFactura").prop('checked', false);
 
     }
 

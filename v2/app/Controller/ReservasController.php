@@ -677,7 +677,7 @@ class ReservasController extends AppController {
         }
 
         //iva
-        $this->set('iva_ops', array('Responsable Inscripto' => 'Responsable Inscripto', 'Excento' => 'Excento', 'Consumidor Final' => 'Consumidor Final', 'Monotributo' => 'Monotributo'));
+        $this->set('iva_ops', array('Responsable Inscripto' => 'Responsable Inscripto', 'Excento' => 'Excento', 'Monotributo' => 'Monotributo'));
 
         $this->set('tipoDocumento_ops', array('DNI' => 'DNI', 'Pasaporte' => 'Pasaporte'));
         $this->set('tipoTelefono_ops', array('Fijo' => 'Fijo', 'Celular' => 'Celular'));
@@ -734,7 +734,7 @@ class ReservasController extends AppController {
         $this->set('subcanals', $this->Reserva->Subcanal->find('list',array('order' => array('Subcanal.subcanal ASC'))));
 
         //iva
-        $this->set('iva_ops', array('Responsable Inscripto' => 'Responsable Inscripto', 'Excento' => 'Excento', 'Consumidor Final' => 'Consumidor Final', 'Monotributo' => 'Monotributo'));
+        $this->set('iva_ops', array('Responsable Inscripto' => 'Responsable Inscripto', 'Excento' => 'Excento', 'Monotributo' => 'Monotributo'));
 
         $this->Reserva->id = $id;
         $this->request->data = $this->Reserva->read();
@@ -872,6 +872,12 @@ class ReservasController extends AppController {
             if ($cliente['tipoDocumento']=='DNI') {
                 if (!ctype_digit($cliente['dni'])){
                     $errores['Cliente']['dni'][] = 'Ingrese solo numeros';
+                }
+
+            }
+            if ($cliente['tipoDocumento']=='DNI') {
+                if (strlen($cliente['dni'])!=8){
+                    $errores['Cliente']['dni'][] = 'El DNI debe contener 8 digitos';
                 }
 
             }
