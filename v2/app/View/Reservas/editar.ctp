@@ -372,19 +372,7 @@ $('#ClienteTipoPersona').change(function(){
 
 $("#ClienteTitularFactura").click( function(){
     if( $(this).is(':checked') ) {
-        $("#ClienteRazonSocial").val($("#ClienteNombreApellido").val());
-        $('#ClienteCuitAux').prop( "disabled", true );
-        $.ajax({
-            url: '<?php echo $this->Html->url('/clientes/getCuit', true);?>',
-            data: {'dni' : $("#ClienteDni").val(),'sexo' : $("#ClienteSexo").val() },
-            dataType: 'json',
-            success: function(data){
-
-                $('#ClienteCuitAux').val(data.cuit);
-
-            },
-
-        });
+        poneCuit();
     }
     else{
         $("#ClienteRazonSocial").val('');
@@ -400,5 +388,34 @@ $('#ClienteCuitAux').change(function(){
 
 
 });
+
+function actualizarFacturacion(){
+    if($("#ClienteIva").val()!=''){
+        $('#ClienteTipoPersona').prop( "disabled", false );
+
+        if( $("#ClienteTitularFactura").attr('checked') ) {
+            poneCuit();
+        }
+    }
+
+
+}
+
+function poneCuit(){
+    $("#ClienteRazonSocial").val($("#ClienteNombreApellido").val());
+    $('#ClienteCuitAux').prop( "disabled", true );
+    $.ajax({
+        url: '<?php echo $this->Html->url('/clientes/getCuit', true);?>',
+        data: {'dni' : $("#ClienteDni").val(),'sexo' : $("#ClienteSexo").val() },
+        dataType: 'json',
+        success: function(data){
+
+            $('#ClienteCuitAux').val(data.cuit);
+
+        },
+
+    });
+}
+
 
 </script>

@@ -10,6 +10,17 @@ $nombreFile = date('Ymd') . '_log';
          fclose($_Log);
 }
 
+function _logCheques($msg){
+    $nombreFile = 'cheques_'.date('Y-m-d');
+    $dt = date('Y-m-d G:i:s');
+
+    $_Log = fopen("logs/" . $nombreFile . ".log", "a+") or die("Operation Failed!");
+
+    fputs($_Log, $dt . " --> " . $msg . "\n");
+
+    fclose($_Log);
+}
+
 	function Format_toMoney( $pNum ){
 
 		return( trim( '$'. Format_toDecimal($pNum) ) );

@@ -14,7 +14,8 @@ class ReservaDescuentosController extends AppController {
         $this->ReservaCobro->set($reservaCobro);
         $this->ReservaCobro->set('tipo','DESCUENTO');
         $this->ReservaCobro->set('fecha',$descuento['fecha']); 
-        $this->ReservaCobro->set('monto_cobrado','0'); //este valor no se guarda pero es para pasar la regla de validacion del modelo  
+        $this->ReservaCobro->set('monto_cobrado','0'); //este valor no se guarda pero es para pasar la regla de validacion del modelo
+        $this->ReservaCobro->set('concepto_facturacion_id','1'); //este valor no se guarda pero es para pasar la regla de validacion del modelo
         $this->ReservaCobro->set('monto_neto',$descuento['monto']);  
         
         if($this->ReservaDescuento->validates()){
