@@ -863,6 +863,9 @@ class ReservasController extends AppController {
                  $errores['Cliente'] = $this->Cliente->validationErrors;
             }
 
+            if ($cliente['tipoDocumento']=='') {
+                $errores['Cliente']['tipoDocumento'][] = 'Seleccione un Tipo de Documento';
+            }
 
 
         	if ($cliente['dni']=='') {
@@ -884,6 +887,10 @@ class ReservasController extends AppController {
 
             if($cliente['codPais'] == '') {
                 $cliente['codPais'] = $cliente['codPaisAux'];
+            }
+
+            if ($cliente['tipoTelefono']=='') {
+                $errores['Cliente']['TipoTelefono'][] = 'Seleccione un Tipo de Teléfono';
             }
 
             if(($cliente['telefono'] == '') AND ($cliente['celular'] == '')){
