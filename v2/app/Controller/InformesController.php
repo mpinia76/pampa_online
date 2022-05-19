@@ -121,7 +121,9 @@ class InformesController extends AppController {
 
          $this->setLogUsuario('Grilla de reservas');
 
+        $this->loadModel('GrillaFeriado');
 
+        $feriados = $this->GrillaFeriado->find('all', array('order' => 'desde ASC'));
 
 
 
@@ -129,6 +131,10 @@ class InformesController extends AppController {
 
         $this->set(array(
            'unidads' => $unidads
+        ));
+
+        $this->set(array(
+            'feriados' => $feriados
         ));
     }
 

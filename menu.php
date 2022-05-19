@@ -227,6 +227,11 @@
             Conceptos de Facturacion
         </div>
     <?php } ?>
+    <?php if(MENU_44){?>
+        <div class="configuracion item" onclick="createWindow('w_grilla_feriados','Carga de feriados en grilla','v2/grilla_feriados/index','600','400'); $('#menu').hide();">
+            Carga de feriados en grilla
+        </div>
+    <?php } ?>
         <div class="title" onclick="$('.informes').toggle();"><img width="30" src="images/ico_informes.png" align="absmiddle" /> Informes</div>
         <?php if(ACCION_108){ ?>
         <div class="informes item" onclick="createWindow('w_informe','Informe economico','informe.economico.php','1230','400'); $('#menu').hide();">

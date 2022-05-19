@@ -26,6 +26,9 @@
 		.green_cell{
 			background-color:#8D6190;
 		}
+        .orange_cell{
+            background-color:#D3D3D3;
+        }
 		.yellow_cell{
 			background-color:#c4accd;
 		}
@@ -714,9 +717,28 @@ scheduler.attachEvent("onCellClick", function (x_ind, y_ind, x_val, y_val, e){
 
             ?>];
 
+            var feriados=[
+                <?php
 
+                foreach($feriados as $feriado){
+
+                    $comienzo = new DateTime(str_replace('/','-',$feriado['GrillaFeriado']['desde']));
+                    $final = new DateTime(str_replace('/','-',$feriado['GrillaFeriado']['hasta']));
+
+                    for($i = $comienzo; $i <= $final; $i->modify('+1 day')){
+
+                        echo '{fecha:"'.$i->format("Y-m-d").'"},';
+                    }
+
+
+
+                }
+
+                ?>];
+
+            //console.log(feriados);
 			var $heightTest = $('#divGrillaData');
-            console.log($heightTest.height());
+            //console.log($heightTest.height());
             var cantidadFilas = $heightTest.height() / 8;
 
             // scheduler.matrix["timeline"].x_size = 12;
@@ -757,10 +779,32 @@ scheduler.attachEvent("onCellClick", function (x_ind, y_ind, x_val, y_val, e){
 			scheduler.templates.matrix_cell_class = function(evs,x,y){
 				var day = x.getDay();
 
+                for (i = 0; i < feriados.length; i++) {
+
+                    /*var desde = feriados[i]['desde'].split('/');
+                    var dDesde = new Date(desde[2],desde[1]-1,desde[0]);
+                    var hasta = feriados[i]['desde'].split('/');
+                    var dHasta = new Date(hasta[2],hasta[1]-1,hasta[0]);
+                    const UN_DIA_EN_MILISEGUNDOS = 1000 * 60 * 60 * 24;
+                    const INTERVALO = UN_DIA_EN_MILISEGUNDOS * 7; // Cada semana
+                    const formateadorFecha = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', });*/
+
+                    //for (let i = dDesde; i <= dHasta; i = new Date(i.getTime() + INTERVALO)) {
+                    var d = new Date(feriados[i]['fecha']);
+                    d.setDate(d.getDate() + 1);
+
+                    if (x.getDate() == (d.getDate()) && (x.getMonth()) == (d.getMonth()) ){
+
+                            return "orange_cell";
+                        }
+                    //}
 
 
-				// -------- Para el d�a de hoy
+                }
+
+                // -------- Para el d�a de hoy
 				var d = new Date();
+
 				if (x.getDate() == (d.getDate()) && (x.getMonth()) == (d.getMonth()) )
 					return "blue_cell";
 
@@ -771,6 +815,10 @@ scheduler.attachEvent("onCellClick", function (x_ind, y_ind, x_val, y_val, e){
 					return "yellow_cell";
 				else
 					return "white_cell";
+
+
+
+
 			};
 			scheduler.templates.matrix_scalex_class = function(date){
 				if (date.getDay()==0 || date.getDay()==6)  return "yellow_cell";
