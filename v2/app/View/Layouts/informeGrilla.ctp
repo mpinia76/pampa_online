@@ -821,7 +821,23 @@ scheduler.attachEvent("onCellClick", function (x_ind, y_ind, x_val, y_val, e){
 
 			};
 			scheduler.templates.matrix_scalex_class = function(date){
+                for (i = 0; i < feriados.length; i++) {
+
+
+                    var d = new Date(feriados[i]['fecha']);
+
+                    d.setDate(d.getDate() + 1);
+                    console.log(d);
+                    if (date.getDate() == (d.getDate()) && (date.getMonth()) == (d.getMonth()) ){
+
+                        return "orange_cell";
+                    }
+
+
+
+                }
 				if (date.getDay()==0 || date.getDay()==6)  return "yellow_cell";
+
 				return "";
 			}
 

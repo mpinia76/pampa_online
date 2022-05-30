@@ -42,10 +42,32 @@ function edit(){
     var data = oTable.fnGetData(row[0]);
     createWindow('w_<?php echo $this->params['controller'];?>_edit','Editar','<?php echo $this->Html->url('/'.$this->params['controller'].'/edit', true);?>/'+data,'430','300');
 }
+function eliminar(){
+    var row = $('tr.row_selected');
+    var dataElem = oTable.fnGetData(row[0]);
+    if(confirm('Seguro desea eliminar?')){
+        $.ajax({
+            url : '<?php echo $this->Html->url('/'.$this->params['controller'].'/eliminar', true);?>',
+            type : 'POST',
+            dataType: 'json',
+            data: {'id' : dataElem},
+            success : function(data){
+                if(data.resultado == 'ERROR'){
+                    alert(data.mensaje+' '+data.detalle);
+                }
+                location.reload();
+            }
+        });
+    }
+}
+
 </script>
 <ul class="action_bar">
     <li class="boton agregar"><a onclick="createWindow('w_<?php echo $this->params['controller'];?>_add','Crear','<?php echo $this->Html->url('/'.$this->params['controller'].'/add', true);?>','430','300');">Crear</a></li>
     <li class="boton editar"><a onclick="edit();">Editar</a></li>
+    <?php if ($this->params['controller'] == 'grilla_feriados'){ ?>
+        <li class="boton anular"><a onclick="eliminar();">Eliminar</a></li>
+    <?php } ?>
 </ul>
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="dataTable">
     <thead>

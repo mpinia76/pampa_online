@@ -50,6 +50,27 @@ class GrillaFeriadosController extends AppController {
 
     }
 
+    public function eliminar($id = null){
+        if(!empty($this->request->data)) {
+
+
+
+
+            $this->GrillaFeriado->delete($this->request->data['id'],true);
+
+
+            $this->set('resultado','OK');
+            $this->set('mensaje','Eliminado');
+            $this->set('detalle','');
+
+            $this->set('_serialize', array(
+                'resultado',
+                'mensaje' ,
+                'detalle'
+            ));
+        }
+    }
+
 
 }
 ?>

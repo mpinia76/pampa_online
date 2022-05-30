@@ -6,10 +6,13 @@
 </script>
 <?php
 }
-$scaffoldFields=array_flip($scaffoldFields); 
-foreach($scaffoldFields as &$v){ 
-        $v=array('empty'=>'Seleccione...'); 
-} 
+$scaffoldFields=array_flip($scaffoldFields);
+
+foreach($scaffoldFields as &$v){
+
+        $v=array('empty'=>'Seleccione...');
+}
+//print_r($scaffoldFields);
 ?>
 <?php $scaffoldFields['legend'] = false; ?>
 <?php echo $this->Form->create(null, array('inputDefaults' => (array('div' => 'ym-gbox', 'legend' => 'false')))); ?>
