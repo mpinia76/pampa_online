@@ -106,12 +106,14 @@ while($rs = mysql_fetch_array($rsTemp)){
 
         $tipoPersona = ($rs['tipoPersona']=='Juridica')?'0':'1';
         $razonSocial = ($rs['titular_factura']=='0')?$rs['razon_social']:'0';
+        $nombre = $rs['nombre_apellido'];
         switch ($rs['iva']) {
 
             case 'Responsable Inscripto':
                 $condicion='0';
                 $docTipo = '80';
                 $documento = str_replace('-','',$rs['cuit']);
+                $nombre = ($rs['razon_social']&&($rs['tipoPersona']!='Juridica'))?$rs['razon_social']:$rs['nombre_apellido'];
                 break;
             case 'Excento':
                 $condicion='2';
@@ -269,7 +271,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;">administracion@villagedelaspampas.com.ar</td>
 <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;"></td>
     <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;"><?php echo $tipoPersona; ?></td>
-    <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;"><?php echo utf8_decode($rs['nombre_apellido']);?></td>
+    <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;"><?php echo utf8_decode($nombre);?></td>
     <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;"> </td>
     <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;"><?php echo utf8_decode($razonSocial);?></td>
     <td style="font-family: Arial; font-size: 10pt; text-align:center;border: 0.1pt solid black;vertical-align: middle;"><?php echo $condicion; ?></td>

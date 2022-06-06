@@ -424,7 +424,7 @@ if ($mostrar) {
 	$totalFacturado +=$facturas;
 
 
-    $razonSocial = ($rs['titular_factura']=='0')?$rs['razon_social']:$rs['nombre_apellido'];
+    $razonSocial = ($rs['razon_social'])?$rs['razon_social']:$rs['nombre_apellido'];
     $iva = ($rs['iva'])?$rs['iva']:'Consumidor final';
 
 	
