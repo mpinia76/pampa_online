@@ -6,6 +6,7 @@
         <td>Titular</td>
         <td>Departamento</td>
         <!-- <td>Adelantada</td>-->
+        <td>Fecha consumo</td>
         <td>Fecha carga</td>
         <td>Cantidad</td>
         <td>Rubro</td>
@@ -32,6 +33,7 @@
             <td align="left"><?php echo $reserva['titular']; ?></td>
             <td align="left"><?php echo $reserva['apartamento']; ?></td>
             <!--<td><?php echo $reserva['adelantada']; ?></td>-->
+        <td><?php echo $reserva['consumida']; ?></td>
             <td><?php echo $reserva['agregada']; ?></td>
             <td><?php echo $reserva['cantidad']; ?></td>
             <td align="left"><?php echo $reserva['rubro']; ?></td>

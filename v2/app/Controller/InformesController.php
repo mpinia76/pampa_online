@@ -934,7 +934,7 @@ class InformesController extends AppController {
                                             $detalle = $ex['ExtraVariable']['detalle'];
                                         }
 
-                                        $reservasMostrar[] = array('check_out' => $reserva['Reserva']['check_out'], 'nro_reserva' => $reserva['Reserva']['numero'], 'titular' => $reserva['Cliente']['nombre_apellido'], 'apartamento' => $reserva['Apartamento']['apartamento'], 'agregada' => date('d/m/Y', strtotime($extra['agregada'])), 'adelantada' => ($extra['adelantada']) ? 'SI' : 'NO', 'cantidad' => $extra['cantidad'], 'rubro' => $rubro['ExtraRubro']['rubro'], 'subrubro' => $subrubro['ExtraSubrubro']['subrubro'], 'detalle' => $detalle, 'monto' => $extra['cantidad'] * $extra['precio']);
+                                        $reservasMostrar[] = array('check_out' => $reserva['Reserva']['check_out'], 'nro_reserva' => $reserva['Reserva']['numero'], 'titular' => $reserva['Cliente']['nombre_apellido'], 'apartamento' => $reserva['Apartamento']['apartamento'],'consumida'=>($extra['consumida'])?date('d/m/Y',strtotime($extra['consumida'])):'', 'agregada' => date('d/m/Y', strtotime($extra['agregada'])), 'adelantada' => ($extra['adelantada']) ? 'SI' : 'NO', 'cantidad' => $extra['cantidad'], 'rubro' => $rubro['ExtraRubro']['rubro'], 'subrubro' => $subrubro['ExtraSubrubro']['subrubro'], 'detalle' => $detalle, 'monto' => $extra['cantidad'] * $extra['precio']);
                                     }
 
                                 }

@@ -1,12 +1,19 @@
 <?php
 class ReservaExtrasController extends AppController {
     public $scaffold;
+
+    public function dateFormatSQL($dateString) {
+        $date_parts = explode("/",$dateString);
+        return $date_parts[2]."-".$date_parts[1]."-".$date_parts[0];
+    }
+
     public function index(){
         $this->set('rows',$this->ReservaExtra->find('all'));
         $this->set('_serialize', array(
             'rows'
         ));
     }
+
     public function eliminar(){
         $id = $this->request->data['reserva_extra_id'];
         $this->ReservaExtra->id = $id;
@@ -162,20 +169,39 @@ class ReservaExtrasController extends AppController {
 
         if($this->request->data){
             $this->set('cantidad',$this->request->data['cantidad']);
+            $this->set('consumida',$this->request->data['consumida']);
             $extra = $this->ReservaExtra->Extra->findById($this->request->data['extra_id']);
             $this->set('extra',$extra);
-            
-            //guardo la relacion automaticamente
-            $this->ReservaExtra->set(array(
-                'reserva_id' => $this->request->data['reserva_id'],
-                'extra_id' => $this->request->data['extra_id'],
-                'cantidad' => $this->request->data['cantidad'],
-                'precio' => $extra['Extra']['tarifa'],
-                'adelantada' => 0,
-                'agregada' => date('Y-m-d')
-            ));
-            $this->ReservaExtra->save();
-            $this->set('reserva_extra_id',$this->ReservaExtra->id);
+
+            $this->loadModel('Reserva');
+            $this->Reserva->id = $this->request->data['reserva_id'];
+            $reserva = $this->Reserva->read();
+
+
+            $consumida = $this->dateFormatSQL($this->request->data['consumida']);
+
+            if (($consumida<$this->dateFormatSQL($reserva['Reserva']['check_in']))||($consumida>$this->dateFormatSQL($reserva['Reserva']['check_out']))){
+
+                $errores = 'error';
+            }
+            if ($errores){
+                $this->set('error', $errores);
+            }
+            else {
+
+                //guardo la relacion automaticamente
+                $this->ReservaExtra->set(array(
+                    'consumida' => $consumida,
+                    'reserva_id' => $this->request->data['reserva_id'],
+                    'extra_id' => $this->request->data['extra_id'],
+                    'cantidad' => $this->request->data['cantidad'],
+                    'precio' => $extra['Extra']['tarifa'],
+                    'adelantada' => 0,
+                    'agregada' => date('Y-m-d')
+                ));
+                $this->ReservaExtra->save();
+                $this->set('reserva_extra_id', $this->ReservaExtra->id);
+            }
         }else{
             $this->set('cantidad',$this->request->query['cantidad']);
             $this->set('extra',$this->ReservaExtra->Extra->findById($this->request->query['extra_id']));
@@ -187,7 +213,7 @@ class ReservaExtrasController extends AppController {
         if($this->request->data){
             $this->set('precio',$this->request->data['precio']);
             $this->set('detalle',$this->request->data['detalle']);
-            
+            $this->set('consumida',$this->request->data['consumida']);
             $this->loadModel('ExtraRubro');
             $this->set('rubro',$this->ExtraRubro->findById($this->request->data['rubro_id']));
             
@@ -198,17 +224,34 @@ class ReservaExtrasController extends AppController {
             ));
             $this->ExtraVariable->save();
             
-            //guardo la relacion automaticamente
-            $this->ReservaExtra->set(array(
-                'reserva_id' => $this->request->data['reserva_id'],
-                'extra_variable_id' => $this->ExtraVariable->id,
-                'precio' => $this->request->data['precio'],
-                'adelantada' => 0,
-                'cantidad' => 1,
-                'agregada' => date('Y-m-d')
-            ));
-            $this->ReservaExtra->save();
-            $this->set('reserva_extra_id',$this->ReservaExtra->id);
+            $this->loadModel('Reserva');
+            $this->Reserva->id = $this->request->data['reserva_id'];
+            $reserva = $this->Reserva->read();
+
+
+            $consumida = $this->dateFormatSQL($this->request->data['consumida']);
+			//echo 
+            if (($consumida<$this->dateFormatSQL($reserva['Reserva']['check_in']))||($consumida>$this->dateFormatSQL($reserva['Reserva']['check_out']))){
+
+                $errores = 'error';
+            }
+            if ($errores){
+                $this->set('error', $errores);
+            }
+            else {
+                //guardo la relacion automaticamente
+                $this->ReservaExtra->set(array(
+                    'consumida' => $consumida,
+                    'reserva_id' => $this->request->data['reserva_id'],
+                    'extra_variable_id' => $this->ExtraVariable->id,
+                    'precio' => $this->request->data['precio'],
+                    'adelantada' => 0,
+                    'cantidad' => 1,
+                    'agregada' => date('Y-m-d')
+                ));
+                $this->ReservaExtra->save();
+                $this->set('reserva_extra_id', $this->ReservaExtra->id);
+            }
             
         }else{
             $this->set('precio',$this->request->query['precio']);

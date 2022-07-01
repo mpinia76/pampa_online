@@ -743,3 +743,7 @@ AUTO_INCREMENT=1;
 
 INSERT INTO `permiso_grupo` (`nombre`) VALUES ('Carga de feriados en grilla');
 INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (44, 'Operar');
+
+################################### 29/06/2022 ###########################################
+ALTER TABLE `reserva_extras`
+	ADD COLUMN `consumida` DATE NULL AFTER `extra_variable_id`;

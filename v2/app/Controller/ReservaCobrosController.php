@@ -194,6 +194,10 @@ class ReservaCobrosController extends AppController {
         
         $this->set('reserva_descuentos',$this->ReservaCobro->find('all',array('conditions' => array('reserva_id =' => $reserva_id, 'ReservaCobro.tipo =' => 'DESCUENTO'), 'order' => 'fecha asc')));
         $this->set('reserva_cobros',$this->ReservaCobro->find('all',array('conditions' => array('reserva_id =' => $reserva_id, 'ReservaCobro.tipo !=' => 'DESCUENTO'), 'order' => 'fecha asc')));
+        $this->loadModel('ConceptoFacturacion');
+
+
+        $this->set('concepto_facturacions',$this->ConceptoFacturacion->find('list',array('fields' => 'id,nombre','conditions' =>array('activo =' => 1))));
         
     }
     public function finalizar($reserva_id, $restringido=0){
@@ -580,6 +584,38 @@ class ReservaCobrosController extends AppController {
         }else{
             $this->redirect('/index');
         }
+    }
+
+    public function guardarConcepto(){
+
+        //print_r($this->request->data);
+
+        $this->ReservaCobro->id = $this->request->data['cobro_id'];
+
+
+        $reservaCobro=$this->ReservaCobro->read();
+        $reservaCobro['ReservaCobro']['concepto_facturacion_id']=$this->request->data['concepto_facturacion_id'];
+
+
+
+        $this->ReservaCobro->save($reservaCobro, false);
+
+
+        if(isset($errores) and count($errores) > 0){
+            $this->set('resultado','ERROR');
+            $this->set('mensaje','No se pudo guardar');
+            $this->set('detalle',$errores);
+        }else{
+            $this->set('resultado','OK');
+            $this->set('mensaje','Datos guardados');
+            $this->set('detalle','');
+        }
+
+        $this->set('_serialize', array(
+            'resultado',
+            'mensaje' ,
+            'detalle'
+        ));
     }
 }
 ?>
