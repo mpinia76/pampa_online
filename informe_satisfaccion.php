@@ -1522,7 +1522,7 @@ function encodeURIComponent($str) {
     return strtr(rawurlencode($str), $revert);
 }
 	if(isset($_POST['ver'])){
-	$sql1 = "SELECT reservas.*,clientes.nombre_apellido,clientes.email, clientes.codArea, clientes.telefono  
+	$sql1 = "SELECT reservas.*,clientes.nombre_apellido,clientes.email, clientes.codPais, clientes.codArea, clientes.telefono  
 	FROM reservas INNER JOIN clientes ON clientes.id=reservas.cliente_id 
 	
 	WHERE
@@ -1553,7 +1553,7 @@ function encodeURIComponent($str) {
 				$imgRespuesta = "bt_delete.png";
 				
 			}
-            $phone = $rs1['codArea'].$rs1['telefono']; // Dejar vacio si quieres que el usuario elija a quien enviar el mensaje
+            $phone = $rs1['codPais'].$rs1['codArea'].$rs1['telefono']; // Dejar vacio si quieres que el usuario elija a quien enviar el mensaje
             $actual_link = 'https://villagedelaspampas.com.ar/encuesta.php?id='.$rs1['id'];
             $message = "Estimado ".$rs1['nombre_apellido']." aprovechamos la oportunidad para invitarlos a participar de nuestra encuesta de satisfaccion. Ingresando al siguiente link";
             //$message = str_replace(" ", "%20", $message); // Remplazamos los espacios por su equivalente
