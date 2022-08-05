@@ -1516,9 +1516,13 @@ if(isset($_POST)){
 	</tr>
 </thead>
 <tbody>
-<?php 
+<?php
+function encodeURIComponent($str) {
+    $revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
+    return strtr(rawurlencode($str), $revert);
+}
 	if(isset($_POST['ver'])){
-	$sql1 = "SELECT reservas.*,clientes.nombre_apellido,clientes.email  
+	$sql1 = "SELECT reservas.*,clientes.nombre_apellido,clientes.email, clientes.codArea, clientes.telefono  
 	FROM reservas INNER JOIN clientes ON clientes.id=reservas.cliente_id 
 	
 	WHERE
@@ -1549,8 +1553,16 @@ if(isset($_POST)){
 				$imgRespuesta = "bt_delete.png";
 				
 			}
-			
-			$enviarEncuesta = '<a href="#" onclick="enviar('.$rs1['id'].')" class="item"><img src="images/mail.png" align="absmiddle" />('.$enviada.') </a>';
+            $phone = $rs1['codArea'].$rs1['telefono']; // Dejar vacio si quieres que el usuario elija a quien enviar el mensaje
+            $actual_link = 'https://villagedelaspampas.com.ar/encuesta.php?id='.$rs1['id'];
+            $message = "Estimado ".$rs1['nombre_apellido']." aprovechamos la oportunidad para invitarlos a participar de nuestra encuesta de satisfaccion. Ingresando al siguiente link";
+            //$message = str_replace(" ", "%20", $message); // Remplazamos los espacios por su equivalente
+            $mensaje = $message.' '.$actual_link;
+
+            $wa_link = "https://wa.me/$phone?text=".encodeURIComponent($mensaje);
+
+
+			$enviarEncuesta = '<a href="#" onclick="enviar('.$rs1['id'].')" class="item"><img src="images/mail.png" align="absmiddle" />('.$enviada.') </a><a href="'.$wa_link.'" target="_blank"  class="item"><img width="16px;" src="images/whatsapp.png" align="absmiddle" /></a>';
 			$modificarEncuesta ="";
 			if(($imgRespuesta != "bt_delete.png")&&(ACCION_115)) {
 				$modificarEncuesta = '<a href="#" onclick="modificar('.$rs1['id'].')" class="item"><img src="images/ico_users.png" align="absmiddle" /></a>';
