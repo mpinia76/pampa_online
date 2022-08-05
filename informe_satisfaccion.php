@@ -1536,33 +1536,32 @@ function encodeURIComponent($str) {
 	if(mysql_affected_rows()>0){
 		while($rs1 = mysql_fetch_array($rsTemp1)){
 			$enviada=0;
-			$sql2 = "SELECT respondida,enviada 
+            $sql2 = "SELECT id,respondida,enviada 
 			FROM encuesta where reserva_id = ".$rs1['id'];
 
-			$rsTemp2 = mysql_query($sql2);
-			if(mysql_affected_rows()>0){
-				$imgEnviada = "ok.gif";
-				if($rs2 = mysql_fetch_array($rsTemp2)){
-					$imgRespuesta = ($rs2['respondida'])?"ok.gif":"bt_delete.png";
-					$enviada=$rs2['enviada'];
-				}
-				//$enviarEncuesta ="";
-			}
-			else{
-				$imgEnviada = "bt_delete.png";
-				$imgRespuesta = "bt_delete.png";
-				
-			}
-            $phone = $rs1['codPais'].$rs1['codArea'].$rs1['telefono']; // Dejar vacio si quieres que el usuario elija a quien enviar el mensaje
-            $actual_link = 'https://villagedelaspampas.com.ar/encuesta.php?id='.$rs1['id'];
-            $message = "Estimado ".$rs1['nombre_apellido']." aprovechamos la oportunidad para invitarlos a participar de nuestra encuesta de satisfaccion. Ingresando al siguiente link";
-            //$message = str_replace(" ", "%20", $message); // Remplazamos los espacios por su equivalente
-            $mensaje = $message.' '.$actual_link;
+            $rsTemp2 = mysql_query($sql2);
+            if(mysql_affected_rows()>0){
+                $imgEnviada = "ok.gif";
+                if($rs2 = mysql_fetch_array($rsTemp2)){
+                    $imgRespuesta = ($rs2['respondida'])?"ok.gif":"bt_delete.png";
+                    $enviada=$rs2['enviada'];
+                    $phone = $rs1['codPais'].$rs1['codArea'].$rs1['telefono']; // Dejar vacio si quieres que el usuario elija a quien enviar el mensaje
+                    $actual_link = 'https://villagedelaspampas.com.ar/encuesta.php?id='.$rs2['id'];
+                    $message = "Estimado ".$rs1['nombre_apellido']." aprovechamos la oportunidad para invitarlos a participar de nuestra encuesta de satisfaccion. Ingresando al siguiente link";
+                    //$message = str_replace(" ", "%20", $message); // Remplazamos los espacios por su equivalente
+                    $mensaje = $message.' '.$actual_link;
 
-            $wa_link = "https://wa.me/$phone?text=".encodeURIComponent($mensaje);
+                    $wa_link = "https://wa.me/$phone?text=".encodeURIComponent($mensaje);
+                    $wa_button = '<a href="'.$wa_link.'" target="_blank"  class="item"><img width="16px;" src="images/whatsapp.png" align="absmiddle" /></a>';
+                }
+                //$enviarEncuesta ="";
+            }
+            else{
+                $imgEnviada = "bt_delete.png";
+                $imgRespuesta = "bt_delete.png";
 
-
-			$enviarEncuesta = '<a href="#" onclick="enviar('.$rs1['id'].')" class="item"><img src="images/mail.png" align="absmiddle" />('.$enviada.') </a><a href="'.$wa_link.'" target="_blank"  class="item"><img width="16px;" src="images/whatsapp.png" align="absmiddle" /></a>';
+            }
+            $enviarEncuesta = '<a href="#" onclick="enviar('.$rs1['id'].')" class="item"><img src="images/mail.png" align="absmiddle" />('.$enviada.') </a>'.$wa_button;
 			$modificarEncuesta ="";
 			if(($imgRespuesta != "bt_delete.png")&&(ACCION_115)) {
 				$modificarEncuesta = '<a href="#" onclick="modificar('.$rs1['id'].')" class="item"><img src="images/ico_users.png" align="absmiddle" /></a>';
