@@ -92,7 +92,7 @@ $this->Js->buffer('
         alert('Debe seleccionar un registro');
     }else{
         var data = oTable.fnGetData(row[0]);
-        if(data[9] == 'Acreditado'){
+        if(data[10] == 'Acreditado'){
             alert('Esta transferencia ya se encuentra acreditada y no puede editarse');
         }else{
             createWindow('w_reservas_view_cobro','Detalles','<?php echo $this->Html->url('/reserva_cobros/detalle/', true);?>'+data[1],'430','400');
@@ -106,7 +106,7 @@ function open_confirm_box(){
         alert('Debe seleccionar un registro');
     }else{
         var data = oTable.fnGetData(row[0]);
-        if(data[9] == 'Acreditado'){
+        if(data[10] == 'Acreditado'){
         	if(confirm("La transferencia ya fue acreditada  \n \n Desea continuar para cambiar la fecha de acreditacion de la transferencia?")) {
             	$('#confirm_box').jqmShow();
             }
@@ -118,7 +118,7 @@ function open_confirm_box(){
 function acreditar(){
     var row = $("#dataTable tr.row_selected");
     var data = oTable.fnGetData(row[0]);
-    var acreditado = (data[9] == 'Acreditado')?1:0;
+    var acreditado = (data[10] == 'Acreditado')?1:0;
     $('#loading_save').show();
     $.ajax({
         url : '<?php echo $this->Html->url('/cobro_transferencias/acreditar', true);?>',
@@ -143,7 +143,7 @@ function anular(){
         alert('Debe seleccionar un registro');
     }else{
         var data = oTable.fnGetData(row[0]);
-        if(data[9] == 'Acreditado'){
+        if(data[10] == 'Acreditado'){
         	if(confirm("Anular acreditacion?")) {
 			    $('#loading_save').show();
 			    $.ajax({
