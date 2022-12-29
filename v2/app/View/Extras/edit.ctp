@@ -27,9 +27,10 @@ echo $this->Form->input('Extra.extra_rubro_id',array('options' => $extra_rubros,
     <?php echo $this->Form->input('Extra.extra_subrubro_id',array('options' => $extra_subrubros, 'empty' => 'Seleccionar', 'type'=>'select')); ?>
 </span>
 <?php 
-echo $this->Form->hidden('Extra.activo',array('value' => 1));
+
 echo $this->Form->input('Extra.detalle',array('label' => 'Detalle'));
 echo $this->Form->input('Extra.tarifa',array('label' => 'Precio $','type' => 'text', 'class' => 'number'));
+echo $this->Form->input('Extra.activo');
 echo $this->Form->end();
 ?>
 <span onclick="guardar('<?php echo $this->Html->url('/extras/guardar.json', true);?>',$('form').serialize(),{id:'w_extras',url:'v2/extras/index'});" class="boton guardar">Guardar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>

@@ -1,6 +1,16 @@
 <?php
 class ExtrasController extends AppController {
     public $scaffold;
+
+    public function index(){
+        $this->layout = 'index';
+        $this->setLogUsuario('Extras');
+
+        $this->set('extras', $this->Extra->find('all'));
+
+
+    }
+
     public function getSubrubros(){
         if ($this->request->is('ajax')) {
             $this->layout = 'ajax';
@@ -38,7 +48,7 @@ class ExtrasController extends AppController {
     
     public function edit($id){
         $this->layout = 'form';
-        
+
         $this->Extra->id = $id;
         $extra = $this->Extra->read();
         $this->set('extra_rubros', $this->Extra->ExtraRubro->find('list'));
