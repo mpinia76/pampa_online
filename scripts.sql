@@ -747,3 +747,7 @@ INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (44, 'Operar');
 ################################### 29/06/2022 ###########################################
 ALTER TABLE `reserva_extras`
 	ADD COLUMN `consumida` DATE NULL AFTER `extra_variable_id`;
+
+##################################17/01/2023###########################################################
+ALTER TABLE `extra_subrubros`
+    ADD COLUMN `activo` TINYINT(1) NOT NULL DEFAULT 1 AFTER `subrubro`;

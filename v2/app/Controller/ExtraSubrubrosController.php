@@ -1,10 +1,21 @@
 <?php
 class ExtraSubrubrosController extends AppController {
     public $scaffold;
+
+
+    public function index(){
+        $this->layout = 'index';
+        $this->setLogUsuario('Subrubros de Extras');
+        //$this->loadModel('ExtraSubrubro');
+        $this->set('extras', $this->ExtraSubrubro->find('all'));
+
+
+    }
+
     public function json(){
         $this->response->type('application/json');
         $this->layout = 'json';
-        $this->set('subrubros',$this->Subrubro->find('all'));
+        //$this->set('subrubros',$this->Subrubro->find('all'));
     }
     
     public function create(){

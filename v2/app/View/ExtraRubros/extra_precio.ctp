@@ -1,7 +1,12 @@
 <?php
 $options = array();
 foreach($subrubro_precio as $key => $obj){
-    $options[$obj['Extra']['id']] = $obj['ExtraSubrubro']['subrubro']." ".$obj['Extra']['detalle']." $".$obj['Extra']['tarifa'];
+    //print_r($obj);
+    //echo $obj['Extra']['activo'];
+    if($obj['ExtraSubrubro']['activo']){
+        $options[$obj['Extra']['id']] = $obj['ExtraSubrubro']['subrubro']." ".$obj['Extra']['detalle']." $".$obj['Extra']['tarifa'];
+    }
+
 }
 ?>
 <div class="ym-gbox" style="width: 64%; float: left;">

@@ -23,16 +23,14 @@ $this->Js->buffer('
           {"bVisible" : false },
           null,
           null,
-          null,
-          null,
           null
         ]
     });
     $("#locacion").change(function(){ 
         if($(this).val() == ""){
-            oTable.fnFilter($(this).val(),5);
+            oTable.fnFilter($(this).val(),3);
         }else{
-            oTable.fnFilter($("#locacion option:selected").text(),5);
+            oTable.fnFilter($("#locacion option:selected").text(),3);
          }
      });
 ');
@@ -66,22 +64,21 @@ function edit(){
             <th>id</th>
             <th>Extra Rubro</th>
             <th>Extra Surubro</th>
-            <th>Detalle</th>
-            <th>Tarifa</th>
             <th>Activo</th>
 
         </tr>
     </thead>
     <tbody>
         <?php 
-        foreach($extras as $extra){ ?>
+        foreach($extras as $extra){
+            //print_r($extra);
+            ?>
         <tr>
-            <td><?php echo $extra['Extra']['id']; ?></td>
+            <td><?php echo $extra['ExtraSubrubro']['id']; ?></td>
             <td><?php echo $extra['ExtraRubro']['rubro']; ?></td>
             <td><?php echo $extra['ExtraSubrubro']['subrubro']; ?></td>
-            <td><?php echo $extra['Extra']['detalle']; ?></td>
-            <td><?php echo $extra['Extra']['detalle']; ?></td>
-            <td><?php echo ($extra['Extra']['activo'])?'SI':'NO'; ?></td>
+
+            <td><?php echo ($extra['ExtraSubrubro']['activo'])?'SI':'NO'; ?></td>
 
         </tr>
         <?php } ?>

@@ -558,3 +558,5 @@ ALTER TABLE `cheque_consumo`
 	
 ALTER TABLE `cheque_consumo`
 	ADD COLUMN `chquera_id` INT(11) NULL AFTER `vencido`;
+
+

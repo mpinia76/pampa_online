@@ -1509,6 +1509,7 @@ if(isset($_POST)){
 		<th width="80">Titular</th>
 		<th width="20">Check Out</th>
 		<th width="50">E-mail</th>
+        <th width="35">Telefono</th>
 		<th width="20">Enviado</th>
 		<th width="20">Respuesta</th>
 		<th width="20">Enviar</th>
@@ -1575,6 +1576,7 @@ function encodeURIComponent($str) {
 				<td><?php echo $rs1['nombre_apellido']?></td>
 				<td><?php echo fechavista($rs1['check_out'])?></td>
 				<td><?php echo $rs1['email']?></td>
+                <td><?php echo$rs1['codPais'].$rs1['codArea'].$rs1['telefono']?></td>
 				<td style="text-align: center;"><img src="images/<?php echo $imgEnviada?>"></img></td>
 				<td style="text-align: center;"><img src="images/<?php echo $imgRespuesta?>"></img></td>
 				<td style="text-align: center;"><?php echo $enviarEncuesta?></td>
