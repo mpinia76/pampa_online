@@ -53,7 +53,7 @@ class ReservaFactura extends AppModel {
         ),
         'monto' => array(
             'basico' => array(
-                'rule'    => array('range', 0,999999),
+                'rule'    => array('range', 0,9999999),
                 'required'   => true,
                 'message' => 'Ingrese un numero mayor a 0'
             ),
