@@ -1190,8 +1190,10 @@ class ReservasController extends AppController {
     }
 
 
-    public function plantilla($reserva_id, $pdf=0, $output='D'){
+    public function plantilla($reserva_id, $pdf=0, $output='D',$grilla=null){
         $this->layout = 'plantilla';
+
+        $this->set('grilla',$grilla);
 
         $this->loadModel('ExtraRubro');
         $this->set('extra_rubros',$this->ExtraRubro->find('list'));

@@ -272,6 +272,10 @@
 				    	//direccionaJS("Comercial/Reservas/modificarReserva.php", "idAlquiler", eventoSeleccionado);
 				    	direccionaJS("<?php echo $this->Html->url('/reservas/editar', true);?>/"+ eventoSeleccionado+"/1");
 				        break;
+                    case "dscargarPlanilla":
+
+                        direccionaJS("<?php echo $this->Html->url('/reservas/plantilla', true);?>/"+ eventoSeleccionado+"/0/D/1");
+                        break;
 				    case "cargarCobranza":
 				    	//direccionaJS("Comercial/Cobranzas/altaCobranza.php", "idAlquiler", eventoSeleccionado);
 				    	if((eventoColorSeleccionado!='#f1fa52')){

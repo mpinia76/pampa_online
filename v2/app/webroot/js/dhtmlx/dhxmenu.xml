@@ -5,6 +5,7 @@
 		<!--<item id="file_sep_1" type="separator"/>-->
 		<item id="modificarReserva" text="Modificar" img="../app/webroot/img/edit-1.png" imgdis="new_dis.gif"/>
 		<item id="cancelarReserva" text="Cancelar" img="../app/webroot/img/close.gif" imgdis="new_dis.gif"/>
+		<item id="dscargarPlanilla" text="Planilla" img="../app/webroot/img/bt_pdf.png" imgdis="new_dis.gif"/>
 		<!--<item id="file_sep_2" type="separator"/>
 		<item id="entrega" text="Entrega" img="../app/webroot/img/fast-forward.png" imgdis="open_dis.gif"/>
 		<item id="devolucion" text="Devolucion" img="../app/webroot/img/rewind.png" imgdis="open_dis.gif"/>
