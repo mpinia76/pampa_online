@@ -320,7 +320,7 @@ class Form{
 		
 	}
 	
-	public function createFile($name, $atr){
+	public function createFile_old($name, $atr){
 		
 //		$atr['infotext']	el texto a mostrar cuando selecciona el archivo
 //		$atr['extensions']	lista de extensiones asi *.jpg;*.jpeg;*.png;*.gif
@@ -370,6 +370,53 @@ class Form{
 		$this->html .= $html;
 		
 	}
+
+	public function createFile($name, $atr)
+	{
+		$html .= '<div class="label">' . $atr['label'] . '</div>';
+		$html .= '<div class="content">';
+		$html .= '<div id="uploader_' . $name . '">';
+		$html .= '<input type="hidden" name="folder" value="' . $atr['folder'] . '" /><br />';
+		$html .= '<input type="hidden" name="name" value="' . $name . '" /><br />';
+		if (isset($atr['value'])){
+			$html .= '<input type="hidden" name="' . $name . '" value="' . $atr['value'] . '" />' . $atr['value'] . '<br />';
+		}
+
+		$html .= '<input id="' . $name . '" type="file" name="' . $name . '" />';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '<div style="clear:both;"></div>';
+
+		$this->html .= $html;
+
+		$js .= "
+    <script type=\"text/javascript\">
+    $(document).ready(function() {
+        $('#" . $name . "').fileupload({
+            url: 'library/upload.php',
+            dataType: 'json',
+      		acceptFileTypes: /(\.|\/)(" . $atr['extensions'] . ")$/i,
+            done: function (e, data) {
+                if (data.result.success) {
+                    var filename = data.result.filename.replace(/ /g, '_');
+                    var html = '<input type=\"hidden\" name=\"" . $name . "\" value=\"' + filename + '\" />' + filename;
+                    $('#uploader_" . $name . "').html(html);
+                    $('input[type=submit]').removeAttr('disabled');
+                } else {
+                    alert(data.result.message);
+                    console.log('Error al cargar el archivo.');
+                }
+            },
+            fail: function (e, data) {
+            	alert(data.result.message);	
+                console.log('Error al cargar el archivo.');
+            }
+        });
+    });
+    </script>";
+
+		$this->js .= $js;
+	}
 	
 	public function createDate($name,$atr){
 	
@@ -380,8 +427,28 @@ class Form{
 		
 		$js .= "
 		<script>
+		
+ $.datepicker.regional['es'] = {
+ closeText: 'Cerrar',
+ prevText: '< Ant',
+ nextText: 'Sig >',
+ currentText: 'Hoy',
+ monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+ monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+ dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+ dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+ dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+ weekHeader: 'Sm',
+ dateFormat: 'dd/mm/yy',
+ firstDay: 1,
+ isRTL: false,
+ showMonthAfterYear: false,
+ yearSuffix: ''
+ };
+ $.datepicker.setDefaults($.datepicker.regional['es']);
+
 		$(function(){
-			$('.".$name."').datePicker();
+			$('.".$name."').datepicker();
 		});
 		</script>";
 		

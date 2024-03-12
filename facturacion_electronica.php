@@ -72,6 +72,10 @@ cursor:pointer;
     <option <?php if($ano == '2021'){?> selected="selected" <?php } ?> >2021</option>
     <option <?php if($ano == '2022'){?> selected="selected" <?php } ?> >2022</option>
     <option <?php if($ano == '2023'){?> selected="selected" <?php } ?> >2023</option>
+    <option <?php if($ano == '2024'){?> selected="selected" <?php } ?> >2024</option>
+    <option <?php if($ano == '2025'){?> selected="selected" <?php } ?> >2025</option>
+    <option <?php if($ano == '2026'){?> selected="selected" <?php } ?> >2026</option>
+    <option <?php if($ano == '2027'){?> selected="selected" <?php } ?> >2027</option>
 </select> 
 
 

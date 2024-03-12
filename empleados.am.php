@@ -116,7 +116,7 @@ $campos['foto'] 			= array(
 								'type'			=> 'file',
 								'label'			=> 'Imagen',
 								'infotext'		=> 'Seleccione una imagen',
-								'extensions' 	=> '*.jpg;*.jpeg;*.png;*.gif',
+                                'extensions' 	=> 'jpg|jpeg|png|gif',
 								'folder'		=> 'empleados'
 							);
 $campos['fecha_alta'] 		= array(
@@ -177,25 +177,22 @@ $form->setCampos($campos);
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Administrador de empleados</title>
-<script type="text/javascript" src="library/jquery/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="library/jquery-ui-1.13.2.custom/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="library/jquery.fileupload/jquery.fileupload.css">
+    <script src="library/jquery.fileupload/jquery.fileupload.js"></script>
 
-<!--JQuery Uploadify-->
-<script type="text/javascript" src="library/uploadify/jquery.uploadify.v2.1.0.min.js"></script>
-<script type="text/javascript" src="library/uploadify/swfobject.js"></script>
-<link href="library/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-<!--/JQuery Uploadify-->
+    <!--JQuery editor-->
+    <script type="text/javascript" src="library/jwysiwyg/jquery.wysiwyg.js"></script>
+    <link rel="stylesheet" href="library/jwysiwyg/jquery.wysiwyg.css" type="text/css" />
+    <!--/JQuery editor-->
 
-<!--JQuery editor-->
-<script type="text/javascript" src="library/jwysiwyg/jquery.wysiwyg.js"></script>
-<link rel="stylesheet" href="library/jwysiwyg/jquery.wysiwyg.css" type="text/css" />
-<!--/JQuery editor-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
 
-<!--JQuery Date Picker-->
-<script type="text/javascript" src="library/datepicker/date.js"></script>
-<!--[if IE]><script type="text/javascript" src="library/datepicker/jquery.bgiframe.js"></script><![endif]-->
-<script type="text/javascript" src="library/datepicker/jquery.datePicker.min-2.1.2.js"></script>
-<script src="library/dhtml/js/dhtmlxcommon.js"></script>
-<script src="js/createWindow.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="library/dhtml/js/dhtmlxcommon.js"></script>
+    <script src="js/createWindow.js"></script>
 <script>
 var dhxWins = parent.dhxWins;
 

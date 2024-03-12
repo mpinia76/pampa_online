@@ -12,13 +12,13 @@ $campos['id'] 				= array(
 								'input_type'		=> 'hidden'
 							);
 $campos['path'] 			= array(
-								'type'			=> 'file',
-								'label' 		=> 'Archivo',
-								'infotext'		=> 'Seleccione un archivo',
-								'extensions' 	=> '*.pdf;*.doc;*.docx;*.rtf',
-								'folder'		=> 'documentos',
-								'requerid' 			=> true
-							);
+    'type'			=> 'file',
+    'label' 		=> 'Archivo',
+    'infotext'		=> 'Seleccione un archivo',
+    'extensions' 	=> 'pdf|doc|docx|rtf',
+    'folder'		=> 'documentos',
+    'requerid' 			=> true
+);
 
 			
 
@@ -66,24 +66,10 @@ $form->setCampos($campos);
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Documento sin t&iacute;tulo</title>
-<script type="text/javascript" src="library/jquery/jquery-1.4.2.min.js"></script>
-
-<!--JQuery Uploadify-->
-<script type="text/javascript" src="library/uploadify/jquery.uploadify.v2.1.0.min.js"></script>
-<script type="text/javascript" src="library/uploadify/swfobject.js"></script>
-<link href="library/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-<!--/JQuery Uploadify-->
-
-<!--JQuery editor-->
-<script type="text/javascript" src="library/jwysiwyg/jquery.wysiwyg.js"></script>
-<link rel="stylesheet" href="library/jwysiwyg/jquery.wysiwyg.css" type="text/css" />
-<!--/JQuery editor-->
-
-<!--JQuery Date Picker-->
-<script type="text/javascript" src="library/datepicker/date.js"></script>
-<!--[if IE]><script type="text/javascript" src="library/datepicker/jquery.bgiframe.js"></script><![endif]-->
-<script type="text/javascript" src="library/datepicker/jquery.datePicker.min-2.1.2.js"></script>
-<link href="library/datepicker/datePicker.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="library/jquery-ui-1.13.2.custom/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="library/jquery.fileupload/jquery.fileupload.css">
+    <script src="library/jquery.fileupload/jquery.fileupload.js"></script>
 <style>
 a.dp-choose-date {
 	float: left;
