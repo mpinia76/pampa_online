@@ -1,7 +1,7 @@
 <?php
 class Usuario extends AppModel {
     public $useTable = 'usuario';
-    public $hasMany = 'UsuarioPermiso';
+    public $hasMany = 'UsuarioPermiso,UsuarioAuditoria';
     public $hasAndBelongsToMany = array(
         'Cuentas' => array(
             'className'              => 'Cuenta',

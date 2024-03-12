@@ -8,29 +8,58 @@ class UsuarioLogsController extends AppController {
         $date_parts = explode("/",$dateString);
         return $date_parts[2]."-".$date_parts[1]."-".$date_parts[0];
     }
-    
-   public function index(){
+
+	public function dateFormatView($dateString) {
+
+		$date_parts = explode("-",$dateString);
+		return $date_parts[2]."/".$date_parts[1]."/".$date_parts[0];
+	}
+
+	function index_auditoria(){
+		$this->layout = 'index';
+		/*if (!isset($_SESSION['paginaOperaciones'])) {
+
+            $_SESSION['paginaOperaciones']=1;
+        }*/
+		$this->setLogUsuario('Auditoria de Usuarios');
+	}
+
+
+
+
+   public function index($desde,$hasta){
    		$_SESSION['desde'] = '';
 		$_SESSION['hasta'] = '';
 	
 	    $this->layout = 'index';
 
-		$_SESSION['desde'] = '';
-		$_SESSION['hasta'] = '';
-   		if (isset($this->data['desde'])) {
-			$_SESSION['desde'] = $this->data['desde'];
+   		if (isset($desde)&&($desde!='')) {
+			$_SESSION['desde'] = $desde;
+			$this->set('desde',$this->dateFormatView($_SESSION['desde']));
 		}
-    	if (isset($this->data['hasta'])) {
-			$_SESSION['hasta'] = $this->data['hasta'];
+    	if (isset($hasta)&&($hasta!='')) {
+			$_SESSION['hasta'] = $hasta;
+			$this->set('hasta',$this->dateFormatView($_SESSION['hasta']));
 		}
-         $this->setLogUsuario('Auditoria de Usuarios');
+	   //echo $desde.' - '.$hasta;
+	   /*$gc_maxlifetime = ini_get('session.gc_maxlifetime');
+	   $cookie_lifetime = ini_get('session.cookie_lifetime');
+
+	   echo "Tiempo de vida máximo de sesión: $gc_maxlifetime segundos\n";
+	   echo "Tiempo de vida de la cookie de sesión: $cookie_lifetime segundos\n";*/
+
+
+
+         $this->setLogUsuario('Auditoria de Usuarios - interacciones');
    	
     }
     
     public function dataTable(){
     	//print_r($_GET);
+		//echo $_SESSION['desde'];
     	$desde = $_SESSION['desde'];
 	    $hasta = $_SESSION['hasta'];
+		//echo $desde.' - '.$hasta;
     	$orderType= ($_GET['sSortDir_0'])? $_GET['sSortDir_0']:'desc';
     	switch ($_GET['iSortCol_0']) {
 			
@@ -63,7 +92,7 @@ class UsuarioLogsController extends AppController {
         	$condicionSearch4 = ($_GET['sSearch_4'])?array('UsuarioLog.ip LIKE '=>'%'.$_GET['sSearch_4'].'%'):array();
         	$condicionSearch5=array();
     		if (($desde!='')&&($hasta!='')) {
-				$condicionSearch5=array('UsuarioLog.created between ? and ?' => array($this->dateFormatSQL($desde), $this->dateFormatSQL($hasta)));
+				$condicionSearch5=array('UsuarioLog.created between ? and ?' => array($desde, $hasta));
 			}
         	$condicion=array($condicionSearch1,$condicionSearch2,$condicionSearch3,$condicionSearch4,$condicionSearch5);
         	
@@ -72,11 +101,11 @@ class UsuarioLogsController extends AppController {
 			$usuarioLogs = $this->UsuarioLog->find('all',array('conditions'=>$condicion,
                                                          'order' => $order, 'limit'=>$_GET['iDisplayLength'], 'offset'=>$_GET['iDisplayStart']));
 			
-			/*App::uses('ConnectionManager', 'Model');
+			App::uses('ConnectionManager', 'Model');
 			$connected = ConnectionManager::getDataSource('default');
     		$logs = $connected->getLog();
     		$lastLog = end($logs['log']);
-    		echo $lastLog;*/
+    		echo $lastLog;
 			$iTotal = $this->UsuarioLog->find('count',array('conditions'=> $condicion));
 			
 			

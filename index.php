@@ -1,14 +1,36 @@
 <?php
-date_default_timezone_set('America/Argentina/Buenos_Aires');
+
 session_start();
 include_once("model/form.class.php");
 include_once("config/db.php");
 include_once("functions/abm.php");
 include_once("functions/util.php");
+// Al final de la página, actualiza la información en la base de datos
+$date = date('Y-m-d');
+
 if(isset($_GET['exit']) and $_GET['exit']=="on"){
 	$sql = "INSERT INTO usuario_log (usuario_id,nombre,accion,ip)
 			VALUES ('".$_SESSION['userid']."','".$_SESSION['usernombre']."','logout','".getRealIP()."')";
 	mysql_query($sql);
+    $date = date('Y-m-d');
+    $sqlAuditoria ="SELECT * FROM usuario_auditoria WHERE usuario_id = ".$_SESSION['userid']." AND fecha='".$date."'";
+    $rsTempAuditoria = mysql_query($sqlAuditoria);
+    $totalAuditoria = mysql_num_rows($rsTempAuditoria);
+    //_log($sqlAuditoria);
+    if($totalAuditoria == 1) {
+        $rsAuditoria = mysql_fetch_array($rsTempAuditoria);
+        $last_interaction = strtotime($rsAuditoria['last']);
+        _log(date('Y-m-d H:i:s'));
+        // Calcula los segundos entre la última interacción y el tiempo actual
+        $elapsed_time_seconds = time() - $last_interaction;
+        //$elapsed_time_minutes = round($elapsed_time_seconds / 60);
+
+            // Actualiza la hora de última interacción y segundos conectados
+            $sql_update = "UPDATE usuario_auditoria SET last = now(), interaccion='logout', segundos = segundos + $elapsed_time_seconds WHERE usuario_id = " . $_SESSION['userid'] . " AND fecha = '$date'";
+        //_log($sql_update);
+        mysql_query($sql_update);
+
+    }
     session_destroy();
     setcookie("userid","",time()-3600);
 }else if($_SESSION['userid'] != ''){
@@ -28,12 +50,47 @@ if(isset($_POST['ingresar'])){
 		$rs = mysql_fetch_array($rsTemp);
 		$_SESSION['userid'] = $rs['id'];
 		$_SESSION['usernombre'] = $rs['nombre']." ".$rs['apellido'];
+        $_SESSION['login_time'] = time();
+        // Actualiza el tiempo de la última interacción del usuario
+        $_SESSION['last_interaction'] = time();
         setcookie('userid',$rs['id'],time()+60*60*24,'/');
         
         $sql = "INSERT INTO usuario_log (usuario_id,nombre,accion,ip)
 			VALUES ('".$_SESSION['userid']."','".$_SESSION['usernombre']."','login','".getRealIP()."')";
 	mysql_query($sql);
-                
+
+
+
+
+        $sqlAuditoria ="SELECT * FROM usuario_auditoria WHERE usuario_id = ".$rs['id']." AND fecha='".$date."'";
+        $rsTempAuditoria = mysql_query($sqlAuditoria);
+        $totalAuditoria = mysql_num_rows($rsTempAuditoria);
+        //_log($sqlAuditoria);
+        if($totalAuditoria == 1) {
+            $rsAuditoria = mysql_fetch_array($rsTempAuditoria);
+            $last_interaction = strtotime($rsAuditoria['last']);
+
+            // Calcula los segundos entre la última interacción y el tiempo actual
+            $elapsed_time_seconds = time() - $last_interaction;
+            $elapsed_time_minutes = round($elapsed_time_seconds / 60);
+            // Verifica si la sesión se ha perdido por inactividad
+            $inactividad_limite = 24; // Establece el límite de inactividad en segundos (ajusta según tus necesidades)
+            $elapsed_time_minutes=($elapsed_time_minutes > $inactividad_limite)?$inactividad_limite:$elapsed_time_minutes;
+            _log(date('Y-m-d H:i:s'));
+                // Actualiza la hora de última interacción y segundos conectados
+                $sql_update = "UPDATE usuario_auditoria SET last = now(), interaccion='logout', segundos = segundos + $elapsed_time_minutes WHERE usuario_id = " . $rs['id'] . " AND fecha = '$date'";
+            //_log($sql_update);
+                mysql_query($sql_update);
+
+        }
+        else{
+            $sqlInsertAuditoria = "INSERT INTO usuario_auditoria (usuario_id,fecha,logueo,last,segundos,interaccion,ip)
+			VALUES ('".$_SESSION['userid']."','".date('Y-m-d')."','".date('Y-m-d H:i:s')."','".date('Y-m-d H:i:s')."',0,'login','".getRealIP()."')";
+            //_log($sqlInsertAuditoria);
+            mysql_query($sqlInsertAuditoria);
+        }
+
+
 		if($rs['admin'] == 1){ $_SESSION['admin'] = true; }
 		header("Location: desktop.php#");
 	}else{

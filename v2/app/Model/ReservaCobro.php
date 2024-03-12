@@ -50,7 +50,7 @@ class ReservaCobro extends AppModel {
         ),
         'monto_neto' => array(
             'numero' => array(
-                'rule'    => array('range', 0,9999999),
+                'rule'    => array('range', 0,99999999),
                 'required'   => true,
                 'message' => 'Ingrese un numero mayor a 0'
              ),

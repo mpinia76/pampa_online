@@ -20,15 +20,15 @@ $this->Js->buffer('
             });
         },
         "aaSorting": [],
-        "sAjaxSource": "'.$this->Html->url('/usuario_logs/dataTable/100', true).'",
+        "sAjaxSource": "'.$this->Html->url('/usuario_auditorias/dataTable/100', true).'",
         "bDeferRender": true,
         "aoColumns": [
             {"bVisible": false },
-            
+             null,
             {"sType": "date-euro"},
                   
             null,
-            null,
+
             null
             
         ]
@@ -47,16 +47,16 @@ $this->Js->buffer('
         oTable.fnReloadAjax("dataTable/"+$(this).val());
     });
     
-
-    $("#filter_creado").keyup(function(){
+$("#filter_nombre").keyup(function(){
         oTable.fnFilter($(this).val(),1);
+    });
+    $("#filter_creado").keyup(function(){
+        oTable.fnFilter($(this).val(),2);
     });
 
     
 
-    $("#filter_nombre").keyup(function(){
-        oTable.fnFilter($(this).val(),2);
-    });
+    
     $("#filter_accion").keyup(function(){
         oTable.fnFilter($(this).val(),3);
     });
@@ -78,8 +78,8 @@ $this->Js->buffer('
 ?>
 <script>
 function limpiarFechas(){
-	$('#desde').val('');
-	$('#hasta').val('');
+	$('#desdeA').val('');
+	$('#hastaA').val('');
 }
 
 
@@ -95,25 +95,25 @@ function limpiarFechas(){
    
 echo $this->Form->end('Cargar');*/
 ?>
-<div id="informe_logs"><strong>&nbsp;&nbsp;Entre fechas&nbsp;<input type="text" name="desde" id="desde" class="datepicker" value="<?php echo $desde?>">&nbsp;&nbsp;y&nbsp;<input type="text" name="hasta" id="hasta" class="datepicker" value="<?php echo $hasta?>"></strong>
+<div id="informe_auditoria"><strong>&nbsp;&nbsp;Entre fechas&nbsp;<input type="text" name="desdeA" id="desdeA" class="datepicker" value="<?php echo $desde?>">&nbsp;&nbsp;y&nbsp;<input type="text" name="hastaA" id="hastaA" class="datepicker" value="<?php echo $hasta?>"></strong>
 
-<input type="button" onclick="ver_logs();" value="Ver" /> <span id="cargando" style="display:none;">Cargando ...</span>
-
+    <input type="button" onclick="ver_auditorias();" value="Ver" /> <span id="cargandoA" style="display:none;">Cargando ...</span>
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="dataTable">
     <thead>
         <tr>
             <th width="100">Id</th>
-            
+
+            <!-- Campo Nombre-->
+            <th width="150">
+                <input type="text" style="width: 90%;" id="filter_nombre" />
+            </th>
 
             <!-- Campo Creado -->
             <th width="150">
                <input type="text" style="width: 90%;" id="filter_creado" />
             </th>
 
-            <!-- Campo Nombre-->
-            <th width="150">
-               <input type="text" style="width: 90%;" id="filter_nombre" />
-            </th>
+
        
        		<!-- Campo Accion-->
             <th width="150">
@@ -127,10 +127,10 @@ echo $this->Form->end('Cargar');*/
         </tr>
         <tr>
             <th width="100">Id</th>
-            
-            <th width="150">Fecha/Hora</th>
             <th width="150">Usuario</th>
-            <th width="150">Accion</th>
+            <th width="150">Fecha</th>
+
+            <th width="150">Ult. Interaccion</th>
             <th width="150">IP</th>
            
         </tr>

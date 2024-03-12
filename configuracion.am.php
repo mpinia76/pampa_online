@@ -8,6 +8,24 @@ include_once("functions/util.php");
 $sql = "INSERT INTO usuario_log (usuario_id,nombre,accion,ip)
 			VALUES ('".$_SESSION['userid']."','".$_SESSION['usernombre']."','Gastos, Compras, Impuestos, Tasas y Cargas sociales: Montos Aprobacion','".getRealIP()."')";
 mysql_query($sql);
+$date = date('Y-m-d');
+$sqlAuditoria ="SELECT * FROM usuario_auditoria WHERE usuario_id = ".$_SESSION['userid']." AND fecha='".$date."'";
+$rsTempAuditoria = mysql_query($sqlAuditoria);
+$totalAuditoria = mysql_num_rows($rsTempAuditoria);
+
+if($totalAuditoria == 1) {
+    $rsAuditoria = mysql_fetch_array($rsTempAuditoria);
+    $last_interaction = strtotime($rsAuditoria['last']);
+
+    // Calcula los segundos entre la última interacción y el tiempo actual
+    $elapsed_time_seconds = time() - $last_interaction;
+    //$elapsed_time_minutes = round($elapsed_time_seconds / 60);
+
+    // Actualiza la hora de última interacción y segundos conectados
+    $sql_update = "UPDATE usuario_auditoria SET last = now(), interaccion='Gastos, Compras, Impuestos, Tasas y Cargas sociales: Montos Aprobacion', segundos = segundos + $elapsed_time_seconds WHERE usuario_id = " . $_SESSION['userid'] . " AND fecha = '$date'";
+    mysql_query($sql_update);
+
+}
 include_once("functions/abm.php");
 
 //indicar tabla a editar
