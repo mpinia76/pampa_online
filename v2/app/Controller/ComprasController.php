@@ -210,7 +210,7 @@ class ComprasController extends AppController {
                 $compra['Subrubro']['subrubro'],
                 $proveedor,
                 $comprobante,
-                $compra['Compra']['monto'],
+                number_format($compra['Compra']['monto'],2),
                 $estado,
                 $compra['Usuario']['nombre'].','.$compra['Usuario']['apellido'],
 				round($iMonto[0]['total'],2)

@@ -224,7 +224,7 @@ class GastosController extends AppController {
                 $gasto['Subrubro']['subrubro'],
                 $proveedor,
                 $gasto['Gasto']['factura_tipo']." ".$gasto['Gasto']['factura_punto_venta'].$gasto['Gasto']['factura_nro'],
-                $gasto['Gasto']['monto'],
+                number_format($gasto['Gasto']['monto'],2, '.', ''),
                 $estado,
                 $gasto['Usuario']['nombre'].','.$gasto['Usuario']['apellido'],
 				round($iMonto[0]['total'],2)

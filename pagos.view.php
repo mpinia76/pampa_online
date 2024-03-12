@@ -40,9 +40,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><label>Cuenta destino:</label><?php echo $rs['cuenta_destino']?></li>
 <!--  <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_transferencia[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_transferencia_id[]" value="<?php echo ($rs['id'])?>" /></li>-->
 <li><label>A la fecha:</label><?=fechavista($rs['fecha'])?></li>
-<li><label>Monto:</label>$<?php echo $rs['monto']?></li>
-<li><label>Interes:</label>$<?php echo $rs['interes']?></li>
-<li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
+<li><label>Monto:</label>$<?php echo number_format($rs['monto'],2, '.', '')?></li>
+<li><label>Interes:</label>$<?php echo number_format($rs['interes'],2, '.', '')?></li>
+<li><label>Descuento:</label>$<?php echo number_format($rs['descuento'],2, '.', '')?></li>
 <?php  }} ?>
 
 <!--CHEQUE DE TERCERO-->
@@ -55,7 +55,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><h3>Cheque de tercero</h3><li>
 <li><label>Banco:</label><?php echo $rs['banco']?></li>
 <li><label>Numero:</label><?php echo $rs['numero']?></li>
-<li><label>Monto:</label>$<?php echo $rs['monto_neto'] + $rs['interes']?></li>
+<li><label>Monto:</label>$<?php echo number_format($rs['monto_neto'] + $rs['interes'],2, '.', '')?></li>
 <?php  }} ?>
 
 <!--DEBITO-->
@@ -68,9 +68,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><h3>Debito</h3></li>
 <li><label>Cuenta:</label><?php echo $rs['banco']?> <?php echo $rs['cuenta_tipo']?></li>
 <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_debito[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_debito_id[]" value="<?php echo ($rs['id'])?>" /></li>
-<li><label>Monto:</label>$<?php echo $rs['monto']?></li>
-<li><label>Interes:</label>$<?php echo $rs['interes']?></li>
-<li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
+<li><label>Monto:</label>$<?php echo number_format($rs['monto'],2, '.', '')?></li>
+<li><label>Interes:</label>$<?php echo number_format($rs['interes'],2, '.', '')?></li>
+<li><label>Descuento:</label>$<?php echo number_format($rs['descuento'],2, '.', '')?></li>
 <?php  }} ?>
 
 <!--EFECIVO-->
@@ -85,9 +85,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><label>Caja origen:</label><?php echo $rs['caja']?></li>
 <!--  <li><label>A la fecha:</label><?php echo fechavista($rs['fecha'])?></li>-->
 <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_efectivo[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_efectivo_id[]" value="<?php echo ($rs['id'])?>" /></li>
-<li><label>Monto:</label>$<?php echo $rs['monto']?></li>
-<li><label>Interes:</label>$<?php echo $rs['interes']?></li>
-<li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
+<li><label>Monto:</label>$<?php echo number_format($rs['monto'],2, '.', '')?></li>
+<li><label>Interes:</label>$<?php echo number_format($rs['interes'],2, '.', '')?></li>
+<li><label>Descuento:</label>$<?php echo number_format($rs['descuento'],2, '.', '')?></li>
 <?php  }} ?>
 
 <!--TARJETA-->
@@ -102,9 +102,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 <li><label>Tarjeta:</label><?php echo $rs['banco']?> <?php echo $rs['marca']?> <?php echo $rs['titular']?></li>
 <!--  <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_tarjeta[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_tarjeta_id[]" value="<?php echo ($rs['id'])?>" /></li>-->
 <li><label>Comprobante:</label><?php echo $rs['comprobante_nro']?></li>
-<li><label>Monto:</label>$<?php echo $rs['monto']?></li>
-<li><label>Interes:</label>$<?php echo $rs['interes']?></li>
-<li><label>Descuento:</label>$<?php echo $rs['descuento']?></li>
+<li><label>Monto:</label>$<?php echo number_format($rs['monto'],2, '.', '')?></li>
+<li><label>Interes:</label>$<?php echo number_format($rs['interes'],2, '.', '')?></li>
+<li><label>Descuento:</label>$<?php echo number_format($rs['descuento'],2, '.', '')?></li>
 <li><label>Cuotas:</label><?php echo $rs['cuotas']?></li>
 
 <?php  }} ?>
@@ -117,5 +117,5 @@ if(mysql_num_rows($rsTemp)>0){
 while($rs = mysql_fetch_array($rsTemp)){
 ?>
 <li><h3>Cuentas a pagar</h3></li>
-<li><label>Monto:</label>$<?php echo $rs['monto']?></li>
+<li><label>Monto:</label>$<?php echo number_format($rs['monto'],2, '.', '')?></li>
 <?php  }} ?>

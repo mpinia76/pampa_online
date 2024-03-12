@@ -290,7 +290,7 @@
         </div>
         <?php } ?>
         <?php if(ACCION_127){ ?>
-        <div class="informes item" onclick="createWindow('w_audiroria_usuario','Auditoria de Usuarios','v2/usuario_logs/index','1230','400'); $('#menu').hide();">
+        <div class="informes item" onclick="createWindow('w_audiroria_usuario','Auditoria de Usuarios','v2/usuario_logs/index_auditoria','1230','400'); $('#menu').hide();">
             Auditor&iacute;a de Usuarios
         </div>
         <?php } ?>

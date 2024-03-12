@@ -751,3 +751,20 @@ ALTER TABLE `reserva_extras`
 ##################################17/01/2023###########################################################
 ALTER TABLE `extra_subrubros`
     ADD COLUMN `activo` TINYINT(1) NOT NULL DEFAULT 1 AFTER `subrubro`;
+
+##################################12/03/2024###########################################################
+CREATE TABLE `usuario_auditoria` (
+                               `id` INT(11) NOT NULL AUTO_INCREMENT,
+                               `usuario_id` INT(11) NOT NULL,
+                               `fecha` DATE NULL DEFAULT NULL,
+                               `logueo` TIMESTAMP NULL DEFAULT NULL,
+                               `last` TIMESTAMP NULL DEFAULT NULL,
+                               `segundos` float NOT NULL DEFAULT '0',
+                               `interaccion` VARCHAR(255) NULL DEFAULT NULL,
+                               `ip` VARCHAR(255) NULL DEFAULT NULL,
+                               PRIMARY KEY (`id`)
+)
+    COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+

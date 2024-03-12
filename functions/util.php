@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 function _log($msg){
 $nombreFile = date('Ymd') . '_log';
          $dt = date('Y-m-d G:i:s');

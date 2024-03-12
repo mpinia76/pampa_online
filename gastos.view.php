@@ -18,26 +18,26 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 }elseif(is_array($data) and count($data)==1){
 
 	$dataid = $data[0];
-
+	
 
 	include_once("functions/fechasql.php");
 	include_once("functions/date.php");
 	include_once("functions/getProveedor.php");
-
-
-
+	
+	
+	
 	if(($_POST['aprobar'])){ //gasto aprobado
 		$sql = "SELECT nro_orden FROM gasto ORDER BY nro_orden DESC LIMIT 1";
 		$rs = mysql_fetch_array(mysql_query($sql));
 		$nro_orden = $rs['nro_orden'] + 1; //obtengo el numero de orden
-
+		
 		$sql = "UPDATE gasto SET nro_orden=$nro_orden WHERE id=".$_POST['gasto_id'];
 		mysql_query($sql); //guardo el numero de orden
 		_log($sql);
 		$dataid = $_POST['gasto_id'];
 		$result = 1;
 		$_GET['action'] = 'abonar';
-
+		
 	}elseif(($_POST['desaprobar'])){ //gasto desaprobado
 		$sql = "UPDATE gasto SET estado=2 WHERE id=".$_POST['gasto_id'];
 		mysql_query($sql);
@@ -54,9 +54,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		$perc_iibb_bsas = (ISSET($_POST['perc_iibb_bsas'])&&($_POST['perc_iibb_bsas']!=''))?$_POST['perc_iibb_bsas']:0;
 		$perc_iibb_caba = (ISSET($_POST['perc_iibb_caba'])&&($_POST['perc_iibb_caba']!=''))?$_POST['perc_iibb_caba']:0;
 		$exento = (ISSET($_POST['exento'])&&($_POST['exento']!=''))?$_POST['exento']:0;
-        $quitar_egresos = ($_POST['quitar_egresos'])?1:0;
+		$quitar_egresos = ($_POST['quitar_egresos'])?1:0;
 		$result = 1;
-		$sql = "UPDATE gasto SET
+		$sql = "UPDATE gasto SET 
 					fecha='".fechasql($_POST['fecha'])."',
 					fecha_vencimiento='".fechasql($_POST['fecha_vencimiento'])."',
 					rubro_id=".$_POST['rubro'].",
@@ -99,8 +99,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				else $result .= 'La fecha del/los cheque/s debe ser inferior o igual a la fecha de hoy<br>';
 			}
 		}
-
-
+		
+		
 		$fecha_transferencia 			= $_POST['fecha_transferencia'];
 		$fecha_transferencia_id 		= $_POST['fecha_transferencia_id'];
 		if ($fecha_transferencia) {
@@ -113,8 +113,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				else $result .= 'La fecha de la/s transferencia/s debe ser inferior o igual a la fecha de hoy<br>';
 			}
 		}
-
-
+		
+		
 		$fecha_debito 			= $_POST['fecha_debito'];
 		$fecha_debito_id 		= $_POST['fecha_debito_id'];
 		if ($fecha_debito) {
@@ -127,46 +127,46 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				else $result .= 'La fecha del/los debito/s debe ser inferior o igual a la fecha de hoy<br>';
 			}
 		}
-
-
+		
+		
 		$fecha_efectivo 			= $_POST['fecha_efectivo'];
 		$fecha_efectivo_id 		= $_POST['fecha_efectivo_id'];
-
+		
 		if ($fecha_efectivo) {
 			$ok=1;
 			foreach($fecha_efectivo as $key=>$valor){
 				if(!ACCION_134){
-					$sql = "SELECT caja_id
+					$sql = "SELECT caja_id  
 					FROM caja_sincronizada
 					WHERE registro_id = ".$fecha_efectivo_id[$key];
-
+					
 					$rsCaja = mysql_fetch_array(mysql_query($sql));
 					$id_caja = $rsCaja['caja_id'];
-
-
-					$sql = "SELECT MAX(fecha) AS fecha
+					
+					
+					$sql = "SELECT MAX(fecha) AS fecha  
 					FROM caja_movimiento
 					WHERE caja_id = ".$id_caja;
-
+					
 					$rsCajaSincronizada = mysql_fetch_array(mysql_query($sql));
 					$fecha_sincronizacion = $rsCajaSincronizada['fecha'];
-
+					
 					if ($fecha_sincronizacion.'>='.fechasql($valor)) {
 						$ok=0;
 						$result .="La caja se encuentra conciliada y sincronizada para la fecha del movimiento que intenta realizar. Contactar administrador";
-
+							
 					}
 				}
-
+				
 				if ($ok) {
 					if((date("Y-m-d")) >= fechasql($valor)){
 						$sql = "UPDATE efectivo_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_efectivo_id[$key];
 				        mysql_query($sql);
 				        _log($sql);
 				        $time = time();
-
+	
 						$hora = date("H:i:s", $time);
-
+						
 						$fecha =fechasql($valor).' '.$hora;
 				        $sql = "UPDATE caja_movimiento SET fecha = '".$fecha."' WHERE registro_id = ".$fecha_efectivo_id[$key];
 				        mysql_query($sql);
@@ -174,12 +174,12 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				    }
 					else $result .= 'La fecha del/los pago/s en efectivo debe ser inferior o igual a la fecha de hoy<br>';
 				}
-
-
+				
+				
 			}
 		}
-
-
+		
+		
 		$fecha_tarjeta 			= $_POST['fecha_tarjeta'];
 		$fecha_tarjeta_id 		= $_POST['fecha_tarjeta_id'];
 		if ($fecha_tarjeta) {
@@ -195,29 +195,29 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		$result = ($result=='')?1:$result;
 		$dataid = $_POST['gasto_id'];
 		$_GET['action'] = 'editar';
-
+		
 	}elseif(($_POST['guardar'])){ //guardo los datos extras del gasto
 		$dataid = $_POST['gasto_id'];
 		$_GET['action'] = 'abonar';
-
+		
 		if($_POST['forma_pago']=='n'){
-
+		
 			$result = 'Debe seleccionar al menos una forma de pago';
 			$dataid = $_POST['gasto_id'];
-
+		
 		}elseif( ($_POST['factura_nro'] != '' and $_POST['factura_tipo'] != 'n') or $_POST['remito_nro'] != '' or $_POST['recibo_nro'] != '' ){
-
+		
 			$operacion_monto = $_POST['gasto_monto'];
 			include("functions/comprueba_pagos.php");
-
+			
 			if($procesa){
-
-
+			
+				
 				//echo $sql."<br>";
 				$operacion_id[] = $dataid;
 				$operacion_tipo = 'gasto';
-
-				include("functions/procesa_pagos.php");
+				
+				include("functions/procesa_pagos.php");	
 				if (!$error) {
 					$iva_27 = (ISSET($_POST['iva_27'])&&($_POST['iva_27']!=''))?$_POST['iva_27']:0;
 					$iva_21 = (ISSET($_POST['iva_21'])&&($_POST['iva_21']!=''))?$_POST['iva_21']:0;
@@ -227,9 +227,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					$perc_iibb_bsas = (ISSET($_POST['perc_iibb_bsas'])&&($_POST['perc_iibb_bsas']!=''))?$_POST['perc_iibb_bsas']:0;
 					$perc_iibb_caba = (ISSET($_POST['perc_iibb_caba'])&&($_POST['perc_iibb_caba']!=''))?$_POST['perc_iibb_caba']:0;
 					$exento = (ISSET($_POST['exento'])&&($_POST['exento']!=''))?$_POST['exento']:0;
-                    $quitar_egresos = ($_POST['quitar_egresos'])?1:0;
+					$quitar_egresos = ($_POST['quitar_egresos'])?1:0;
 					$result = 1;
-					$sql = "UPDATE gasto SET
+					$sql = "UPDATE gasto SET 
 								estado=1,
 								orden_pago=nro_orden,
 								factura_nro='".$_POST['factura_nro']."',
@@ -247,13 +247,13 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 								perc_iibb_caba='".$perc_iibb_caba."',
 								quitar_egresos='".$quitar_egresos."',
 								exento='".$exento."'
-
+								
 							WHERE id=".$_POST['gasto_id'];
 					mysql_query($sql);
 					_log($sql);
 					//echo $sql;
 				}
-
+				
 			}else{
 				if(($operacion_monto+$monto_interes-$monto_descuento) != $monto_pagado){
 					$result = 'Verifique que monto original ('.$operacion_monto.') mas los intereses ('.$monto_interes.') menos los descuentos ('.$monto_descuento.') sea igual al valor que intenta pagar ('.$monto_pagado.')';
@@ -262,34 +262,34 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				}elseif($error_cheque == true){
 					$result = 'Debe completar el titular del cheque';
 				}elseif($error_cheque_numero == true){
-					$result = 'Ya existe un cheque del banco seleccionado y el numero ingresado';
+					$result = 'Ya existe un cheque del banco seleccionado y el numero ingresado';				
 				}elseif($fecha_hoy == false){
 					$result = 'Le fecha de pago no puede ser posterior a hoy';
 				}else{
 					$result = 'No se pudo procesar la operacion';
 				}
 			}
-
+		
 		}else{
 			$result = 'No se guardo, debe completar con un n&uacute;mero de recibo, remito o factura';
 		}
 	}
-
-
+	
+	
 	if(isset($dataid)){
 		$sql = "SELECT usuario.nombre,usuario.apellido,gasto.*,subrubro.subrubro,subrubro.id as subrubro_id,rubro.rubro,rubro.id as rubro_id FROM gasto LEFT JOIN subrubro ON gasto.subrubro_id=subrubro.id INNER JOIN usuario ON gasto.user_id=usuario.id INNER JOIN rubro ON gasto.rubro_id=rubro.id WHERE gasto.id=$dataid";
 		$rs = mysql_fetch_array(mysql_query($sql));
-
+		
 		$estado = $rs['estado'];
 		$operacion_id = $dataid;
 		$operacion_tipo = 'gasto';
-
+		
 	}
 	?>
-
-	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
+	
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+	<html xmlns="http://www.w3.org/1999/xhtml"> 
+	<head> 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="STYLESHEET" type="text/css" href="styles/toolbar.css"/>
 	<link href="styles/form.css" rel="stylesheet" type="text/css" />
@@ -299,7 +299,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	<link href="library/jquery/ui/css/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
 	<script src="js/combobox-autosuggest.js" type="text/javascript"></script>
 	<!--/JQuery UI-->
-
+	
 	<!--JQuery Date Picker-->
 	<script type="text/javascript" src="library/datepicker/date.js"></script>
 	<!--[if IE]><script type="text/javascript" src="library/datepicker/jquery.bgiframe.js"></script><![endif]-->
@@ -315,7 +315,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		display: block;
 		text-indent: -2000px;
 		overflow: hidden;
-		background: url(images/calendar.png) no-repeat;
+		background: url(images/calendar.png) no-repeat; 
 	}
 	a.dp-choose-date.dp-disabled {
 		background-position: 0 -20px;
@@ -328,7 +328,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		width: 140px;
 		float: left;
 	}
-
+	
 	.ui-autocomplete {
 		max-height: 100px;
 		overflow-y: auto;
@@ -336,7 +336,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	select{
 		height: 21px;
 	}
-
+	
 	</style>
 	<?php
 	$proveedores=array();
@@ -359,7 +359,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		$(".ui-autocomplete-input").blur(function () {
 			var datos = ({
 				'id' : $("#proveedores").val()
-
+				
 			});
 
 			$.ajax({
@@ -371,51 +371,51 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				dataType:"json",
 				success: function(data) {
 					if($("#razon").val()){
-						$("#razon").attr('disabled','disabled');
+						$("#razon").attr('disabled','disabled');	
 					}
 					else{
 						$("#razon").removeAttr('disabled');
 						}
-					$("#cuit").val(data["cuit"]);
+					$("#cuit").val(data["cuit"]);	
 					if($("#cuit").val()){
-						$("#cuit").attr('disabled','disabled');
+						$("#cuit").attr('disabled','disabled');	
 					}
 					else{
 						$("#cuit").removeAttr('disabled');
 						}
-
+					
 				}
 			});
 		});
-
+		
 
 
 $( "#factura_orden" ).change(function() {
-
-
+		
+		
 		$('#factura_tipo').empty();
 		$('#factura_tipo').append('<option value="n">Tipo</option>');
 		if($(this).val()=='N'){
 			$('#factura_tipo').append('<option value="Ticket">Ticket</option>');
-            $('#quitar_egresos').attr('disabled','disabled');
+			$('#quitar_egresos').attr('disabled','disabled');
 		}
 		else{
-            $("#quitar_egresos").removeAttr('disabled');
+			$("#quitar_egresos").removeAttr('disabled');
 			$('#factura_tipo').append('<option value="A">A</option>');
 			$('#factura_tipo').append('<option value="B">B</option>');
 			$('#factura_tipo').append('<option value="C">C</option>');
 			$('#factura_tipo').append('<option value="E">E</option>');
 			$('#factura_tipo').append('<option value="M">M</option>');
 			}
-
-
+			
+			
 			/*<option value="A">A</option>
 			<option value="B">B</option>
-			<option value="C">C</option>
+			<option value="C">C</option>					
 			<option value="E">E</option>
 			<option value="M">M</option>*/
-
-
+			
+		
     });
 	$( "#monto" ).change(function() {
 		calcularControl();
@@ -447,11 +447,11 @@ $( "#factura_orden" ).change(function() {
 	$( "#exento" ).change(function() {
 		calcularControl();
     });
-
+    
 });
 
 	function calcularControl(){
-		if(($( "#factura_tipo" ).val() == 'A')||($( "#factura_tipo" ).val() == 'M')){
+		if(($( "#factura_tipo" ).val() == 'A')||($( "#factura_tipo" ).val() == 'M')){ 
 			if(isNaN($( "#monto" ).val())||$( "#monto" ).val()==""){
 				$( "#monto" ).val(0);
 			}
@@ -489,12 +489,12 @@ $( "#factura_orden" ).change(function() {
 			}
 	}
 	function mostrarAlicuota(tipo){
-
-		if((tipo == 'A')||(tipo == 'M')){
-			$('#alicuota').show();
+		
+		if((tipo == 'A')||(tipo == 'M')){ 
+			$('#alicuota').show(); 
 		}
-		else{
-			$('#alicuota').hide();
+		else{ 
+			$('#alicuota').hide(); 
 			$('#iva_27').val('');
 			$('#iva_21').val('');
 			$('#iva_10_5').val('');
@@ -507,22 +507,22 @@ $( "#factura_orden" ).change(function() {
 	}
 	function inicializarCalendario() {
 
-		var ToEndDate = new Date();
+		var ToEndDate = new Date();	
 
 		var fullDate = new Date()
 		var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
-
+		 
 		var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
 
 		$('.dp-applied').datePicker({
-
+		
 		    weekStart: 1,
 		    startDate: '01/01/2010',
-		    endDate: currentDate,
+		    endDate: currentDate, 
 		    autoclose: true
 		})
-	}
-
+	}	
+	
 	function createCombo(tabla,campo_id,campo,value){
 
         var datos = ({
@@ -548,12 +548,12 @@ $( "#factura_orden" ).change(function() {
 	</script>
 	<script type="text/javascript">
 	function addFormaDePago(forma_pago_id){
-
+	
 		var datos = ({
 			'forma_pago' : forma_pago_id,
 			'pago' : 1
 		});
-
+		
 		$.ajax({
 			beforeSend: function(){
 				$('#forma_pago_loading').show();
@@ -568,7 +568,7 @@ $( "#factura_orden" ).change(function() {
 		});
 	}
 	</script>
-	<script language="javascript" type="text/javascript">
+	<script language="javascript" type="text/javascript"> 
 	function vacio(q) {
 		//funcion que chequea que los campos no sean espacios en blanco
 		for ( i = 0; i < q.length; i++ ) {
@@ -578,44 +578,44 @@ $( "#factura_orden" ).change(function() {
 		}
 	return false
 	}
-	$(document).ready( function() {   // Esta parte del cï¿½digo se ejecutarï¿½ automï¿½ticamente cuando la pï¿½gina estï¿½ lista.
-	    $("#guardarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
+	$(document).ready( function() {   // Esta parte del código se ejecutará automáticamente cuando la página esté lista.
+	    $("#guardarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
 	    	$('#guardarSubmit').val('Procesando...');
 			$('#guardarSubmit').attr('disabled','disabled');
-	        if(validaForm()){
-
+	        if(validaForm()){      
+		       
 	        }
-	    });
-	    $("#actualizarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
-	        if(validaForm()){
-
+	    }); 
+	    $("#actualizarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	        if(validaForm()){      
+		       
 	        }
-	    });
-	    $("#desaprobarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
-	        if(validaForm()){
-
+	    });  
+	    $("#desaprobarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	        if(validaForm()){      
+		       
 	        }
-	    });
-	    $("#aprobarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
-	        if(validaForm()){
-
+	    });  
+	    $("#aprobarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	        if(validaForm()){      
+		       
 	        }
-	    });
+	    });  
 	});
-
+		    
 	function validaForm() {
-
+		
 		if($("#rubro").val() == ""){
 	        alert("Rubro es obligatorio");
-	        $("#rubro").focus();       // Esta funciï¿½n coloca el foco de escritura del usuario en el campo Nombre directamente.
+	        $("#rubro").focus();       // Esta función coloca el foco de escritura del usuario en el campo Nombre directamente.
 	        return false;
 	    }
 		if($("#fecha").val() == ""){
 	        alert("Fecha es obligatorio");
-	        $("#fecha").focus();       // Esta funciï¿½n coloca el foco de escritura del usuario en el campo Nombre directamente.
+	        $("#fecha").focus();       // Esta función coloca el foco de escritura del usuario en el campo Nombre directamente.
 	        return false;
 	    }
-
+		
 		if(isNaN($("#cuit").val())){
 			alert("Ingrese solo numeros en el CUIT")
 			$("#cuit").focus();
@@ -648,10 +648,10 @@ $( "#factura_orden" ).change(function() {
 		}
 		if($("#monto").val() == ""){
 	        alert("El monto es obligatorio");
-	        $("#monto").focus();       // Esta funciï¿½n coloca el foco de escritura del usuario en el campo Nombre directamente.
+	        $("#monto").focus();       // Esta función coloca el foco de escritura del usuario en el campo Nombre directamente.
 	        return false;
 	    }
-	     // Si todo estï¿½ correcto
+	     // Si todo está correcto
 				/*if(F.rubro.value == 'null') {
 				alert("Rubro es obligatorio")
 				F.rubro.focus();
@@ -672,7 +672,7 @@ $( "#factura_orden" ).change(function() {
 						alert("Incluya los montos de IVA Segun la alicuota que corresponda")
 						$("#iva_27").focus();
 						return false
-						}
+						}	
 					var mitadMonto = parseFloat($("#monto").val()/2);
 					var totalAlicuota = parseFloat($("#iva_27").val())+parseFloat($("#iva_21").val())+parseFloat($("#iva_10_5").val())+parseFloat($("#otra_alicuota").val());
 					if((totalAlicuota>mitadMonto)||($("#iva_27").val()>mitadMonto)||($("#iva_21").val()>mitadMonto)||($("#iva_10_5").val()>mitadMonto)||($("#otra_alicuota").val()>mitadMonto)){
@@ -683,15 +683,15 @@ $( "#factura_orden" ).change(function() {
 				}
 				/*if($("#neto").val() == ""){
 			        alert("El neto es obligatorio");
-			        $("#neto").focus();       // Esta funciï¿½n coloca el foco de escritura del usuario en el campo Nombre directamente.
+			        $("#neto").focus();       // Esta función coloca el foco de escritura del usuario en el campo Nombre directamente.
 			        return false;
 			    }*/
 			    if(($("#control").val()!='0.00')&&($("#control").val()!='-0.00')){
 					alert("El monto de control debe ser 0(cero)")
 					$("#control").focus();
 					return false
-				}
-
+				}	
+				
 		<?php if($rs['nro_orden']==0 and $rs['estado']==0 and $_GET['action'] == 'autorizar'){ ?>
 				$('#aprobarSubmit').val('Procesando...');
 				$('#aprobarSubmit').attr('disabled','disabled');
@@ -703,20 +703,20 @@ $( "#factura_orden" ).change(function() {
 				$("#cuit").removeAttr('disabled');
 				$("#idForm").submit();
 		<?php }elseif($_GET['action'] == 'editar'){ ?>
-
+				
 				var datos = ({
-
+					
 					'fecha' : $("#fecha").val(),
 					'fecha_vencimiento' : $("#fecha_vencimiento").val()
 				});
 				$.ajax({
-
+					
 					data: datos,
 					url: 'functions/checkFecha.php',
 					dataType:"json",
 					success: function(data) {
-
-						if(data["fecha"] == 'no'){
+					
+						if(data["fecha"] == 'no'){	
 							alert('Error en alguna de las fechas');
 						}
 						else{
@@ -732,14 +732,14 @@ $( "#factura_orden" ).change(function() {
 		<?php }elseif($rs['nro_orden']!=0 and $rs['estado']==0 and $_GET['action'] == 'abonar'){ ?>
 					$('#mensaje').html('');
 					$('#mensaje').hide();
-
+					
 					$.ajax({
-
+					
 						type : 'POST',
 						data: $("#idForm").serialize(),
 						url: 'controlar_abono_gasto.php',
 						success: function(data){
-
+							
 							if(data.logs){
 								for(var x = 0; x < data.logs.length; x++){
 									$('#mensaje').append(data.logs[x]+'<br />');
@@ -759,20 +759,20 @@ $( "#factura_orden" ).change(function() {
 								$("#cuit").removeAttr('disabled');
 								$("#idForm").submit();
 							}
-
+							
 						}
 					});
-
-
-
+				
+					
+				
 		<?php } ?>
-
+		
 	}
-
+	
 	</script>
-
+	
 	</head>
-
+	
 	<body onload="inicializarCalendario()">
 	<?php if( isset($_POST['guardar']) or isset($_POST['actualizar']) or isset($_POST['aprobar']) or isset($_POST['desaprobar']) ) { ?>
 	<script>
@@ -780,11 +780,11 @@ $( "#factura_orden" ).change(function() {
 	dhxWins.window('w_gasto').attachURL('v2/gastos/index');
 	</script>
 	<?php } ?>
-
-	<?php include_once("config/messages.php");
+	
+	<?php include_once("config/messages.php"); 
 
 	?>
-    <div id="mensaje" class="error" style="display:none"></div>
+    <div id="mensaje" class="error" style="display:none"></div>               
 	<div class="formContainer">
 	<form method="post" id="idForm" name="form" action="gastos.view.php">
 	<input name="aprobar" id="aprobar" type="hidden" value="0">
@@ -794,7 +794,7 @@ $( "#factura_orden" ).change(function() {
 		<input type="hidden" name="gasto_id" id="gasto_id" value="<?php echo $operacion_id?>" />
 		<input type="hidden" name="gasto_monto" id="gasto_monto" value="<?php echo $rs['monto']?>" />
 		<fieldset>
-			<legend>Detalle de gasto</legend>
+			<legend>Detalle de gasto</legend> 
 			<ul class="form">
 				<li><label>Estado:</label>
 				<span style="background:#FFFF99;">
@@ -806,7 +806,7 @@ $( "#factura_orden" ).change(function() {
 					Gasto autorizado, pendiente de pago
 				<?php }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] == ''){ ?>
 					<?php $subestado = 3; ?>
-					Gasto autorizado, abonado, falta numero de factura
+					Gasto autorizado, abonado, falta numero de factura 
 				<?php }elseif($rs['estado'] == 1 and $rs['nro_orden'] != 0 and $rs['factura_nro'] != ''){ ?>
 					<?php $subestado = 4; ?>
 					Gasto autorizado, abonado, con numero de factura
@@ -844,7 +844,7 @@ $( "#factura_orden" ).change(function() {
 							while($rs2 = mysql_fetch_array($rsTemp2)){?>
 							<option <?php if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['subrubro']?></option>
 							<?php } ?>
-							</select>
+							</select> 
 						</div>
 					</li>
 					<li><label>Proveedor:</label>
@@ -866,8 +866,8 @@ $( "#factura_orden" ).change(function() {
 					<li><label>Descripcion:</label><textarea name="descripcion" style="width:138px"><?php echo $rs['descripcion']?></textarea></li>
 					<li><label>Tipo de operacion:</label><select size="1" name="factura_orden" id="factura_orden">
 					<option value="B" <?php if($rs['factura_orden']=='B'){ ?> selected="selected" <?php } ?>>0001</option>
-					<?php
-
+					<?php 
+					
 					if(ACCION_137){
 					?>
 						<option value="N" <?php if($rs['factura_orden']=='N'){ ?> selected="selected" <?php } ?>>0002</option>
@@ -890,14 +890,14 @@ $( "#factura_orden" ).change(function() {
 						?>
 						<option value="Ticket" <?php if($rs['factura_tipo']=='Ticket'){ ?> selected="selected" <?php } ?>>Ticket</option>
 						<?php }?>
-					</select>
+					</select> 
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
 					<input type="text" name="factura_punto_venta" id="factura_punto_venta"  maxlength="4" size="4" value="<?php echo $rs['factura_punto_venta']?>"/>
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
 					<input type="text" name="factura_nro" id="factura_nro" value="<?php echo $rs['factura_nro']?>" maxlength="8" size="8"/></li>
 					<?php } ?>
-
-				<?php }elseif( ($_GET['action'] == 'editar' and $subestado == 3)) { ?>
+					
+				<?php }elseif( ($_GET['action'] == 'editar' and $subestado == 3)) { ?>									
 					<li><label>Fecha devengado:</label><input class="date-pick date-edit dp-applied" name="fecha" id="fecha" value="<?php echo fechavista($rs['fecha'])?>" /></li>
 					<li><label>Fecha factura:</label><input class="date-pick date-edit dp-applied" name="fecha_vencimiento" id="fecha_vencimiento" value="<?php echo fechavista($rs['fecha_vencimiento'])?>" /></li>
 					<li><label>Origen:</label>
@@ -924,7 +924,7 @@ $( "#factura_orden" ).change(function() {
 							while($rs2 = mysql_fetch_array($rsTemp2)){?>
 							<option <?php if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['subrubro']?></option>
 							<?php } ?>
-							</select>
+							</select> 
 						</div>
 					</li>
 					<li><label>Proveedor:</label>
@@ -943,18 +943,18 @@ $( "#factura_orden" ).change(function() {
 					</li>
 					<li><label>Raz&oacute;n Social:</label><input type="text" name="razon" id="razon" value="<?php echo $rs['razon']?>" disabled/></li>
 					<li><label>CUIT:</label><input type="text" name="cuit" id="cuit" value="<?php echo $rs['cuit']?>" disabled/></li>
-
-					<li><label>Descripcion:</label><textarea name="descripcion" style="width:138px"><?php echo $rs['descripcion']?></textarea></li>
+					
+					<li><label>Descripcion:</label><textarea name="descripcion" style="width:138px"><?php echo $rs['descripcion']?></textarea></li>					
 					<li><label>Tipo de operacion:</label><select size="1" name="factura_orden" id="factura_orden">
 					<option value="B" <?php if($rs['factura_orden']=='B'){ ?> selected="selected" <?php } ?>>0001</option>
-					<?php
-
+					<?php 
+					
 					if(ACCION_137){
 					?>
 						<option value="N" <?php if($rs['factura_orden']=='N'){ ?> selected="selected" <?php } ?>>0002</option>
 					<?php }?>
-				</select><input type="checkbox" id="quitar_egresos" name="quitar_egresos" <?php if($rs['quitar_egresos']=='1'){ ?> checked="checked" <?php }?>></input> </li>
-
+					</select><input type="checkbox" id="quitar_egresos" name="quitar_egresos" <?php if($rs['quitar_egresos']=='1'){ ?> checked="checked" <?php }?>></input> </li>
+					
 					<li><label>Remito:</label><input type="text" name="remito_nro" id="remito_nro" value="<?php echo $rs['remito_nro']?>" maxlength="6"/></li>
 					<li><label>Recibo:</label><input type="text" name="recibo_nro" id="recibo_nro" value="<?php echo $rs['recibo_nro']?>" maxlength="6"/></li>
 					<li><label>Factura:</label>
@@ -971,7 +971,7 @@ $( "#factura_orden" ).change(function() {
 						?>
 						<option value="Ticket" <?php if($rs['factura_tipo']=='Ticket'){ ?> selected="selected" <?php } ?>>Ticket</option>
 						<?php }?>
-					</select>
+					</select> 
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
 					<input type="text" name="factura_punto_venta" id="factura_punto_venta"  maxlength="4" size="4" value="<?php echo $rs['factura_punto_venta']?>"/>
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
@@ -997,8 +997,8 @@ $( "#factura_orden" ).change(function() {
 					<input type="hidden" name="descripcion" id="descripcion" value="<?php echo $rs['descripcion']?>" />
 					<li><label>Tipo de operacion:</label><select size="1" name="factura_orden" id="factura_orden">
 					<option value="B" <?php if($rs['factura_orden']=='B'){ ?> selected="selected" <?php } ?>>0001</option>
-					<?php
-
+					<?php 
+					
 					if(ACCION_137){
 					?>
 						<option value="N" <?php if($rs['factura_orden']=='N'){ ?> selected="selected" <?php } ?>>0002</option>
@@ -1020,7 +1020,7 @@ $( "#factura_orden" ).change(function() {
 						?>
 						<option value="Ticket" <?php if($rs['factura_tipo']=='Ticket'){ ?> selected="selected" <?php } ?>>Ticket</option>
 						<?php }?>
-					</select>
+					</select> 
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
 					<input type="text" name="factura_punto_venta" id="factura_punto_venta"  maxlength="4" size="4" value="<?php echo $rs['factura_punto_venta']?>"/>
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
@@ -1052,7 +1052,7 @@ $( "#factura_orden" ).change(function() {
 							while($rs2 = mysql_fetch_array($rsTemp2)){?>
 							<option <?php if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['subrubro']?></option>
 							<?php } ?>
-							</select>
+							</select> 
 						</div>
 					</li>
 					<li><label>Proveedor:</label>
@@ -1071,12 +1071,12 @@ $( "#factura_orden" ).change(function() {
 					</li>
 					<li><label>Raz&oacute;n Social:</label><input type="text" name="razon" id="razon" value="<?php echo $rs['razon']?>" disabled/></li>
 					<li><label>CUIT:</label><input type="text" name="cuit" id="cuit" value="<?php echo $rs['cuit']?>" disabled/></li>
-
-					<li><label>Descripcion:</label><textarea name="descripcion" style="width:138px"><?php echo $rs['descripcion']?></textarea></li>
+					
+					<li><label>Descripcion:</label><textarea name="descripcion" style="width:138px"><?php echo $rs['descripcion']?></textarea></li>					
 					<li><label>Tipo de operacion:</label><select size="1" name="factura_orden" id="factura_orden">
 					<option value="B" <?php if($rs['factura_orden']=='B'){ ?> selected="selected" <?php } ?>>0001</option>
-					<?php
-
+					<?php 
+					
 					if(ACCION_137){
 					?>
 						<option value="N" <?php if($rs['factura_orden']=='N'){ ?> selected="selected" <?php } ?>>0002</option>
@@ -1086,7 +1086,7 @@ $( "#factura_orden" ).change(function() {
 					<li><label>Recibo:</label><input type="text" name="recibo_nro" id="recibo_nro" value="<?php echo $rs['recibo_nro']?>" maxlength="6"/></li>
 					<li><label>Factura:</label>
 
-					<select size="1" name="factura_tipo" id="factura_tipo" onchange="mostrarAlicuota($(this).val())">
+					<select size="1" name="factura_tipo" id="factura_tipo" onchange="mostrarAlicuota($(this).val())">					
 						<option value="n"  <?php if($rs['factura_tipo'] == "n") echo"selected";?> >Tipo</option>
 						<?php if($rs['factura_orden']=='B'){ ?>
 						<option value="A" <?php if($rs['factura_tipo']=='A'){ ?> selected="selected" <?php } ?>>A</option>
@@ -1099,7 +1099,7 @@ $( "#factura_orden" ).change(function() {
 						?>
 						<option value="Ticket" <?php if($rs['factura_tipo']=='Ticket'){ ?> selected="selected" <?php } ?>>Ticket</option>
 						<?php }?>
-					</select>
+					</select> 
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
 					<input type="text" name="factura_punto_venta" id="factura_punto_venta"  maxlength="4" size="4" value="<?php echo $rs['factura_punto_venta']?>"/>
 					<span style="float:left;padding: 3px 5px 3px 1px;"></span>
@@ -1123,7 +1123,7 @@ $( "#factura_orden" ).change(function() {
 					<input type="hidden" name="cuit" id="cuit" value="<?php echo $rs['cuit']?>" />
 					<li><label>Descripcion:</label><?php echo $rs['descripcion']?></li>
 					<input type="hidden" name="descripcion" id="descripcion" value="<?php echo $rs['descripcion']?>" />
-                    <li><label>Tipo de operacion:</label><?php
+					<li><label>Tipo de operacion:</label><?php
                         $color=($rs['quitar_egresos'])?'red':'';
                         echo ($rs['factura_orden']=='B')?'<span style="color:'.$color.'">0001</span>':'0002';?></li>
 					<input type="hidden" name="factura_orden" id="factura_orden" value="<?php echo $rs['factura_orden']?>" />
@@ -1139,21 +1139,21 @@ $( "#factura_orden" ).change(function() {
 					<?php } ?>
 				<?php } ?>
 				<?php if($_GET['action'] == 'editar' and $subestado < 3 and ACCION_39){ ?>
-					<li><label>Monto bruto:</label><input type="text" name="monto" id="monto" value="<?php echo $rs['monto']?>" size="3"/></li>
-
+					<li><label>Monto bruto:</label><input type="text" name="monto" id="monto" value="<?php echo number_format($rs['monto'],2, '.', '')?>" size="3"/></li>
+					
 				<?php }else{ ?>
-					<li><label>Monto bruto:</label>$<?php echo $rs['monto']?></li>
+					<li><label>Monto bruto:</label>$<?php echo number_format($rs['monto'],2, '.', '')?></li>
                     <input type="hidden" name="monto" id="monto" value="<?php echo $rs['monto']?>" />
                     <!--  <li><label>Monto neto:</label>$<?php echo $rs['monto']-($rs['iva_27']+$rs['iva_21']+$rs['iva_10_5']+$rs['otra_alicuota']+$rs['perc_iva']+$rs['perc_iibb_bsas']+$rs['perc_iibb_caba']+$rs['exento']);?></li>
 					<input type="hidden" name="neto" id="neto" value="<?php echo $rs['monto']-($rs['iva_27']+$rs['iva_21']+$rs['iva_10_5']+$rs['otra_alicuota']+$rs['perc_iva']+$rs['perc_iibb_bsas']+$rs['perc_iibb_caba']+$rs['exento']);?>" />-->
-
+					
 					<!--<input type="hidden" name="control" id="control" value="<?php echo $rs['monto']-($rs['monto']-($rs['iva_27']+$rs['iva_21']+$rs['iva_10_5']+$rs['otra_alicuota']+$rs['perc_iva']+$rs['perc_iibb_bsas']+$rs['perc_iibb_caba']+$rs['exento']));?>" />-->
-				<?php
-
+				<?php 
+				
 				} ?>
-
+				
 				<span id="alicuota" style="display:none">
-				<li><label>Monto neto:</label><input name="neto" id="neto" value="<?php echo $rs['monto']-($rs['iva_27']+$rs['iva_21']+$rs['iva_10_5']+$rs['otra_alicuota']+$rs['perc_iva']+$rs['perc_iibb_bsas']+$rs['perc_iibb_caba']+$rs['exento']);?>" size="3" /><span style="width:40px;float:left;padding: 3px 5px 3px 10px;"> Control:</span><input name="control" id="control" value="" size="3" disabled/></li>
+				<li><label>Monto neto:</label><input name="neto" id="neto" value="<?php echo number_format($rs['monto']-($rs['iva_27']+$rs['iva_21']+$rs['iva_10_5']+$rs['otra_alicuota']+$rs['perc_iva']+$rs['perc_iibb_bsas']+$rs['perc_iibb_caba']+$rs['exento']),2, '.', '');?>" size="3" /><span style="width:40px;float:left;padding: 3px 5px 3px 10px;"> Control:</span><input name="control" id="control" value="" size="3" disabled/></li>
 				<li><label>IVA 27%:</label><input name="iva_27" id="iva_27" value="<?php echo ($rs['iva_27']!=0)?$rs['iva_27']:"";?>" size="3"/></li>
 				<li><label>IVA 21%:</label><input name="iva_21" id="iva_21" value="<?php echo ($rs['iva_21']!=0)?$rs['iva_21']:"";?>" size="3"/></li>
 				<li><label>IVA 10.5%:</label><input name="iva_10_5" id="iva_10_5" value="<?php echo ($rs['iva_10_5']!=0)?$rs['iva_10_5']:"";?>" size="3"/></li>
@@ -1163,29 +1163,29 @@ $( "#factura_orden" ).change(function() {
 				<li><label>Perc. IIBB CABA:</label><input name="perc_iibb_caba" id="perc_iibb_caba" value="<?php echo ($rs['perc_iibb_caba']!=0)?$rs['perc_iibb_caba']:"";?>" size="3"/></li>
 				<li><label>Exento:</label><input name="exento" id="exento" value="<?php echo ($rs['exento']!=0)?$rs['exento']:"";?>" size="3"/></li>
 				</span>
-
+				
 	<?php if($rs['nro_orden']==0 and $rs['estado']==0 and $_GET['action'] == 'autorizar'){ ?>
-
+				
 			</ul>
 		</fieldset>
-		<p align="center"><input type="button" value="Aprobar gasto" name="aprobarSubmit" id="aprobarSubmit" /> <input type="button" value="Desaprobar gasto" name="desaprobarSubmit" id="desaprobarSubmit" /></p>
+		<p align="center"><input type="button" value="Aprobar gasto" name="aprobarSubmit" id="aprobarSubmit" /> <input type="button" value="Desaprobar gasto" name="desaprobarSubmit" id="desaprobarSubmit" /></p> 
 	</form>
-
+	
 	<?php }elseif($rs['estado']==0 and $_GET['action'] == 'autorizar' and $rs['nro_orden']!=0){ ?>
 			</ul>
 		</fieldset>
 		<input type="hidden" name="gasto_id" id="gasto_id" value="<?php echo $operacion_id?>" />
 	</form>
-
+	
 	<?php }elseif($_GET['action'] == 'editar'){ ?>
 			<?php if($subestado >= 3) { include("pagos.view.php"); } ?>
 			</ul>
 		</fieldset>
-		<p align="center"><input type="button" value="Actualizar datos" name="actualizarSubmit" id="actualizarSubmit" /></p>
+		<p align="center"><input type="button" value="Actualizar datos" name="actualizarSubmit" id="actualizarSubmit" /></p> 
 	</form>
-
+	
 	<?php }elseif($rs['nro_orden']!=0 and $rs['estado']==0 and $_GET['action'] == 'abonar'){ ?>
-
+	
 				<li><label>Forma de pago:</label>
 				<select name="forma_pago">
 				<option value="n">Seleccionar...</option>
@@ -1198,13 +1198,14 @@ $( "#factura_orden" ).change(function() {
 				</select> &nbsp; <a style="cursor:pointer; color:#0000FF; text-decoration:underline;" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
 				<div id="forma_de_pago"></div>
 			</ul>
-		</fieldset>
-		<p align="center"><input type="button" value="Abonar" name="guardarSubmit" id="guardarSubmit" /></p>
+		</fieldset> 
+		<p align="center"><input type="button" value="Abonar" name="guardarSubmit" id="guardarSubmit" /></p> 
 	</form>
-
+				
 	<?php }elseif($rs['nro_orden']!=0 and $rs['estado']==1 and ($_GET['action'] == 'consultar' or $_GET['action'] == 'autorizar' or $_GET['action'] == 'abonar') ){ ?>
-				<?php
-        $id = $rs['id'];
+				<?php 
+					
+					$id = $rs['id'];
         include("pagos.view.php");
         $sql = "SELECT * FROM cuenta_a_pagar WHERE operacion_tipo = 'gasto' AND operacion_id = ".$id." AND plan_id is not null";
                     //echo $sql;
@@ -1222,7 +1223,7 @@ $( "#factura_orden" ).change(function() {
                                     <li><label>Plan:</label><?php echo $rsPlan['plan']?> </li>
 
 
-                                    <li><label>Deuda original:</label>$<?php echo $rsPlan['monto']?></li>
+                                    <li><label>Deuda original:</label>$<?php echo number_format($rsPlan['monto'], 2, '.', '')?></li>
                                     <li><label>Interes:</label>$<?php echo $rsPlan['intereses']?></li>
 
                                     <li><label>Cantidad de cuotas:</label><?php echo $rsPlan['cuotas']?></li>
@@ -1232,22 +1233,22 @@ $( "#factura_orden" ).change(function() {
                             }
                         }
                     }
-
-        ?>
+	
+				?>
 			</ul>
 		</fieldset>
 	</form>
-
+	
 	<?php }elseif($rs['estado']==2){ ?>
 			</ul>
 		</fieldset>
 		<input type="hidden" name="gasto_id" id="gasto_id" value="<?php echo $operacion_id?>" />
-		<p align="center">Este gasto fue desaprobado por administraci&oacute;n</p>
+		<p align="center">Este gasto fue desaprobado por administraci&oacute;n</p> 
 	</form>
-
-
-	<?php }elseif(($rs['plan_id'])and ($_GET['action'] == 'consultar')){
-
+	
+	
+	<?php }elseif(($rs['plan_id'])and ($_GET['action'] == 'consultar')){ 
+	
 		$sql = "SELECT * FROM plans WHERE id=".$rs['plan_id'];
 		//echo $sql;
 		$rsTemp = mysql_query($sql);
@@ -1256,32 +1257,32 @@ $( "#factura_orden" ).change(function() {
 		?>
 		<li><h3>Plan de pago</h3></li>
 		<li><label>Plan:</label><?php echo $rsPlan['plan']?> </li>
-
-
-		<li><label>Deuda original:</label>$<?php echo $rsPlan['monto']?></li>
+		
+		
+		<li><label>Deuda original:</label>$<?php echo number_format($rsPlan['monto'], 2, '.', '')?></li>
 		<li><label>Interes:</label>$<?php echo $rsPlan['intereses']?></li>
-
+		
 		<li><label>Cantidad de cuotas:</label><?php echo $rsPlan['cuotas']?></li>
 		<li><label>Cuota mensual:</label>$<?php echo number_format(($rsPlan['monto'].'+'.$rsPlan['intereses'])/$rsPlan['cuotas'], 2, '.', '');?></li>
-
-		<?php }} ?>
-
-
-
-
-
+		
+		<?php }} ?>	
+		
+		
+		
+		
+		
 			</ul>
 		</fieldset>
-
+		
 	</form>
-
+	
 	<?php } ?>
-	</div>
+	</div> 
 	</body>
 	<script>
-
+	
 		calcularControl();
-
+	
 	</script>
 	</html>
 <?php } ?>
