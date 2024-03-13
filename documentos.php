@@ -3,27 +3,8 @@ session_start();
 
 include_once("config/db.php");
 include_once("functions/util.php");
-$sql = "INSERT INTO usuario_log (usuario_id,nombre,accion,ip)
-			VALUES ('".$_SESSION['userid']."','".$_SESSION['usernombre']."','Carga de documentacion de sistema','".getRealIP()."')";
-mysql_query($sql);
-$date = date('Y-m-d');
-$sqlAuditoria ="SELECT * FROM usuario_auditoria WHERE usuario_id = ".$_SESSION['userid']." AND fecha='".$date."'";
-$rsTempAuditoria = mysql_query($sqlAuditoria);
-$totalAuditoria = mysql_num_rows($rsTempAuditoria);
+auditarUsuarios('Carga de documentacion de sistema');
 
-if($totalAuditoria == 1) {
-    $rsAuditoria = mysql_fetch_array($rsTempAuditoria);
-    $last_interaction = strtotime($rsAuditoria['last']);
-
-    // Calcula los segundos entre la última interacción y el tiempo actual
-    $elapsed_time_seconds = time() - $last_interaction;
-    //$elapsed_time_minutes = round($elapsed_time_seconds / 60);
-
-    // Actualiza la hora de última interacción y segundos conectados
-    $sql_update = "UPDATE usuario_auditoria SET last = now(), interaccion='Carga de documentacion de sistema', segundos = segundos + $elapsed_time_seconds WHERE usuario_id = " . $_SESSION['userid'] . " AND fecha = '$date'";
-    mysql_query($sql_update);
-
-}
 $tabla 	= "documento"; //tabla
 $label 	= "documento"; //nombre para el editar y agregar
 $file 	= "documentos.php"; //archivo

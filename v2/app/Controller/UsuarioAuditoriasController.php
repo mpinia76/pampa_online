@@ -62,7 +62,7 @@ class UsuarioAuditoriasController extends AppController {
 			$order='UsuarioAuditoria.ip '.$orderType;
 			break;
 			default:
-			$order='UsuarioAuditoria.fecha '.$orderType;
+			$order='Usuario.nombre '.$orderType;
 			break;
 		}
 		
@@ -80,7 +80,7 @@ class UsuarioAuditoriasController extends AppController {
     		if (($desde!='')&&($hasta!='')) {
 				$condicionSearch5=array('UsuarioAuditoria.fecha between ? and ?' => array($desde, $hasta));
 			}
-        	$condicion=array($condicionSearch1,$condicionSearch2,$condicionSearch3,$condicionSearch4,$condicionSearch5);
+        	$condicion=array($condicionSearch2,$condicionSearch3,$condicionSearch4,$condicionSearch5);
         	
 		    
         	
@@ -88,62 +88,51 @@ class UsuarioAuditoriasController extends AppController {
                                                          'order' => $order, 'limit'=>$_GET['iDisplayLength'], 'offset'=>$_GET['iDisplayStart']));*/
 
 		$this->loadModel('Usuario');
-		// Obtener todos los usuarios con datos de la tabla de auditoría
-		$UsuarioAuditorias = $this->Usuario->find('all', array(
-			'joins' => array(
-				array(
-					'table' => 'usuario_auditoria', // Ajusta el nombre de la tabla según tu configuración
-					'alias' => 'UsuarioAuditoria',
-					'type' => 'LEFT',
-					'conditions' => array(
-						'Usuario.id = UsuarioAuditoria.usuario_id', // Ajusta los campos según tu relación
-					)
-				)
-			),
-			'conditions' => $condicion,
-			'order' => $order,
+
+		// Obtener todos los usuarios
+		$usuarios = $this->Usuario->find('all', [
+			'conditions' => $condicionSearch1,
 			'limit' => $_GET['iDisplayLength'],
 			'offset' => $_GET['iDisplayStart']
-		));
-			
+		]);
 
-			//$iTotal = $this->UsuarioAuditoria->find('count',array('conditions'=> $condicion));
+		// Paso 2: Agregar las tuplas de auditoría para la fecha específica
+		foreach ($usuarios as &$usuario) {
+			$usuarioId = $usuario['id'];
 
+			// Obtener las tuplas de auditoría para el usuario actual y la fecha específica
+			$tuplasAuditoria = $this->Usuario->UsuarioAuditoria->find('all', [
+				'conditions' => [
+					'UsuarioAuditoria.usuario_id' => $usuarioId,
+					$condicion
+				]
 
-		// Contar el total de usuarios, incluyendo aquellos que no tienen entrada en la tabla de auditoría
-		$iTotal = $this->Usuario->find('count', array(
-			'joins' => array(
-				array(
-					'table' => 'usuario_auditoria', // Ajusta el nombre de la tabla según tu configuración
-					'alias' => 'UsuarioAuditoria',
-					'type' => 'LEFT',
-					'conditions' => array(
-						'Usuario.id = UsuarioAuditoria.usuario_id', // Ajusta los campos según tu relación
-					)
-				)
-			),
-			'conditions' => $condicion
-		));
-			
-           
-            
-         //print_r($UsuarioAuditorias);
- 
+			]);
 
-        foreach($UsuarioAuditorias as $UsuarioAuditoria){
-        	//print_r($UsuarioAuditoria);
-            //estado y nro de orden
-            
-            
-            $rows[] = array(
-                $UsuarioAuditoria['UsuarioAuditoria'][0]['id'],
+			// Agregar las tuplas de auditoría al usuario actual
+			$usuario['UsuarioAuditoria'] = $tuplasAuditoria->toArray();
+		}
 
-				$UsuarioAuditoria['Usuario']['apellido'].', '.$UsuarioAuditoria['Usuario']['nombre'],
-                $UsuarioAuditoria['UsuarioAuditoria'][0]['fecha'],
-                $UsuarioAuditoria['UsuarioAuditoria'][0]['interaccion'],
-                $UsuarioAuditoria['UsuarioAuditoria'][0]['ip']
-            );
-        }
+// Contar el total de usuarios sin aplicar condiciones adicionales
+		$iTotal = $this->Usuario->find('count', ['conditions' => $condicionSearch1]);
+
+// Ahora, $usuarios contiene todos los usuarios y sus tuplas de auditoría para la fecha específica
+		$rows = array();
+
+		foreach ($usuarios as $usuario) {
+			$apellidoNombre = $usuario['apellido'] . ', ' . $usuario['nombre'];
+
+			// Iterar sobre las tuplas de auditoría para el usuario actual
+			foreach ($usuario['UsuarioAuditoria'] as $auditoria) {
+				$rows[] = array(
+					$auditoria['id'],
+					$apellidoNombre,
+					$auditoria['fecha'],
+					$auditoria['interaccion'],
+					$auditoria['ip']
+				);
+			}
+		}
         $output = array(
         	"sEcho" => intval($_GET['sEcho']),
         	"iTotalRecords" => count($rows),

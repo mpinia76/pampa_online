@@ -13,28 +13,8 @@ $abm 	= "cuentas_pagar.view.php"; //agregar o modificar
 include_once("functions/delete.php");
 include_once("config/db.php");
 include_once("functions/util.php");
-$sql = "INSERT INTO usuario_log (usuario_id,nombre,accion,ip)
-			VALUES ('".$_SESSION['userid']."','".$_SESSION['usernombre']."','Cuentas a pagar','".getRealIP()."')";
+auditarUsuarios('Cuentas a pagar');
 
-mysql_query($sql);
-$date = date('Y-m-d');
-$sqlAuditoria ="SELECT * FROM usuario_auditoria WHERE usuario_id = ".$_SESSION['userid']." AND fecha='".$date."'";
-$rsTempAuditoria = mysql_query($sqlAuditoria);
-$totalAuditoria = mysql_num_rows($rsTempAuditoria);
-
-if($totalAuditoria == 1) {
-    $rsAuditoria = mysql_fetch_array($rsTempAuditoria);
-    $last_interaction = strtotime($rsAuditoria['last']);
-
-    // Calcula los segundos entre la última interacción y el tiempo actual
-    $elapsed_time_seconds = time() - $last_interaction;
-    //$elapsed_time_minutes = round($elapsed_time_seconds / 60);
-
-    // Actualiza la hora de última interacción y segundos conectados
-    $sql_update = "UPDATE usuario_auditoria SET last = now(), interaccion='Cuentas a pagar', segundos = segundos + $elapsed_time_seconds WHERE usuario_id = " . $_SESSION['userid'] . " AND fecha = '$date'";
-    mysql_query($sql_update);
-
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
