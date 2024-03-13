@@ -101,11 +101,11 @@ class UsuarioLogsController extends AppController {
 			$usuarioLogs = $this->UsuarioLog->find('all',array('conditions'=>$condicion,
                                                          'order' => $order, 'limit'=>$_GET['iDisplayLength'], 'offset'=>$_GET['iDisplayStart']));
 			
-			App::uses('ConnectionManager', 'Model');
+			/*App::uses('ConnectionManager', 'Model');
 			$connected = ConnectionManager::getDataSource('default');
     		$logs = $connected->getLog();
     		$lastLog = end($logs['log']);
-    		echo $lastLog;
+    		echo $lastLog;*/
 			$iTotal = $this->UsuarioLog->find('count',array('conditions'=> $condicion));
 			
 			

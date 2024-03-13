@@ -19,17 +19,30 @@ $this->Js->buffer('
                 $(this).toggleClass("row_selected");
             });
         },
+        "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+            // aData contiene los datos de la fila actual
+            // Puedes acceder a cada columna usando aData[index]
+
+            // Aquí asumimos que la columna correspondiente al estado de la auditoría es la 4ª columna
+            var estadoAuditoria = aData[2];
+            //alert(estadoAuditoria);
+            // Si no hay auditoría, aplicamos el color de fondo rojo a toda la fila
+            if (estadoAuditoria === null) {
+                $(nRow).css("background-color", "#ffcccc");
+            }
+        },
         "aaSorting": [],
         "sAjaxSource": "'.$this->Html->url('/usuario_auditorias/dataTable/100', true).'",
         "bDeferRender": true,
         "aoColumns": [
             {"bVisible": false },
              null,
-            {"sType": "date-euro"},
-                  
-            null,
+            {"sType": "date-euro","bSortable": false},
+                  {"sType": "date-euro","bSortable": false},
+                  {"bSortable": false},
+           {"bSortable": false},
 
-            null
+           {"bSortable": false}
             
         ]
     });
@@ -50,21 +63,7 @@ $this->Js->buffer('
 $("#filter_nombre").keyup(function(){
         oTable.fnFilter($(this).val(),1);
     });
-    $("#filter_creado").keyup(function(){
-        oTable.fnFilter($(this).val(),2);
-    });
-
     
-
-    
-    $("#filter_accion").keyup(function(){
-        oTable.fnFilter($(this).val(),3);
-    });
-    
-
-    $("#filter_ip").keyup(function(){
-        oTable.fnFilter($(this).val(),4);
-    });
 
 ');
 
@@ -110,26 +109,32 @@ echo $this->Form->end('Cargar');*/
 
             <!-- Campo Creado -->
             <th width="150">
-               <input type="text" style="width: 90%;" id="filter_creado" />
-            </th>
 
+            </th>
+            <th width="150">
+
+            </th>
+            <th width="150">
+
+            </th>
 
        
        		<!-- Campo Accion-->
             <th width="150">
-               <input type="text" style="width: 90%;" id="filter_accion" />
+
             </th>
 
-            
+
             <th width="100">
-                <input type="text" style="width: 90%;" id="filter_ip" />
+
             </th>
         </tr>
         <tr>
             <th width="100">Id</th>
             <th width="150">Usuario</th>
             <th width="150">Fecha</th>
-
+            <th width="150">Login</th>
+            <th width="150">Horas</th>
             <th width="150">Ult. Interaccion</th>
             <th width="150">IP</th>
            

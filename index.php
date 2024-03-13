@@ -6,8 +6,7 @@ include_once("config/db.php");
 include_once("functions/abm.php");
 include_once("functions/util.php");
 // Al final de la página, actualiza la información en la base de datos
-$date = date('Y-m-d');
-_log('Usuario: '.$_SESSION['userid']);
+
 if(isset($_GET['exit']) and $_GET['exit']=="on"){
     auditarUsuarios('logout');
     session_destroy();
