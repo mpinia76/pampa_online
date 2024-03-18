@@ -102,20 +102,24 @@ class UsuarioAuditoriasController extends AppController {
 		));
 
 
-		// Paso 2: Agregar las tuplas de auditorÃ­a para la fecha especÃ­fica
-		foreach ($usuarios as &$usuario) {
-			//print_r($usuario);
+		$nuevosUsuarios = array();
+		foreach ($usuarios as $usuario) {
 			$usuarioId = $usuario['Usuario']['id'];
 
-			// Obtener las tuplas de auditorÃ­a para el usuario actual y la fecha especÃ­fica
+			// Obtener las tuplas de auditoría para el usuario actual y la fecha específica
 			$tuplasAuditoria = $this->UsuarioAuditoria->find('all', array(
 				'conditions' => array_merge(array('usuario_id' => $usuarioId), $condicionSearch5)
 			));
 
-			//print_r($tuplasAuditoria);
-			// Agregar las tuplas de auditorÃ­a al usuario actual
+			// Agregar las tuplas de auditoría al usuario actual
 			$usuario['UsuarioAuditoria'] = $tuplasAuditoria;
+
+			// Agregar el usuario actual al nuevo array
+			$nuevosUsuarios[] = $usuario;
 		}
+
+		// Reemplazar el array original de usuarios con el nuevo array construido
+		$usuarios = $nuevosUsuarios;
 
 // Contar el total de usuarios sin aplicar condiciones adicionales
 		$iTotal = $this->Usuario->find('count', array('conditions' => $condicionSearch1));
@@ -123,10 +127,11 @@ class UsuarioAuditoriasController extends AppController {
 
 // Ahora, $usuarios contiene todos los usuarios y sus tuplas de auditorÃ­a para la fecha especÃ­fica
 		$rows = array();
-
+// Eliminar el último elemento del array de usuarios antes de la segunda iteración
+//array_pop($usuarios);
 		foreach ($usuarios as $usuario) {
 			$apellidoNombre = $usuario['Usuario']['apellido'] . ', ' . $usuario['Usuario']['nombre'];
-
+			//CakeLog::write('debug', '2do. '.$apellidoNombre);
 			// Verificar si el usuario tiene tuplas de auditorÃ­a
 			if (!empty($usuario['UsuarioAuditoria'])) {
 				// Iterar sobre las tuplas de auditorÃ­a para el usuario actual
