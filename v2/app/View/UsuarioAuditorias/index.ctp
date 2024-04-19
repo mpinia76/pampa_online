@@ -1,4 +1,5 @@
 <?php
+$mes= (isset($mes))?$mes:date('m');
 //calendario
 $this->Js->buffer('$.datepicker.regional[ "es" ]');
 $this->Js->buffer('$(".datepicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yyyy-mm-dd" });');
@@ -94,7 +95,21 @@ function limpiarFechas(){
    
 echo $this->Form->end('Cargar');*/
 ?>
-<div id="informe_auditoria"><strong>&nbsp;&nbsp;Entre fechas&nbsp;<input type="text" name="desdeA" id="desdeA" class="datepicker" value="<?php echo $desde?>">&nbsp;&nbsp;y&nbsp;<input type="text" name="hastaA" id="hastaA" class="datepicker" value="<?php echo $hasta?>"></strong>
+<div id="informe_auditoria"><select id="mes">
+        <option value="N">Todos</option>
+        <option value="01" <?php if($mes == '01'){?> selected="selected" <?php } ?>>Enero</option>
+        <option value="02" <?php if($mes == '02'){?> selected="selected" <?php } ?>>Febrero</option>
+        <option value="03" <?php if($mes == '03'){?> selected="selected" <?php } ?>>Marzo</option>
+        <option value="04" <?php if($mes == '04'){?> selected="selected" <?php } ?>>Abril</option>
+        <option value="05" <?php if($mes == '05'){?> selected="selected" <?php } ?>>Mayo</option>
+        <option value="06" <?php if($mes == '06'){?> selected="selected" <?php } ?>>Junio</option>
+        <option value="07" <?php if($mes == '07'){?> selected="selected" <?php } ?>>Julio</option>
+        <option value="08" <?php if($mes == '08'){?> selected="selected" <?php } ?>>Agosto</option>
+        <option value="09" <?php if($mes == '09'){?> selected="selected" <?php } ?>>Septiembre</option>
+        <option value="10" <?php if($mes == '10'){?> selected="selected" <?php } ?>>Octubre</option>
+        <option value="11" <?php if($mes == '11'){?> selected="selected" <?php } ?>>Noviembre</option>
+        <option value="12" <?php if($mes == '12'){?> selected="selected" <?php } ?>>Diciembre</option>
+    </select>
 
     <input type="button" onclick="ver_auditorias();" value="Ver" /> <span id="cargandoA" style="display:none;">Cargando ...</span>
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="dataTable">

@@ -77,32 +77,11 @@ function ver_logs(){
 }
 function ver_auditorias(){
 
-    var desde='';
-    var hasta='';
-    if ($('#desdeA').val() && $('#hastaA').val()){
-        var strDesde = $('#desdeA').val().split("/");
-        var Fecha1 = new Date(parseInt(strDesde[2]),parseInt(strDesde[1]-1),parseInt(strDesde[0]));
-        var strHasta = $('#hastaA').val().split("/");
-        var Fecha2 = new Date(parseInt(strHasta[2]),parseInt(strHasta[1]-1),parseInt(strHasta[0]));
-        if(!isNaN(strHasta[2])){
 
 
-            if(Fecha1>Fecha2){
-                alert('La fecha Hasta tiene que ser posterior a la fecha Desde');
-                return false;
-            }
-        }
-
-
-
-        var desde = strDesde[2]+'-'+strDesde[1]+'-'+strDesde[0];
-
-        var hasta = strHasta[2]+'-'+strHasta[1]+'-'+strHasta[0];
-    }
-
-    $('#cargando').show();
+    $('#cargandoA').show();
     $.ajax({
-        url: '<?php echo $this->Html->url('/usuario_auditorias/index', true);?>/'+desde+'/'+hasta,
+        url: '<?php echo $this->Html->url('/usuario_auditorias/index', true);?>/'+$('#mes').val(),
         dataType: 'html',
         success: function(data){
             $('#cargandoA').hide();

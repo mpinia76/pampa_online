@@ -17,19 +17,19 @@ class UsuarioAuditoriasController extends AppController {
 
 
 
-	public function index($desde,$hasta){
-		$_SESSION['desdeA'] = '';
-		$_SESSION['hastaA'] = '';
+	public function index($mes){
 
+		$_SESSION['mesA'] = '';
 		$this->layout = 'index';
 
-		if (isset($desde)&&($desde!='')) {
-			$_SESSION['desdeA'] = $desde;
-			$this->set('desde',$this->dateFormatView($_SESSION['desdeA']));
+
+		if (isset($mes)&&($mes!='')) {
+			$_SESSION['mesA'] = $mes;
+			$this->set('mes',$_SESSION['mesA']);
 		}
-		if (isset($hasta)&&($hasta!='')) {
-			$_SESSION['hastaA'] = $hasta;
-			$this->set('hasta',$this->dateFormatView($_SESSION['hastaA']));
+		else{
+			$_SESSION['mesA'] = date('m');
+			$this->set('mes',$_SESSION['mesA']);
 		}
 		/*$gc_maxlifetime = ini_get('session.gc_maxlifetime');
         $cookie_lifetime = ini_get('session.cookie_lifetime');
@@ -44,8 +44,11 @@ class UsuarioAuditoriasController extends AppController {
 
 	public function dataTable(){
 		//print_r($_GET);
-		$desde = $_SESSION['desdeA'];
-		$hasta = $_SESSION['hastaA'];
+		$mes = (isset($_SESSION['mesA']))?$_SESSION['mesA']:date('m');
+
+		// Obtener el primer y último día del mes
+		$desde = date('Y-m-01', strtotime("2024-$mes-01"));
+		$hasta = date('Y-m-t', strtotime("2024-$mes-01"));
 		$orderType= ($_GET['sSortDir_0'])? $_GET['sSortDir_0']:'asc';
 		switch ($_GET['iSortCol_0']) {
 
@@ -101,6 +104,8 @@ class UsuarioAuditoriasController extends AppController {
 			'offset' => $_GET['iDisplayStart']
 		));
 
+		// Agregar la condición de activo = 1 a las condiciones de búsqueda existentes
+		$condicionSearch1['AND'] = array('Usuario.activo' => 1);
 
 		$nuevosUsuarios = array();
 		foreach ($usuarios as $usuario) {

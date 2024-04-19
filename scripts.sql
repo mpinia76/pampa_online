@@ -768,3 +768,6 @@ CREATE TABLE `usuario_auditoria` (
 ENGINE=InnoDB
 ;
 
+##################################18/04/2024###########################################################
+ALTER TABLE `usuario`
+    ADD COLUMN `activo` TINYINT(1) NOT NULL DEFAULT '1';

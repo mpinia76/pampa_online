@@ -57,6 +57,11 @@ if(!$_GET['comun']){
 									'label'				=> 'Administrador',
 									'requerid' 			=> true
 								);
+    $campos['activo']            = array(
+        'type'				=> 'checkbox',
+        'label'				=> 'Activo',
+        'requerid' 			=> true
+    );
 }
 			
 

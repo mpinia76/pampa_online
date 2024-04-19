@@ -28,6 +28,8 @@ include_once("functions/delete.php");
 <script src="library/dhtml/js/dhtmlxcommon.js"></script>
 <script src="library/dhtml/js/dhtmlxgrid.js"></script>
 <script src="library/dhtml/js/dhtmlxgridcell.js"></script>
+    <script src="library/dhtml/js/dhtmlxgrid_filter.js"></script>
+    <script type="text/javascript" src="library/jquery/jquery-1.4.2.min.js"></script>
 <script>
 var dhxWins = parent.dhxWins;
 
@@ -43,13 +45,13 @@ var dataid;
 function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
-    mygrid.setHeader("Nombre,Apellido"); 		//nombre de las columnas
-    mygrid.setInitWidths("*,*"); 				//ancho de las columnas
-    mygrid.setColAlign("left,left");			//alineacion de las columnas
-	mygrid.setColSorting("str,str");			//tipo datos para ordenar
-	mygrid.setColTypes("ro,ro");				//editable o no 
-    mygrid.setSkin("dhx_skyblue");	
-	mygrid.load("<?php echo $json?>","json");	//ruta al json con datos
+    mygrid.setHeader("Nombre,Apellido,Activo"); 		//nombre de las columnas
+    mygrid.setInitWidths("*,*,*"); 				//ancho de las columnas
+    mygrid.setColAlign("left,left,left");			//alineacion de las columnas
+    mygrid.setColSorting("str,str,str");			//tipo datos para ordenar
+    mygrid.setColTypes("ro,ro,ro");				//editable o no
+    mygrid.setSkin("dhx_skyblue");
+    mygrid.load("<?php echo $json?>?activo=1","json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -73,6 +75,15 @@ function add(){
 	createWindow('w_subrubros_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 
+function filtroActivo(select){
+
+    $('#mygrid_container').show();
+    $('#mensaje').hide();
+    mygrid.clearAll();
+    mygrid.load("<?php echo $json?>?activo="+select.value,"json");
+
+}
+
 </script>
 <script src="js/createWindow.js"></script>
 </head>
@@ -80,6 +91,12 @@ function add(){
 <body onload="doInitGrid();">
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
+    <li class="item">
+        <select id="selectActivo" name="selectActivo" onChange="filtroActivo(this)">
+            <option value="1" >Activos</option>
+            <option value="0" >Inactivos</option>
+        </select>
+    </li>
 	<li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li>
 	<li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li>
 	<li onclick="eliminar()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Eliminar</li>
