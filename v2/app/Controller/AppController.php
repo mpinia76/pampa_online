@@ -105,6 +105,7 @@ class AppController extends Controller {
                 // Calcula los segundos entre la última interacción y el tiempo actual
                 $elapsed_time_seconds = time() - $last_interaction;
                 //$elapsed_time_minutes = round($elapsed_time_seconds / 60);
+				$elapsed_time_seconds = ($elapsed_time_seconds>1440)?1440:$elapsed_time_seconds;
 
                 $this->UsuarioAuditoria->set('segundos',$userAuditado['UsuarioAuditoria']['segundos'] + $elapsed_time_seconds);
 
