@@ -11,6 +11,7 @@ $campos['banco_id'] 			= array('combo','Banco',1,'','banco','id','banco');
 $campos['tarjeta_marca_id'] 	= array('combo','Marca de la tarjeta',1,'','tarjeta_marca','id','marca');
 $campos['titular'] 				= array('text','Titular',1);
 $campos['id']					= array('text','',0,'','','hidden');
+$campos['activa'] 	= array('checkbox','Activa',1);
 
 include_once("functions/common.php");
 

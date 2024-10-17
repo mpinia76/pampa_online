@@ -15,7 +15,7 @@ $campos['id'] 				= array(
 $campos['tarjeta_id']		= array(
 								'type'				=> 'combo',
 								'label'				=> 'Tarjeta',
-								'sql'				=> "SELECT CONCAT(banco.banco,' ',tarjeta_marca.marca,' ',tarjeta.titular) AS tarjeta,tarjeta.id FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id",
+								'sql'				=> "SELECT CONCAT(banco.banco,' ',tarjeta_marca.marca,' ',tarjeta.titular) AS tarjeta,tarjeta.id FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id WHERE tarjeta.activa=1",
 								'campo_id'			=> 'id',
 								'campo'				=> 'tarjeta'
 							);

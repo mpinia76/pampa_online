@@ -4,7 +4,7 @@ session_start();
 include_once("config/db.php");
 
 //$sql = "SELECT * FROM usuario WHERE admin!=1 AND id!=".$_SESSION['userid'];
-$sql = "SELECT id,nombre,apellido, CASE activo WHEN '0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM usuario WHERE id!=".$_SESSION['useridushuaia']." AND activo = ".$_GET['activo'];
+$sql = "SELECT id,nombre,apellido, CASE activo WHEN '0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM usuario WHERE id!=".$_SESSION['userid']." AND activo = ".$_GET['activo'];
 
 $rsTemp = mysql_query($sql);
 $rows = array();

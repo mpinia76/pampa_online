@@ -150,7 +150,7 @@ switch($forma_pago){
 	<input type="hidden" name="tarjeta[]" value="1">
 	<li><label>Tarjeta:</label><select name="tarjeta_tarjeta_id[]">
 <?php
-	$sql = "SELECT banco.banco,tarjeta_marca.marca,tarjeta.titular,tarjeta.id FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id ORDER BY banco.banco";
+	$sql = "SELECT banco.banco,tarjeta_marca.marca,tarjeta.titular,tarjeta.id FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id WHERE tarjeta.activa=1 ORDER BY banco.banco";
 	$rsTemp = mysql_query($sql);
 	while($rs = mysql_fetch_array($rsTemp)){?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['marca']?> <?php echo $rs['titular']?></option>

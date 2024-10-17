@@ -771,3 +771,12 @@ ENGINE=InnoDB
 ##################################18/04/2024###########################################################
 ALTER TABLE `usuario`
     ADD COLUMN `activo` TINYINT(1) NOT NULL DEFAULT '1';
+
+##################################15/10/2024###########################################################
+UPDATE permiso SET `nombre`='Mar de las Pampas' WHERE  `id`=67;
+UPDATE permiso SET `nombre`='Buenos Aires (Oficina)' WHERE  `id`=66;
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (19, 'BB');
+
+##################################16/10/2024###########################################################
+ALTER TABLE `tarjeta`
+    ADD COLUMN `activa` TINYINT(1) NOT NULL DEFAULT '1';
