@@ -100,6 +100,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 ?>
 <li><h3>Tarjeta</h3></li>
 <li><label>Tarjeta:</label><?php echo $rs['banco']?> <?php echo $rs['marca']?> <?php echo $rs['titular']?></li>
+    <li><label>A la fecha:</label><?php echo fechavista($rs['fecha'])?></li>
 <!--  <li><label>A la fecha:</label><input class="date-pick dp-applied" name="fecha_tarjeta[]" value="<?php echo fechavista($rs['fecha'])?>" /><input type="hidden" name="fecha_tarjeta_id[]" value="<?php echo ($rs['id'])?>" /></li>-->
 <li><label>Comprobante:</label><?php echo $rs['comprobante_nro']?></li>
 <li><label>Monto:</label>$<?php echo number_format($rs['monto'],2, '.', '')?></li>
