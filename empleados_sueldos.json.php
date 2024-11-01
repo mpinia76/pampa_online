@@ -52,7 +52,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$descuento[$rs['empleado_id']]=$rs['descuentos'];
 }
 
-if($_GET['espacio'] == 'todos'){
+/*if($_GET['espacio'] == 'todos'){
 	//$sql = "SELECT * FROM empleado e WHERE fecha_alta <= '".date('Y-m-d',mktime(0,0,0,$mes,1,$ano))."'";
 	$sql = "SELECT alta, baja, e.* 
 FROM empleado e INNER JOIN empleado_historico eh ON e.id = eh.empleado_id  
@@ -79,7 +79,32 @@ WHERE e.id IN ($list) and alta <= '".date('Y-m-d',mktime(0,0,0,$mes+1,1,$ano))."
 	$sql = "SELECT alta, baja, e.* 
 FROM empleado e INNER JOIN empleado_historico eh ON e.id = eh.empleado_id  
 WHERE e.id IN ($list) and alta <= '".date('Y-m-d',mktime(0,0,0,$mes+1,1,$ano))."' AND eh.id=(SELECT max(eh2.id) FROM empleado_historico eh2 WHERE eh.empleado_id= eh2.empleado_id GROUP BY eh2.empleado_id)";
+}elseif($_GET['espacio'] == 'BB'){
+    foreach($espacio_id as $empleado_id => $sector){
+        if($sector == 3){
+            $empleados[] = $empleado_id;
+        }
+    }
+    $list = implode(",",$empleados);
+    //$sql = "SELECT * FROM empleado e WHERE e.id IN ($list) and fecha_alta <= '".date('Y-m-d',mktime(0,0,0,$mes,1,$ano))."'";
+    $sql = "SELECT alta, baja, e.* 
+FROM empleado e INNER JOIN empleado_historico eh ON e.id = eh.empleado_id  
+WHERE e.id IN ($list) and alta <= '".date('Y-m-d',mktime(0,0,0,$mes+1,1,$ano))."' AND eh.id=(SELECT max(eh2.id) FROM empleado_historico eh2 WHERE eh.empleado_id= eh2.empleado_id GROUP BY eh2.empleado_id)";
+}*/
+$centro = $_GET['espacio'];
+$espacio_array = explode(',', $centro);
+
+foreach($espacio_id as $empleado_id => $sec){
+    if (in_array($sec, $espacio_array )){
+    //if($sector == 1){
+        $empleados[] = $empleado_id;
+    }
 }
+$list = implode(",",$empleados);
+$sql = "SELECT alta, baja, e.* 
+FROM empleado e INNER JOIN empleado_historico eh ON e.id = eh.empleado_id  
+WHERE e.id IN ($list) and alta <= '".date('Y-m-d',mktime(0,0,0,$mes+1,1,$ano))."' AND eh.id=(SELECT max(eh2.id) FROM empleado_historico eh2 WHERE eh.empleado_id= eh2.empleado_id GROUP BY eh2.empleado_id)";
+
 //echo $sql."<br>";
 $rsTemp = mysql_query($sql);
 $rows = array();

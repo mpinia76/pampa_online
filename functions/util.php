@@ -72,7 +72,7 @@ function _logCheques($msg){
             $elapsed_time_seconds = time() - $last_interaction;
             $elapsed_time_seconds = ($elapsed_time_seconds>1440)?1440:$elapsed_time_seconds;
             //$elapsed_time_minutes = round($elapsed_time_seconds / 60);
-
+			$elapsed_time_seconds = ($elapsed_time_seconds>1440)?1440:$elapsed_time_seconds;
             // Actualiza la hora de última interacción y segundos conectados
             $sql_update = "UPDATE usuario_auditoria SET last = now(), interaccion='".$accion."', segundos = segundos + $elapsed_time_seconds WHERE usuario_id = " . $_SESSION['userid'] . " AND fecha = '$date'";
             //_log($sql_update);

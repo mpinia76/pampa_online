@@ -5,7 +5,7 @@ $user_id = $_SESSION['userid'];
 include_once("config/db.php");
 include_once("functions/util.php");
 $sql = "INSERT INTO usuario_log (usuario_id,nombre,accion,ip)
-			VALUES ('".$_SESSION['useridushuaia']."','".$_SESSION['usernombreushuaia']."','Cheques a debitar','".getRealIP()."')";
+			VALUES ('".$_SESSION['userid']."','".$_SESSION['usernombreushuaia']."','Cheques a debitar','".getRealIP()."')";
 mysqli_query($conn,$sql);
 include_once("config/user.php");
 

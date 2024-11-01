@@ -137,7 +137,7 @@
         </div>
         <?php } ?>
         <?php if(MENU_5){?>
-        <div class="configuracion item" onclick="createWindow('w_tarjeta','Administrador de tarjetas','tarjetas.php','600','400'); $('#menu').hide();">
+        <div class="configuracion item" onclick="createWindow('w_tarjeta','Administrador de tarjetas','tarjetas.php','650','400'); $('#menu').hide();">
             Tarjetas Corporativas
         </div>
         <?php } ?>

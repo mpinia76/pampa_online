@@ -42,14 +42,14 @@ var dataid;
 function doInitGrid(){
 	mygrid = new dhtmlXGridObject('mygrid_container');
 	mygrid.setImagePath("library/dhtml/imgs/");
-    mygrid.setHeader("Banco,Marca,Titular"); 		//nombre de las columnas
-    mygrid.setInitWidths("*,*,*"); 				//ancho de las columnas
-    mygrid.setColAlign("left,left,left");			//alineacion de las columnas
-	mygrid.setColSorting("str,str,str");			//tipo datos para ordenar
-	mygrid.setColTypes("ro,ro,ro");				//editable o no
-	mygrid.enableEditEvents(false,false,false);
+    mygrid.setHeader("Banco,Marca,Titular,Estado"); 		//nombre de las columnas
+    mygrid.setInitWidths("*,*,200,*"); 				//ancho de las columnas
+    mygrid.setColAlign("left,left,left,left");			//alineacion de las columnas
+	mygrid.setColSorting("str,str,str,str");			//tipo datos para ordenar
+	mygrid.setColTypes("ro,ro,ro,ro");				//editable o no
+	mygrid.enableEditEvents(false,false,false,false);
     mygrid.setSkin("dhx_skyblue");		
-	mygrid.load("<?php echo $json?>","json");	//ruta al json con datos
+	mygrid.load("<?php echo $json?>?activo=1","json");	//ruta al json con datos
 	mygrid.init();
 }
 
@@ -73,6 +73,14 @@ function add(){
 	createWindow('w_<?php echo $tabla?>_add','Agregar <?php echo $label?>','<?php echo $abm?>','600','400'); //botones
 }
 
+function filtroActivo(select){
+
+    mygrid.clearAll();
+    mygrid.load("<?php echo $json?>?activo="+select.value,"json");
+
+
+}
+
 </script>
 <script src="js/createWindow.js"></script>
 </head>
@@ -80,6 +88,12 @@ function add(){
 <body onload="doInitGrid();">
 <ul id="menu">
 	<li onclick="window.location.reload()" class="item"><img src="images/bt_reload.png" align="absmiddle" /></li>
+    <li class="item">
+        <select id="selectActivo" name="selectActivo" onChange="filtroActivo(this)">
+            <option value="1" >Activas</option>
+            <option value="0" >Inactivas</option>
+        </select>
+    </li>
 	<li onclick="add()" class="item"><img src="images/bt_add.png" align="absmiddle" />  Agregar</li>
 	<li onclick="edit()" class="item"><img src="images/bt_edit.png" align="absmiddle" />  Editar</li>
 	<li onclick="eliminar()" class="item"><img src="images/bt_delete.png" align="absmiddle" />  Eliminar</li>
