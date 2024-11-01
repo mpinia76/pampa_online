@@ -70,6 +70,7 @@ function _logCheques($msg){
             //_log(date('Y-m-d H:i:s'));
             // Calcula los segundos entre la última interacción y el tiempo actual
             $elapsed_time_seconds = time() - $last_interaction;
+            $elapsed_time_seconds = ($elapsed_time_seconds>1440)?1440:$elapsed_time_seconds;
             //$elapsed_time_minutes = round($elapsed_time_seconds / 60);
 
             // Actualiza la hora de última interacción y segundos conectados
