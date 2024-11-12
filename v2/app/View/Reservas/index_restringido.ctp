@@ -116,8 +116,8 @@ function asignacion_masiva(){
     <li class="boton abonar"><a onclick="extras_facturas();">Carga de extras y facturas</a></li>
     <li class="boton abonar"><a onclick="finalizar();">Finalizar <img src="<?php echo $this->webroot; ?>img/loading.gif" class="loading" id="loading_finalizar" align="absmiddle" /></a></li>
     <li class="boton abonar"><a onclick="asignacion_masiva();">Asignacion masiva</a></li>
-    <li class="filtro">Hasta  <input class="datepicker date_filter"  id="ffin" type="text" /> <input type="hidden" id="ffin_col" value="4"/></li>
-    <li class="filtro">Desde <input class="datepicker date_filter" id="fini" type="text" /> <input type="hidden" id="fini_col" value="3"/></li>
+    <li class="filtro">Hasta  <input class="datepicker date_filter"  id="ffin" type="text" /> <input type="hidden" id="ffin_col" value="6"/></li>
+    <li class="filtro">Desde <input class="datepicker date_filter" id="fini" type="text" /> <input type="hidden" id="fini_col" value="5"/></li>
     <li class="filtro">Buscar <input id="data_search" type="text"/></li>
 </ul>
 
