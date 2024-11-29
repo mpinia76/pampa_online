@@ -1,4 +1,5 @@
 <?php
+session_start();
 class ReservaExtrasController extends AppController {
     public $scaffold;
 
@@ -170,13 +171,15 @@ class ReservaExtrasController extends AppController {
         if($this->request->data){
             $this->set('cantidad',$this->request->data['cantidad']);
             $this->set('consumida',$this->request->data['consumida']);
+
             $extra = $this->ReservaExtra->Extra->findById($this->request->data['extra_id']);
+            //print_r($extra);
             $this->set('extra',$extra);
 
             $this->loadModel('Reserva');
             $this->Reserva->id = $this->request->data['reserva_id'];
             $reserva = $this->Reserva->read();
-
+            //print_r($reserva);
 
             $consumida = $this->dateFormatSQL($this->request->data['consumida']);
 
@@ -197,6 +200,7 @@ class ReservaExtrasController extends AppController {
                     'cantidad' => $this->request->data['cantidad'],
                     'precio' => $extra['Extra']['tarifa'],
                     'adelantada' => 0,
+                    'usuario_id' => $_SESSION['userid'],
                     'agregada' => date('Y-m-d')
                 ));
                 $this->ReservaExtra->save();
@@ -247,6 +251,7 @@ class ReservaExtrasController extends AppController {
                     'precio' => $this->request->data['precio'],
                     'adelantada' => 0,
                     'cantidad' => 1,
+                    'usuario_id' => $_SESSION['userid'],
                     'agregada' => date('Y-m-d')
                 ));
                 $this->ReservaExtra->save();

@@ -744,9 +744,7 @@ AUTO_INCREMENT=1;
 INSERT INTO `permiso_grupo` (`nombre`) VALUES ('Carga de feriados en grilla');
 INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (44, 'Operar');
 
-################################### 29/06/2022 ###########################################
-ALTER TABLE `reserva_extras`
-	ADD COLUMN `consumida` DATE NULL AFTER `extra_variable_id`;
+
 
 ##################################17/01/2023###########################################################
 ALTER TABLE `extra_subrubros`
@@ -780,3 +778,18 @@ INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (19, 'BB');
 ##################################16/10/2024###########################################################
 ALTER TABLE `tarjeta`
     ADD COLUMN `activa` TINYINT(1) NOT NULL DEFAULT '1';
+
+##################################22/11/2024###########################################################
+ALTER TABLE `reserva_extras`
+    ADD COLUMN `usuario_id` INT(11) NULL AFTER `extra_variable_id`;
+
+ALTER TABLE `reserva_extras`
+    ADD COLUMN `consumida` DATE NULL AFTER `extra_variable_id`;
+
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Check de consumos');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Planilla');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Carga de extras y facturas');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Finalizar');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Asignacion Masiva');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Permitir cobros');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Permitir carga facturas');

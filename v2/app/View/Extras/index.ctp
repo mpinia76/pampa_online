@@ -36,6 +36,40 @@ $this->Js->buffer('
          }
      });
 ');
+
+//filtrar total de resultados
+$this->Js->buffer('
+    $("#total_rows").change(function(){
+        oTable.fnReloadAjax("dataTable/"+$(this).val());
+    });
+    $("#filter_rubro").keyup(function(){
+        oTable.fnFilter($(this).val(),1);
+    });
+
+    $("#filter_subrubro").keyup(function(){
+        oTable.fnFilter($(this).val(),2);
+    });
+
+    $("#filter_detalle").keyup(function(){
+        oTable.fnFilter($(this).val(),3);
+    });
+
+	
+	$("#filter_tarifa").keyup(function(){
+        oTable.fnFilter($(this).val(),4);
+    });
+    
+    
+
+   
+
+	
+
+    
+
+');
+
+
 $this->Js->buffer('
     dhxWins = parent.dhxWins;
     position = dhxWins.window("w_'.$this->params['controller'].'").getPosition();
@@ -62,6 +96,36 @@ function edit(){
 </ul>
 <table cellpadding="0" cellspacing="0" border="0" class="display" id="dataTable">
     <thead>
+    <tr>
+        <th width="100">Id</th>
+        <!-- Campo Cuenta -->
+        <th width="150">
+            <input type="text"  id="filter_rubro" />
+        </th>
+
+        <!-- Campo Numero -->
+        <th width="20">
+            <input type="text"  id="filter_subrubro" />
+        </th>
+
+
+        <!-- Campo Tipo-->
+        <th width="50">
+            <input type="text"  id="filter_detalle" />
+        </th>
+        <!-- Campo Cantidad -->
+        <th width="20">
+            <input type="text"  id="filter_tarifa" />
+        </th>
+        <th width="20">
+
+        </th>
+
+
+
+
+
+    </tr>
         <tr>
             <th>id</th>
             <th>Extra Rubro</th>
@@ -80,7 +144,7 @@ function edit(){
             <td><?php echo $extra['ExtraRubro']['rubro']; ?></td>
             <td><?php echo $extra['ExtraSubrubro']['subrubro']; ?></td>
             <td><?php echo $extra['Extra']['detalle']; ?></td>
-            <td><?php echo $extra['Extra']['detalle']; ?></td>
+            <td><?php echo '$'.$extra['Extra']['tarifa']; ?></td>
             <td><?php echo ($extra['Extra']['activo'])?'SI':'NO'; ?></td>
 
         </tr>

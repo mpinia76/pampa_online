@@ -215,8 +215,8 @@ class ReservaCobrosController extends AppController {
         
         $extras = $this->Reserva->ReservaExtra->find('all',array('conditions' => array('reserva_id' => $reserva_id, 'adelantada' => 0),'recursive' => 2));
         $this->set('extras',$extras);
-        
-        $this->loadModel('ExtraRubro');
+        //'print_r($extras);
+        $this->loadModel('ExtraRubro');//
         $this->set('extra_rubros',$this->ExtraRubro->find('list'));
         
         $pagado = 0;
@@ -289,11 +289,15 @@ class ReservaCobrosController extends AppController {
         
         $permisoEditar=1;
 		$permisoDescuento=1;
+        $permisoCobro=1;
+        $permisoFactura=1;
         if ($user['Usuario']['admin'] != '1'){
 	        $this->loadModel('UsuarioPermiso');
 	        $permisos = $this->UsuarioPermiso->findAllByUsuarioId($user_id);
 	        $permisoEditar=0;
 	        $permisoDescuento=0;
+            $permisoCobro=0;
+            $permisoFactura=0;
 	    	foreach($permisos as $permiso){
                if ($permiso['UsuarioPermiso']['permiso_id']==117) {
                		$permisoEditar=1;
@@ -302,11 +306,21 @@ class ReservaCobrosController extends AppController {
 	    		if ($permiso['UsuarioPermiso']['permiso_id']==132) {
                		$permisoDescuento=1;
                		//continue;
-               }	
+               }
+                if ($permiso['UsuarioPermiso']['permiso_id']==156) {
+                    $permisoCobro=1;
+                    //continue;
+                }
+                if ($permiso['UsuarioPermiso']['permiso_id']==157) {
+                    $permisoFactura=1;
+                    //continue;
+                }
 	        }
         }
         $this->set('permisoEditar',$permisoEditar);
         $this->set('permisoDescuento',$permisoDescuento);
+        $this->set('permisoCobro',$permisoCobro);
+        $this->set('permisoFactura',$permisoFactura);
         $this->set('restringido',$restringido);
         //if ($restringido) {
         	 $this->set('reserva_descuentos',$this->ReservaCobro->find('all',array('conditions' => array('reserva_id =' => $reserva_id, 'ReservaCobro.tipo =' => 'DESCUENTO'), 'order' => 'fecha asc')));

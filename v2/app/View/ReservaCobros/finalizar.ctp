@@ -40,23 +40,28 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
     <table width="100%" id="reserva_extras">
             <?php $total_extras = 0; 
                 if(count($extras) > 0){ 
-                    foreach($extras as $extra){ 
+                    foreach($extras as $extra){
+                        //print_r($extra['Usuario']);
                         if($extra['Extra']['id'] != ''){
                             $total_extras = $total_extras + ($extra['ReservaExtra']['cantidad']*$extra['ReservaExtra']['precio']); ?>
                             <tr class="border_bottom" id="ReservaExtra<?php echo $extra['ReservaExtra']['id']?>">
-                                <td width="25%"><?php echo (!empty($extra['ReservaExtra']['consumida']))?date('d/m/Y',strtotime($extra['ReservaExtra']['consumida']))." - ":"";?><?php echo $extra['Extra']['ExtraRubro']['rubro'];?></td>
+                                <td width="10%"><?php echo (!empty($extra['ReservaExtra']['consumida']))?date('d/m/Y',strtotime($extra['ReservaExtra']['consumida'])):"";?></td>
+                                <td width="25%"><?php echo $extra['Extra']['ExtraRubro']['rubro'];?></td>
                                 <td><?php echo $extra['Extra']['ExtraSubrubro']['subrubro'];?> <?php echo $extra['Extra']['detalle']; ?></td>
                                 <td align="right" width="100"><span class="extra_cantidad"><?php echo $extra['ReservaExtra']['cantidad']?> x $<span class="extra_tarifa"><?php echo $extra['ReservaExtra']['precio']?></span></td>
                                 <td align="right" width="50">$<?php echo $extra['ReservaExtra']['cantidad']*$extra['ReservaExtra']['precio']?></td>
+                                <td align="right" width="50"><?php echo $extra['Usuario']['nombre'].' '.$extra['Usuario']['apellido']?></td>
                                 <td align="right" width="50"><a onclick="quitarExtra('<?php echo $extra['ReservaExtra']['id']?>');">quitar</a></td>
                             </tr>
                         <?php }elseif($extra['ExtraVariable']['id'] != ''){ 
                             $total_extras = $total_extras + $extra['ReservaExtra']['precio']; ?>
                             <tr class="border_bottom" id="ReservaExtra<?php echo $extra['ReservaExtra']['id']?>">
-                                <td width="25%"><?php echo (!empty($extra['ReservaExtra']['consumida']))?date('d/m/Y',strtotime($extra['ReservaExtra']['consumida']))." - ":"";?><?php echo $extra['ExtraVariable']['ExtraRubro']['rubro'];?></td>
+                                <td width="10%"><?php echo (!empty($extra['ReservaExtra']['consumida']))?date('d/m/Y',strtotime($extra['ReservaExtra']['consumida'])):"";?></td>
+                                <td width="25%"><?php echo $extra['ExtraVariable']['ExtraRubro']['rubro'];?></td>
                                 <td colspan="2"><?php echo $extra['ExtraVariable']['detalle'];?> </td>
                                 <?php if($reserva['Reserva']['estado'] == 0){ ?>
                                 <td align="right" width="50">$<span class="extra_tarifa"><?php echo $extra['ReservaExtra']['precio']?></span></td>
+                                    <td align="right" width="50"><?php echo $extra['Usuario']['nombre'].' '.$extra['Usuario']['apellido']?></td>
                                 <td align="right" width="50"><a onclick=" quitarExtra('<?php echo $extra['ReservaExtra']['id']?>');">quitar</a></td>
                                 <?php }else{ ?>
                                 <td align="right" colspan="2" width="50">$<span class="extra_tarifa"><?php echo $extra['ReservaExtra']['precio']?></span></td>
@@ -139,7 +144,8 @@ else{
 	    }
 	}
 }*/
-?>	
+?>
+<?php if($permisoCobro){ ?>
 <div class="sectionTitle">Cobros</div>
 <!--lista de pagos finalizados-->
 <div class="ym-gbox">
@@ -292,7 +298,8 @@ else{
 </div>
 <div id="cobro_tipos"></div>
  <?php } ?>
-
+<?php } ?>
+<?php if($permisoFactura){ ?>
 <div class="sectionTitle">Facturas</div>
 <?php 
 $factura_total = 0;
@@ -342,6 +349,7 @@ if(count($facturas)>0){ ?>
     <div class="ym-g25 ym-gl"><?php echo $this->Form->input('ReservaFactura.monto',array('type' => 'text', 'label' => 'Monto $', 'class' => 'number'));?></div>
     <div class="ym-g25 ym-gr"><span style="margin-top: 15px;" onclick="guardar('<?php echo $this->Html->url('/reserva_facturas/guardar.json', true);?>',$('form').serialize());"  class="boton agregar"> + agregar </span></div>
 </div>
+<?php } ?>
 <script>
 function eliminarFactura(factura_id){
     if(confirm('Seguro desea eliminar la factura?')){
@@ -430,13 +438,13 @@ function addExtraVariable(){
 $('#ExtraExtraRubroId').change(function(){
     if($(this).val() != ""){
         $.ajax({
-          url: '<?php echo $this->Html->url('/extra_rubros/detalle', true);?>/'+$(this).val(),
-          success: function(data){
-            $('#btn_add_extra').show();
-            $('#extra_detalle').html(data);
-            updateTotal();
-          },
-          dataType: 'html'
+            url: '<?php echo $this->Html->url('/extra_rubros/obtenerSubrubros', true);?>/'+$(this).val(),
+            success: function(data){
+                $('#btn_add_extra').show();
+                $('#extra_detalle').html(data);
+                updateTotal();
+            },
+            dataType: 'html'
         });
     }else{
         $('#btn_add_extra').hide();

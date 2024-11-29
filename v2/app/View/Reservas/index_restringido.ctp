@@ -76,6 +76,16 @@ function plantilla(){
         document.location = "<?php echo $this->Html->url('/reservas/plantilla', true);?>/"+data[0];
     }
 }
+function checkConsumo(){
+    var row = $("#dataTable tr.row_selected");
+    if(row.length == 0){
+        alert('Debe seleccionar un registro');
+    }else{
+        var data = oTable.fnGetData(row[0]);
+        document.location = "<?php echo $this->Html->url('/reservas/check_consumo', true);?>/"+data[0];
+    }
+}
+
 function finalizar(){
     var row = $("#dataTable tr.row_selected");
     if(row.length == 0){
@@ -112,10 +122,11 @@ function asignacion_masiva(){
 }
 </script>
 <ul class="action_bar">
-    <li class="boton pdf"><a onclick="plantilla();">Planilla</a></li>
-    <li class="boton abonar"><a onclick="extras_facturas();">Carga de extras y facturas</a></li>
-    <li class="boton abonar"><a onclick="finalizar();">Finalizar <img src="<?php echo $this->webroot; ?>img/loading.gif" class="loading" id="loading_finalizar" align="absmiddle" /></a></li>
-    <li class="boton abonar"><a onclick="asignacion_masiva();">Asignacion masiva</a></li>
+    <?php if($permisoPlanilla){ ?><li class="boton pdf"><a onclick="plantilla();">Planilla</a></li><?php  } ?>
+    <?php if($permisoCheckConsumo){ ?><li class="boton pdf"><a onclick="checkConsumo();">Check de consumos</a></li><?php  } ?>
+    <?php if($permisoCarga){ ?><li class="boton abonar"><a onclick="extras_facturas();">Carga de extras y facturas</a></li><?php  } ?>
+    <?php if($permisoFinalizar){ ?><li class="boton abonar"><a onclick="finalizar();">Finalizar <img src="<?php echo $this->webroot; ?>img/loading.gif" class="loading" id="loading_finalizar" align="absmiddle" /></a></li><?php  } ?>
+    <?php if($permisoMasiva){ ?><li class="boton abonar"><a onclick="asignacion_masiva();">Asignacion masiva</a></li><?php  } ?>
     <li class="filtro">Hasta  <input class="datepicker date_filter"  id="ffin" type="text" /> <input type="hidden" id="ffin_col" value="6"/></li>
     <li class="filtro">Desde <input class="datepicker date_filter" id="fini" type="text" /> <input type="hidden" id="fini_col" value="5"/></li>
     <li class="filtro">Buscar <input id="data_search" type="text"/></li>
