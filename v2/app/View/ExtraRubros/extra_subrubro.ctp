@@ -18,7 +18,9 @@
         'id' => 'ExtraId'
     )); ?>
 </div>
-
+<div class="ym-gbox" style="width: 10%; float: left;">
+    <?php echo $this->Form->input('ReservaExtra.cantidad',array('value' => '1', 'type'=>'text', 'size' => '2', 'label' => 'Cant.')); ?>
+</div>
 <div class="ym-gbox" style="width: 10%; float: left;">
     <!-- Campo de Precio -->
     <?php echo $this->Form->input('Extra.precio', array(
@@ -27,9 +29,7 @@
         'id' => 'precioId'
     )); ?>
 </div>
-<div class="ym-gbox" style="width: 10%; float: left;">
-    <?php echo $this->Form->input('ReservaExtra.cantidad',array('value' => '1', 'type'=>'text', 'size' => '2', 'label' => 'Cant.')); ?>
-</div>
+
 <div class="ym-gbox" style="width: 20%; float: right; margin-top:5px;"><span onclick="addExtra();" class="boton agregar">+ agregar</span></div>
 <script>
     $(document).ready(function() {

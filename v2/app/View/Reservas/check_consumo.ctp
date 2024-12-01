@@ -86,6 +86,7 @@ $this->Js->buffer('
 
 
         <tr>
+            <td><strong>Fecha</strong></td>
             <td colspan="2"><strong>Detalle</strong></td>
             <td><strong>Precio</strong></td>
             <td><strong>Cantidad</strong></td>
@@ -98,6 +99,7 @@ $this->Js->buffer('
             $total +=$extra['ReservaExtra']['precio']*$extra['ReservaExtra']['cantidad'];
         ?>
             <tr>
+                <td class="border"><?php echo date("d/m/Y",strtotime($extra['ReservaExtra']['consumida']));?></td>
                 <td class="border" colspan="2"> <?php echo utf8_encode($extra['Extra']['ExtraRubro']['rubro']);?> <?php echo utf8_encode($extra['Extra']['ExtraSubrubro']['subrubro']);?> <?php echo utf8_encode($extra['Extra']['detalle']); ?></td>
                 <td class="border"><?php echo number_format($extra['Extra']['tarifa'],2, ',', '.');?></td>
                 <td class="border"><?php echo $extra['ReservaExtra']['cantidad'];?></td>
@@ -106,13 +108,13 @@ $this->Js->buffer('
         <?php } ?>
         <tr>
 
-            <td class="border" colspan="4" style="text-align: right"><strong>Total</strong></td>
+            <td class="border" colspan="5" style="text-align: right"><strong>Total</strong></td>
             <td class="border"><strong><?php echo number_format($total,2, ',', '.');?></strong></td>
         </tr>
     </table>
     <?php } ?>
 
-    <p style="font-size:16px;" align="right"><strong>Saldo Pendiente: $<?php echo ($pendiente==-0)?0:$pendiente; ?></strong></p>
+
 </div>
 <?php if(!$pdf){ ?>
 <span id="botonDescargar" onclick="descargar()" class="boton guardar">Descargar</span>

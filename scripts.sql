@@ -786,10 +786,13 @@ ALTER TABLE `reserva_extras`
 ALTER TABLE `reserva_extras`
     ADD COLUMN `consumida` DATE NULL AFTER `extra_variable_id`;
 
-INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Check de consumos');
-INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Planilla');
-INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Carga de extras y facturas');
-INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Finalizar');
-INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Asignacion Masiva');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Check de consumos - Boton');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Planilla de reserva- Boton');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Carga de extras y facturas - Boton + funcionalidad de carga de extras');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Finalizar - Boton');
+INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Asignacion Masiva - Boton');
 INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Permitir cobros');
 INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Permitir carga facturas');
+
+DELETE FROM `permiso` WHERE  `id`=83;
+UPDATE permiso SET `nombre`='Editar y eliminar facturas' WHERE  `id`=117;

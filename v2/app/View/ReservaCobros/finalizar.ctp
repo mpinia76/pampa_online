@@ -31,7 +31,7 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
 <div class="sectionTitle" style="margin-top: 10px;">Extras no adelantadas</div>
 <?php if($reserva['Reserva']['estado'] == 0){ ?>
 <div class="ym-grid">
-    <div class="ym-g ym-gl" style="width: 15%;"><?php echo $this->Form->input('Extra.consumida',array('label' => 'F. consumo','class' => 'datepicker', 'type' => 'text')); ?></div>
+    <div class="ym-g ym-gl" style="width: 15%;"><?php echo $this->Form->input('Extra.consumida',array('label' => 'Fecha','class' => 'datepicker', 'type' => 'text')); ?></div>
     <div class="ym-g ym-gl" style="width: 20%"><?php echo $this->Form->input('Extra.extra_rubro_id',array('label' => 'Seleccione un rubro', 'options' => $extra_rubros, 'empty' => 'Rubro', 'type'=>'select')); ?></div>
     <div class="ym-g ym-gl" id="extra_detalle" style="width: 65%;"></div>
 </div>
@@ -77,7 +77,8 @@ echo $this->Form->hidden('ReservaCobro.finalizado',array('value' => 1));
 <?php 
 
 //if($restringido){
-	$descuentos = 0; 
+if ($permisoDescuento){
+$descuentos = 0;
 	if(count($reserva_descuentos) > 0){  ?>
 	    <div class="sectionTitle" style="margin-top: 10px;">Descuentos</div>
 	    <div class="ym-gbox">
@@ -144,6 +145,7 @@ else{
 	    }
 	}
 }*/
+}
 ?>
 <?php if($permisoCobro){ ?>
 <div class="sectionTitle">Cobros</div>
@@ -307,25 +309,27 @@ if(count($facturas)>0){ ?>
 <div class="ym-gbox">
     <table width="100%">
         <tr>
-        	<td></td>
+
             <td width="100"><strong>Fecha</strong></td>
             <td width="100"><strong>Tipo</strong></td>
             <td width="250"><strong>Numero</strong></td>
             <td width="250"><strong>Titular</strong></td>
             <!--<td><strong>Punto de venta</strong></td>-->
             <td width="80" align="right"><strong>Monto</strong></td>
+            <td></td>
         </tr>
         <?php foreach($facturas as $factura){ 
         //print_r($factura);
         ?>
         <tr>
-            <td><a onclick="editarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">editar</a>&nbsp;&nbsp;&nbsp;<a onclick="eliminarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;</td>
+
             <td><?php echo $factura['ReservaFactura']['fecha_emision']?></td>
             <td><?php echo ($factura['ReservaFactura']['tipoDoc']==1)?'Factura':'Nota de credito'?></td>
             <td><?php echo $factura['ReservaFactura']['tipo']?> - <?php echo $factura['PuntoVenta']['numero']?> - <?php echo $factura['ReservaFactura']['numero']?></td>
             <td><?php echo $factura['ReservaFactura']['titular']?></td>
             <!-- <td><?php echo $factura['PuntoVenta']['puntoVenta']?></td> -->
             <td align="right">$<?php echo $factura['ReservaFactura']['monto']?></td>
+            <td><a onclick="editarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">editar</a>&nbsp;&nbsp;&nbsp;<a onclick="eliminarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;</td>
         </tr>
         <?php $factura_total = $factura_total + $factura['ReservaFactura']['monto']; } ?>
         <tr>
@@ -374,7 +378,7 @@ function editarFactura(factura_id){
 }
 function addExtra(){
     if($('#ExtraConsumida').val() == ''){
-        alert('Complete F. Consumo');
+        alert('Complete Fecha');
         $('#ExtraConsumida').focus();
         return false;
     }
@@ -385,7 +389,7 @@ function addExtra(){
           data: {'consumida' : $('#ExtraConsumida').val(),'extra_id' : $('#ExtraId').val(), 'cantidad' : $('#ReservaExtraCantidad').val(), 'reserva_id' : '<?php echo $reserva['Reserva']['id'];?>'},
           type: 'post',
           success: function(data){
-              if(data == 'La fecha de consumo esta fuera de rango'){
+              if(data == 'La fecha esta fuera de rango'){
                   alert(data);
               }
               else {
@@ -402,7 +406,7 @@ function addExtra(){
 }
 function addExtraVariable(){
     if($('#ExtraConsumida').val() == ''){
-        alert('Complete F. Consumo');
+        alert('Complete Fecha');
         $('#ExtraConsumida').focus();
         return false;
     }
@@ -422,7 +426,7 @@ function addExtraVariable(){
       data: {'consumida' : $('#ExtraConsumida').val(),'rubro_id' : $('#ExtraExtraRubroId').val(), 'precio' : $('#ReservaExtraPrecio').val(), 'detalle' : $('#ExtraVariableDetalle').val(), 'reserva_id' : '<?php echo $reserva['Reserva']['id'];?>'},
       type : 'post',
       success: function(data){
-          if(data == 'La fecha de consumo esta fuera de rango'){
+          if(data == 'La fecha esta fuera de rango'){
               alert(data);
           }
           else {
