@@ -1,10 +1,10 @@
 <?php
 class ExtraRubrosController extends AppController {
     public $scaffold;
-    
+
     public function detalle($rubro_id){
         $this->layout = 'ajax';
-        
+
         $this->ExtraRubro->id = $rubro_id;
         $er = $this->ExtraRubro->read();
         if($er['ExtraRubro']['extra_variables']){
@@ -44,32 +44,38 @@ class ExtraRubrosController extends AppController {
 
     public function obtenerSubrubros($extra_rubro_id) {
         $this->layout = 'ajax';
-//listo los extras disponibles
-        $this->loadModel('Extra');
-        // Obtener subrubros únicos para el rubro
-        $subrubros = $this->Extra->find('list', array(
-            'conditions' => array(
-                'Extra.extra_rubro_id' => $extra_rubro_id,
-                'Extra.activo' => 1
-            ),
-            'fields' => array('ExtraSubrubro.id', 'ExtraSubrubro.subrubro'), // Obtener el nombre del subrubro desde la tabla extra_subrubros
-            'joins' => array(
-                array(
-                    'table' => 'extra_subrubros',  // Especificar la tabla extra_subrubros
-                    'alias' => 'ExtraSubrubro',    // Definir un alias para la tabla
-                    'type' => 'INNER',             // Realizar una unión interna
-                    'conditions' => 'Extra.extra_subrubro_id = ExtraSubrubro.id'  // Condición de unión entre extra_subrubros y Extra
-                )
-            ),
-            'group' => 'ExtraSubrubro.id',   // Agrupar por el ID del subrubro para evitar duplicados
-            'order' => 'ExtraSubrubro.subrubro ASC' // Ordenar por el nombre del subrubro
-        ));
+        $this->ExtraRubro->id = $extra_rubro_id;
+        $er = $this->ExtraRubro->read();
+        if($er['ExtraRubro']['extra_variables']){
+            $this->render('extra_variable');
+        }else {
+            //listo los extras disponibles
+            $this->loadModel('Extra');
+            // Obtener subrubros únicos para el rubro
+            $subrubros = $this->Extra->find('list', array(
+                'conditions' => array(
+                    'Extra.extra_rubro_id' => $extra_rubro_id,
+                    'Extra.activo' => 1
+                ),
+                'fields' => array('ExtraSubrubro.id', 'ExtraSubrubro.subrubro'), // Obtener el nombre del subrubro desde la tabla extra_subrubros
+                'joins' => array(
+                    array(
+                        'table' => 'extra_subrubros',  // Especificar la tabla extra_subrubros
+                        'alias' => 'ExtraSubrubro',    // Definir un alias para la tabla
+                        'type' => 'INNER',             // Realizar una unión interna
+                        'conditions' => 'Extra.extra_subrubro_id = ExtraSubrubro.id'  // Condición de unión entre extra_subrubros y Extra
+                    )
+                ),
+                'group' => 'ExtraSubrubro.id',   // Agrupar por el ID del subrubro para evitar duplicados
+                'order' => 'ExtraSubrubro.subrubro ASC' // Ordenar por el nombre del subrubro
+            ));
 
-        // Verifica los resultados de la consulta
-        //print_r($subrubros);
-        $this->set('subrubros', $subrubros);
-        //$this->set('_serialize', ['subrubros']);
-        $this->render('extra_subrubro');
+            // Verifica los resultados de la consulta
+            //print_r($subrubros);
+            $this->set('subrubros', $subrubros);
+            //$this->set('_serialize', ['subrubros']);
+            $this->render('extra_subrubro');
+        }
     }
 
     public function obtenerDetalles($subrubro_id) {
