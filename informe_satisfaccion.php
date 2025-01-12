@@ -240,11 +240,11 @@ $rsTemp = mysql_query($sql);
         <option value="<?php echo $rs['id']?>" <?php if(in_array($rs['id'], $_POST['ApartamentoId'])){?> selected="selected" <?php } ?>><?php echo $rs['apartamento']?> </option>
 
     <?php } ?>
-	
+
 </select>
 
-	
-	
+
+
 </span></td>
                 <td>
                     <div class="titulo_secundario" style="float:left; margin-top:3px;">
@@ -432,7 +432,7 @@ $rsTemp = mysql_query($sql);
 				&chd=t:<?php echo implode(",",$valores)?>
 				&cht=p3
 				&chco=<?php echo implode(",",$colores)?>
-				&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+				&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 				/>-->
                             <br />Esta pregunta obtuvo <?php echo $total?> respuestas en <?php echo count($encuestas)?> encuestas encontradas
                         </div>
@@ -522,7 +522,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                 <?php
@@ -586,7 +586,7 @@ $rsTemp = mysql_query($sql);
 					&chf=bg,s,65432100
 					&cht=gom
 					&chd=t:<?php echo $promedio?>
-					
+
 					&chl=Promedio"
 					/>-->
                             </td>
@@ -681,7 +681,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>-->
                                             <?php echo $total?> / <?php echo count($encuestas)?>
                                         </div>
@@ -777,7 +777,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                 <?php
@@ -838,7 +838,7 @@ $rsTemp = mysql_query($sql);
 					&chf=bg,s,65432100
 					&cht=gom
 					&chd=t:<?php echo $promedio?>
-					
+
 					&chl=Promedio"
 					/>-->
                             </td>
@@ -927,7 +927,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>
 						<br />--><?php echo $total?> / <?php echo count($encuestas)?>
                                         </div>
@@ -1022,7 +1022,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                 <?php
@@ -1171,7 +1171,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>
 						<br />--><?php echo $total?> / <?php echo count($encuestas)?>
                                         </div>
@@ -1270,7 +1270,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                     <?php
@@ -1422,7 +1422,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>
 						<br />--><?php echo $total?> / <?php echo count($encuestas)?>
                                             </div>
@@ -1521,7 +1521,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                 <?php
@@ -1672,7 +1672,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>
 						<br />--><?php echo $total?> / <?php echo count($encuestas)?>
                                         </div>
@@ -1767,7 +1767,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                 <?php
@@ -1918,7 +1918,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>
 						<br />--><?php echo $total?> / <?php echo count($encuestas)?>
                                         </div>
@@ -2013,7 +2013,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                 <?php
@@ -2164,7 +2164,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>
 						<br />--><?php echo $total?> / <?php echo count($encuestas)?>
                                         </div>
@@ -2258,7 +2258,7 @@ $rsTemp = mysql_query($sql);
 					&chd=t:<?php echo implode(",",$valores)?>
 					&cht=p3
 					&chco=<?php echo implode(",",$colores)?>
-					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>" 
+					&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 					/>
 					<br /><br />-->
                                 <?php
@@ -2410,7 +2410,7 @@ $rsTemp = mysql_query($sql);
 						&chd=t:<?php echo implode(",",$valores)?>
 						&cht=p3
 						&chco=<?php echo implode(",",$colores)?>
-						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"  
+						&chl=<?php echo implode("|",$etiquetas)?>&chdl=<?php echo implode("|",$valores)?>"
 						/>
 						<br />--><?php echo $total?> / <?php echo count($encuestas)?>
                                         </div>
@@ -2463,21 +2463,19 @@ $rsTemp = mysql_query($sql);
             <option value="11" <?php if($mes == '11'){?> selected="selected" <?php } ?>>Noviembre</option>
             <option value="12" <?php if($mes == '12'){?> selected="selected" <?php } ?>>Diciembre</option>
         </select>
-        <select id="ano" name="ano">
-            <option <?php if($ano == '2012'){?> selected="selected" <?php } ?>>2012</option>
-            <option <?php if($ano == '2013'){?> selected="selected" <?php } ?>>2013</option>
-            <option <?php if($ano == '2014'){?> selected="selected" <?php } ?>>2014</option>
-            <option <?php if($ano == '2015'){?> selected="selected" <?php } ?>>2015</option>
-            <option <?php if($ano == '2016'){?> selected="selected" <?php } ?>>2016</option>
-            <option <?php if($ano == '2017'){?> selected="selected" <?php } ?>>2017</option>
-            <option <?php if($ano == '2018'){?> selected="selected" <?php } ?>>2018</option>
-            <option <?php if($ano == '2019'){?> selected="selected" <?php } ?>>2019</option>
-            <option <?php if($ano == '2020'){?> selected="selected" <?php } ?>>2020</option>
-            <option <?php if($ano == '2021'){?> selected="selected" <?php } ?>>2021</option>
-            <option <?php if($ano == '2022'){?> selected="selected" <?php } ?>>2022</option>
-            <option <?php if($ano == '2023'){?> selected="selected" <?php } ?>>2023</option>
-            <option <?php if($ano == '2024'){?> selected="selected" <?php } ?>>2024</option>
-        </select>
+        <?php
+        $currentYear = date("Y"); // Año actual
+        $startYear = 2011; // Año de inicio del rango
+
+
+        ?><select id="ano" name="ano">
+                <?php for ($year = $startYear; $year <= $currentYear; $year++): ?>
+                    <option value="<?php echo $year; ?>" <?php if ($ano == $year) echo 'selected="selected"'; ?>>
+                        <?php echo $year; ?>
+                    </option>
+                <?php endfor; ?>
+            </select>
+
         <input type="submit" name="ver" id="ver" value="Ver" />
         <div style="clear:both;"></div>
     </form>
