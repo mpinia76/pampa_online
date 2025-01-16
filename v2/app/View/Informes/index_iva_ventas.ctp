@@ -33,22 +33,17 @@ function descargar(){
     <option value="11" <?php if($mes == '11'){?> selected="selected" <?php } ?>>Noviembre</option>
     <option value="12" <?php if($mes == '12'){?> selected="selected" <?php } ?>>Diciembre</option>
 </select>
-<select id="financiero_mensual_ano">
-    <option <?php if($ano == '2012'){?> selected="selected" <?php } ?>>2012</option>
-    <option <?php if($ano == '2013'){?> selected="selected" <?php } ?>>2013</option>
-    <option <?php if($ano == '2014'){?> selected="selected" <?php } ?>>2014</option>
-    <option <?php if($ano == '2015'){?> selected="selected" <?php } ?>>2015</option>
-    <option <?php if($ano == '2016'){?> selected="selected" <?php } ?>>2016</option>
-    <option <?php if($ano == '2017'){?> selected="selected" <?php } ?>>2017</option>
-    <option <?php if($ano == '2018'){?> selected="selected" <?php } ?>>2018</option>
-    <option <?php if($ano == '2019'){?> selected="selected" <?php } ?>>2019</option>
-    <option <?php if($ano == '2020'){?> selected="selected" <?php } ?>>2020</option>
-    <option <?php if($ano == '2021'){?> selected="selected" <?php } ?>>2021</option>
-    <option <?php if($ano == '2022'){?> selected="selected" <?php } ?>>2022</option>
-    <option <?php if($ano == '2023'){?> selected="selected" <?php } ?>>2023</option>
-    <option <?php if($ano == '2024'){?> selected="selected" <?php } ?>>2024</option>
-        <option <?php if($ano == '2025'){?> selected="selected" <?php } ?>>2025</option>
-    <option <?php if($ano == '2026'){?> selected="selected" <?php } ?>>2026</option>
+<?php
+$currentYear = date("Y"); // Año actual
+$startYear = 2011; // Año de inicio del rango
+
+
+?><select id="financiero_mensual_ano" name="financiero_mensual_ano">
+    <?php for ($year = $startYear; $year <= $currentYear; $year++): ?>
+        <option value="<?php echo $year; ?>" <?php if ($ano == $year) echo 'selected="selected"'; ?>>
+            <?php echo $year; ?>
+        </option>
+    <?php endfor; ?>
 </select>
 <select id="financiero_mensual_orden">
     <option value="fecha_emision">Ordenar por fecha</option>
