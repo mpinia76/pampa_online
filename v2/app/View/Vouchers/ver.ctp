@@ -46,6 +46,10 @@
             <td><?php echo $apartamento['Categoria']['categoria'];?></td>
         </tr>
         <tr>
+            <td width="200"><strong>Descripción</strong></td>
+            <td><?php echo $apartamento['Categoria']['descripcion'];?></td>
+        </tr>
+        <tr>
             <td width="200"><strong>Cantidad de pasajeros</strong></td>
             <td><?php echo $reserva['Reserva']['pax_adultos'] + $reserva['Reserva']['pax_menores'];?></td>
         </tr>

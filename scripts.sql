@@ -796,3 +796,7 @@ INSERT INTO permiso (`permiso_grupo_id`, `nombre`) VALUES (21, 'Permitir carga f
 
 DELETE FROM `permiso` WHERE  `id`=83;
 UPDATE permiso SET `nombre`='Editar y eliminar facturas' WHERE  `id`=117;
+
+##################################05/02/2025###########################################################
+ALTER TABLE `categorias`
+    ADD COLUMN `descripcion` text NULL;

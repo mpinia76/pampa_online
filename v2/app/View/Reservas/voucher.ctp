@@ -50,6 +50,10 @@
             <td><?php echo $apartamento['Categoria']['categoria'];?></td>
         </tr>
         <tr>
+            <td width="200"><strong>Descripción</strong></td>
+            <td><?php echo $apartamento['Categoria']['descripcion'];?></td>
+        </tr>
+        <tr>
             <td width="200"><strong>Check In</strong></td>
             <td><?php echo $reserva['Reserva']['check_in'];?> <?php echo $reserva['Reserva']['hora_check_in'];?> hs.</td>
         </tr>
