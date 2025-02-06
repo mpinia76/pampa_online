@@ -132,8 +132,19 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
 </div>
 <div class="sectionSubtitle">Comentarios</div>
 <div class="ym-grid">
-    <?php echo $this->Form->input('Reserva.comentarios',array('label' => false, 'type' => 'textarea')); ?>
+    <?php
+    echo $this->Form->input('Reserva.comentarios', array(
+        'label' => false,
+        'type' => 'textarea'
+    ));
+
+    ?>
+    <script>
+        document.getElementById('ReservaComentarios').value =
+            "OBSERVACIONES: BOOKING/ MOTOR/ DIRECTA\nCAMA MATRIMONIAL/ SEPARADAS\n\nVIAJA CON: (EDADES)\n\nRESTRICCION DE ALIMENTOS:\n\nMASAJE:\n\nTARIFA CATEGORIA --- PAX:\nFOTOS DE LA CATEGORIA:";
+    </script>
 </div>
+
 <?php if($grilla){ ?>
 <span id="botonGuardar" onclick="guardarSinRefrescar('<?php echo $this->Html->url('/reservas/guardar.json', true);?>',$('form').serialize());" class="boton guardar">Guardar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>
 <span id="botonBloquear" onclick="guardarSinRefrescar('<?php echo $this->Html->url('/reservas/bloquearApartamento.json', true);?>',$('form').serialize());" class="boton bloquear">Bloquear Apartamento <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>

@@ -121,7 +121,8 @@ class InformesController extends AppController {
 
          $this->setLogUsuario('Grilla de reservas');
 
-        $this->loadModel('GrillaFeriado');
+
+		$this->loadModel('GrillaFeriado');
 
         $feriados = $this->GrillaFeriado->find('all', array('order' => 'desde ASC'));
 
@@ -146,7 +147,7 @@ class InformesController extends AppController {
         ini_set('max_execution_time', "-1");
 
 
-        $this->loadModel('Usuario');
+		$this->loadModel('Usuario');
         $user_id = $_SESSION['userid'];
         $user = $this->Usuario->find('first',array('conditions'=>array('Usuario.id'=>$_SESSION['userid'])));
 
@@ -166,7 +167,6 @@ class InformesController extends AppController {
 
             }
         }
-
 
 
        $hasta= date('Y-m-d', strtotime($desde. ' + 32 days'));
@@ -260,7 +260,8 @@ class InformesController extends AppController {
 		                    break;
 
 		            }
-                    $event_type = ($reserva['Reserva']['checkIn'])?'checkin_event':'';
+
+					$event_type = ($reserva['Reserva']['checkIn'])?'checkin_event':'';
                     $event_type = ($reserva['Reserva']['checkOut'])?'checkout_event':$event_type;
 					$date_parts = explode("/",$reserva['Reserva']['check_in']);
         			$yy=$date_parts[2];
@@ -792,12 +793,14 @@ class InformesController extends AppController {
 
         $this->loadModel('Reserva');
 
-
-        if ($mes!='Seleccionar...'){
+       	//$reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'order' => 'check_out asc'));
+		
+		if ($mes!='Seleccionar...'){
             $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'order' => 'check_out asc'));
         }
         else{
-            $reservas = $this->Reserva->find('all',array('joins' => array(
+			
+            /*$reservas = $this->Reserva->find('all',array('joins' => array(
                 array(
                     'table' => 'reserva_extras',
                     'alias' => 'ReservaExtras',
@@ -809,17 +812,32 @@ class InformesController extends AppController {
 
 
 
-            ),'order' => 'ReservaExtras.agregada asc', 'conditions' => array('YEAR(ReservaExtras.agregada)' => $ano, 'MONTH(ReservaExtras.agregada)' => $mes_carga)));
+            ),'order' => 'ReservaExtras.agregada asc', 'conditions' => array('YEAR(ReservaExtras.agregada)' => $ano, 'MONTH(ReservaExtras.agregada)' => $mes_carga)));*/
+			$reservas = $this->Reserva->find('all', array(
+				'fields' => array('DISTINCT Reserva.id', 'Reserva.*','Cliente.*','Apartamento.*'), // Trae solo reservas únicas
+				'joins' => array(
+					array(
+						'table' => 'reserva_extras',
+						'alias' => 'ReservaExtras',
+						'type' => 'LEFT',
+						'conditions' => array(
+							'Reserva.id = ReservaExtras.reserva_id'
+						)
+					)
+				),
+				'order' => 'ReservaExtras.agregada asc',
+				'conditions' => array(
+					'YEAR(ReservaExtras.agregada)' => $ano,
+					'MONTH(ReservaExtras.agregada)' => $mes_carga
+				)
+			));
 
-        }
-
-        /*App::uses('ConnectionManager', 'Model');
+			/*App::uses('ConnectionManager', 'Model');
                  $dbo = ConnectionManager::getDatasource('default');
                  $logs = $dbo->getLog();
                  $lastLog = $logs['log'][0];
                  echo $lastLog['query'];*/
-
-        //print_r($reservas);
+        }
 
         $this->loadModel('Usuario');
 		 $user_id = $_SESSION['userid'];
@@ -871,12 +889,9 @@ class InformesController extends AppController {
                     if(count($reserva['ReservaExtra']>0)){
 
                         foreach($reserva['ReservaExtra'] as $extra){
-
                         	/*print_r($extra);
 	                        	echo "<br>";*/
-
                         	$mostrar=0;
-
                         	switch ($tipo) {
                         		case 1:
                         			if($extra['adelantada'] == 1){
@@ -899,46 +914,34 @@ class InformesController extends AppController {
                         		$mostrar=0;
                         	}
                         	if ($mostrar) {
-                                if ($mes_carga != 'Seleccionar...') {
-                                    $date_parts = explode("-", $extra['agregada']);
-                                    $yy = $date_parts[0];
-                                    $mm = $date_parts[1];
-                                    $dd = $date_parts[3];
-                                    if ($yy != $ano || $mm != $mes_carga) {
-                                        $mostrar = 0;
-                                    }
+	                        	$filtroRubro = ($extra_rubro!='Seleccionar...')?array('Extra.extra_rubro_id'=>$extra_rubro):array(1=>1);
+	                        	$filtroSubRubro = ($extra_subrubro!='Seleccionar...')?array('Extra.extra_subrubro_id'=>$extra_subrubro):array(1=>1);
+	                        	if ($extra['extra_id']) {
+	                        		$condicion=array(array('Extra.id'=>$extra['extra_id']),$filtroRubro,$filtroSubRubro);
+	                        		$ex = $this->Extra->find('first',array('conditions' => $condicion));
+	                        	}
+	                        	else{
+	                        		$filtroRubro = ($extra_rubro!='Seleccionar...')?array('ExtraVariable.extra_rubro_id'=>$extra_rubro):array(1=>1);
+	                        		$condicion=array(array('ExtraVariable.id'=>$extra['extra_variable_id']),$filtroRubro);
+	                        		$ex = $this->ExtraVariable->find('first',array('conditions' => $condicion));
+	                        	}
 
 
-                                }
-                                if ($mostrar) {
-                                    $filtroRubro = ($extra_rubro != 'Seleccionar...') ? array('Extra.extra_rubro_id' => $extra_rubro) : array(1 => 1);
-                                    $filtroSubRubro = ($extra_subrubro != 'Seleccionar...') ? array('Extra.extra_subrubro_id' => $extra_subrubro) : array(1 => 1);
-                                    if ($extra['extra_id']) {
-                                        $condicion = array(array('Extra.id' => $extra['extra_id']), $filtroRubro, $filtroSubRubro);
-                                        $ex = $this->Extra->find('first', array('conditions' => $condicion));
-                                    } else {
-                                        $filtroRubro = ($extra_rubro != 'Seleccionar...') ? array('ExtraVariable.extra_rubro_id' => $extra_rubro) : array(1 => 1);
-                                        $condicion = array(array('ExtraVariable.id' => $extra['extra_variable_id']), $filtroRubro);
-                                        $ex = $this->ExtraVariable->find('first', array('conditions' => $condicion));
-                                    }
+	                        	/*print_r($ex);
+	                        	echo "<br>";*/
+	                        	if ($ex) {
+	                        		$rubro = $this->ExtraRubro->findById($ex['Extra']['extra_rubro_id']);
+		                        	$subrubro = $this->ExtraSubrubro->findById($ex['Extra']['extra_subrubro_id']);
+		                        	$detalle=$ex['Extra']['detalle'];
+		                        	if ($ex['ExtraVariable']) {
+		                        		$rubro = $this->ExtraRubro->findById($ex['ExtraVariable']['extra_rubro_id']);
+		                        		$detalle=$ex['ExtraVariable']['detalle'];
+		                        	}
 
+		                            $reservasMostrar[]=array('check_out'=>$reserva['Reserva']['check_out'],'nro_reserva'=>$reserva['Reserva']['numero'],'titular'=>$reserva['Cliente']['nombre_apellido'],'apartamento'=>$reserva['Apartamento']['apartamento'],'agregada'=>date('d/m/Y',strtotime($extra['agregada'])),'adelantada'=>($extra['adelantada'])?'SI':'NO','cantidad'=>$extra['cantidad'],'rubro'=>$rubro['ExtraRubro']['rubro'],'subrubro'=>$subrubro['ExtraSubrubro']['subrubro'],'detalle'=>$detalle,'monto'=>$extra['cantidad']*$extra['precio']);
+	                        	}
 
-                                    /*print_r($ex);
-                                    echo "<br>";*/
-                                    if ($ex) {
-                                        $rubro = $this->ExtraRubro->findById($ex['Extra']['extra_rubro_id']);
-                                        $subrubro = $this->ExtraSubrubro->findById($ex['Extra']['extra_subrubro_id']);
-                                        $detalle = $ex['Extra']['detalle'];
-                                        if ($ex['ExtraVariable']) {
-                                            $rubro = $this->ExtraRubro->findById($ex['ExtraVariable']['extra_rubro_id']);
-                                            $detalle = $ex['ExtraVariable']['detalle'];
-                                        }
-
-                                        $reservasMostrar[] = array('check_out' => $reserva['Reserva']['check_out'], 'nro_reserva' => $reserva['Reserva']['numero'], 'titular' => $reserva['Cliente']['nombre_apellido'], 'apartamento' => $reserva['Apartamento']['apartamento'],'consumida'=>($extra['consumida'])?date('d/m/Y',strtotime($extra['consumida'])):'', 'agregada' => date('d/m/Y', strtotime($extra['agregada'])), 'adelantada' => ($extra['adelantada']) ? 'SI' : 'NO', 'cantidad' => $extra['cantidad'], 'rubro' => $rubro['ExtraRubro']['rubro'], 'subrubro' => $subrubro['ExtraSubrubro']['subrubro'], 'detalle' => $detalle, 'monto' => $extra['cantidad'] * $extra['precio']);
-                                    }
-
-                                }
-                            }
+                        	}
 
                         }
                     }
@@ -1234,23 +1237,28 @@ class InformesController extends AppController {
     }
 
     function ventas_economico_financiero($mes,$ano){
+		ini_set( "memory_limit", "-1" );
+		ini_set('max_execution_time', "-1");
         error_reporting(0);
-        $this->layout = 'ajax';
+        //echo $mes.$ano;
+		$this->layout = 'ajax';
 
         $this->loadModel('Reserva');
         $this->loadModel('CobroTarjeta');
-
+		
         $cobrado = array();
         $pendiente_cobro = 0;
         $ventas_netas = 0;
 
         $meses = array('01'=>'Enero', '02'=> 'Febrero','03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto', '09' => 'Septiembre', 10=>'Octubre', 11=> 'Noviembre', 12=>'Diciembre');
         $this->set('meses',$meses);
-
+		//print_r($meses);
         $reservas = $this->Reserva->find('all',array('conditions' => array('YEAR(check_out)' => $ano, 'MONTH(check_out)' => $mes), 'recursive' => 2));
+		
         //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out <=' => '2014-03-31', 'check_out >=' => '2014-03-01'), 'recursive' => 2));
         //$reservas = $this->Reserva->find('all',array('conditions' => array('check_out' => '2014-03-31'), 'recursive' => 2));
 		//$reservas = $this->Reserva->find('all',array('conditions' => array('numero' => '394'), 'recursive' => 2));
+		//print_r($reservas);
         if(count($reservas) > 0){
 
             foreach($reservas as $reserva){
@@ -1790,7 +1798,7 @@ function iva_compras($mes,$ano, $orden){
             }
         }
        // $this->array_sort_by($gastosMostrar, $orden);
-        foreach($clientesMostrar as $cliente){
+         foreach($clientesMostrar as $cliente){
 
             $row = array();
             if ($colNombre){
