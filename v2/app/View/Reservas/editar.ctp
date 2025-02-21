@@ -288,6 +288,47 @@ $(document).ready(function(){
             $("#CodPaisId").remove();
         }
     });
+    $("#ClienteDni").autocomplete({
+        source: '<?php echo $this->Html->url('/clientes/autoCompleteDni', true);?>',
+        minLength: 2
+    });
+
+    $("#ClienteDni").autocomplete({
+        select: function(event, ui) {
+            selected_id = ui.item.id;
+            selected_dni = ui.item.value;
+            $("#ClienteDni").val(selected_dni);
+            $.ajax({
+                url: '<?php echo $this->Html->url('/clientes/getDatos', true);?>',
+                data: {'id' : selected_id },
+                dataType: 'json',
+                success: function(data){
+
+                    $('#ClienteNombreApellido').val(data.Cliente.nombre_apellido);
+                    $('#ClienteTipoDocumento').val(data.Cliente.tipoDocumento);
+                    $('#ClienteTipoTelefono').val(data.Cliente.tipoTelefono);
+                    $('#ClienteCodPaisAux').val(data.Cliente.codPais);
+                    $('#ClienteCodPais').val(data.Cliente.codPais);
+                    $('#ClienteCodArea').val(data.Cliente.codArea);
+                    $('#ClienteTelefono').val(data.Cliente.telefono);
+                    $('#ClienteDireccion').val(data.Cliente.direccion);
+                    $('#ClienteLocalidad').val(data.Cliente.localidad);
+                    $('#ClienteEmail').val(data.Cliente.email);
+                    $('#ClienteEmail2').val(data.Cliente.email2);
+                    $('#ClienteProfesion').val(data.Cliente.profesion);
+
+                    $('#Cliente1erContacto').val(data.Cliente['1er_contacto']);
+                    $('#ClienteFumador').val(data.Cliente.fumador);
+                    $('#ClienteClienteRazonesEligio').val(data.Cliente.razones_eligio);
+
+                    $('#ClienteSexo').val(data.Cliente.sexo);
+
+
+                },
+            });
+
+        }
+    });
     modificarFacturacion();
 });
 
