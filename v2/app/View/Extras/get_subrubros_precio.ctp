@@ -5,7 +5,7 @@ foreach($subrubro_precio as $key => $obj){
 }
 ?>
 <div class="ym-gbox" style="width: 70%; float: left;">
-    <?php echo $this->Form->input('Extra.id',array('options' => $optons, 'label' => 'Subrubro y Precio')); ?>
+    <?php echo $this->Form->input('Extra.id',array('options' => $options, 'label' => 'Subrubro y Precio')); ?>
 </div> 
 <div class="ym-gbox" style="width: 20%; float: left;">
     <?php echo $this->Form->input('ReservaExtra.cantidad',array('value' => '1', 'type'=>'text', 'size' => '2', 'label' => 'Cant.')); ?>
