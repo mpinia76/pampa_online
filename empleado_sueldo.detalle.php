@@ -157,7 +157,7 @@ input.dp-applied {
                 <?php 
                 $caja = ($rs['caja'])? 'Caja: '.$rs['caja']:'';
         $cuenta = ($rs['sucursal'])? 'Cuenta: '.$rs['banco'].' ('.$rs['sucursal'].') '.$rs['nombre']:'';
-                echo fechavista($rs['creado'])?> $<?php echo $rs['monto']?> <?php echo $rs['comentarios']?> Abonado por: <?php echo $rs['user'].' '.$caja.' '.$cuenta?>  <button class="button" onClick="window.open('reciboPDF.php?id=<?php echo $rs['id']?>&adelanto=1&copia=1');">Recibo</button><button class="button" onClick="borrar_adelanto('<?php echo $rs['id']?>');">Anular</button><br>
+                echo fechavista($rs['creado'])?> $<?php echo number_format($rs['monto'], 2, ',', '.')?> <?php echo $rs['comentarios']?> Abonado por: <?php echo $rs['user'].' '.$caja.' '.$cuenta?>  <button class="button" onClick="window.open('reciboPDF.php?id=<?php echo $rs['id']?>&adelanto=1&copia=1');">Recibo</button><button class="button" onClick="borrar_adelanto('<?php echo $rs['id']?>');">Anular</button><br>
                 <?php  $adelantos = $adelantos + $rs['monto']; ?>
                 <?php  } ?>
             <?php  }else{ ?>
@@ -186,7 +186,7 @@ WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND 
         
         <p><strong>Sueldo abonado:</strong></p>
         <?php 
-        echo fechavista($rsSueldo['abonado'])?> $<?php echo $rsSueldo['monto']?> Abonado por: <?php echo $rsSueldo['user'];
+        echo fechavista($rsSueldo['abonado'])?> $<?php number_format($rsSueldo['monto'], 2, ',', '.');?> Abonado por: <?php echo $rsSueldo['user'];
        $sql = "SELECT empleado_pago.id, empleado_pago.abonado, 
  caja.caja, empleado_pago.descuentos, 
 empleado_pago.motivo_descuentos, ec.monto
@@ -202,7 +202,7 @@ WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND 
        			if ($rsSueldo1['monto']) {
 			        $caja = ($rsSueldo1['caja'])? 'Caja: '.$rsSueldo1['caja']:'';
 			        $cuenta = ($rsSueldo1['sucursal'])? 'Cuenta: '.$rsSueldo1['banco'].' ('.$rsSueldo1['sucursal'].') '.$rsSueldo1['nombre']:'';
-			        ?><br> En efectivo $<?php echo $rsSueldo1['monto'].' '.$caja.' '.$cuenta;
+			        ?><br> En efectivo $<?php echo number_format($rsSueldo1['monto'], 2, ',', '.').' '.$caja.' '.$cuenta;
        			}
        		}
        }
@@ -217,7 +217,7 @@ WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND 
        if(mysql_num_rows($rsTemp) > 0) {
        		while($rsSueldo2 = mysql_fetch_array($rsTemp)){ 
 	        if ($rsSueldo2['monto']) {
-	        	echo "<br>"?> Con cheque $<?php echo $rsSueldo2['monto'];
+	        	echo "<br>"?> Con cheque $<?php echo number_format($rsSueldo2['monto'], 2, ',', '.');
 	        }
 	        
        		}
@@ -232,7 +232,7 @@ WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND 
        if(mysql_num_rows($rsTemp) > 0) {
        		while($rsSueldo3 = mysql_fetch_array($rsTemp)){ 
        			if ($rsSueldo3['monto']) {
-	        		echo "<br>"?> Con transferencia $<?php echo $rsSueldo3['monto'];
+	        		echo "<br>"?> Con transferencia $<?php echo number_format($rsSueldo3['monto'], 2, ',', '.');
        			}
 	       	}
        }
@@ -249,7 +249,7 @@ WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND 
        			if ($rsSueldo4['monto']) {
 			        $caja = ($rsSueldo4['caja'])? 'Caja: '.$rsSueldo4['caja']:'';
 			        $cuenta = ($rsSueldo4['sucursal'])? 'Cuenta: '.$rsSueldo4['banco'].' ('.$rsSueldo4['sucursal'].') '.$rsSueldo4['nombre']:'';
-			        echo "<br>"?> Con debito $<?php echo $rsSueldo4['monto'].' '.$caja.' '.$cuenta;
+			        echo "<br>"?> Con debito $<?php echo number_format($rsSueldo4['monto'], 2, ',', '.').' '.$caja.' '.$cuenta;
        			}
 	       	}
        }
