@@ -18,14 +18,26 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$saldo_rs = mysql_fetch_array(mysql_query($saldo_sql));
 	
 	$saldo = $saldo_rs['saldo'];
-	
-	$saldo_sql = "SELECT SUM(monto_moneda) as saldo, SUM(monto_moneda*cambio) as saldo_pesos FROM caja_movimiento WHERE caja_id=".$rs['id']." AND moneda_id = 2";
+
+	$saldo_sql = "
+    SELECT 
+        SUM(CASE WHEN monto_moneda > usados THEN monto_moneda - usados ELSE 0 END) AS saldo, 
+        SUM(CASE WHEN monto_moneda > usados THEN (monto_moneda - usados) * cambio ELSE 0 END) AS saldo_pesos 
+    FROM caja_movimiento 
+    WHERE caja_id = ".$rs['id']." AND moneda_id = 2
+";
 	$saldo_rs = mysql_fetch_array(mysql_query($saldo_sql));
 	
 	$saldo_usd = $saldo_rs['saldo'];
 	$saldo_usd_restar = $saldo_rs['saldo_pesos'];
-	
-	$saldo_sql = "SELECT SUM(monto_moneda) as saldo, SUM(monto_moneda*cambio) as saldo_pesos  FROM caja_movimiento WHERE caja_id=".$rs['id']." AND moneda_id = 3";
+
+	$saldo_sql = "
+    SELECT 
+        SUM(CASE WHEN monto_moneda > usados THEN monto_moneda - usados ELSE 0 END) AS saldo, 
+        SUM(CASE WHEN monto_moneda > usados THEN (monto_moneda - usados) * cambio ELSE 0 END) AS saldo_pesos 
+    FROM caja_movimiento 
+    WHERE caja_id = ".$rs['id']." AND moneda_id = 3
+";
 	$saldo_rs = mysql_fetch_array(mysql_query($saldo_sql));
 	
 	$saldo_euros = $saldo_rs['saldo'];
