@@ -11,7 +11,7 @@ $this->Js->buffer('
         "bServerSide": true,
     	"bAutoWidth": false,
         "oLanguage": {
-            "sUrl": "/dataTables.spanish.txt"
+            "sUrl": "<?php echo $this->webroot; ?>js/dataTables.spanish.txt"
         },
         "fnDrawCallback": function( oSettings ) {
             $("#dataTable tr").unbind("dblclick").dblclick(function(){
