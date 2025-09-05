@@ -30,9 +30,9 @@ if($_GET['inicio'] != '' and $_GET['fin'] != ''){
 $sql = "SELECT rel_pago_operacion.operacion_tipo, gasto.nro_orden as gasto_orden, reservas.numero as reserva_numero, compra.nro_orden as compra_orden,transferencia_consumo.*,banco.banco,cuenta.sucursal,cuenta.nombre,MONTH(transferencia_consumo.fecha) as mes, cuota_plans.id AS id_cuotaPlan, plans.plan, cuota_plans.vencimiento  FROM transferencia_consumo INNER JOIN cuenta ON transferencia_consumo.cuenta_id=cuenta.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id LEFT JOIN rel_pago_operacion ON transferencia_consumo.id = rel_pago_operacion.forma_pago_id AND rel_pago_operacion.forma_pago = 'transferencia' LEFT JOIN gasto ON gasto.id = rel_pago_operacion.operacion_id and rel_pago_operacion.operacion_tipo = 'gasto' LEFT JOIN compra ON compra.id = rel_pago_operacion.operacion_id and rel_pago_operacion.operacion_tipo = 'compra' LEFT JOIN cuota_plans ON cuota_plans.id = rel_pago_operacion.operacion_id and rel_pago_operacion.operacion_tipo = 'cuota_plan'
 LEFT JOIN plans ON cuota_plans.plan_id = plans.id LEFT JOIN reserva_devoluciones ON reserva_devoluciones.id = rel_pago_operacion.operacion_id LEFT JOIN reservas ON reserva_devoluciones.reserva_id = reservas.id $where GROUP BY transferencia_consumo.id ORDER BY transferencia_consumo.fecha DESC";
 
-$rsTemp = mysql_query($sql); echo mysql_error();
+$rsTemp = mysqli_query($conn,$sql); echo mysql_error();
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	$concepto = '';
 	$estado	= '';

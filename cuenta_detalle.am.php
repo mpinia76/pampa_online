@@ -25,7 +25,7 @@ if(($_POST['agregar'])){
 	$monto 		= $_POST['monto'];
 	
 	$insert = "INSERT INTO $tabla (fecha,cuenta_id,origen,monto,usuario_id) VALUES ('$fecha','$cuenta_id','$detalle','$monto',$user_id)";
-	mysql_query($insert);
+	mysqli_query($conn,$insert);
 	//echo $insert;
 	$result = '1'.mysql_error();
 
@@ -182,8 +182,8 @@ function valida(F) {
 	<option value="null">Seleccionar...</option>
 	<?php
 	$sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	?>
 	<option  value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
 	<?php } ?>
@@ -196,8 +196,8 @@ function valida(F) {
 	<option value="null">Seleccionar...</option>
 	<?php
 	$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 2 ORDER BY nombre ASC";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['nombre']?></option>
 	<?php } ?>

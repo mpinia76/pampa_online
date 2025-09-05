@@ -20,11 +20,11 @@ if(isset($_GET['cuenta_id']) and $_GET['sincronizar']=='si'){
 	$fecha = date("Y-m-d H:i:s");
 	//obtengo el saldo de la cuenta
 	$saldo_sql = "SELECT SUM(monto) as saldo FROM cuenta_movimiento WHERE cuenta_id=$cuenta_id";
-	$saldo_rs = mysql_fetch_array(mysql_query($saldo_sql));
+	$saldo_rs = mysqli_fetch_array(mysqli_query($conn,$saldo_sql));
 	$saldo = $saldo_rs['saldo'];
 	
 	$insert = "INSERT INTO cuenta_sincronizada (cuenta_id,usuario_id,fecha,monto) VALUES ($cuenta_id,$user_id,'$fecha','$saldo')";
-	mysql_query($insert);
+	mysqli_query($conn,$insert);
 	echo mysql_error();
 }
 

@@ -7,6 +7,6 @@ if(isset($_GET['dataid']) and isset($_GET['delete'])){
 	}else{
 		$sql = "DELETE FROM $tabla WHERE id=$dataid";
 	}
-	mysql_query($sql);
+	mysqli_query($conn,$sql);
 }
 ?>

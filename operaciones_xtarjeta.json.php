@@ -14,9 +14,9 @@ INNER JOIN rel_pago_operacion ON compra.id=rel_pago_operacion.operacion_id AND r
 ORDER BY fecha DESC
 ";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	$data = array(
 	"id" => $i,

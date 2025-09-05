@@ -30,13 +30,13 @@ $hasta = ($_GET['hasta']!='')?"_".str_replace('/', '', $_GET['hasta']):"";
 $excel = new gridExcelGenerator();
 if ($_GET['cuenta']) {
 	$sql = "SELECT banco.banco,cuenta.* FROM cuenta  INNER JOIN banco ON cuenta.banco_id=banco.id WHERE cuenta.id = ".$_GET['nombre'];
-	$rs = mysql_fetch_array(mysql_query($sql));
+	$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 	$primerCelda = $tipo.": ".$rs['banco'].' ('.$rs['sucursal'].') '.$rs['nombre'].$desde.$hasta;
 	$nombre = $tipo."_".$rs['banco'].'_('.$rs['sucursal'].')_'.$rs['nombre'].$desde.$hasta;
 }
 else{
 	$sql = "SELECT caja.* FROM caja WHERE id = ".$_GET['nombre'];
-	$rs = mysql_fetch_array(mysql_query($sql));
+	$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 	$primerCelda = $tipo.": ".$rs['caja'].$desde.$hasta;
 	$nombre = $tipo."_".$rs['caja'].$desde.$hasta;
 }

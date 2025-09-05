@@ -5,8 +5,8 @@ include_once("config/db.php");
 include_once("functions/abm.php");
 
 $sql = "SELECT * FROM empleado WHERE id=".$_GET['empleado_id'];
-$r = mysql_query($sql);
-$rs = mysql_fetch_array($r);
+$r = mysqli_query($conn,$sql);
+$rs = mysqli_fetch_array($r);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -133,8 +133,8 @@ function addAdelanto(){
 <p><strong>Detalle de la jornada de trabajo</strong></p>
 <?php 
 $sql = "SELECT empleado_trabajo.*,a.sector as 'sector1', b.sector as 'sector2', espacio_trabajo.espacio FROM empleado_trabajo LEFT JOIN sector as a ON empleado_trabajo.sector_1_id = a.id LEFT JOIN sector as b ON empleado_trabajo.sector_2_id = b.id INNER JOIN espacio_trabajo ON empleado_trabajo.espacio_trabajo_id = espacio_trabajo.id WHERE empleado_trabajo.empleado_id=".$_GET['empleado_id']." ORDER BY id DESC";
-$rsTemp = mysql_query($sql);
-if(mysql_num_rows($rsTemp) > 0){
+$rsTemp = mysqli_query($conn,$sql);
+if(mysqli_num_rows($rsTemp) > 0){
 	$i = 1;
 ?>
 	<table width="100%" cellpadding="0" cellspacing="0">
@@ -149,7 +149,7 @@ if(mysql_num_rows($rsTemp) > 0){
 			<td>Sector 2</td>
 			<td width="50">%</td>
 		</tr>
-<?php  	while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 		
 		<tr <?php  if($i != 1){ ?> class="jornada-historico" <?php  } ?>>
 			<td><?php echo fechavista($rs['fecha'])?></td>
@@ -175,8 +175,8 @@ if(mysql_num_rows($rsTemp) > 0){
 <p><strong>Salario convenido</strong></p>
 <?php 
 $sql = "SELECT * FROM empleado_sueldo_0001 WHERE empleado_id = ".$_GET['empleado_id']."";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$sueldo_0001[$rs['sueldo_id']] = $rs;
 }
 
@@ -248,8 +248,8 @@ $sql = "SELECT
 		WHERE empleado_id = ".$_GET['empleado_id']." 
 		GROUP BY sueldo_id 
 		ORDER BY sueldo_id DESC";
-$rsTemp = mysql_query($sql);
-if(mysql_num_rows($rsTemp) > 0){ 
+$rsTemp = mysqli_query($conn,$sql);
+if(mysqli_num_rows($rsTemp) > 0){ 
 	$i = 1;
 ?>
 <table cellpadding="0" cellspacing="0">
@@ -270,7 +270,7 @@ if(mysql_num_rows($rsTemp) > 0){
         <td width="80">Nov</td>
         <td width="80">Dic</td>
    	</tr>
-<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<tr <?php  if($i != 1){ ?> class="sueldos-historico" <?php  } ?>>
     	<td rowspan="6" valign="middle"><?php echo $rs['ano']?></td>
     	<td rowspan="6" valign="middle"><?php echo fechavista($rs['creado'])?></td>
@@ -407,8 +407,8 @@ $sql = "SELECT
 			ehe.estado = 1 
 		GROUP BY 
 			ehe.ano";
-$rsTemp = mysql_query($sql);
-if(mysql_num_rows($rsTemp) > 0){ 
+$rsTemp = mysqli_query($conn,$sql);
+if(mysqli_num_rows($rsTemp) > 0){ 
 ?>
 <table cellpadding="0" cellspacing="0">
 	<tr style="font-weight:bold;">
@@ -426,7 +426,7 @@ if(mysql_num_rows($rsTemp) > 0){
         <td width="80">Nov</td>
         <td width="80">Dic</td>
    	</tr>
-<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<tr>
     	<td valign="middle" align="center"><?php echo $rs['ano']?></td>
         <td><?php echo round($rs['1'],2)?></td>
@@ -452,7 +452,7 @@ No se ha cargado ninguna hora extra aprobada
 - <a style="color:blue; text-decoration: underline; cursor:pointer;" onclick="verHorasExtras()">Ver horas extras asignadas</a>
 <?php 
 $sql = "SELECT id FROM empleado_hora_extra WHERE empleado_id = ".$_GET['empleado_id']." AND estado = 0";
-$cant = mysql_num_rows(mysql_query($sql));
+$cant = mysqli_num_rows(mysqli_query($conn,$sql));
 if($cant > 0){?>
 	(<?php echo $cant?> pendientes de aprobar) 
 <?php  } ?>
@@ -479,8 +479,8 @@ $sql = "SELECT
 		WHERE 
 			empleado_id = ".$_GET['empleado_id'];
 			
-$rsTemp = mysql_query($sql);
-if(mysql_num_rows($rsTemp) > 0){ 
+$rsTemp = mysqli_query($conn,$sql);
+if(mysqli_num_rows($rsTemp) > 0){ 
 ?>
 <table cellpadding="0" cellspacing="0">
 	<tr style="font-weight:bold;">
@@ -498,7 +498,7 @@ if(mysql_num_rows($rsTemp) > 0){
         <td width="80">Nov</td>
         <td width="80">Dic</td>
    	</tr>
-<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<tr>
     	<td valign="middle" align="center"><?php echo $rs['ano']?></td>
         <td><?php echo round($rs['1'],2)?></td>
@@ -530,8 +530,8 @@ $sql = "SELECT
 		WHERE 
 			empleado_id = ".$_GET['empleado_id'];
 			
-$rsTemp = mysql_query($sql);
-if(mysql_num_rows($rsTemp) > 0){ 
+$rsTemp = mysqli_query($conn,$sql);
+if(mysqli_num_rows($rsTemp) > 0){ 
 ?>
 <table cellpadding="0" cellspacing="0">
 	<tr style="font-weight:bold;">
@@ -540,7 +540,7 @@ if(mysql_num_rows($rsTemp) > 0){
         <td width="80">Baja</td>
         
    	</tr>
-<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+<?php  while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<tr>
     	
         <td><?php 

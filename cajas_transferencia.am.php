@@ -67,10 +67,10 @@ if(($_POST['agregar'])){
 		
 		$sql = "SELECT id,monto_moneda,cambio,usados FROM caja_movimiento WHERE monto_moneda>0 AND caja_id=".$_POST['origen']." AND moneda_id = ".$_POST['moneda_id']. " ORDER BY id ASC";
 		//echo $sql;
-		$rsTemp = mysql_query($sql);
+		$rsTemp = mysqli_query($conn,$sql);
 		$monto=0;
 		$ok=1;
-		while($rs = mysql_fetch_array($rsTemp) AND $ok){
+		while($rs = mysqli_fetch_array($rsTemp) AND $ok){
 			if ($_POST['monto']<=($rs['monto_moneda']-$rs['usados'])) {
 				$monto_moneda +=$_POST['monto'];
 				$cambio=$rs['cambio'];
@@ -81,21 +81,21 @@ if(($_POST['agregar'])){
 				$sql_update = "UPDATE caja_movimiento SET usados = ".$usados." WHERE id = ".$rs['id'] ;
 				//echo $sql_update."<br>";
 				_log($sql_update);
-				mysql_query($sql_update);
+				mysqli_query($conn,$sql_update);
 				$ok=0;
 			}
 			else{
 				$monto_moneda +=($rs['monto_moneda']-$rs['usados']);
 				$cambio=$rs['cambio'];
 				$monto +=(($rs['monto_moneda']-$rs['usados'])*$cambio);
-				$usados_ant = $rs['usados'];//para anular la actualización en caso de no usarlos
+				$usados_ant = $rs['usados'];//para anular la actualizaciï¿½n en caso de no usarlos
 				$usados = $rs['usados']+($rs['monto_moneda']-$rs['usados']);
 				$sql_update = "UPDATE caja_movimiento SET usados = ".$usados." WHERE id = ".$rs['id'] ;
 				_log($sql_update);
 				//echo $monto."<br>";
 				//echo $monto_moneda."<br>";
 				//echo $sql_update."<br>";
-				mysql_query($sql_update);
+				mysqli_query($conn,$sql_update);
 				$_POST['monto'] -=($rs['monto_moneda']-$rs['usados']);
 				$ultimo_id=$rs['id'];
 			}
@@ -112,7 +112,7 @@ if(($_POST['agregar'])){
 	if ($ok) {
 		$sql_update = "UPDATE caja_movimiento SET usados = ".$usados_ant." WHERE id = ".$ultimo_id ;
 		_log($sql_update);
-		mysql_query($sql_update);
+		mysqli_query($conn,$sql_update);
 		$monto=0;
 	}
 	if ($monto!=0) {
@@ -125,7 +125,7 @@ if(($_POST['agregar'])){
 		$sql_entra = "INSERT INTO $tabla (fecha,origen,caja_id,monto,usuario_id,moneda_id,monto_moneda,cambio) 
 					VALUES 
 					('".$fecha."','caja_".$_POST['origen']."','".$_POST['caja_id']."','".$monto."',".$user_id.",'".$_POST['moneda_id']."','".$monto_moneda."','".$cambio."')";
-		mysql_query($sql_entra);
+		mysqli_query($conn,$sql_entra);
 		_log($sql_entra);
 		//echo mysql_error();
 		//echo $sql_entra."<br>";
@@ -133,7 +133,7 @@ if(($_POST['agregar'])){
 		$sql_sale = "INSERT INTO $tabla (fecha,origen,caja_id,monto,usuario_id,moneda_id,monto_moneda,cambio) 
 					VALUES 
 					('".$fecha."','hacia_".$_POST['caja_id']."','".$_POST['origen']."','-".$monto."',".$user_id.",'".$_POST['moneda_id']."','-".$monto_moneda."','".$cambio."')";
-		mysql_query($sql_sale);
+		mysqli_query($conn,$sql_sale);
 		_log($sql_sale);
 		//echo $sql_sale."<br>";
 		$result = 1;
@@ -150,8 +150,8 @@ $form->setAction('cajas_transferencia.am.php'); //a donde hacer el post
 if(isset($dataid)){
 
 	$sql = "SELECT * FROM $tabla WHERE id=".$dataid; //traer datos
-	$rsTemp = mysql_query($sql);
-	$rs = mysql_fetch_array($rsTemp);
+	$rsTemp = mysqli_query($conn,$sql);
+	$rs = mysqli_fetch_array($rsTemp);
 	
 	foreach($campos as $clave=>$valores){
 		$campos[$clave][3] = $rs[$clave];

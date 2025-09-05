@@ -16,8 +16,8 @@ $abm 	= "documentos.am.php"; //agregar o modificar
 if(isset($_GET['dataid']) and isset($_GET['delete'])){
 	include_once("config/db.php");
 	$sql = "SELECT * FROM $tabla WHERE id=".$_GET['dataid'];
-	$rsTemp = mysql_query($sql);
-	$rs = mysql_fetch_array($rsTemp);
+	$rsTemp = mysqli_query($conn,$sql);
+	$rs = mysqli_fetch_array($rsTemp);
 	unlink('documentos/'.$rs['path']);
 	
 	

@@ -8,8 +8,8 @@ $mes = $_GET['mes'];
 
 //sector
 $sql = "SELECT empleado_trabajo.*,a.sector as 'sector1', b.sector as 'sector2', espacio_trabajo.espacio, espacio_trabajo.id as 'espacio_id' FROM empleado_trabajo LEFT JOIN sector as a ON empleado_trabajo.sector_1_id = a.id LEFT JOIN sector as b ON empleado_trabajo.sector_2_id = b.id INNER JOIN espacio_trabajo ON empleado_trabajo.espacio_trabajo_id = espacio_trabajo.id ORDER BY id ASC";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['sector1'] != '' and $rs['sector2'] != ''){
 		$sector[$rs['empleado_id']] = $rs['sector1']." (".$rs['porcentaje_sector_1']."),".$rs['sector2']." (".$rs['porcentaje_sector_2'].")";
 	}elseif($rs['sector1'] != '' and $rs['sector2'] == ''){
@@ -23,8 +23,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 
 //sueldo + asignaciones
 $sql = "SELECT * FROM empleado_sueldo WHERE ano = $ano AND mes = $mes ORDER BY id ASC";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$sueldo[$rs['empleado_id']] = $rs['sueldo'] + $rs['viaticos'] + $rs['asignaciones'] + $rs['presentismo'] ;
 	$aguinaldo[$rs['empleado_id']]=$rs['aguinaldo'];
 	
@@ -32,22 +32,22 @@ while($rs = mysql_fetch_array($rsTemp)){
 
 //adelantos
 $sql = "SELECT * FROM empleado_adelanto WHERE ano = $ano AND mes = $mes";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
     $adelanto[$rs['empleado_id']] = $adelanto[$rs['empleado_id']] + $rs['monto'];
 }
 
 //horas extras
 $sql = "SELECT ehe.cantidad_aprobada*she.valor as 'monto', ehe.* FROM empleado_hora_extra ehe INNER JOIN sector_horas_extras she ON ehe.hora_extra_id = she.id WHERE ehe.estado = 1 AND ano = $ano AND mes = $mes";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
     $hora_extra[$rs['empleado_id']] = $hora_extra[$rs['empleado_id']] + round($rs['monto'],2);
 }
 
 //pagos
 $sql = "SELECT * FROM empleado_pago WHERE ano = $ano AND mes = $mes";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$pago[$rs['empleado_id']] = $rs['monto'];
 	$descuento[$rs['empleado_id']]=$rs['descuentos'];
 }
@@ -106,9 +106,9 @@ FROM empleado e INNER JOIN empleado_historico eh ON e.id = eh.empleado_id
 WHERE e.id IN ($list) and alta <= '".date('Y-m-d',mktime(0,0,0,$mes+1,1,$ano))."' AND eh.id=(SELECT max(eh2.id) FROM empleado_historico eh2 WHERE eh.empleado_id= eh2.empleado_id GROUP BY eh2.empleado_id)";
 
 //echo $sql."<br>";
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
     if($rs['estado'] == '1' or (mktime(0,0,0,$mes,1,$ano) <= strtotime($rs['baja']))){
 	if($pago[$rs['id']] == '' and $adelanto[$rs['id']] == ''){
 		$pago[$rs['id']] = 0;

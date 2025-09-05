@@ -5,9 +5,9 @@ include_once("config/db.php");
 
 $sql = "SELECT banco.banco,tarjeta_marca.marca,tarjeta.titular,tarjeta.id,tarjeta.activa FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id WHERE tarjeta.activa = ".$_GET['activo']." ORDER BY banco.banco";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	$data = array(
 		"id" => $rs['id'],

@@ -106,7 +106,7 @@ class CobroTransferenciasController extends AppController {
             $acreditado = $this->request->data['acreditado'];
             //elimino el movimiento anterior si ya estaba acreditado
         	if ($acreditado) {
-				//mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+				//mysqli_query($conn,"DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
 				$this->CuentaMovimiento->deleteAll(array('cuenta_id' => $cobro['CobroTransferencia']['cuenta_id'], 'origen' => 'reservatransferencia_'.$this->CobroTransferencia->id), false);
 			}
             //agrego el movimiento a la cuenta

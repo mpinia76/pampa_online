@@ -15,7 +15,7 @@ $tabla = 'empleado_sueldo';
 if(isset($_POST['agregar'])){
 
 	$sql = "SELECT sueldo_id FROM $tabla ORDER BY sueldo_id DESC LIMIT 0,1";
-	$rs = mysql_fetch_array(mysql_query($sql));
+	$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 	$sueldo_id = $rs['sueldo_id'] + 1;
 
 	for($i=0; $i<=11; $i++){
@@ -44,7 +44,7 @@ if(isset($_POST['agregar'])){
 					'".$_POST['presentismo'][$i]."',
 					'".$_POST['aguinaldo'][$i]."',
 					$user_id) ";
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 
 	}
 
@@ -64,7 +64,7 @@ if(isset($_POST['agregar'])){
 				'".$_POST['seccion']."',
 				'".$_POST['sueldo_aprox']."',
 				'".$sueldo_id."')";
-	mysql_query($sql);
+	mysqli_query($conn,$sql);
 }
 
 ?>
@@ -256,8 +256,8 @@ function sumMes(i){
 	<?php  $ano = $_GET['ano']; ?>
     <?php
 	$sql = "SELECT * FROM empleado_sueldo WHERE empleado_id = ".$_GET['empleado_id']." AND ano = $ano ORDER BY sueldo_id DESC LIMIT 0,12";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
 		$asignado[$rs['ano']."_".$rs['mes']]['sueldo'] = $rs['sueldo'];
 		$asignado[$rs['ano']."_".$rs['mes']]['viaticos'] = $rs['viaticos'];
 		$asignado[$rs['ano']."_".$rs['mes']]['asignaciones'] = $rs['asignaciones'];
@@ -267,8 +267,8 @@ function sumMes(i){
 	}
 
 	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_GET['empleado_id']." AND ano = $ano";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
 		$pagado[$rs['ano']."_".$rs['mes']] = true;
 	}
 	?>
@@ -289,7 +289,7 @@ function sumMes(i){
         </p>
     <?php
 	$sql = "SELECT * FROM empleado_sueldo_0001 WHERE sueldo_id = $sueldo_id";
-	$rs = mysql_fetch_array(mysql_query($sql));
+	$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 	?>
 	<p><strong>Categoria del trabajador:</strong> <input type="text" name="categoria" size="20" value="<?php echo $rs['categoria']?>" /></p>
 	<p><strong>Calificaci&oacute;n:</strong> <input type="text" name="calificacion" size="20" value="<?php echo $rs['calificacion']?>" /></p>

@@ -5,9 +5,9 @@ include_once("config/db.php");
 
 $sql = "SELECT motivo.*,motivo_grupo.grupo FROM motivo INNER JOIN motivo_grupo ON motivo.motivo_grupo_id = motivo_grupo.id ORDER BY motivo_grupo_id";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	$data = array(
 		"id" => $rs['id'],

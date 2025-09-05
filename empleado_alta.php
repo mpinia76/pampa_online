@@ -10,7 +10,7 @@ include_once("functions/abm.php");
 $error=0;
 if(($_POST['agregar'])){
 	$sql	= "SELECT * FROM empleado WHERE id=".$_POST['registro']." and estado = 0";
-		$rs		= mysql_fetch_array(mysql_query($sql));
+		$rs		= mysqli_fetch_array(mysqli_query($conn,$sql));
 	if($rs['id']){
 		
 			$registro_id	= $_POST['registro'];
@@ -20,9 +20,9 @@ if(($_POST['agregar'])){
 			
 			
 			$sql = "UPDATE empleado SET estado = 1, fecha_baja = '0000-00-00' WHERE id = ".$registro_id;
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 			$sql = "INSERT INTO empleado_historico (empleado_id, alta) VALUES ($registro_id, '".fechasql($_POST['fecha'])."')";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 			//echo $update."<br>";
 			
 			$result = 1;

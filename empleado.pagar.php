@@ -17,8 +17,8 @@ $mes = $_GET['mes'];
 if(isset($_POST['guardar'])){
 
 	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
 		$pagado[$rs['ano']."_".$rs['mes']] = true;
 	}
 	
@@ -64,7 +64,7 @@ if(isset($_POST['guardar'])){
 						(empleado_id,monto,mes,ano,abonado_por,abonado,descuentos, motivo_descuentos)
 					VALUES
 						(".$_POST['empleado_id'].",'".$operacion_monto."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW(),'".$_POST['descuentos']."','".$_POST['motivo_descuentos']."')";
-			mysql_query($sql); 
+			mysqli_query($conn,$sql); 
 			$operacion_id[] = mysql_insert_id();
 			$operacion_tipo = 'sueldo_pago';
 			
@@ -167,8 +167,8 @@ function vacio(q) {
 	return false
 }
 
-$(document).ready( function() {   // Esta parte del código se ejecutará automáticamente cuando la página esté lista.
-    $("#agregarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+$(document).ready( function() {   // Esta parte del cï¿½digo se ejecutarï¿½ automï¿½ticamente cuando la pï¿½gina estï¿½ lista.
+    $("#agregarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
         if(validaForm()){      
 	       
         }
@@ -259,7 +259,7 @@ function addFormaDePago(forma_pago_id){
 
 <?php 
 $sql = "SELECT * FROM empleado_pago WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
-if(mysql_num_rows(mysql_query($sql)) == 0){
+if(mysqli_num_rows(mysqli_query($conn,$sql)) == 0){
 ?>
     <form method="POST" id="idForm" name="form" action="empleado.pagar.php"">
         <input type="hidden" name="empleado_id" value="<?php echo $empleado_id?>" />
@@ -268,14 +268,14 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
         <input name="guardar" id="guardar" type="hidden" value="0">
         <?php 
         $sql = "SELECT * FROM empleado WHERE id = $empleado_id";
-        $rs = mysql_fetch_array(mysql_query($sql));
+        $rs = mysqli_fetch_array(mysqli_query($conn,$sql));
         ?>
         <p><strong><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></strong> (<?php echo $mes?>/<?php echo $ano?>) </p>
         
         <p><strong>Sector de trabajo:</strong> 
         <?php 
         $sql = "SELECT empleado_trabajo.*,a.sector as 'sector1', b.sector as 'sector2', espacio_trabajo.espacio FROM empleado_trabajo LEFT JOIN sector as a ON empleado_trabajo.sector_1_id = a.id LEFT JOIN sector as b ON empleado_trabajo.sector_2_id = b.id INNER JOIN espacio_trabajo ON empleado_trabajo.espacio_trabajo_id = espacio_trabajo.id WHERE empleado_trabajo.empleado_id=$empleado_id ORDER BY empleado_trabajo.id DESC LIMIT 0,1";
-        $rs = mysql_fetch_array(mysql_query($sql));
+        $rs = mysqli_fetch_array(mysqli_query($conn,$sql));
         ?>
         <?php echo $rs['sector1'] != '' ? $rs['sector1'] : ''?> <?php echo $rs['sector1'] != '' ? $rs['porcentaje_sector_1']."%" : ''?> 
         <?php echo $rs['sector2'] != '' ? " - ".$rs['sector2'] : ''?> <?php echo $rs['sector2'] != '' ? $rs['porcentaje_sector_2']."%" : ''?>
@@ -284,7 +284,7 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
         <p><strong>Salario acordado del mes:</strong></p>
         <?php 
         $sql = "SELECT * FROM empleado_sueldo WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano ORDER BY sueldo_id DESC LIMIT 0,1";
-        $rs = mysql_fetch_array(mysql_query($sql));
+        $rs = mysqli_fetch_array(mysqli_query($conn,$sql));
         ?>
         Sueldo: $<?php echo $rs['sueldo']?> <br>
         Viaticos: $<?php echo $rs['viaticos']?> <br>
@@ -312,9 +312,9 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
                 AND 
                 ehe.ano = $ano
             ";
-            $rsTemp = mysql_query($sql); echo mysql_error();
-            if(mysql_num_rows($rsTemp) > 0) {
-                while($rs = mysql_fetch_array($rsTemp)){ ?>
+            $rsTemp = mysqli_query($conn,$sql); echo mysql_error();
+            if(mysqli_num_rows($rsTemp) > 0) {
+                while($rs = mysqli_fetch_array($rsTemp)){ ?>
                 <?php echo $rs['sector']?>: <?php echo $rs['cantidad_solicitada']?> hrs. solicitadas - <?php echo $rs['cantidad_aprobada']?> hrs. aprobadas = $<?php echo $rs['cantidad_aprobada']*$rs['valor']?> <br>
                 <?php  $horas_extras = $horas_extras + ($rs['cantidad_aprobada']*$rs['valor']); ?>
                 <?php  } ?>
@@ -326,9 +326,9 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
         <p><strong>Adelantos otorgados:</strong></p>
         <?php 
             $sql = "SELECT * FROM empleado_adelanto WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano";
-            $rsTemp = mysql_query($sql);
-            if(mysql_num_rows($rsTemp) > 0) {
-                while($rs = mysql_fetch_array($rsTemp)){ ?>
+            $rsTemp = mysqli_query($conn,$sql);
+            if(mysqli_num_rows($rsTemp) > 0) {
+                while($rs = mysqli_fetch_array($rsTemp)){ ?>
                 <?php echo fechavista($rs['creado'])?> $<?php echo $rs['monto']?> <?php echo $rs['comentarios']?> <br>
                 <?php  $adelantos = $adelantos + $rs['monto']; ?>
                 <?php  } ?>
@@ -349,8 +349,8 @@ if(mysql_num_rows(mysql_query($sql)) == 0){
             <option value="n">Seleccionar...</option>
             <?php 
             $sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4,6) ORDER BY forma_pago ";
-            $rsTemp = mysql_query($sql);
-            while($rs = mysql_fetch_array($rsTemp)){?>
+            $rsTemp = mysqli_query($conn,$sql);
+            while($rs = mysqli_fetch_array($rsTemp)){?>
             <option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
             <?php  } ?>
             </select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>

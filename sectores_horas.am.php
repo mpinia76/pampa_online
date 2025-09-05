@@ -43,10 +43,10 @@ if(isset($_POST['agregar'])){
 				(sector_id,creado,creado_por,valor)
 			VALUES
 				(".$_POST['sector_id'].",'".$_POST['creado']."',".$_POST['creado_por'].",".$_POST['valor'].")";
-	mysql_query($sql); echo mysql_error();
+	mysqli_query($conn,$sql); echo mysql_error();
 	
 	$sql = "UPDATE sector SET hora_extra_activa = ".mysql_insert_id()." WHERE id = ".$_POST['sector_id'];
-	mysql_query($sql); echo mysql_error();
+	mysqli_query($conn,$sql); echo mysql_error();
 }
 
 $form = new Form();

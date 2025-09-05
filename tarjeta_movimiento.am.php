@@ -21,7 +21,7 @@ if(isset($_POST['agregar'])){
 	$monto 		= $_POST['monto'];
 	
 	$insert = "INSERT INTO $tabla (fecha,tarjeta_resumen_id,detalle,monto) VALUES ('$fecha','$resumen_id','$detalle','$monto')";
-	mysql_query($insert);
+	mysqli_query($conn,$insert);
 	
 	$result = '1'.mysql_error();
 
@@ -175,8 +175,8 @@ dhxWins.window('w_tarjeta_resumen_detalle').attachURL('tarjeta_resumen_detalle.p
 	<option value="null">Seleccionar...</option>
 	<?php
 	$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 3";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	?>
 	<option value="<?php echo $rs['id']?>"><?php echo$rs['nombre']?></option>
 	<?php } ?>

@@ -1299,13 +1299,28 @@ class ReservasController extends AppController {
 
 
         //genero el pdf
-        if ($pdf) {
+        /*if ($pdf) {
         	$this->Mpdf->init();
 
         	$fileName = ($output=='F')?'files/reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf':'reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf';
 
         	$this->Mpdf->setFilename($fileName);
         	$this->Mpdf->setOutput($output);
+        }*/
+
+        if ($pdf) {
+
+
+            $fileName = ($output=='F')?'files/reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf':'reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf';
+
+
+
+            require_once '../../vendor/autoload.php';
+
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->WriteHTML($this->render());
+            $mpdf->Output($fileName,$output);
+
         }
 
 
@@ -1371,13 +1386,28 @@ class ReservasController extends AppController {
 
 
         //genero el pdf
-        if ($pdf) {
+       /*if ($pdf) {
             $this->Mpdf->init();
 
             $fileName = ($output=='F')?'files/check('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf':'reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf';
 
             $this->Mpdf->setFilename($fileName);
             $this->Mpdf->setOutput($output);
+        }*/
+
+        if ($pdf) {
+
+
+            $fileName = ($output=='F')?'files/check('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf':'reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_plantilla_'.date('d_m_Y').'.pdf';
+
+
+
+            require_once '../../vendor/autoload.php';
+
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->WriteHTML($this->render());
+            $mpdf->Output($fileName,$output);
+
         }
 
 

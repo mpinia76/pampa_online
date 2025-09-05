@@ -5,15 +5,15 @@ include_once("config/db.php");
 
 //busco los motivos de movimientos de tarjeta
 $sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 3";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$motivos[$rs['id']] = $rs['nombre'];
 }
 
 //detalle del resumen
 $resumen_id = $_GET['resumen_id'];
 $sql = "SELECT * FROM tarjeta_resumen WHERE id=$resumen_id";
-$rs = mysql_fetch_array(mysql_query($sql));
+$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 $inicio = $rs['inicio'];
 $fin	= $rs['fin'];
 $tarjeta = $rs['tarjeta_id'];
@@ -70,9 +70,9 @@ $sql = "SELECT
 		WHERE tarjeta_movimiento.tarjeta_resumen_id=$resumen_id
 		";
 //echo $sql;
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	$es_mov = explode("_",$rs['operacion']);
 

@@ -6,7 +6,7 @@ include_once("../config/db.php");
 
 $sql = "SELECT debitado FROM $tabla WHERE id = $id";
 
-$rs = mysql_fetch_array(mysql_query($sql));
+$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 
 if($rs['debitado']){
 

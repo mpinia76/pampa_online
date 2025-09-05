@@ -26,8 +26,8 @@ $tabla 		= "gasto";
 $sql_meses 	= sql_meses($tabla,$ano);
 $sql 		= "SELECT $sql_meses,ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, rubro.rubro as tipo, rubro.id as rubro_id FROM $tabla INNER JOIN rubro ON $tabla.rubro_id = rubro.id GROUP BY $tabla.rubro_id";
 
-$rsTemp =  mysql_query($sql);echo mysql_error();
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);echo mysql_error();
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 		<tr>
 			<td><a style="color:blue;" onclick="$('.<?=$tabla?>_rubro_<?=$rs['rubro_id']?>').toggle();"><?=$rs['tipo']?></a></td>
@@ -41,8 +41,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 		<?
 		$rubro_id = $rs['rubro_id'];
 		$sql_subrubro = "SELECT $sql_meses,ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, subrubro.subrubro as tipo FROM $tabla INNER JOIN subrubro ON $tabla.subrubro_id = subrubro.id WHERE $tabla.rubro_id = '$rubro_id' GROUP BY $tabla.subrubro_id";
-		$rsTemp2 =  mysql_query($sql_subrubro);echo mysql_error();
-		while($rs2 = mysql_fetch_array($rsTemp2)){ ?>
+		$rsTemp2 =  mysqli_query($conn,$sql_subrubro);echo mysql_error();
+		while($rs2 = mysqli_fetch_array($rsTemp2)){ ?>
 			<tr class="<?=$tabla?>_rubro_<?=$rubro_id?>" style="display:none;">
 				<td><?=$rs2['tipo']?></td>
 				<? for($i=0;$i<12;$i++){ ?>

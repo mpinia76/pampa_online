@@ -63,8 +63,8 @@ auditarUsuarios('Informes financiero - Egresos');
 
 <?php
 $sql = "SELECT operacion_tipo,SUM(monto) as total FROM cuenta_a_pagar WHERE estado = 0 GROUP BY operacion_tipo";
-$rsTemp = mysql_query($sql);
-while ($rs = mysql_fetch_array($rsTemp)){ ?>
+$rsTemp = mysqli_query($conn,$sql);
+while ($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<p>Cuentas a pagar de <strong><?php echo $rs['operacion_tipo']?></strong>: <?php echo round($rs['total'],2)?></p>
 <?php } ?>
 

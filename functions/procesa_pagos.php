@@ -26,8 +26,8 @@ if(isset($_POST['tarjeta'])){
 			$part=explode("/",$tarjeta_fecha[$key]);
 			$sql = "SELECT id FROM tarjeta_resumen WHERE estado = 1 AND CONCAT(ano,mes) = '".$part[2].intval($part[1])."' AND tarjeta_id = ".$tarjeta_id[$key];
 			//echo "<br>".$sql;
-			$rsTempTarjetaResumen = mysql_query($sql);
-			if(mysql_fetch_array($rsTempTarjetaResumen)){
+			$rsTempTarjetaResumen = mysqli_query($conn,$sql);
+			if(mysqli_fetch_array($rsTempTarjetaResumen)){
 				$ok=0;
 				$error = true;
 				echo "El resumen al cual intenta asignar el pago, ya se encuentra cerrado, verifique los datos de carga y vuelva a intentarlo <br>";
@@ -38,7 +38,7 @@ if(isset($_POST['tarjeta'])){
 				$tarjeta_descuento[$key]=($tarjeta_descuento[$key])?$tarjeta_descuento[$key]:0;
 				$sql = "INSERT INTO tarjeta_consumo (tarjeta_id,monto,interes,descuento,cuotas,fecha,comprobante_nro) VALUES 
 						(".$tarjeta_id[$key].",'".$tarjeta_monto[$key]."','".$tarjeta_interes[$key]."','".$tarjeta_descuento[$key]."','".$tarjeta_cuotas[$key]."','".fechasql($tarjeta_fecha[$key])."','".$tarjeta_comprobante[$key]."')";
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 				_log($sql);	
 				$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 				
@@ -46,7 +46,7 @@ if(isset($_POST['tarjeta'])){
 				foreach($operacion_id as $clave=>$valor){
 					$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 						($registro_id, 'tarjeta', '$operacion_tipo', $valor)";
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 					_log($sql);
 				} 
 				
@@ -62,7 +62,7 @@ if(isset($_POST['tarjeta'])){
 					//$monto		= $monto-$descuento+$interes;
 					
 					$sql 		= "INSERT INTO tarjeta_consumo_cuota (fecha,tarjeta_consumo_id,nro_cuota,monto) VALUES ('$fecha',$registro_id,$nro_cuota,$monto)";
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 					_log($sql);
 				}
 			}
@@ -89,7 +89,7 @@ if ($ok) {
 				('".$operacion_tipo."',".$operacion_id[0].",".$cuenta_monto[$key].",0)";
 			_log($sql);
 			//echo $sql;
-			$resulta = mysql_query($sql);
+			$resulta = mysqli_query($conn,$sql);
 			  
 			if (!$resulta){
 				
@@ -108,14 +108,14 @@ if ($ok) {
 	        foreach($cheques_acreditar as $key=>$value){
 	            //actualizo el estado del cheque
 	            $sql = "UPDATE cobro_cheques SET asociado_a_pagos = 1, asociado_a_pagos_fecha = NOW() WHERE id = ".$cheques_acreditar_id[$key];
-	            mysql_query($sql);
+	            mysqli_query($conn,$sql);
 	            
 	            //guardo la relacion de pago y operacion
 	            foreach($operacion_id as $clave=>$valor){
 	                $sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 	                        ($cheques_acreditar_id[$key], 'cheque_tercero', '$operacion_tipo', $valor)";
 	                _log($sql);
-	                mysql_query($sql);
+	                mysqli_query($conn,$sql);
 	               
 	            }
 	        }
@@ -141,7 +141,7 @@ if ($ok) {
 				$sql = "INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
 					(".$efectivo_caja_id[$key].",'".$efectivo_monto[$key]."','".$efectivo_interes[$key]."','".$efectivo_descuento[$key]."','".fechasql($efectivo_fecha[$key])."')";
 				_log($sql);
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 				$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 				_log($registro_id);
 				//guardo la relacion de pago y operacion
@@ -149,7 +149,7 @@ if ($ok) {
 					$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 						($registro_id, 'efectivo', '$operacion_tipo', $valor)";
 					_log($sql);
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 				} 
 					
 				
@@ -169,7 +169,7 @@ if ($ok) {
 				$sql = "INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha,usuario_id) VALUES 
 					(".$efectivo_caja_id[$key].",'efectivo_consumo',$registro_id,'-$efectivo','".$fecha."','$user_id')";
 				_log($sql);
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 			
 			}
 			
@@ -207,7 +207,7 @@ if ($ok) {
 				//guardo el registro de cheques
 				$sql = "INSERT INTO cheque_consumo (numero,titular,fecha,monto,interes,descuento,cuenta_id,chequera_id) VALUES 
 						('".$cheque_numero[$key]."','".$cheque_titular[$key]."','".fechasql($cheque_fecha[$key])."','".$cheque_monto[$key]."','".$cheque_interes[$key]."','".$cheque_descuento[$key]."','".$cheque_cuenta_id[$key]."','".$chequera_id[$key]."')";
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 				_log($sql);
 				
 				
@@ -215,22 +215,22 @@ if ($ok) {
 				_log($registro_id);
 				
 				 $sql = "UPDATE chequera_cheques SET estado = 1 WHERE id = ".$chequera_cheque_id[$key];
-	            mysql_query($sql);
+	            mysqli_query($conn,$sql);
 				_log($sql);
 				_LogCheques('Update '.$sql);
                 _LogCheques('El cheque '.str_pad($cheque_numero[$key], 8,'0',STR_PAD_LEFT).' se pasó a 1 en la chequera '.$chequera_id[$key]);
 				$sql = "SELECT chequera_cheques.chequera_id FROM chequera_cheques  WHERE chequera_cheques.chequera_id = '".$chequera_id[$key]."' AND chequera_cheques.estado = '0'";
 				
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 				$estadoChequera = (mysql_affected_rows() > 0)?'1':'3';
 				$sql = "UPDATE chequeras SET estado = ".$estadoChequera." WHERE id = '".$chequera_id[$key]."'";
 				_log($sql);
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 				//guardo la relacion de pago y operacion
 				foreach($operacion_id as $clave=>$valor){
 					$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 						($registro_id, 'cheque', '$operacion_tipo', $valor)";
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 					_log($sql);
 				} 
 				
@@ -266,7 +266,7 @@ if ($ok) {
 				$sql = "INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
 						('".$transferencia_cuenta_id[$key]."','".$transferencia_destino[$key]."','".$transferencia_monto[$key]."','".$transferencia_interes[$key]."','".$transferencia_descuento[$key]."','".fechasql($transferencia_fecha[$key])."')";
 				_log($sql);
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 				
 				$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 				
@@ -275,7 +275,7 @@ if ($ok) {
 					$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 						($registro_id, 'transferencia', '$operacion_tipo', $valor)";
 					_log($sql);
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 				} 
 				
 			}
@@ -309,7 +309,7 @@ if ($ok) {
 				$monto = $debito_monto[$key] + $debito_interes[$key] - $debito_descuento[$key];
 				$insert = "INSERT INTO cuenta_movimiento (fecha,cuenta_id,origen,monto, usuario_id) VALUES ('".fechasql($fecha[$key])."','$debito_cuenta_id[$key]','$detalle','-$monto', '$user_id')";
 				//echo $insert."<br>";
-				mysql_query($insert);
+				mysqli_query($conn,$insert);
 			
 				$registro_id = mysql_insert_id(); //numero id en el tipo de pago
 				
@@ -318,7 +318,7 @@ if ($ok) {
 					$sql = "INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
 						($registro_id, 'debito', '$operacion_tipo', $valor)";
 					_log($sql);
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 				}
 				
 			}

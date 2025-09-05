@@ -278,7 +278,7 @@ input.dp-applied {
 
 	$sql="SELECT id FROM encuesta WHERE id='".$_POST['id']."' AND respondida = 0";
 
-	$rsTemp = mysql_query($sql);
+	$rsTemp = mysqli_query($conn,$sql);
 
 	if(mysql_affected_rows()==1){
 
@@ -287,11 +287,11 @@ input.dp-applied {
 
 		/*$sql="SELECT id FROM clientes WHERE email='".$_POST['email']."'";
 
-		$rsTemp = mysql_query($sql);
+		$rsTemp = mysqli_query($conn,$sql);
 
 		if(mysql_affected_rows()==1){
 
-			$rs = mysql_fetch_array($rsTemp);
+			$rs = mysqli_fetch_array($rsTemp);
 
 			$cliente_id = $rs['id'];
 
@@ -321,7 +321,7 @@ input.dp-applied {
 
 				WHERE email = '".$_POST['email']."'";
 
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 
 
 
@@ -343,7 +343,7 @@ input.dp-applied {
 
 				WHERE id = '".$_POST['id']."'";
 
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 
 
 		//echo $sql;
@@ -384,7 +384,7 @@ input.dp-applied {
 
 
 
-						mysql_query($sql);
+						mysqli_query($conn,$sql);
 
 					}
 
@@ -407,7 +407,7 @@ input.dp-applied {
 
 
 
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 
 				}
 
@@ -500,9 +500,9 @@ input.dp-applied {
 	INNER JOIN apartamentos ON reservas.apartamento_id = apartamentos.id
 	WHERE encuesta.id = ".$_GET['id']." AND respondida = 0";
 	//echo $sql;
-	$rsTemp1 = mysql_query($sql);
+	$rsTemp1 = mysqli_query($conn,$sql);
 	//print_r($rsTemp1);
-	if ($rs = mysql_fetch_array($rsTemp1)){
+	if ($rs = mysqli_fetch_array($rsTemp1)){
 			//echo $_POST['username']." == ".$rs['email'] ." and ". md5($_POST['password'])." == ".$rs['password'];
 			//if ($_POST['username']==$rs['email'] and md5($_POST['password'])==$rs['password']){
 
@@ -683,10 +683,10 @@ input.dp-applied {
 
 	WHERE encuesta_preguntas_items.pregunta_id IN ('3u','3v','3w') ";
 	//echo $sql;
-	$rsTemp1 = mysql_query($sql);
+	$rsTemp1 = mysqli_query($conn,$sql);
 	//print_r($rsTemp1);
 	$mostrar=1;
-	if ($rs = mysql_fetch_array($rsTemp1)){
+	if ($rs = mysqli_fetch_array($rsTemp1)){
 		$mostrar=($rs['activa']==1)?1:0;
 	}
 	 if ($mostrar) {

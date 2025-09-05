@@ -20,7 +20,7 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del gasto
 		if (!$error) {
 			$result = 1;
 			$sql = "UPDATE tarjeta_resumen SET estado=1,fecha_pago=NOW(),monto=$monto_pagado WHERE id=".$_POST['resumen_id'];
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		}
 		
 		$resumen_id = $_POST['resumen_id'];
@@ -45,7 +45,7 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del gasto
 
 //detalle del resumen
 $sql = "SELECT * FROM tarjeta_resumen WHERE id=$resumen_id";
-$resumen = mysql_fetch_array(mysql_query($sql));
+$resumen = mysqli_fetch_array(mysqli_query($conn,$sql));
 $inicio = $resumen['inicio'];
 $fin	= $resumen['fin'];
 $tarjeta = $resumen['tarjeta_id'];
@@ -89,9 +89,9 @@ $sql = "SELECT
 		WHERE tarjeta_movimiento.tarjeta_resumen_id=$resumen_id
 		";
 
-$rsTemp = mysql_query($sql); 
+$rsTemp = mysqli_query($conn,$sql); 
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	$monto_total = $monto_total + $rs['monto'];
 	
@@ -161,8 +161,8 @@ function addFormaDePago(forma_pago_id){
 			$('.date-pick').datePicker().trigger('change');
 		}
 	});
-}$(document).ready( function() {   // Esta parte del código se ejecutará automáticamente cuando la página esté lista.
-    $("#guardarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+}$(document).ready( function() {   // Esta parte del cï¿½digo se ejecutarï¿½ automï¿½ticamente cuando la pï¿½gina estï¿½ lista.
+    $("#guardarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
         if(validaForm()){      
 	       
         }
@@ -231,8 +231,8 @@ dhxWins.window('w_tarjeta_resumen_detalle').attachURL('tarjeta_resumen_detalle.p
 			<option value="n">Seleccionar...</option>
 			<?php
 			$sql = "SELECT id,forma_pago FROM forma_pago where id!=4 ORDER BY forma_pago";
-			$rsTemp = mysql_query($sql);
-			while($rs = mysql_fetch_array($rsTemp)){?>
+			$rsTemp = mysqli_query($conn,$sql);
+			while($rs = mysqli_fetch_array($rsTemp)){?>
 			<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
 			<?php } ?>
 			</select> &nbsp; <a href="#" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>

@@ -1,1 +1,1 @@
-[16-May-2011 15:15:21] PHP Warning:  mysql_fetch_array(): supplied argument is not a valid MySQL result resource in /home/pampa/public_html/functions/formadepago.php on line 23
+[16-May-2011 15:15:21] PHP Warning:  mysqli_fetch_array(): supplied argument is not a valid MySQL result resource in /home/pampa/public_html/functions/formadepago.php on line 23

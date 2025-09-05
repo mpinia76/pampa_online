@@ -22,11 +22,11 @@ if(isset($_POST['ingresar'])){
 	$pass = $_POST['password'];
 	
 	$sql = "SELECT * FROM usuario WHERE email = '$user' AND password='$pass'";
-	$rsTemp = mysql_query($sql);
-	$total = mysql_num_rows($rsTemp);
+	$rsTemp = mysqli_query($conn,$sql);
+	$total = mysqli_num_rows($rsTemp);
 	
 	if($total == 1){
-		$rs = mysql_fetch_array($rsTemp);
+		$rs = mysqli_fetch_array($rsTemp);
 		$_SESSION['userid'] = $rs['id'];
 		$_SESSION['usernombre'] = $rs['nombre']." ".$rs['apellido'];
         $_SESSION['login_time'] = time();

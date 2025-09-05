@@ -38,8 +38,8 @@ INNER JOIN rubro ON rubro.id = usuario_rubro.rubro_id
 WHERE rubro.gastos=1 AND usuario.id = ".$_SESSION['userid'];
 			}
 
-	$rsTempRubros =  mysql_query($sqlRubros);
-	while($rsRubros = mysql_fetch_array($rsTempRubros)){
+	$rsTempRubros =  mysqli_query($conn,$sqlRubros);
+	while($rsRubros = mysqli_fetch_array($rsTempRubros)){
 		$arrayRubros[]=$rsRubros['rubro_id'];
 	}
 }
@@ -54,8 +54,8 @@ if ($espacio_trabajo) {
 }
 $sql .=" GROUP BY $tabla.rubro_id";
 //echo $sql;
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 		<tr>
 			<td><a style="color:blue;" onclick="$('.<?php echo $tabla?>_rubro_<?php echo $rs['rubro_id']?>').toggle();"><?php echo $rs['tipo']?></a></td>
@@ -69,8 +69,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 		<?php
 		$rubro_id = $rs['rubro_id'];
 		$sql_subrubro = "SELECT $sql_meses,ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, subrubro.subrubro as tipo FROM $tabla INNER JOIN subrubro ON $tabla.subrubro_id = subrubro.id WHERE $tabla.rubro_id = '$rubro_id' AND quitar_egresos != 1 GROUP BY $tabla.subrubro_id";
-		$rsTemp2 =  mysql_query($sql_subrubro);
-		while($rs2 = mysql_fetch_array($rsTemp2)){ ?>
+		$rsTemp2 =  mysqli_query($conn,$sql_subrubro);
+		while($rs2 = mysqli_fetch_array($rsTemp2)){ ?>
 			<tr class="<?php echo $tabla?>_rubro_<?php echo $rubro_id?>" style="display:none;">
 				<td><?php echo $rs2['tipo']?></td>
 				<?php for($i=0;$i<12;$i++){ ?>

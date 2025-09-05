@@ -13,7 +13,7 @@ if(($_POST['agregar'])){
 	
 	if((date("Y-m-d")) >= fechasql($_POST['fecha'])){
 		$sql	= "SELECT * FROM cheque_consumo WHERE id=".$_POST['registro'];
-		$rs		= mysql_fetch_array(mysql_query($sql));
+		$rs		= mysqli_fetch_array(mysqli_query($conn,$sql));
 		//echo $sql;
 		if(($rs['fecha']) <= fechasql($_POST['fecha'])){ //la fecha de pago es menor o igual a la fecha de hoy
 			$cuenta_id	= $rs['cuenta_id'];
@@ -22,14 +22,14 @@ if(($_POST['agregar'])){
 			
 			$monto		= $rs['monto'];
 			if ($_POST['actualizar']) {
-				mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+				mysqli_query($conn,"DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
 			}
 		
 			$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
-			mysql_query($insert);
+			mysqli_query($conn,$insert);
 			//echo $insert."<br>";
 			$update = "UPDATE cheque_consumo SET debitado=1, fecha_debitado='".fechasql($_POST['fecha'])."', debitado_por=$user_id  WHERE id=".$rs['id'];
-			mysql_query($update);
+			mysqli_query($conn,$update);
 			//echo $update."<br>";
 			$result = 1;
 			echo "<script>

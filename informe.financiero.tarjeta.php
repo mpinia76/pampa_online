@@ -22,8 +22,8 @@
 <tbody>
 <?php
 $sql1 = "SELECT id FROM tarjeta";
-$rsTemp1 = mysql_query($sql1);
-while($row = mysql_fetch_array($rsTemp1)){
+$rsTemp1 = mysqli_query($conn,$sql1);
+while($row = mysqli_fetch_array($rsTemp1)){
 	$tarjeta_id = $row['id'];
 	$resumen = '';
 
@@ -32,8 +32,8 @@ while($row = mysql_fetch_array($rsTemp1)){
 	}
 
 	$sql = "SELECT * FROM tarjeta_resumen WHERE tarjeta_id = $tarjeta_id AND ano = $ano";
-	$rsTemp = mysql_query($sql); echo mysql_error();
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql); echo mysql_error();
+	while($rs = mysqli_fetch_array($rsTemp)){
 
 		$inicio = $rs['inicio'];
 		$fin 	= $rs['fin'];
@@ -41,8 +41,8 @@ while($row = mysql_fetch_array($rsTemp1)){
 		$tabla 	= "tarjeta_consumo_cuota";
 		
 		$sql = "SELECT SUM(monto) as monto FROM tarjeta_movimiento WHERE tarjeta_resumen_id=".$rs['id'];
-		$rowTemp = mysql_query($sql); //echo $sql;
-		$row = mysql_fetch_array($rowTemp);
+		$rowTemp = mysqli_query($conn,$sql); //echo $sql;
+		$row = mysqli_fetch_array($rowTemp);
 		$row['monto'] ? $total = $row['monto'] : $total = 0;
 	
 		$resumen[$mes] = "SUM(IF($tabla.fecha >= '$inicio' AND $tabla.fecha <= '$fin',$tabla.monto,0)) + $total as '$mes'";
@@ -60,8 +60,8 @@ while($row = mysql_fetch_array($rsTemp1)){
 	$tabla 		= "tarjeta_consumo_cuota";
 	$sql 		= "SELECT $resumen,ROUND(SUM(IF($tabla.fecha >= '$anual_inicio' AND $tabla.fecha <= '$anual_fin',$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, CONCAT(tarjeta_marca.marca,' ',tarjeta.titular) as tipo FROM $tabla INNER JOIN tarjeta_consumo ON $tabla.tarjeta_consumo_id=tarjeta_consumo.id INNER JOIN tarjeta ON tarjeta_consumo.tarjeta_id = tarjeta.id AND tarjeta.id = $tarjeta_id INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id = tarjeta_marca.id GROUP BY tarjeta.id";
 
-	$rsTemp =  mysql_query($sql);echo mysql_error();
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp =  mysqli_query($conn,$sql);echo mysql_error();
+	while($rs = mysqli_fetch_array($rsTemp)){
 		if($rs['total'] != NULL){ ?>
 		<tr>
 			<td><?php echo $rs['tipo']?></td>

@@ -6,7 +6,7 @@ include_once("../config/db.php");
 
 $sql = "SELECT count(*) as cantidad FROM $tabla WHERE monto like '$monto'";
 
-$rs = mysql_fetch_array(mysql_query($sql));
+$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 
 if($rs['cantidad'] > 0){
 

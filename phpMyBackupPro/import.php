@@ -144,10 +144,10 @@ if ($_GET['empty_ALL']) {
     foreach($all_db as $dbname) {
         $db=mysql_select_db($dbname,$con);
         $res=mysql_list_tables($dbname,$con);
-        for ($i=0;$i<mysql_num_rows($res);$i++) {
+        for ($i=0;$i<mysqli_num_rows($res);$i++) {
             $row=mysql_fetch_row($res);
             $tablename=$row[0];
-            mysql_query("drop table `".$tablename."`",$con);
+            mysqli_query($conn,"drop table `".$tablename."`",$con);
         }
     }
 
@@ -163,10 +163,10 @@ if ($_GET['empty_all']) {
         printf(".<div class=\"red\">".PMBP_EX_NO_AVAILABLE."</div>\n",$_GET['empty_all']);
     } else {    
         $res=mysql_list_tables($_GET['empty_all']);
-        for ($i=0;$i<mysql_num_rows($res);$i++) {
+        for ($i=0;$i<mysqli_num_rows($res);$i++) {
             $row=mysql_fetch_row($res);
             $tablename=$row[0];
-            mysql_query("drop table `".$tablename."`");
+            mysqli_query($conn,"drop table `".$tablename."`");
         }
         $error=mysql_error();
         if ($error) echo $error;

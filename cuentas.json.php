@@ -10,17 +10,17 @@ if($user_id != 1){
 	$sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id ORDER BY banco.banco";
 }
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	$saldo_sql = "SELECT SUM(monto) as saldo FROM cuenta_movimiento WHERE cuenta_id=".$rs['id'];
-	$saldo_rs = mysql_fetch_array(mysql_query($saldo_sql));
+	$saldo_rs = mysqli_fetch_array(mysqli_query($conn,$saldo_sql));
 	
 	$saldo = round($saldo_rs['saldo'],2);
 	
 	$sinc_sql = "SELECT cuenta_sincronizada.usuario_id,cuenta_sincronizada.fecha,cuenta_sincronizada.monto,usuario.nombre, usuario.apellido FROM cuenta_sincronizada INNER JOIN usuario ON cuenta_sincronizada.usuario_id = usuario.id WHERE cuenta_sincronizada.cuenta_id = ".$rs['id']." ORDER BY cuenta_sincronizada.fecha DESC LIMIT 1";
-	$sinc_rs = mysql_fetch_array(mysql_query($sinc_sql));
+	$sinc_rs = mysqli_fetch_array(mysqli_query($conn,$sinc_sql));
 	$usuario = $sinc_rs['nombre']." ".$sinc_rs['apellido'];
 	if($sinc_rs['fecha'] != ''){ $fecha = date("d/m/Y H:i:s",strtotime($sinc_rs['fecha'])); }else{ $fecha = ''; }
 	if($sinc_rs['monto'] != ''){ $monto = $sinc_rs['monto']; }else{ $monto = ''; }

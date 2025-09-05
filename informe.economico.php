@@ -60,8 +60,8 @@ if(isset($_POST['espacio_trabajo'])) { $espacio_trabajo = $_POST['espacio_trabaj
 			}
 			
 			
-			$rsTemp = mysql_query($sql);
-			while($rs = mysql_fetch_array($rsTemp)){ 
+			$rsTemp = mysqli_query($conn,$sql);
+			while($rs = mysqli_fetch_array($rsTemp)){ 
 			if (!$espacio_trabajo&&!$_SESSION['admin']) {
 				$espacio_trabajo=$rs['id'];
 			}	

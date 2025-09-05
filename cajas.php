@@ -20,13 +20,13 @@ if(isset($_GET['caja_id']) and $_GET['sincronizar']=='si'){
 	$fecha = date("Y-m-d H:i:s");
 	//obtengo el saldo de la caja
 	$saldo_sql = "SELECT SUM(monto) as saldo FROM caja_movimiento WHERE caja_id=$caja_id";
-	$saldo_rs = mysql_fetch_array(mysql_query($saldo_sql));
+	$saldo_rs = mysqli_fetch_array(mysqli_query($conn,$saldo_sql));
 	$saldo = $saldo_rs['saldo'];
 	
 	$insert = "INSERT INTO caja_sincronizada (caja_id,usuario_id,fecha,monto) VALUES ($caja_id,$user_id,'$fecha','$saldo')";
 	
 	//echo $insert;
-	mysql_query($insert);
+	mysqli_query($conn,$insert);
 	//echo mysql_error();
 }
 

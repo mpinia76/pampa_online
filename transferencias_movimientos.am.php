@@ -71,8 +71,8 @@ $form->setAction('transferencias_movimientos.am.php'); //a donde hacer el post
 if(isset($dataid)){
 
 	$sql = "SELECT * FROM transferencia_consumo WHERE id=".$dataid;
-	$rsTemp = mysql_query($sql);
-	$rs = mysql_fetch_array($rsTemp);
+	$rsTemp = mysqli_query($conn,$sql);
+	$rs = mysqli_fetch_array($rsTemp);
 	
 	foreach($campos as $clave=>$atr){
 		if($atr['type']=='date'){

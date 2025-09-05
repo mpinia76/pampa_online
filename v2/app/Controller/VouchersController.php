@@ -61,10 +61,15 @@ class VouchersController extends AppController {
         $fileName = ($output=='F')?'files/reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_voucher_'.date('d_m_Y').'.pdf':'reserva('.$reserva['Reserva']['numero'].')_'.$reserva['Cliente']['nombre_apellido'].'_voucher_'.date('d_m_Y').'.pdf';
 
         //genero el pdf
-        $this->Mpdf->init();
+        /*$this->Mpdf->init();
        $this->Mpdf->setFilename($fileName);
 
-       $this->Mpdf->setOutput($output);
+       $this->Mpdf->setOutput($output);*/
+		require_once '../../vendor/autoload.php';
+
+		$mpdf = new \Mpdf\Mpdf();
+		$mpdf->WriteHTML($this->render());
+		$mpdf->Output($fileName,$output);
        //$content = $this->Mpdf->setOutput('S');
        //print_r($this->Mpdf);
     }

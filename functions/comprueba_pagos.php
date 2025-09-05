@@ -101,8 +101,8 @@ if(isset($_POST['cheque'])){
 		//verifico si ya no existe un cheque con esa info
 		$sql = "SELECT * FROM cheque_consumo WHERE numero = '".intval($cheque_numero[$key])."' AND cuenta_id = '".$cheque_cuenta[$key]."' AND chequera_id = '".$chequera_cheque_id[$key]."'";
 		//echo $sql."<br>";
-		$rsTemp = mysql_query($sql);
-		if(mysql_num_rows($rsTemp)>0){
+		$rsTemp = mysqli_query($conn,$sql);
+		if(mysqli_num_rows($rsTemp)>0){
 			$error_cheque_numero = true;
 		}
 		

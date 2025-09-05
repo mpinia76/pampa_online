@@ -12,8 +12,8 @@ $ano = ($_GET['ano'])?$_GET['ano']:date('Y');
 $mes = ($_GET['mes'])?$_GET['mes']:'0';
 if(isset($_POST['agregar'])){
 	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
 		$pagado[$rs['ano']."_".$rs['mes']] = true;
 	}
 	
@@ -28,7 +28,7 @@ if(isset($_POST['agregar'])){
 					(empleado_id,hora_extra_id,cantidad_solicitada,mes,ano,creado_por,creado)
 				VALUES
 					(".$_POST['empleado_id'].",".$_POST['sector_id'].",'".$_POST['horas']."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW())";
-		mysql_query($sql); 
+		mysqli_query($conn,$sql); 
 		
 		if(mysql_error() != ''){
 			$result = mysql_error();
@@ -182,18 +182,18 @@ function cargarMeses(year, mes){
         <option value="null">Seleccionar...</option>
         <?php 
         $sql = "SELECT sector_1_id,sector_2_id FROM empleado_trabajo WHERE empleado_id = ".$_GET['empleado_id']." ORDER BY id DESC LIMIT 1";
-        $rsector = mysql_fetch_array(mysql_query($sql));
+        $rsector = mysqli_fetch_array(mysqli_query($conn,$sql));
 
 		$sql = "SELECT sector_id FROM sector_horas_extras WHERE sector_id IN (".$rsector['sector_1_id'].",".$rsector['sector_2_id'].") GROUP BY sector_id";
-        $rsTemp = mysql_query($sql);
-		while($rs = mysql_fetch_array($rsTemp)){
+        $rsTemp = mysqli_query($conn,$sql);
+		while($rs = mysqli_fetch_array($rsTemp)){
 			$sector[] = $rs['sector_id'];
 		}
 		if(is_array($sector) and count($sector)>0){
 			$lista_sector = implode(",",$sector);
 			$sql = "SELECT * FROM sector WHERE id IN (".$lista_sector.")";
-			$rsTemp = mysql_query($sql); 
-			while($rs = mysql_fetch_array($rsTemp)){ ?>
+			$rsTemp = mysqli_query($conn,$sql); 
+			while($rs = mysqli_fetch_array($rsTemp)){ ?>
 				<option value="<?php echo $rs['hora_extra_activa']?>"><?php echo $rs['sector']?></option>
 			<?php  } ?>
 		<?php  } ?>

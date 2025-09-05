@@ -2,7 +2,7 @@
 include_once("config/db.php");
 
 $sql = "SELECT * FROM empleado WHERE id=".$_GET['empleado_id']." AND estado = 1";
-$rs = mysql_fetch_array(mysql_query($sql));
+$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 
 ?>
 <script>

@@ -65,10 +65,10 @@ function makeFilter(){
 }
 <?php 
 $sql = "SELECT * FROM rubro ORDER BY rubro ASC"; 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 ?>
 function addFilter(){
-	$('#rubro_filter').html('<select style="font-size:11px;" id="rubro" onchange="makeFilter();"><option selected="selected" value=""> </option><?PHP while($rs = mysql_fetch_array($rsTemp)){ ?><option value="<?php echo $rs['id']?>"><?php echo $rs['rubro']?></option><?PHP } ?></select>');
+	$('#rubro_filter').html('<select style="font-size:11px;" id="rubro" onchange="makeFilter();"><option selected="selected" value=""> </option><?PHP while($rs = mysqli_fetch_array($rsTemp)){ ?><option value="<?php echo $rs['id']?>"><?php echo $rs['rubro']?></option><?PHP } ?></select>');
 }
 
 function showDesaprobadas(desaprobadas){

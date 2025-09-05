@@ -24,28 +24,28 @@ $condicion = (isset($_GET['id']))?" reservas.id='".$_GET['id']."' ":" (reservas.
 $sql = "SELECT reservas.id, clientes.nombre_apellido, clientes.email FROM reservas INNER JOIN clientes ON reservas.cliente_id = clientes.id 
 WHERE ".$condicion." AND ((reservas.estado != 2 AND reservas.estado != 3) OR reservas.estado is null)";
 //echo $sql."<br>";
-$rsTemp1 = mysql_query($sql);
+$rsTemp1 = mysqli_query($conn,$sql);
 $id=0;
-while ($rs = mysql_fetch_array($rsTemp1)){
+while ($rs = mysqli_fetch_array($rsTemp1)){
 
 	//echo $newPassword."<br>";
 	$sql = "SELECT id, enviada,respondida FROM encuesta WHERE reserva_id = ".$rs['id'];
 	//echo $sql."<br>";
-	$rsTemp = mysql_query($sql);
-	if(mysql_num_rows($rsTemp)==0){
+	$rsTemp = mysqli_query($conn,$sql);
+	if(mysqli_num_rows($rsTemp)==0){
 		$sql = "INSERT INTO encuesta (reserva_id, enviada) VALUES ('".$rs['id']."', 1)";
 		//echo $sql."<br>";
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		$id=mysql_insert_id();
 	}
 	else{
-		$rsEncuesta = mysql_fetch_array($rsTemp);
+		$rsEncuesta = mysqli_fetch_array($rsTemp);
 		if ($rsEncuesta['respondida']==0) {
 			$enviada = $rsEncuesta['enviada'] + 1;
 			$id = $rsEncuesta['id'];
 			$sql = "UPDATE encuesta SET enviada = ".$enviada." WHERE id = ".$id;
 			//echo $sql."<br>";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		}
 	}
 	if ($id) {

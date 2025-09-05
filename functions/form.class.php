@@ -281,9 +281,9 @@ class Form{
 		$html .= '<select name="'.$name.'" id="'.$name.'">';
 		$html .= '<option value="null">Seleccionar...</option>';
 		
-		$rsTemp = mysql_query($sql);
+		$rsTemp = mysqli_query($conn,$sql);
 
-		while($rs = mysql_fetch_array($rsTemp)){
+		while($rs = mysqli_fetch_array($rsTemp)){
 			if($rs[$column_id] == $atr['value'] ){
 				$selected = 'selected="selected"';
 			}else{

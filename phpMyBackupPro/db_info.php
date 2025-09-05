@@ -45,8 +45,8 @@ if ($_GET['table']) {
     // select the db
     mysql_select_db($_GET['table']);
 
-    $stati=mysql_query("show table status");
-    while($status=mysql_fetch_array($stati)) {
+    $stati=mysqli_query($conn,"show table status");
+    while($status=mysqli_fetch_array($stati)) {
         $table_names[]=$status['Name'];
         $table_rows[]=$status['Rows'];
         $size=PMBP_size_type($status['Data_length']+$status['Index_length']);
@@ -56,7 +56,7 @@ if ($_GET['table']) {
     // get number of fields
     if (is_array($table_names))
     foreach($table_names as $table) {
-        mysql_query("show columns from `".$table."`");
+        mysqli_query($conn,"show columns from `".$table."`");
         $table_fields[]=mysql_affected_rows();
     }
 
@@ -122,8 +122,8 @@ if (!$con) {
 	        $num_tables=$num_rows=$data_size=0;
 	        
 	        // get number of rows and size of tables
-	        $stati=mysql_query("show table status",$con);
-	        while ($status=@mysql_fetch_array($stati)) {
+	        $stati=mysqli_query($conn,"show table status",$con);
+	        while ($status=@mysqli_fetch_array($stati)) {
 	            $data_size+=($status['Data_length']+$status['Index_length']);
 	            $num_rows+=$status['Rows'];
 	        }

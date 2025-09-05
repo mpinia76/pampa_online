@@ -27,12 +27,12 @@ if(isset($_POST['agregar'])){
 	}	
 	$result = mysql_insert($tabla,$datos, $conn);
 	$usuario_id = mysql_insert_id();
-	//creo el histórico de empleados
+	//creo el histï¿½rico de empleados
 	if ($tabla == 'empleado' ) {
 		$alta = fechasql($_POST['fecha_alta']);
 		$sql = "INSERT INTO empleado_historico (empleado_id,alta) VALUES ($usuario_id,'$alta')";
 		//echo $sql;
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 	}
 	//guardo si hay permisos actualizados
 	if(isset($_POST['permisos'])){
@@ -42,7 +42,7 @@ if(isset($_POST['agregar'])){
 		foreach($permisos as $key => $permiso_id){
 		
 			$sql = "INSERT INTO usuario_permiso (usuario_id,permiso_id) VALUES ($usuario_id,$permiso_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		
@@ -54,7 +54,7 @@ if(isset($_POST['agregar'])){
 		foreach($rubros as $key => $rubro_id){
 		
 			$sql = "INSERT INTO usuario_rubro (usuario_id,rubro_id) VALUES ($usuario_id,$rubro_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		
@@ -68,7 +68,7 @@ if(isset($_POST['agregar'])){
 		foreach($cajas as $key => $caja_id){
 		
 			$sql = "INSERT INTO usuario_caja (usuario_id,caja_id) VALUES ($usuario_id,$caja_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		
@@ -81,7 +81,7 @@ if(isset($_POST['agregar'])){
 		foreach($cuentas as $key => $cuenta_id){
 		
 			$sql = "INSERT INTO usuario_cuenta (usuario_id,cuenta_id) VALUES ($usuario_id,$cuenta_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		
@@ -113,14 +113,14 @@ if(isset($_POST['editar'])){
 	if(isset($_POST['cajas'])){
 	
 		$sql = "DELETE FROM usuario_caja WHERE usuario_id=$usuario_id";
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		
 		$cajas = $_POST['cajas'];
 		
 		foreach($cajas as $key => $caja_id){
 		
 			$sql = "INSERT INTO usuario_caja (usuario_id,caja_id) VALUES ($usuario_id,$caja_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		
@@ -130,14 +130,14 @@ if(isset($_POST['editar'])){
 	if(isset($_POST['permisos'])){
 	
 		$sql = "DELETE FROM usuario_permiso WHERE usuario_id=$usuario_id";
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		
 		$permisos = $_POST['permisos'];
 		
 		foreach($permisos as $key => $permiso_id){
 		
 			$sql = "INSERT INTO usuario_permiso (usuario_id,permiso_id) VALUES ($usuario_id,$permiso_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		
@@ -146,14 +146,14 @@ if(isset($_POST['editar'])){
 	if(isset($_POST['rubros'])){
 	
 		$sql = "DELETE FROM usuario_rubro WHERE usuario_id=$usuario_id";
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		
 		$rubros = $_POST['rubros'];
 		
 		foreach($rubros as $key => $rubro_id){
 		
 			$sql = "INSERT INTO usuario_rubro (usuario_id,rubro_id) VALUES ($usuario_id,$rubro_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		
@@ -162,14 +162,14 @@ if(isset($_POST['editar'])){
 	if(isset($_POST['cuentas'])){
 		
 		$sql = "DELETE FROM usuario_cuenta WHERE usuario_id=$usuario_id";
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 	
 		$cuentas = $_POST['cuentas'];
 		
 		foreach($cuentas as $key => $cuenta_id){
 		
 			$sql = "INSERT INTO usuario_cuenta (usuario_id,cuenta_id) VALUES ($usuario_id,$cuenta_id)";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		
 		}
 		

@@ -58,14 +58,14 @@ function _logCheques($msg){
     function auditarUsuarios($accion){
         $sql = "INSERT INTO usuario_log (usuario_id,nombre,accion,ip)
 			VALUES ('".$_SESSION['userid']."','".$_SESSION['usernombre']."','".$accion."','".getRealIP()."')";
-        mysql_query($sql);
+        mysqli_query($conn,$sql);
         $date = date('Y-m-d');
         $sqlAuditoria ="SELECT * FROM usuario_auditoria WHERE usuario_id = ".$_SESSION['userid']." AND fecha='".$date."'";
-        $rsTempAuditoria = mysql_query($sqlAuditoria);
-        $totalAuditoria = mysql_num_rows($rsTempAuditoria);
+        $rsTempAuditoria = mysqli_query($conn,$sqlAuditoria);
+        $totalAuditoria = mysqli_num_rows($rsTempAuditoria);
         //_log($sqlAuditoria);
         if($totalAuditoria == 1) {
-            $rsAuditoria = mysql_fetch_array($rsTempAuditoria);
+            $rsAuditoria = mysqli_fetch_array($rsTempAuditoria);
             $last_interaction = strtotime($rsAuditoria['last']);
             //_log(date('Y-m-d H:i:s'));
             // Calcula los segundos entre la última interacción y el tiempo actual
@@ -76,13 +76,13 @@ function _logCheques($msg){
             // Actualiza la hora de última interacción y segundos conectados
             $sql_update = "UPDATE usuario_auditoria SET last = now(), interaccion='".$accion."', segundos = segundos + $elapsed_time_seconds WHERE usuario_id = " . $_SESSION['userid'] . " AND fecha = '$date'";
             //_log($sql_update);
-            mysql_query($sql_update);
+            mysqli_query($conn,$sql_update);
 
         }
         else{
             $sqlInsertAuditoria = "INSERT INTO usuario_auditoria (usuario_id,fecha,logueo,last,segundos,interaccion,ip)
 			VALUES ('".$_SESSION['userid']."','".date('Y-m-d')."','".date('Y-m-d H:i:s')."','".date('Y-m-d H:i:s')."',0,'".$accion."','".getRealIP()."')";
             //_log($sqlInsertAuditoria);
-            mysql_query($sqlInsertAuditoria);
+            mysqli_query($conn,$sqlInsertAuditoria);
         }
     }

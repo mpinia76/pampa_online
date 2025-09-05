@@ -5,7 +5,7 @@ $valor	= $_POST['valor'];
 include_once("../config/db.php");
 
 $sql = "UPDATE encuesta_preguntas SET activa = ".$valor." WHERE id = ".$id;
-	            mysql_query($sql);
+	            mysqli_query($conn,$sql);
 
 
 

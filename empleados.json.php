@@ -4,8 +4,8 @@ session_start();
 include_once("config/db.php");
 
 $sql = "SELECT e.id,et.espacio_trabajo_id FROM empleado e LEFT JOIN empleado_trabajo et ON e.id = et.empleado_id ORDER BY e.id ASC";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$sector[$rs['id']] = $rs['espacio_trabajo_id'];
 }
 if($_GET['espacio'] == 'todos'){
@@ -27,9 +27,9 @@ if($_GET['espacio'] == 'todos'){
 	$list = implode(",",$empleados);
 	$sql = "SELECT id,nombre,apellido, CASE estado WHEN '0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM empleado WHERE id IN ($list) AND estado = ".$_GET['activo'];
 }
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	$data = array(
 		"id" => $rs['id'],

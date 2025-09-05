@@ -79,8 +79,8 @@ else{
 if(isset($dataid)){
 
 	$sql = "SELECT * FROM usuario WHERE id=".$dataid;
-	$rsTemp = mysql_query($sql);
-	$rs = mysql_fetch_array($rsTemp);
+	$rsTemp = mysqli_query($conn,$sql);
+	$rs = mysqli_fetch_array($rsTemp);
 	
 	foreach($campos as $clave=>$atr){
 		if($atr['type']=='date'){

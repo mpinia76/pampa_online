@@ -12,7 +12,7 @@ include_once("config/user.php");
 if(isset($_POST['ok'])){
 
 	$sql	= "SELECT * FROM ".$_POST['tabla']." WHERE id=".$_POST['registro'];
-	$rs		= mysql_fetch_array(mysql_query($sql));
+	$rs		= mysqli_fetch_array(mysqli_query($conn,$sql));
 	
 	if(strtotime($rs['fecha']) <= time()){ //la fecha de pago es menor o igual a la fecha de hoy
 		$cuenta_id	= $rs['cuenta_id'];
@@ -22,10 +22,10 @@ if(isset($_POST['ok'])){
 		$monto		= $rs['monto'];
 	
 		$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,NOW())";
-		mysql_query($insert);
+		mysqli_query($conn,$insert);
 		
 		$update = "UPDATE ".$_POST['tabla']." SET debitado=1, fecha_debitado=NOW(), debitado_por=$user_id  WHERE id=".$rs['id'];
-		mysql_query($update);
+		mysqli_query($conn,$update);
 	}else{
 		$error = true;
 	}

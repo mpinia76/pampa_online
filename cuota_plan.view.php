@@ -39,7 +39,7 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 			if (!$error) {
 				$result = 1;
 				$sql = "UPDATE cuota_plans SET estado=1,fecha_pago=NOW() WHERE id=".$_POST['cuenta_id'];
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 			}
 
 		}else{
@@ -77,7 +77,7 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 						WHERE cuota_plans.id=$dataid";
 
 		//echo $sql;
-		$rs_cuenta 	= mysql_fetch_array(mysql_query($sql));
+		$rs_cuenta 	= mysqli_fetch_array(mysqli_query($conn,$sql));
 
 
 		$estado = $rs_cuenta['estado'];
@@ -230,9 +230,9 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 
 						$sql = "SELECT * FROM gasto WHERE plan_id=".$rs_cuenta['plan_id'];
 						//echo $sql;
-						$rsTemp = mysql_query($sql);
-						if(mysql_num_rows($rsTemp)>0){
-							while($rsGasto = mysql_fetch_array($rsTemp)){
+						$rsTemp = mysqli_query($conn,$sql);
+						if(mysqli_num_rows($rsTemp)>0){
+							while($rsGasto = mysqli_fetch_array($rsTemp)){
 								$ordenes .=$rsGasto['nro_orden'].' / ';
 							}
 						}
@@ -241,9 +241,9 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 
 						$sql = "SELECT * FROM compra WHERE plan_id=".$rs_cuenta['plan_id'];
 						//echo $sql;
-						$rsTemp = mysql_query($sql);
-						if(mysql_num_rows($rsTemp)>0){
-							while($rsCompra = mysql_fetch_array($rsTemp)){
+						$rsTemp = mysqli_query($conn,$sql);
+						if(mysqli_num_rows($rsTemp)>0){
+							while($rsCompra = mysqli_fetch_array($rsTemp)){
 								$ordenes .=$rsCompra['nro_orden'].' / ';
 							}
 						}
@@ -251,16 +251,16 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 					default:
 						$sql = "SELECT * FROM cuenta_a_pagar WHERE plan_id=".$rs_cuenta['plan_id'];
 						//echo $sql;
-						$rsTemp = mysql_query($sql);
-						if(mysql_num_rows($rsTemp)>0){
-							while($rsCuenta = mysql_fetch_array($rsTemp)){
+						$rsTemp = mysqli_query($conn,$sql);
+						if(mysqli_num_rows($rsTemp)>0){
+							while($rsCuenta = mysqli_fetch_array($rsTemp)){
 								switch ($rsCuenta['operacion_tipo']) {
 		        					case 'gasto':
 										$sqlGasto = "SELECT * FROM gasto WHERE id=".$rsCuenta['operacion_id'];
 										//echo $sql;
-										$rsTempGasto = mysql_query($sqlGasto);
-										if(mysql_num_rows($rsTempGasto)>0){
-											while($rsGasto = mysql_fetch_array($rsTempGasto)){
+										$rsTempGasto = mysqli_query($conn,$sqlGasto);
+										if(mysqli_num_rows($rsTempGasto)>0){
+											while($rsGasto = mysqli_fetch_array($rsTempGasto)){
 												$ordenes .=$rsGasto['nro_orden'].' / ';
 											}
 										}
@@ -269,9 +269,9 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 		        					default:
 										$sqlCompra = "SELECT * FROM compra WHERE id=".$rsCuenta['operacion_id'];
 										//echo $sql;
-										$rsTempCompra = mysql_query($sqlCompra);
-										if(mysql_num_rows($rsTempCompra)>0){
-											while($rsCompra = mysql_fetch_array($rsTempCompra)){
+										$rsTempCompra = mysqli_query($conn,$sqlCompra);
+										if(mysqli_num_rows($rsTempCompra)>0){
+											while($rsCompra = mysqli_fetch_array($rsTempCompra)){
 												$ordenes .=$rsCompra['nro_orden'].' / ';
 											}
 										}
@@ -296,8 +296,8 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 				<option value="n">Seleccionar...</option>
 				<?php
 				$sql = "SELECT id,forma_pago FROM forma_pago ORDER BY forma_pago";
-				$rsTemp = mysql_query($sql);
-				while($rs = mysql_fetch_array($rsTemp)){?>
+				$rsTemp = mysqli_query($conn,$sql);
+				while($rs = mysqli_fetch_array($rsTemp)){?>
 				<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
 				<?php } ?>
 				</select> &nbsp; <a href="#" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>

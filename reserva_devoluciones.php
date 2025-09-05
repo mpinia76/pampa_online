@@ -25,7 +25,7 @@ if(isset($_POST['guardar'])){
 	//$result = $monto;
 	if($monto){
 		$sql = "SELECT sum(monto_cobrado) as 'total_cobrado' FROM reserva_cobros WHERE reserva_id = ".$_GET['reserva_id']." and tipo != 'DESCUENTO'";
-		$rs = mysql_fetch_array(mysql_query($sql)); echo mysql_error();
+		$rs = mysqli_fetch_array(mysqli_query($conn,$sql)); echo mysql_error();
 		$cobrado = $rs['total_cobrado'];
 		
 		if($monto > $cobrado){
@@ -39,7 +39,7 @@ if(isset($_POST['guardar'])){
 					$monto,
 					$_POST['motivo']);
 
-				mysql_query($sql); //echo mysql_error();
+				mysqli_query($conn,$sql); //echo mysql_error();
 			$operacion_tipo = 'reserva_devolucion';
 			$operacion_id[] = mysql_insert_id();
 			include("functions/procesa_pagos.php");
@@ -89,7 +89,7 @@ if(isset($_POST['guardar'])){
 <body>
 <?php 
 $sql = "SELECT reservas.*, clientes.*, apartamentos.* FROM reservas INNER JOIN clientes ON reservas.cliente_id = clientes.id INNER JOIN apartamentos ON reservas.apartamento_id = apartamentos.id WHERE reservas.id = ".$_GET['reserva_id'];
-$reserva = mysql_fetch_array(mysql_query($sql));
+$reserva = mysqli_fetch_array(mysqli_query($conn,$sql));
 ?>
 <div class="info">
     <strong>Titular: </strong> <?php echo $reserva['nombre_apellido']?> <br/>
@@ -115,8 +115,8 @@ $reserva = mysql_fetch_array(mysql_query($sql));
         LEFT JOIN transferencia_consumo tc ON rpo.forma_pago_id = tc.id LEFT JOIN cuenta ctc ON ctc.id = tc.cuenta_id 
         LEFT JOIN cheque_consumo cc ON rpo.forma_pago_id = cc.id
         WHERE rd.reserva_id = ".$_GET['reserva_id']." GROUP BY rd.id ORDER BY rd.fecha ASC"; 
-    $rsTemp = mysql_query($sql);
-    if(mysql_num_rows($rsTemp) > 0){ ?>
+    $rsTemp = mysqli_query($conn,$sql);
+    if(mysqli_num_rows($rsTemp) > 0){ ?>
     <table width="100%">
         <tr>
             <td width="100"><strong>Fecha</strong></td>
@@ -127,7 +127,7 @@ $reserva = mysql_fetch_array(mysql_query($sql));
         </tr>
     <?php
     $total = 0;
-    while($rs = mysql_fetch_array($rsTemp)){
+    while($rs = mysqli_fetch_array($rsTemp)){
         switch($rs['forma_pago']){
             case 'EFECTIVO':
                 $detalle = 'desde caja '.$rs['caja'];
@@ -161,8 +161,8 @@ $reserva = mysql_fetch_array(mysql_query($sql));
                 <option value="n">Seleccionar...</option>
                 <?php
                 $sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4) ORDER BY forma_pago ";
-                $rsTemp = mysql_query($sql);
-                while($rs = mysql_fetch_array($rsTemp)){?>
+                $rsTemp = mysqli_query($conn,$sql);
+                while($rs = mysqli_fetch_array($rsTemp)){?>
                     <option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
                 <?php } ?>
             </select> &nbsp; <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>

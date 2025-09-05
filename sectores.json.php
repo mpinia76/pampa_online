@@ -5,9 +5,9 @@ include_once("config/db.php");
 
 $sql = "SELECT s.*,she.valor FROM sector s LEFT JOIN sector_horas_extras she ON s.hora_extra_activa = she.id ORDER BY sector ASC";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	$data = array(
 		"id" => $rs['id'],

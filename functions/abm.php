@@ -3,7 +3,7 @@ function validar($tabla,$campos,$conn=''){
 	switch ($tabla) {
 		case 'empleado':
 			$sql="SELECT id, CONCAT(nombre,' ',apellido) as empleado, CASE WHEN estado ='0' THEN 'Inactivo' ELSE 'Activo' END as estado FROM $tabla WHERE dni = '".$campos['dni']."'";
-			$rs = mysql_fetch_array(mysql_query($sql));
+			$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 			//echo $sql;
 			if ($rs['id']) {
 				$msg=" El DNI ya se encuentra registrado para ".$rs['empleado']." - ".$rs['estado'];
@@ -51,7 +51,7 @@ if (!$msg) {
 	}
 	$query.=')';
 	//echo $query;
-	mysql_query($query);
+	mysqli_query($conn,$query);
 	$result=mysql_affected_rows();
 	//print_r($result);
 	if($result=="-1"){
@@ -63,7 +63,7 @@ if (!$msg) {
 		if ($tabla=='empleado') {
 			$sql = "INSERT INTO empleado_historico (empleado_id, alta) VALUES (".mysql_insert_id().", '".fechasql($_POST['fecha_alta'])."')";
 			//echo $sql;
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		}
 		
 		$msg=1;
@@ -90,7 +90,7 @@ $count++;
 $query.=' WHERE id = \''.$id.'\'';
 
 
-mysql_query($query);
+mysqli_query($conn,$query);
 $result=mysql_affected_rows();
 if($result=="-1"){
 	$msg="No se pudieron actualizar los datos: ".mysql_error();
@@ -103,19 +103,19 @@ else{
 INNER JOIN chequeras ON chequera_cheques.chequera_id = chequeras.id
 SET chequera_cheques.estado = 2 WHERE chequeras.cuenta_id = '".$_POST['cuenta_id']."' AND chequera_cheques.numero = '".$numero."'";
 		//echo $sql;
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		if(mysql_affected_rows() > 0){
 			$sql = "SELECT chequeras.id FROM chequera_cheques INNER JOIN chequeras ON chequera_cheques.chequera_id = chequeras.id WHERE chequeras.cuenta_id = '".$_POST['cuenta_id']."' AND chequera_cheques.numero = '".$numero."'";
 			
-			$rsTempChequera = mysql_query($sql);
-			if($rsChequera = mysql_fetch_array($rsTempChequera)){
+			$rsTempChequera = mysqli_query($conn,$sql);
+			if($rsChequera = mysqli_fetch_array($rsTempChequera)){
 				$sql = "SELECT chequera_cheques.chequera_id FROM chequera_cheques  WHERE chequera_cheques.chequera_id = '".$rsChequera['id']."' AND chequera_cheques.estado = '0'";
 				
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 				$estadoChequera = (mysql_affected_rows() > 0)?'1':'3';
 				$sql = "UPDATE chequeras SET estado = ".$estadoChequera." WHERE id = '".$rsChequera['id']."'";
 				echo $sql;
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 			}
 		}
 	}

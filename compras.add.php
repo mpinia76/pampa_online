@@ -10,7 +10,7 @@ if(isset($_POST['monto'])){
 	
 		
 	$sql = "SELECT valor FROM configuracion WHERE id='compra_aprobada'";
-	$rs = mysql_fetch_array(mysql_query($sql));
+	$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 	
 	if($_POST['monto'] >= $rs['valor']){  //el monto del compra supera al valor permitido automatico
 	
@@ -21,7 +21,7 @@ if(isset($_POST['monto'])){
 		
 		$estado = 0;
 		$sql = "SELECT nro_orden FROM compra ORDER BY nro_orden DESC LIMIT 1";
-		$rs = mysql_fetch_array(mysql_query($sql));
+		$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 		$nro_orden = $rs['nro_orden'] + 1;
 		
 	}
@@ -29,7 +29,7 @@ if(isset($_POST['monto'])){
 	$sql = "INSERT INTO compra (nro_orden,fecha,fecha_vencimiento,rubro_id,subrubro_id,proveedor,descripcion,remito_nro,recibo_nro,factura_nro,factura_tipo,factura_orden,monto,user_id,estado)
 			VALUES ($nro_orden,'".fechasql($_POST['fecha'])."','".fechasql($_POST['fecha_vencimiento'])."',".$_POST['rubro'].",'".$_POST['subrubro_id']."','".$_POST['proveedor']."','".$_POST['descripcion']."','".$_POST['remito_nro']."','".$_POST['recibo_nro']."','".$_POST['factura_nro']."','".$_POST['factura_tipo']."','".$_POST['factura_orden']."','".$_POST['monto']."',".$_SESSION['userid'].",$estado)";
 	//echo $sql;
-	mysql_query($sql);
+	mysqli_query($conn,$sql);
 	//$result = mysql_error();
 	
 	if($result == ''){ $result = 1; }
@@ -239,8 +239,8 @@ function valida(F) {
 			<option value="null">Seleccionar...</option>
 			<?php 
 			$sql = "SELECT id,rubro FROM rubro WHERE impuestos=1 AND activo=1  ORDER BY rubro";
-			$rsTemp = mysql_query($sql);
-			while($rs = mysql_fetch_array($rsTemp)){?>
+			$rsTemp = mysqli_query($conn,$sql);
+			while($rs = mysqli_fetch_array($rsTemp)){?>
 			<option value="<?php echo $rs['id']?>"><?php echo $rs['rubro']?></option>
 			<?php  } ?>
 			</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
@@ -250,8 +250,8 @@ function valida(F) {
 			<option value="">Seleccione uno...</option>
 			<?php 
 			$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
-			$rsTemp2 = mysql_query($sql2);
-			while($rs2 = mysql_fetch_array($rsTemp2)){?>
+			$rsTemp2 = mysqli_query($conn,$sql2);
+			while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 			<option <?php  if($rs2['id']==$rs['proveedor_id']){ ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['nombre']?></option>
 			<?php  } ?>
 			</select>

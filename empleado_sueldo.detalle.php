@@ -93,14 +93,14 @@ input.dp-applied {
         
 
         $sql = "SELECT * FROM empleado WHERE id = $empleado_id";
-        $rs = mysql_fetch_array(mysql_query($sql));
+        $rs = mysqli_fetch_array(mysqli_query($conn,$sql));
         ?>
         <p><strong><?php echo $rs['nombre']?> <?php echo $rs['apellido']?></strong> (<?php echo $mes?>/<?php echo $ano?>) </p>
         
         <p><strong>Sector de trabajo:</strong> 
         <?php 
         $sql = "SELECT empleado_trabajo.*,a.sector as 'sector1', b.sector as 'sector2', espacio_trabajo.espacio FROM empleado_trabajo LEFT JOIN sector as a ON empleado_trabajo.sector_1_id = a.id LEFT JOIN sector as b ON empleado_trabajo.sector_2_id = b.id INNER JOIN espacio_trabajo ON empleado_trabajo.espacio_trabajo_id = espacio_trabajo.id WHERE empleado_trabajo.empleado_id=$empleado_id ORDER BY empleado_trabajo.id DESC LIMIT 0,1";
-        $rs = mysql_fetch_array(mysql_query($sql));
+        $rs = mysqli_fetch_array(mysqli_query($conn,$sql));
         ?>
         <?php echo $rs['sector1'] != '' ? $rs['sector1'] : ''?> <?php echo $rs['sector1'] != '' ? $rs['porcentaje_sector_1']."%" : ''?> 
         <?php echo $rs['sector2'] != '' ? " - ".$rs['sector2'] : ''?> <?php echo $rs['sector2'] != '' ? $rs['porcentaje_sector_2']."%" : ''?>
@@ -109,7 +109,7 @@ input.dp-applied {
         <p><strong>Salario acordado del mes:</strong></p>
         <?php 
         $sql = "SELECT * FROM empleado_sueldo WHERE empleado_id = $empleado_id AND mes = $mes AND ano = $ano ORDER BY sueldo_id DESC LIMIT 0,1";
-        $rs = mysql_fetch_array(mysql_query($sql));
+        $rs = mysqli_fetch_array(mysqli_query($conn,$sql));
         ?>
         Sueldo: $<?php echo $rs['sueldo']?> <br>
         Viaticos: $<?php echo $rs['viaticos']?> <br>
@@ -137,9 +137,9 @@ input.dp-applied {
                 AND 
                 ehe.ano = $ano
             ";
-            $rsTemp = mysql_query($sql); echo mysql_error();
-            if(mysql_num_rows($rsTemp) > 0) {
-                while($rs = mysql_fetch_array($rsTemp)){ ?>
+            $rsTemp = mysqli_query($conn,$sql); echo mysql_error();
+            if(mysqli_num_rows($rsTemp) > 0) {
+                while($rs = mysqli_fetch_array($rsTemp)){ ?>
                 <?php echo $rs['sector']?>: <?php echo $rs['cantidad_solicitada']?> hrs. solicitadas - <?php echo $rs['cantidad_aprobada']?> hrs. aprobadas = $<?php echo $rs['cantidad_aprobada']*$rs['valor']?> <br>
                 <?php  $horas_extras = $horas_extras + ($rs['cantidad_aprobada']*$rs['valor']); ?>
                 <?php  } ?>
@@ -151,9 +151,9 @@ input.dp-applied {
         <p><strong>Adelantos otorgados:</strong></p>
         <?php 
             $sql = "SELECT empleado_adelanto.id,empleado_adelanto.creado, empleado_adelanto.monto, empleado_adelanto.comentarios, CONCAT(usuario.apellido,', ',usuario.nombre) as user, caja.caja, cuenta.sucursal, cuenta.nombre, banco.banco  FROM empleado_adelanto LEFT JOIN usuario ON empleado_adelanto.creado_por = usuario.id LEFT JOIN rel_pago_operacion rpo ON empleado_adelanto.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_adelanto' LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' LEFT JOIN caja ON cm.caja_id = caja.id LEFT JOIN rel_pago_operacion ON empleado_adelanto.id = rel_pago_operacion.operacion_id AND rel_pago_operacion.operacion_tipo = 'sueldo_adelanto' LEFT JOIN cuenta_movimiento ON rel_pago_operacion.forma_pago=cuenta_movimiento.origen AND rel_pago_operacion.forma_pago_id = cuenta_movimiento.registro_id LEFT JOIN cheque_consumo ON cuenta_movimiento.registro_id = cheque_consumo.id AND cuenta_movimiento.origen = 'cheque' LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id LEFT JOIN banco ON cuenta.banco_id = banco.id WHERE empleado_adelanto.empleado_id = $empleado_id AND empleado_adelanto.mes = $mes AND empleado_adelanto.ano = $ano";
-            $rsTemp = mysql_query($sql);
-            if(mysql_num_rows($rsTemp) > 0) {
-                while($rs = mysql_fetch_array($rsTemp)){ ?>
+            $rsTemp = mysqli_query($conn,$sql);
+            if(mysqli_num_rows($rsTemp) > 0) {
+                while($rs = mysqli_fetch_array($rsTemp)){ ?>
                 <?php 
                 $caja = ($rs['caja'])? 'Caja: '.$rs['caja']:'';
         $cuenta = ($rs['sucursal'])? 'Cuenta: '.$rs['banco'].' ('.$rs['sucursal'].') '.$rs['nombre']:'';
@@ -169,10 +169,10 @@ input.dp-applied {
 empleado_pago.motivo_descuentos, empleado_pago.monto, CONCAT(usuario.apellido,', ',usuario.nombre) as user
 FROM empleado_pago LEFT JOIN usuario ON empleado_pago.abonado_por = usuario.id 
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
-        if(mysql_num_rows(mysql_query($sql)) == 0){ ?>
+        if(mysqli_num_rows(mysqli_query($conn,$sql)) == 0){ ?>
         <p><strong>Pendiente de pago:</strong> $<?php echo $salario+$horas_extras-$adelantos?></p>
         <?php  }else{ 
-         $rsSueldo = mysql_fetch_array(mysql_query($sql));?>
+         $rsSueldo = mysqli_fetch_array(mysqli_query($conn,$sql));?>
          <p><strong>Descuentos:</strong></p>
          <?php if ($rsSueldo['descuentos']) {?>
          	
@@ -196,9 +196,9 @@ LEFT JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id
 LEFT JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' 
 LEFT JOIN caja ON cm.caja_id = caja.id 
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
-       $rsTemp = mysql_query($sql);
-       if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo1 = mysql_fetch_array($rsTemp)){ 
+       $rsTemp = mysqli_query($conn,$sql);
+       if(mysqli_num_rows($rsTemp) > 0) {
+       		while($rsSueldo1 = mysqli_fetch_array($rsTemp)){
        			if ($rsSueldo1['monto']) {
 			        $caja = ($rsSueldo1['caja'])? 'Caja: '.$rsSueldo1['caja']:'';
 			        $cuenta = ($rsSueldo1['sucursal'])? 'Cuenta: '.$rsSueldo1['banco'].' ('.$rsSueldo1['sucursal'].') '.$rsSueldo1['nombre']:'';
@@ -213,9 +213,9 @@ LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.
 LEFT JOIN cheque_consumo ec ON rpo.forma_pago_id = ec.id 
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
         
-        $rsTemp = mysql_query($sql);
-       if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo2 = mysql_fetch_array($rsTemp)){ 
+        $rsTemp = mysqli_query($conn,$sql);
+       if(mysqli_num_rows($rsTemp) > 0) {
+       		while($rsSueldo2 = mysqli_fetch_array($rsTemp)){
 	        if ($rsSueldo2['monto']) {
 	        	echo "<br>"?> Con cheque $<?php echo number_format($rsSueldo2['monto'], 2, ',', '.');
 	        }
@@ -228,9 +228,9 @@ FROM empleado_pago
 LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' AND rpo.forma_pago = 'transferencia'  
 LEFT JOIN transferencia_consumo ec ON rpo.forma_pago_id = ec.id 
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
-        $rsTemp = mysql_query($sql);
-       if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo3 = mysql_fetch_array($rsTemp)){ 
+        $rsTemp = mysqli_query($conn,$sql);
+       if(mysqli_num_rows($rsTemp) > 0) {
+       		while($rsSueldo3 = mysqli_fetch_array($rsTemp)){
        			if ($rsSueldo3['monto']) {
 	        		echo "<br>"?> Con transferencia $<?php echo number_format($rsSueldo3['monto'], 2, ',', '.');
        			}
@@ -243,9 +243,9 @@ LEFT JOIN rel_pago_operacion rpo ON empleado_pago.id = rpo.operacion_id AND rpo.
 LEFT JOIN cuenta ON cuenta_movimiento.cuenta_id = cuenta.id
 LEFT JOIN banco ON cuenta.banco_id = banco.id
 WHERE empleado_pago.empleado_id = $empleado_id AND empleado_pago.mes = $mes AND empleado_pago.ano = $ano";
-       $rsTemp = mysql_query($sql);
-       if(mysql_num_rows($rsTemp) > 0) {
-       		while($rsSueldo4 = mysql_fetch_array($rsTemp)){ 
+       $rsTemp = mysqli_query($conn,$sql);
+       if(mysqli_num_rows($rsTemp) > 0) {
+       		while($rsSueldo4 = mysqli_fetch_array($rsTemp)){
        			if ($rsSueldo4['monto']) {
 			        $caja = ($rsSueldo4['caja'])? 'Caja: '.$rsSueldo4['caja']:'';
 			        $cuenta = ($rsSueldo4['sucursal'])? 'Cuenta: '.$rsSueldo4['banco'].' ('.$rsSueldo4['sucursal'].') '.$rsSueldo4['nombre']:'';

@@ -26,8 +26,8 @@ $tabla 		= "efectivo_consumo";
 $sql_meses 	= sql_meses($tabla,$ano);
 $sql 		= "SELECT $sql_meses,ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, caja.caja as tipo FROM $tabla INNER JOIN caja ON $tabla.caja_id = caja.id GROUP BY $tabla.caja_id";
 
-$rsTemp =  mysql_query($sql);echo mysql_error();
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);echo mysql_error();
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><?php echo $rs['tipo']?></td>

@@ -79,8 +79,8 @@ $tabla 		= "cheque_consumo";
 $sql_meses 	= sql_meses($tabla,$ano,'fecha');
 $sql 		= "SELECT $sql_meses,ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, concat(banco.banco,' ',cuenta.sucursal,' ',cuenta.nombre) as tipo FROM $tabla INNER JOIN cuenta ON $tabla.cuenta_id = cuenta.id INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id WHERE $tabla.vencido = 0 GROUP BY $tabla.cuenta_id";
 
-$rsTemp =  mysql_query($sql);echo mysql_error();
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);echo mysql_error();
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><?php echo $rs['tipo']?></td>
@@ -162,8 +162,8 @@ $(".total_cheque_librado_anual").html(roundVal(sum));
 $tabla 		= "cheque_consumo";
 $sql_meses 	= sql_meses($tabla,$ano,'fecha_debitado');
 $sql 		= "SELECT $sql_meses,ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, concat(banco.banco,' ',cuenta.sucursal,' ',cuenta.nombre) as tipo FROM $tabla INNER JOIN cuenta ON $tabla.cuenta_id = cuenta.id INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id WHERE $tabla.vencido = 0 AND ($tabla.concepto not like 'Reemplazado%' OR $tabla.concepto is null) AND ($tabla.concepto not like 'Anulado%' OR $tabla.concepto is null) GROUP BY $tabla.cuenta_id";
-$rsTemp =  mysql_query($sql);echo mysql_error();
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);echo mysql_error();
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><?php echo $rs['tipo']?></td>
@@ -220,7 +220,7 @@ $(".total_cheque_anual").html(roundVal(sum));
 <?php 
 $ant = $ano - 1;
 $sql = "SELECT if(sum(monto) is null,0,sum(monto)) as 'acumulado' FROM cheque_consumo WHERE debitado = 0 AND YEAR(fecha) = '$ant'";
-$rs = mysql_fetch_array(mysql_query($sql))
+$rs = mysqli_fetch_array(mysqli_query($conn,$sql))
 ?>
 
 <table class="medios_pago">
@@ -263,7 +263,7 @@ $sql = "SELECT
     ROUND(SUM(IF(MONTH($tabla.$campo)=12 AND YEAR($tabla.$campo)=$ano,$tabla.monto,0)),2) -  ROUND(SUM(IF(MONTH($tabla.$campo)=12 AND YEAR($tabla.$campo)=$ano AND $tabla.debitado = 1,$tabla.monto,0)),2) as '12',
     ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) - ROUND(SUM(IF(YEAR($tabla.fecha)=$ano AND $tabla.debitado = 1,$tabla.monto,0)),2) as 'anual',
     ROUND(sum($tabla.monto),2) -  ROUND(sum(IF($tabla.debitado = 1,$tabla.monto,0)),2) as total FROM $tabla WHERE $tabla.vencido = 0";
-    $rs = mysql_fetch_array(mysql_query($sql)); //echo $sql; //echo mysql_error();
+    $rs = mysqli_fetch_array(mysqli_query($conn,$sql)); //echo $sql; //echo mysql_error();
     for($i=0;$i<12;$i++){
 ?>
 		<td width="50" class="pendiente_<?php echo $i?>"><?php echo $rs[$i]?></td>

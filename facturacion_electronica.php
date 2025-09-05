@@ -128,8 +128,8 @@ include_once("functions/util.php");
 	<?php 
 	$sql = "SELECT id, CONCAT(numero,' ', cuit,' ', descripcion,' ', direccion) as punto FROM punto_ventas  ";
 
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
 	
 	?>
 	
@@ -200,26 +200,26 @@ else{
 }
 
 //echo $sql;
-$rsTemp = mysql_query($sql); 
+$rsTemp = mysqli_query($conn,$sql); 
 $aFacturar=0;
 $totalVentas=0;
 $totalFacturado=0;
 $totalMesFacturado=0;
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	if(($rs['estado']!='2')&&($rs['estado']!='3')){
 		$sql = "SELECT * FROM reserva_extras WHERE reserva_id = ".$rs['id'];
 	
-		$rsTempExtras = mysql_query($sql); 
+		$rsTempExtras = mysqli_query($conn,$sql); 
 		$no_adelantadas=0;
-		while($rsExtras = mysql_fetch_array($rsTempExtras)){
+		while($rsExtras = mysqli_fetch_array($rsTempExtras)){
 			if($rsExtras['adelantada'] != 1){
 	        	$no_adelantadas = $no_adelantadas + $rsExtras['cantidad'] * $rsExtras['precio'];
 	        }
 		}
 		$sql = "SELECT * FROM reserva_cobros WHERE reserva_id = ".$rs['id'];
 		
-		$rsTempDescuentos = mysql_query($sql); 
+		$rsTempDescuentos = mysqli_query($conn,$sql); 
 		$descontado=0;
 		$transferencias=0;
 		$transferenciasEstado=0;
@@ -230,7 +230,7 @@ while($rs = mysql_fetch_array($rsTemp)){
 		$cheques=0;
 		$chequesEstado=0;
 		$libradoPor='';
-		while($rsDescuentos = mysql_fetch_array($rsTempDescuentos)){
+		while($rsDescuentos = mysqli_fetch_array($rsTempDescuentos)){
 			if($rsDescuentos['tipo'] == "DESCUENTO"){
 				
 	        	$descontado += $rsDescuentos['monto_neto'];
@@ -242,9 +242,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 		        	$sql .= " AND cobro_transferencias.fecha_acreditado LIKE '".$_POST["ano"]."-".$_POST["mes"]."%'";
 		        }
 		        //echo $sql;
-				$rsTempTransferencias = mysql_query($sql); 
+				$rsTempTransferencias = mysqli_query($conn,$sql); 
 				
-				while($rsTransferencias = mysql_fetch_array($rsTempTransferencias)){
+				while($rsTransferencias = mysqli_fetch_array($rsTempTransferencias)){
 					
 						$transferencias +=$rsTransferencias['monto_neto']+$rsTransferencias['intereses']; 
 						$quienTransfiere =$rsTransferencias['quien_transfiere'];
@@ -258,9 +258,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 		        WHERE reserva_cobro_id = ".$rsDescuentos['id']." AND cuenta.controla_facturacion = 1 AND cobro_transferencias.acreditado = 1";
 	        	
 		        //echo $sql;
-				$rsTempTransferencias = mysql_query($sql); 
+				$rsTempTransferencias = mysqli_query($conn,$sql); 
 				
-				while($rsTransferencias = mysql_fetch_array($rsTempTransferencias)){
+				while($rsTransferencias = mysqli_fetch_array($rsTempTransferencias)){
 					$transferenciasEstado +=$rsTransferencias['monto_neto']+$rsTransferencias['intereses'];
 					
 					
@@ -278,9 +278,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 	        	if ($_POST['metodo']!='check_out') {
 					$sql .= " AND (reserva_cobros.fecha LIKE '".$_POST["ano"]."-".$_POST["mes"]."%')";
 				}
-				$rsTempTarjetas = mysql_query($sql); 
+				$rsTempTarjetas = mysqli_query($conn,$sql); 
 				
-				while($rsTarjetas = mysql_fetch_array($rsTempTarjetas)){
+				while($rsTarjetas = mysqli_fetch_array($rsTempTarjetas)){
 					
 						$tarjetas +=$rsTarjetas['monto_neto']+$rsTarjetas['intereses']; 
 						$titular =$rsTarjetas['titular'];
@@ -292,9 +292,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 	        	
 		        $sql .= " WHERE reserva_cobro_id = ".$rsDescuentos['id'];
 	        	
-				$rsTempTarjetas = mysql_query($sql); 
+				$rsTempTarjetas = mysqli_query($conn,$sql); 
 				
-				while($rsTarjetas = mysql_fetch_array($rsTempTarjetas)){
+				while($rsTarjetas = mysqli_fetch_array($rsTempTarjetas)){
 					$tarjetasEstado +=$rsTarjetas['monto_neto']+$rsTarjetas['intereses'];
 				}
 	        }
@@ -305,9 +305,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 					$sql .= " AND (fecha_acreditado LIKE '".$_POST["ano"]."-".$_POST["mes"]."%' OR asociado_a_pagos_fecha LIKE '".$_POST["ano"]."-".$_POST["mes"]."%')";
 				}
 				//echo $sql."<br>";
-				$rsTempCheques = mysql_query($sql); 
+				$rsTempCheques = mysqli_query($conn,$sql); 
 				
-				while($rsCheques = mysql_fetch_array($rsTempCheques)){
+				while($rsCheques = mysqli_fetch_array($rsTempCheques)){
 					
 						$cheques +=$rsCheques['monto_neto']; 
 						$libradoPor =$rsCheques['librado_por']; 
@@ -319,9 +319,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 		        WHERE reserva_cobro_id = ".$rsDescuentos['id']." AND ((acreditado = 1 AND cuenta.controla_facturacion = 1) OR (cobro_cheques.cuenta_acreditado=0))";
 				
 				//echo $sql."<br>";
-				$rsTempCheques = mysql_query($sql); 
+				$rsTempCheques = mysqli_query($conn,$sql); 
 				
-				while($rsCheques = mysql_fetch_array($rsTempCheques)){
+				while($rsCheques = mysqli_fetch_array($rsTempCheques)){
 					if ($_POST['hCheques']==1) {
 						$chequesEstado +=$rsCheques['monto_neto'];
 					}
@@ -334,10 +334,10 @@ while($rs = mysql_fetch_array($rsTemp)){
 		
 		$sql = "SELECT * FROM reserva_facturas WHERE reserva_id = ".$rs['id'];
 		
-		$rsTempFacturas = mysql_query($sql); 
+		$rsTempFacturas = mysqli_query($conn,$sql); 
 		$facturas=0;
 		$estado='';
-		while($rsFacturas = mysql_fetch_array($rsTempFacturas)){
+		while($rsFacturas = mysqli_fetch_array($rsTempFacturas)){
 			
 			$facturas +=$rsFacturas['monto'];
 		}
@@ -348,10 +348,10 @@ while($rs = mysql_fetch_array($rsTemp)){
 			
 			$sql .= " AND fecha_emision NOT LIKE '".$_POST["ano"]."-".$_POST["mes"]."%' ";
 			
-			$rsTempFacturas = mysql_query($sql); 
+			$rsTempFacturas = mysqli_query($conn,$sql); 
 			
 			
-			while($rsFacturas = mysql_fetch_array($rsTempFacturas)){
+			while($rsFacturas = mysqli_fetch_array($rsTempFacturas)){
 				
 				$otrasFacturas +=$rsFacturas['monto'];
 			}
@@ -453,10 +453,10 @@ if ($mostrar) {
 </tr>
 <?php }}}
 $sql = "SELECT reserva_facturas.monto, punto_ventas.alicuota FROM reserva_facturas LEFT JOIN punto_ventas ON reserva_facturas.punto_venta_id = punto_ventas.id WHERE fecha_emision LIKE '".$_POST["ano"]."-".$_POST["mes"]."%' ";
-		$rsTempFacturas = mysql_query($sql); 
+		$rsTempFacturas = mysqli_query($conn,$sql); 
 		$facturasMes=0;
 		$facturasMesIva=0;
-		while($rsFacturas = mysql_fetch_array($rsTempFacturas)){
+		while($rsFacturas = mysqli_fetch_array($rsTempFacturas)){
 			
 			$facturasMes +=$rsFacturas['monto'];
 			$facturasMesIva +=($rsFacturas['alicuota'])?$rsFacturas['monto']/(1+$rsFacturas['alicuota']):$rsFacturas['monto'];

@@ -7,67 +7,67 @@ include_once("functions/fechasql.php");
 $balance = 0;
 
 $sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$motivos[$rs['id']] = $rs['nombre'];
 }
-$sql = "SELECT *,(fecha) as fecha2, TIME(TIMESTAMPADD(HOUR,2,fecha)) as hora FROM caja_sincronizada WHERE caja_id =".$_GET['caja_id'];$rsTemp = mysql_query($sql);
+$sql = "SELECT *,(fecha) as fecha2, TIME(TIMESTAMPADD(HOUR,2,fecha)) as hora FROM caja_sincronizada WHERE caja_id =".$_GET['caja_id'];$rsTemp = mysqli_query($conn,$sql);
 //echo $sql;
-while($rs = mysql_fetch_array($rsTemp)){	
+while($rs = mysqli_fetch_array($rsTemp)){	
     $sincronizada[round($rs['monto'],1)]['fecha'] = $rs['fecha2'];	
     $sincronizada[round($rs['monto'],1)]['monto'] = $rs['monto'];	
     $sincronizada[round($rs['monto'],1)]['usuario_id'] = $rs['usuario_id']; 
     $sincronizada[round($rs['monto'],1)]['hora'] = $rs['hora'];    
 }
 $sql = "SELECT * FROM caja";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$cajas[$rs['id']] = $rs['caja'];
 }
 
 $sql = "SELECT * FROM tarjeta_resumen";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
     $resumen[$rs['id']] = 'Resumen '.$rs['nombre'];
 }
 
 //devoluciones de reserva en efectivo
 $sql = "SELECT rd.id, r.numero, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM reserva_devoluciones rd LEFT JOIN usuario ON rd.usuario_id = usuario.id INNER JOIN reservas r ON rd.reserva_id = r.id WHERE rd.forma_pago = 'EFECTIVO' ";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
     $devoluciones[$rs['id']] = 'Devolucion de Reserva-'.$rs['user'];
 }
 
 $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id ORDER BY banco.banco";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$cuentas[$rs['id']] = $rs['banco']." ".$rs['sucursal']." ".$rs['cuenta_tipo']." ".$rs['nombre'];
 }
 
 //cobro de reservas
 $sql = "SELECT reservas.numero,ce.id as cobro_efectivo_id, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM cobro_efectivos ce INNER JOIN reserva_cobros rc ON ce.reserva_cobro_id = rc.id LEFT JOIN usuario ON rc.usuario_id = usuario.id INNER JOIN reservas ON reservas.id = rc.reserva_id";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
     $reserva_cobro[$rs['cobro_efectivo_id']] = $rs['numero'].'-'.$rs['user'];
 }
 //cobro de reservas con cheque
 $sql = "SELECT reservas.numero,cc.id as cobro_cheque_id, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM cobro_cheques cc INNER JOIN reserva_cobros rc ON cc.reserva_cobro_id = rc.id INNER JOIN reservas ON reservas.id = rc.reserva_id LEFT JOIN usuario ON rc.usuario_id = usuario.id";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
     $reserva_cobro_cheque[$rs['cobro_cheque_id']] = $rs['numero'].'-'.$rs['user'];
 }
 //tomamos los adelantos si hay en cajas
 $sql = "SELECT e.nombre, e.apellido, cm.id, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM empleado_adelanto ea LEFT JOIN usuario ON ea.creado_por = usuario.id INNER JOIN rel_pago_operacion rpo ON ea.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_adelanto' INNER JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' INNER JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' AND cm.caja_id = ".$_GET['caja_id']." INNER JOIN empleado e ON e.id = ea.empleado_id";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$adelanto[$rs['id']] = "Adelanto ".$rs['apellido']." ".$rs['nombre'];
 	$adelantoAbonado[$rs['id']]=$rs['user'];
 }
 
 //tomamos los pagos de sueldos si hay en cajas
 $sql = "SELECT e.nombre, e.apellido, cm.id, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM empleado_pago ea LEFT JOIN usuario ON ea.abonado_por = usuario.id INNER JOIN rel_pago_operacion rpo ON ea.id = rpo.operacion_id AND rpo.operacion_tipo = 'sueldo_pago' INNER JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' INNER JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' AND cm.caja_id = ".$_GET['caja_id']." INNER JOIN empleado e ON e.id = ea.empleado_id";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$salario[$rs['id']] = "Salario a ".$rs['apellido']." ".$rs['nombre'];
 	$salarioAbonado[$rs['id']]=$rs['user'];
 }
@@ -80,8 +80,8 @@ LEFT JOIN usuario ON plans.user_id = usuario.id
 INNER JOIN rel_pago_operacion rpo ON cuota_plans.id = rpo.operacion_id AND rpo.operacion_tipo = 'cuota_plan' 
 INNER JOIN efectivo_consumo ec ON rpo.forma_pago_id = ec.id AND rpo.forma_pago = 'efectivo' 
 INNER JOIN caja_movimiento cm ON cm.registro_id = ec.id AND cm.origen = 'efectivo_consumo' AND cm.caja_id = ".$_GET['caja_id'];
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$plan[$rs['id']] = "Cuota Plan ".$rs['plan']." Vencimiento ".$rs['vencimiento'];
 	$planAbonado[$rs['id']]=$rs['user'];
 }
@@ -126,10 +126,10 @@ $sql .=" ORDER BY T.fecha DESC, T.id DESC, T.operacion_id ASC";
 
 
 //echo $sql;
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 //print_r($rsTemp);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	$orden = '';
 	if($rs['operacion_tipo'] == ''){
@@ -252,8 +252,8 @@ $gastos = $operaciones['gasto'];
 if(is_array($gastos) and count($gastos)>0){
 	$sql_gastos = "SELECT gasto.id,gasto.nro_orden, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM gasto LEFT JOIN usuario ON gasto.user_id = usuario.id WHERE gasto.id IN (".implode(",",$gastos).")";
 	//echo $sql_gastos;
-	$rsGastosTemp = mysql_query($sql_gastos);
-	while($rsGastos = mysql_fetch_array($rsGastosTemp)){
+	$rsGastosTemp = mysqli_query($conn,$sql_gastos);
+	while($rsGastos = mysqli_fetch_array($rsGastosTemp)){
 		
 		$operacion['gasto_'.$rsGastos['id']] = $rsGastos['nro_orden'];
 		if ($operaciones['gasto_usuarios'][$rsGastos['id']]) {
@@ -273,8 +273,8 @@ $compras = $operaciones['compra'];
 
 if(is_array($compras) and count($compras)>0){
 	$sql_compras = "SELECT compra.id,compra.nro_orden, CONCAT(usuario.apellido,', ',usuario.nombre) as user FROM compra LEFT JOIN usuario ON compra.user_id = usuario.id WHERE compra.id IN (".implode(",",$compras).")";
-	$rsComprasTemp = mysql_query($sql_compras);
-	while($rsCompras = mysql_fetch_array($rsComprasTemp)){
+	$rsComprasTemp = mysqli_query($conn,$sql_compras);
+	while($rsCompras = mysqli_fetch_array($rsComprasTemp)){
 		
 		$operacion['compra_'.$rsCompras['id']] = $rsCompras['nro_orden'];
 		if ($operaciones['compra_usuarios'][$rsCompras['id']]) {

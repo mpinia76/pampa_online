@@ -66,8 +66,8 @@ if ($CONF['login'] && !$_SESSION['multi_user_mode']) {
             {
                 $con=@mysql_connect($PMBP_MU_CONF['sql_host_admin'],$PMBP_MU_CONF['sql_user_admin'],$PMBP_MU_CONF['sql_passwd_admin']);
                 mysql_select_db("mysql");
-                $res=mysql_query("select * from user where (User='".$_POST['username']."' or User='') and password=password('".$_POST['password']."')");
-                $success=mysql_fetch_array($res);
+                $res=mysqli_query($conn,"select * from user where (User='".$_POST['username']."' or User='') and password=password('".$_POST['password']."')");
+                $success=mysqli_fetch_array($res);
                 @mysql_close($con);
             } else {
                 if ($CONF['sql_user']==$_POST['username'] && $CONF['sql_passwd']==$_POST['password']) {

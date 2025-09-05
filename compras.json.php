@@ -19,9 +19,9 @@ if(isset($where) and $where != ''){
 
 $sql = "SELECT rubro.rubro,subrubro.subrubro,compra.fecha,DATE_FORMAT(compra.created,'%Y-%m-%d') as created,compra.monto,compra.estado,compra.nro_orden,compra.id,compra.factura_nro FROM compra LEFT JOIN subrubro ON compra.subrubro_id=subrubro.id INNER JOIN rubro ON compra.rubro_id = rubro.id $where ORDER BY created DESC";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	if($rs['estado'] == 0 and $rs['nro_orden'] == 0){
 		$nro_orden	= 'Pendiente';

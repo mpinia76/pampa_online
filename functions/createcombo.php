@@ -11,8 +11,8 @@ $value		= $_GET['value'];
 <?php
 $sql = "SELECT id,$campo FROM $tabla WHERE $campo_id=$value";
 $sql .=($tabla=='subrubro')?" AND activo=1 ":"";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){?>
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){?>
 
 	<option value="<?php echo $rs['id']?>"><?php echo $rs[$campo]?></option>
 

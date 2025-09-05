@@ -77,10 +77,10 @@ function showDesaprobadas(desaprobadas){
 }
 <? 
 $sql = "SELECT * FROM rubro ORDER BY rubro ASC"; 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 ?>
 function addFilter(){
-	$('#rubro_filter').html('<select style="font-size:11px;" id="rubro" onchange="makeFilter();"><option selected="selected" value=""> </option><? while($rs = mysql_fetch_array($rsTemp)){ ?><option value="<?=$rs['id']?>"><?=$rs['rubro']?></option><? } ?></select>');
+	$('#rubro_filter').html('<select style="font-size:11px;" id="rubro" onchange="makeFilter();"><option selected="selected" value=""> </option><? while($rs = mysqli_fetch_array($rsTemp)){ ?><option value="<?=$rs['id']?>"><?=$rs['rubro']?></option><? } ?></select>');
 }
 function edit(action){
 	dataid = mygrid.getSelectedRowId();

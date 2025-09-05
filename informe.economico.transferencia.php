@@ -26,8 +26,8 @@ $tabla 		= "transferencia_consumo";
 $sql_meses 	= sql_meses($tabla,$ano);
 $sql 		= "SELECT $sql_meses,ROUND(SUM(IF(YEAR($tabla.fecha)=$ano,$tabla.monto,0)),2) as 'anual',ROUND(sum($tabla.monto),2) as total, concat(banco.banco,' ',cuenta.sucursal,' ',cuenta.nombre) as tipo FROM $tabla INNER JOIN cuenta ON $tabla.cuenta_id = cuenta.id INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id WHERE $tabla.debitado = 1 GROUP BY $tabla.cuenta_id";
 
-$rsTemp =  mysql_query($sql);echo mysql_error();
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);echo mysql_error();
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><?=$rs['tipo']?></td>

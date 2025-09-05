@@ -4,8 +4,8 @@ session_start();
 include_once("config/db.php");
 include_once("config/user.php");
 $sql = "SELECT id,nombre FROM proveedor";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$provs[$rs['id']] = $rs['nombre'];
 }
 function getProveedor($nombre,$provs){
@@ -61,9 +61,9 @@ if(ACCION_126){
 		INNER JOIN tarjeta_resumen
 			ON cuenta_a_pagar.operacion_id=tarjeta_resumen.id AND cuenta_a_pagar.operacion_tipo='tarjeta_resumen' $estado";
 //echo $sql;
-$rsTemp = mysql_query($sql); 
+$rsTemp = mysqli_query($conn,$sql); 
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
    if($rs['estado']==0){
 		$estado = 'Pendiente de pago';
 		$segundos= strtotime('now')-strtotime($rs['fecha']);

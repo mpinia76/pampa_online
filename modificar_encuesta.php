@@ -279,7 +279,7 @@ input.dp-applied {
 	$sql="SELECT id FROM encuesta WHERE id='".$_POST['id']."'";
 
 
-	$rsTemp = mysql_query($sql);
+	$rsTemp = mysqli_query($conn,$sql);
 
 	if(mysql_affected_rows()==1){
 
@@ -288,11 +288,11 @@ input.dp-applied {
 
 		/*$sql="SELECT id FROM clientes WHERE email='".$_POST['email']."'";
 
-		$rsTemp = mysql_query($sql);
+		$rsTemp = mysqli_query($conn,$sql);
 
 		if(mysql_affected_rows()==1){
 
-			$rs = mysql_fetch_array($rsTemp);
+			$rs = mysqli_fetch_array($rsTemp);
 
 			$cliente_id = $rs['id'];
 
@@ -322,7 +322,7 @@ input.dp-applied {
 
 				WHERE email = '".$_POST['email']."'";
 
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 
 
 
@@ -344,7 +344,7 @@ input.dp-applied {
 
 				WHERE id = '".$_POST['id']."'";
 
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 
 
 		//echo $sql;
@@ -378,7 +378,7 @@ input.dp-applied {
 
 						//echo $sql."<br>";
 
-						mysql_query($sql);
+						mysqli_query($conn,$sql);
 						/*$contestada++;
 						$total += $_POST[$i.$letras[$j]];*/
 						$sql = "INSERT INTO `encuesta_respuestas`
@@ -393,7 +393,7 @@ input.dp-applied {
 
 
 
-						mysql_query($sql);
+						mysqli_query($conn,$sql);
 
 					}
 
@@ -409,7 +409,7 @@ input.dp-applied {
 
 						//echo $sql."<br>";
 
-						mysql_query($sql);
+						mysqli_query($conn,$sql);
 
 					$sql = "INSERT INTO `encuesta_respuestas`
 
@@ -423,7 +423,7 @@ input.dp-applied {
 
 
 
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 
 				}
 
@@ -488,9 +488,9 @@ input.dp-applied {
 	INNER JOIN apartamentos ON reservas.apartamento_id = apartamentos.id
 	WHERE encuesta.reserva_id = ".$_GET['id'];
 	//echo $sql;
-	$rsTemp1 = mysql_query($sql);
+	$rsTemp1 = mysqli_query($conn,$sql);
 	//print_r($rsTemp1);
-	if ($rs = mysql_fetch_array($rsTemp1)){
+	if ($rs = mysqli_fetch_array($rsTemp1)){
 			//echo $_POST['username']." == ".$rs['email'] ." and ". md5($_POST['password'])." == ".$rs['password'];
 			//if ($_POST['username']==$rs['email'] and md5($_POST['password'])==$rs['password']){
 
@@ -545,8 +545,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -567,8 +567,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -597,8 +597,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -618,8 +618,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -639,8 +639,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -672,8 +672,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -693,8 +693,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -714,8 +714,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -746,8 +746,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -767,8 +767,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -788,8 +788,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -809,8 +809,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -841,8 +841,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -862,8 +862,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -883,8 +883,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -916,8 +916,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -937,8 +937,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -959,8 +959,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -991,8 +991,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -1012,8 +1012,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -1046,8 +1046,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -1067,8 +1067,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -1091,8 +1091,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>
@@ -1110,8 +1110,8 @@ input.dp-applied {
 
 
 
-					$rsTemp2 =	mysql_query($sql);
-					$rsRespuestas = mysql_fetch_array($rsTemp2);
+					$rsTemp2 =	mysqli_query($conn,$sql);
+					$rsRespuestas = mysqli_fetch_array($rsTemp2);
 
 
 		?>

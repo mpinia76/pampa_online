@@ -4,29 +4,29 @@ session_start();
 include_once("config/db.php");
 $balance = 0;
 $sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$motivos[$rs['id']] = $rs['nombre'];
 }
 
 $sql = "SELECT * FROM caja";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$cajas[$rs['id']] = $rs['caja'];
 }
 
 $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id ORDER BY banco.banco";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	$cuentas[$rs['id']] = $rs['banco']." ".$rs['sucursal']." ".$rs['cuenta_tipo']." ".$rs['nombre'];
 }
 
 
 $sql = "SELECT rel_pago_operacion.operacion_id, rel_pago_operacion.operacion_tipo, caja_movimiento.id, caja_movimiento.caja_id, caja_movimiento.monto, caja_movimiento.fecha, caja_movimiento.origen FROM rel_pago_operacion RIGHT JOIN caja_movimiento ON rel_pago_operacion.forma_pago = 'efectivo' AND rel_pago_operacion.forma_pago_id = caja_movimiento.registro_id WHERE caja_id =".$_GET['caja_id']." ORDER BY fecha DESC";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	if($rs['operacion_tipo'] == ''){
 	
@@ -63,8 +63,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 $gastos = $operaciones['gasto'];
 if(is_array($gastos) and count($gastos)>0){
 	$sql_gastos = "SELECT id,nro_orden FROM gasto WHERE id IN (".implode(",",$gastos).")";
-	$rsGastosTemp = mysql_query($sql_gastos);
-	while($rsGastos = mysql_fetch_array($rsGastosTemp)){
+	$rsGastosTemp = mysqli_query($conn,$sql_gastos);
+	while($rsGastos = mysqli_fetch_array($rsGastosTemp)){
 		
 		$operacion['gasto_'.$rsGastos['id']] = $rsGastos['nro_orden'];
 	
@@ -78,8 +78,8 @@ if(is_array($gastos) and count($gastos)>0){
 $compras = $operaciones['compra'];
 if(is_array($compras) and count($compras)>0){
 	$sql_compras = "SELECT id,nro_orden FROM compra WHERE id IN (".implode(",",$compras).")";
-	$rsComprasTemp = mysql_query($sql_compras);
-	while($rsCompras = mysql_fetch_array($rsComprasTemp)){
+	$rsComprasTemp = mysqli_query($conn,$sql_compras);
+	while($rsCompras = mysqli_fetch_array($rsComprasTemp)){
 		
 		$operacion['compra_'.$rsCompras['id']] = $rsCompras['nro_orden'];
 	

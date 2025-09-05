@@ -26,7 +26,7 @@ foreach ($ids as $id) {
 			 WHERE cuenta_a_pagar.id = $id";
 	//echo $sqlGasto.' ; ';
 	//echo $id.': '.$proveedorAnt.' - '.$rubroAnt.' - '.$subrubroAnt.' - '.$tipoAnt.' / ';
-	if($rsGasto = mysql_fetch_array(mysql_query($sqlGasto))){
+	if($rsGasto = mysqli_fetch_array(mysqli_query($conn,$sqlGasto))){
 		//echo 'G->.'.$id.': '.$proveedorAnt.' - '.$rubroAnt.' - '.$subrubroAnt.' - '.$tipoAnt.' / ';	
 		if ($rs['estado']==0) {
 			if (($tipoAnt!='')&&($tipoAnt!='gasto')) {
@@ -72,7 +72,7 @@ foreach ($ids as $id) {
 			
 			 WHERE cuenta_a_pagar.id = $id";
 	
-	if($rsCompra = mysql_fetch_array(mysql_query($sqlCompra))){
+	if($rsCompra = mysqli_fetch_array(mysqli_query($conn,$sqlCompra))){
 		//echo 'C->.'.$id.': '.$proveedorAnt.' - '.$rubroAnt.' - '.$subrubroAnt.' - '.$tipoAnt.' / ';
 		if ($rsCompra['estado']==0) {
 			if (($tipoAnt!='')&&($tipoAnt!='compra')) {

@@ -25,8 +25,8 @@ $tabla 		= "tarjeta_consumo_cuota";
 $sql_meses 	= sql_meses($tabla,$ano);
 $sql 		.= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total, CONCAT(tarjeta_marca.marca,' ',tarjeta.titular) as tipo FROM $tabla INNER JOIN tarjeta_consumo ON $tabla.tarjeta_consumo_id=tarjeta_consumo.id INNER JOIN tarjeta ON tarjeta_consumo.tarjeta_id = tarjeta.id INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id = tarjeta_marca.id GROUP BY tarjeta_consumo.tarjeta_id";
 
-$rsTemp =  mysql_query($sql);echo mysql_error();
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);echo mysql_error();
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><?=$rs['tipo']?></td>

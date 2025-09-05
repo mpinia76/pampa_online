@@ -358,9 +358,19 @@ class ReservaCobrosController extends AppController {
         $this->set('acordado',$reserva['Reserva']['total'] - $descontado);
        
         //genero el pdf
-        $this->Mpdf->init(); 
+        /*$this->Mpdf->init();
         $this->Mpdf->setFilename('reserva('.$reserva['Reserva']['numero'].')_'.$cliente['Cliente']['nombre_apellido'].'_cobro_recibo_'.$cobro_id.'_'.date('d_m_Y').'.pdf'); 
-        $this->Mpdf->setOutput('D'); 
+        $this->Mpdf->setOutput('D');*/
+
+
+        require_once '../../vendor/autoload.php';
+
+
+
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($this->render());
+        $mpdf->Output('reserva('.$reserva['Reserva']['numero'].')_'.$cliente['Cliente']['nombre_apellido'].'_cobro_recibo_'.$cobro_id.'_'.date('d_m_Y').'.pdf','D');
+
     }
     
     public function detalle($cobro_id){

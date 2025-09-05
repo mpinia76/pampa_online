@@ -149,7 +149,7 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
                     if (!$key) echo "<div class=\"bold_left\">".SQ_RESULT." ".$i.":</div>\n";
     
                     // error if: no result AND error is not 'empty result' OR: error is empty result and its the first error
-                    if ((!$res=mysql_query($query) AND mysql_errno()!=1065) OR (mysql_errno()==1065 AND !$sql_error)){
+                    if ((!$res=mysqli_query($conn,$query) AND mysql_errno()!=1065) OR (mysql_errno()==1065 AND !$sql_error)){
                         echo $query."\n<div class=\"red_left\">".mysql_error()."</div><br>\n";
                         if ($key) $sql_error.="F".$i.", "; else $sql_error.=$i.", ";
                     } elseif (mysql_errno()!=1065) {
@@ -166,7 +166,7 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
     
                             // print query results
                             $result_exists=FALSE;
-                            while($result=@mysql_fetch_array($res,MYSQL_NUM)) {
+                            while($result=@mysqli_fetch_array($res,MYSQL_NUM)) {
                                 $result_exists=TRUE;
                                 if (!$key) echo "<tr ".PMBP_change_color("#FFFFFF","#000000").">";
                                 foreach($result as $field)
@@ -179,7 +179,7 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
                                 if (!$key) echo "<tr>\n<td>".SQ_SUCCESS."</td>\n</tr>\n";
                                 if (!$affected=@mysql_affected_rows()) $affected=0;
                             } else {
-                                if (!$affected=@mysql_num_rows($res)) $affected=0;
+                                if (!$affected=@mysqli_num_rows($res)) $affected=0;
                             }
                             
                             echo "<tr>\n<td colspan=\"".$j."\">".SQ_AFFECTED.": ".$affected."</td>\n</tr>\n";

@@ -33,7 +33,7 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 			
 			$dataid			= $_POST['cuenta_id'];
 			$sql 			= "SELECT * FROM cuenta_a_pagar WHERE id=$dataid";
-			$rs_cuenta 		= mysql_fetch_array(mysql_query($sql));
+			$rs_cuenta 		= mysqli_fetch_array(mysqli_query($conn,$sql));
 			$operacion_id[] = $rs_cuenta['operacion_id'];
 			$operacion_tipo = $rs_cuenta['operacion_tipo'];
 			
@@ -41,7 +41,7 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 			if (!$error) {
 				$result = 1;
 				$sql = "UPDATE cuenta_a_pagar SET estado=1,fecha_pago=NOW() WHERE id=".$_POST['cuenta_id'];
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 			}
 			
 		}else{
@@ -70,14 +70,14 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 	
 	if(isset($dataid)){
 		$sql 		= "SELECT * FROM cuenta_a_pagar WHERE id=$dataid";
-		$rs_cuenta 	= mysql_fetch_array(mysql_query($sql));
+		$rs_cuenta 	= mysqli_fetch_array(mysqli_query($conn,$sql));
 		$tabla 		= $rs_cuenta['operacion_tipo'];
 		$id			= $rs_cuenta['operacion_id'];
 		$estado		= $rs_cuenta['estado'];
 		$plan_id		= $rs_cuenta['plan_id'];
 		
 		$sql = "SELECT usuario.nombre,usuario.apellido,$tabla.*,subrubro.subrubro,rubro.rubro FROM $tabla LEFT JOIN subrubro ON $tabla.subrubro_id=subrubro.id INNER JOIN usuario ON $tabla.user_id=usuario.id INNER JOIN rubro ON $tabla.rubro_id=rubro.id WHERE $tabla.id=$id";
-		$rs = mysql_fetch_array(mysql_query($sql));
+		$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 		
 		//echo $sql;
 		
@@ -151,8 +151,8 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 		});
 	}
 
-	$(document).ready( function() {   // Esta parte del código se ejecutará automáticamente cuando la página esté lista.
-	    $("#agregarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	$(document).ready( function() {   // Esta parte del cï¿½digo se ejecutarï¿½ automï¿½ticamente cuando la pï¿½gina estï¿½ lista.
+	    $("#agregarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
 	        if(validaForm()){      
 		       
 	        }
@@ -230,8 +230,8 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 				<option value="n">Seleccionar...</option>
 				<?php
 				$sql = "SELECT id,forma_pago FROM forma_pago ORDER BY forma_pago";
-				$rsTemp = mysql_query($sql);
-				while($rs = mysql_fetch_array($rsTemp)){?>
+				$rsTemp = mysqli_query($conn,$sql);
+				while($rs = mysqli_fetch_array($rsTemp)){?>
 				<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
 				<?php } ?>
 				</select> &nbsp; <a href="#" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
@@ -251,9 +251,9 @@ if(is_array($data) and count($data)>1 and $_GET['action'] == 'consultar' ){ ?>
 	<?php }elseif($estado == 2){ 
 			$sql = "SELECT * FROM plans WHERE id=".$plan_id;
 		//echo $sql;
-		$rsTemp = mysql_query($sql);
-		if(mysql_num_rows($rsTemp)>0){
-		if($rsPlan = mysql_fetch_array($rsTemp)){
+		$rsTemp = mysqli_query($conn,$sql);
+		if(mysqli_num_rows($rsTemp)>0){
+		if($rsPlan = mysqli_fetch_array($rsTemp)){
 		?>
 		<li><h3>Plan de pago</h3></li>
 		<li><label>Plan:</label><?php echo $rsPlan['plan']?> </li>

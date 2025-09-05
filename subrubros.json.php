@@ -5,9 +5,9 @@ include_once("config/db.php");
 
 $sql = "SELECT rubro.rubro,subrubro.id,subrubro.subrubro, subrubro.activo FROM subrubro INNER JOIN rubro ON subrubro.rubro_id=rubro.id ORDER BY rubro.rubro";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 	$data = array(
 		"id" => $rs['id'],

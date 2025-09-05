@@ -15,13 +15,13 @@ if(($_POST['agregar'])){
 	$sql_entra = "INSERT INTO $tabla (fecha,origen,cuenta_id,monto,usuario_id) 
 				VALUES 
 				('".fechasql($_POST['fecha'])."','cuenta_".$_POST['origen']."','".$_POST['cuenta_id']."','".$_POST['monto']."',$user_id)";
-	mysql_query($sql_entra);
+	mysqli_query($conn,$sql_entra);
 	echo mysql_error();
 	//proceso la salida de plata
 	$sql_sale = "INSERT INTO $tabla (fecha,origen,cuenta_id,monto,usuario_id) 
 				VALUES 
 				('".fechasql($_POST['fecha'])."','hacia_".$_POST['cuenta_id']."','".$_POST['origen']."','-".$_POST['monto']."',$user_id)";
-	mysql_query($sql_sale);
+	mysqli_query($conn,$sql_sale);
 	
 	$result = 1;
 }
@@ -162,8 +162,8 @@ function valida(F) {
 	<select name="origen">
 	<option value="null">Seleccionar...</option>
 	<?php  $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
 	<?php  } ?>
 	</select>
@@ -175,8 +175,8 @@ function valida(F) {
 	<select name="cuenta_id">
 	<option value="null">Seleccionar...</option>
 	<?php  $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
 	<?php  } ?>
 	</select>

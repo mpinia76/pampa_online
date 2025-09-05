@@ -26,11 +26,11 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	
 	if(($_POST['aprobar'])){ //compra aprobado
 		$sql = "SELECT nro_orden FROM compra ORDER BY nro_orden DESC LIMIT 1";
-		$rs = mysql_fetch_array(mysql_query($sql));
+		$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 		$nro_orden = $rs['nro_orden'] + 1; //obtengo el numero de orden
 		
 		$sql = "UPDATE compra SET nro_orden=$nro_orden WHERE id=".$_POST['compra_id'];
-		mysql_query($sql); //guardo el numero de orden
+		mysqli_query($conn,$sql); //guardo el numero de orden
 		
 		$dataid = $_POST['compra_id'];
 		$result = 1;
@@ -38,7 +38,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		
 	}elseif(($_POST['desaprobar'])){ //compra desaprobado
 		$sql = "UPDATE compra SET estado=2 WHERE id=".$_POST['compra_id'];
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		$dataid = $_POST['compra_id'];
 		$result = 1;
 		$_GET['action'] = 'consultar';
@@ -58,14 +58,14 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					recibo_nro='".$_POST['recibo_nro']."',
 					monto='".$_POST['monto']."'
 				WHERE id=".$_POST['compra_id'];
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		$result = '';
 		$fecha_cheque 			= $_POST['fecha_cheque'];
 		$fecha_cheque_id 		= $_POST['fecha_cheque_id'];
 		foreach($fecha_cheque as $key=>$valor){
 			if((date("Y-m-d")) >= fechasql($valor)){
 				$sql = "UPDATE cheque_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_cheque_id[$key];
-		        mysql_query($sql);
+		        mysqli_query($conn,$sql);
 			}
 			else $result .= 'La fecha del/los cheque/s debe ser inferior o igual a la fecha de hoy<br>';
 		}
@@ -75,7 +75,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		foreach($fecha_transferencia as $key=>$valor){
 			if((date("Y-m-d")) >= fechasql($valor)){
 				$sql = "UPDATE transferencia_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_transferencia_id[$key];
-		        mysql_query($sql);
+		        mysqli_query($conn,$sql);
 		    }
 			else $result .= 'La fecha de la/s transferencia/s debe ser inferior o igual a la fecha de hoy<br>';
 		}
@@ -85,7 +85,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		foreach($fecha_debito as $key=>$valor){
 			if((date("Y-m-d")) >= fechasql($valor)){
 				$sql = "UPDATE cuenta_movimiento SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_debito_id[$key];
-		        mysql_query($sql);
+		        mysqli_query($conn,$sql);
 		    }
 			else $result .= 'La fecha del/los debito/s debe ser inferior o igual a la fecha de hoy<br>';
 		}
@@ -100,7 +100,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					FROM caja_sincronizada
 					WHERE registro_id = ".$fecha_efectivo_id[$key];
 					
-					$rsCaja = mysql_fetch_array(mysql_query($sql));
+					$rsCaja = mysqli_fetch_array(mysqli_query($conn,$sql));
 					$id_caja = $rsCaja['caja_id'];
 					
 					
@@ -108,7 +108,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					FROM caja_movimiento
 					WHERE caja_id = ".$id_caja;
 					
-					$rsCajaSincronizada = mysql_fetch_array(mysql_query($sql));
+					$rsCajaSincronizada = mysqli_fetch_array(mysqli_query($conn,$sql));
 					$fecha_sincronizacion = $rsCajaSincronizada['fecha'];
 					
 					if ($fecha_sincronizacion.'>='.fechasql($valor)) {
@@ -121,14 +121,14 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				if ($ok) {
 					if((date("Y-m-d")) >= fechasql($valor)){
 						$sql = "UPDATE efectivo_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_efectivo_id[$key];
-				        mysql_query($sql);
+				        mysqli_query($conn,$sql);
 				        $time = time();
 		
 						$hora = date("H:i:s", $time);
 						
 						$fecha =fechasql($valor).' '.$hora;
 				        $sql = "UPDATE caja_movimiento SET fecha = '".$fecha."' WHERE registro_id = ".$fecha_efectivo_id[$key];
-				        mysql_query($sql);
+				        mysqli_query($conn,$sql);
 				    }
 					else $result .= 'La fecha del/los pago/s en efectivo debe ser inferior o igual a la fecha de hoy<br>';
 				}
@@ -139,7 +139,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		foreach($fecha_tarjeta as $key=>$valor){
 			if((date("Y-m-d")) >= fechasql($valor)){
 				$sql = "UPDATE tarjeta_consumo SET fecha = '".fechasql($valor)."' WHERE id = ".$fecha_tarjeta_id[$key];
-		        mysql_query($sql);
+		        mysqli_query($conn,$sql);
 		    }
 			else $result .= 'La fecha del/los pago/s con tarjeta debe ser inferior o igual a la fecha de hoy<br>';
 		}
@@ -180,7 +180,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 								remito_nro='".$_POST['remito_nro']."',
 								recibo_nro='".$_POST['recibo_nro']."'
 							WHERE id=".$_POST['compra_id'];
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 					//echo mysql_error();
 				}
 				
@@ -209,7 +209,7 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	
 	if(isset($dataid)){
 		$sql = "SELECT usuario.nombre,usuario.apellido,compra.*,subrubro.subrubro,subrubro.id as subrubro_id,rubro.rubro,rubro.id as rubro_id FROM compra LEFT JOIN subrubro ON compra.subrubro_id=subrubro.id INNER JOIN usuario ON compra.user_id=usuario.id INNER JOIN rubro ON compra.rubro_id=rubro.id WHERE compra.id=$dataid";
-		$rs = mysql_fetch_array(mysql_query($sql));
+		$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 		
 		$estado = $rs['estado'];
 		$operacion_id = $dataid;
@@ -341,24 +341,24 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		}
 	return false
 	}
-	$(document).ready( function() {   // Esta parte del código se ejecutará automáticamente cuando la página esté lista.
-	    $("#guardarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	$(document).ready( function() {   // Esta parte del cï¿½digo se ejecutarï¿½ automï¿½ticamente cuando la pï¿½gina estï¿½ lista.
+	    $("#guardarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
 	        if(validaForm()){      
 		       
 	        }
 	    }); 
-	    $("#actualizarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	    $("#actualizarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
 		    
 	        if(validaForm()){      
 		       
 	        }
 	    });  
-	    $("#desaprobarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	    $("#desaprobarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
 	        if(validaForm()){      
 		       
 	        }
 	    });  
-	    $("#aprobarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+	    $("#aprobarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
 	        if(validaForm()){      
 		       
 	        }
@@ -385,21 +385,21 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		if($("#rubro").val()!=null){
 			if($("#rubro").val() == ""){
 				alert("Rubro es obligatorio");
-				$("#rubro").focus();       // Esta función coloca el foco de escritura del usuario en el campo Nombre directamente.
+				$("#rubro").focus();       // Esta funciï¿½n coloca el foco de escritura del usuario en el campo Nombre directamente.
 				return false;
 			}
 		}
 		if($("#fecha").val()!=null){
 			if($("#fecha").val() == ""){
 				alert("Fecha es obligatorio");
-				$("#fecha").focus();       // Esta función coloca el foco de escritura del usuario en el campo Nombre directamente.
+				$("#fecha").focus();       // Esta funciï¿½n coloca el foco de escritura del usuario en el campo Nombre directamente.
 				return false;
 			}
 		}
 		if($("#monto").val()!=null){
 			if($("#monto").val() == ""){
 				alert("El monto es obligatorio");
-				$("#monto").focus();       // Esta función coloca el foco de escritura del usuario en el campo Nombre directamente.
+				$("#monto").focus();       // Esta funciï¿½n coloca el foco de escritura del usuario en el campo Nombre directamente.
 				return false;
 			}
 		}
@@ -544,8 +544,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<select name="rubro" id="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);">
 					<?php 
 					$sql2 = "SELECT id,rubro FROM rubro WHERE impuestos=1 and activo=1 ORDER BY rubro";
-					$rsTemp2 = mysql_query($sql2);
-					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					$rsTemp2 = mysqli_query($conn,$sql2);
+					while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 					<option <?php  if($rs2['id']==$rs['rubro_id']){ ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['rubro']?></option>
 					<?php  } ?>
 					</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
@@ -554,8 +554,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							<select name="subrubro_id" size="1">
 							<?php 
 							$sql2 = "SELECT id,subrubro FROM subrubro WHERE rubro_id = ".$rs['rubro_id']." AND activo=1 ORDER BY subrubro ";
-							$rsTemp2 = mysql_query($sql2);
-							while($rs2 = mysql_fetch_array($rsTemp2)){?>
+							$rsTemp2 = mysqli_query($conn,$sql2);
+							while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 							<option <?php  if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['subrubro']?></option>
 							<?php  } ?>
 							</select> 
@@ -566,8 +566,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<option value="">Seleccione uno...</option>
 					<?php 
 					$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
-					$rsTemp2 = mysql_query($sql2);
-					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					$rsTemp2 = mysqli_query($conn,$sql2);
+					while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 					<option <?php  if($rs2['id']==$rs['proveedor']){ $selected = true; ?> selected="selected" <?php  } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['nombre']?></option>
 					<?php  } ?>
 					<?php  if(!$selected){ ?>
@@ -600,8 +600,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);;">
 					<?php
 					$sql2 = "SELECT id,rubro FROM rubro WHERE impuestos=1 and activo=1 ORDER BY rubro";
-					$rsTemp2 = mysql_query($sql2);
-					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					$rsTemp2 = mysqli_query($conn,$sql2);
+					while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 					<option <?php if($rs2['id']==$rs['rubro_id']){ ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['rubro']?></option>
 					<?php } ?>
 					</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
@@ -610,8 +610,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							<select name="subrubro_id" size="1">
 							<?php
 							$sql2 = "SELECT id,subrubro FROM subrubro WHERE rubro_id = ".$rs['rubro_id']." AND activo=1 ORDER BY subrubro ";
-							$rsTemp2 = mysql_query($sql2);
-							while($rs2 = mysql_fetch_array($rsTemp2)){?>
+							$rsTemp2 = mysqli_query($conn,$sql2);
+							while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 							<option <?php if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['subrubro']?></option>
 							<?php } ?>
 							</select> 
@@ -622,8 +622,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<option value="">Seleccione uno...</option>
 					<?php
 					$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
-					$rsTemp2 = mysql_query($sql2);
-					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					$rsTemp2 = mysqli_query($conn,$sql2);
+					while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 					<option <?php if($rs2['id']==$rs['proveedor']){ $selected = true; ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['nombre']?></option>
 					<?php } ?>
 					<?php if(!$selected){ ?>
@@ -684,8 +684,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<select name="rubro" onChange="createCombo('subrubro','rubro_id','subrubro',form.rubro.options[form.rubro.selectedIndex].value);;">
 					<?php
 					$sql2 = "SELECT id,rubro FROM rubro WHERE impuestos=1 and activo=1 ORDER BY rubro";
-					$rsTemp2 = mysql_query($sql2);
-					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					$rsTemp2 = mysqli_query($conn,$sql2);
+					while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 					<option <?php if($rs2['id']==$rs['rubro_id']){ ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['rubro']?></option>
 					<?php } ?>
 					</select> <img id="combo_loading" src="images/loading.gif" style="display:none" />
@@ -694,8 +694,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 							<select name="subrubro_id" size="1">
 							<?php
 							$sql2 = "SELECT id,subrubro FROM subrubro WHERE rubro_id = ".$rs['rubro_id']." AND activo=1 ORDER BY subrubro ";
-							$rsTemp2 = mysql_query($sql2);
-							while($rs2 = mysql_fetch_array($rsTemp2)){?>
+							$rsTemp2 = mysqli_query($conn,$sql2);
+							while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 							<option <?php if($rs2['id']==$rs['subrubro_id']){ ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['subrubro']?></option>
 							<?php } ?>
 							</select> 
@@ -706,8 +706,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 					<option value="">Seleccione uno...</option>
 					<?php
 					$sql2 = "SELECT id,nombre FROM proveedor ORDER BY nombre ASC";
-					$rsTemp2 = mysql_query($sql2);
-					while($rs2 = mysql_fetch_array($rsTemp2)){?>
+					$rsTemp2 = mysqli_query($conn,$sql2);
+					while($rs2 = mysqli_fetch_array($rsTemp2)){?>
 					<option <?php if($rs2['id']==$rs['proveedor']){ $selected = true; ?> selected="selected" <?php } ?> value="<?php echo $rs2['id']?>"><?php echo $rs2['nombre']?></option>
 					<?php } ?>
 					<?php if(!$selected){ ?>
@@ -790,8 +790,8 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 				<option value="n">Seleccionar...</option>
 				<?php 
 				$sql = "SELECT id,forma_pago FROM forma_pago ORDER BY forma_pago";
-				$rsTemp = mysql_query($sql);
-				while($rs = mysql_fetch_array($rsTemp)){?>
+				$rsTemp = mysqli_query($conn,$sql);
+				while($rs = mysqli_fetch_array($rsTemp)){?>
 				<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
 				<?php  } ?>
 				</select> &nbsp; <a style="cursor:pointer; color:#0000FF; text-decoration:underline;" onClick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>
@@ -808,15 +808,15 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 		
 						$sql = "SELECT * FROM cuenta_a_pagar WHERE operacion_id = ".$id." AND operacion_tipo = 'compra' AND plan_id is not null";
                     //echo $sql;
-                    $result = mysql_query($sql);
-                    if(mysql_num_rows($result) != 0){
+                    $result = mysqli_query($conn,$sql);
+                    if(mysqli_num_rows($result) != 0){
 
-                        if($rsCuenta = mysql_fetch_array($result)){
+                        if($rsCuenta = mysqli_fetch_array($result)){
                             $sql = "SELECT * FROM plans WHERE id=".$rsCuenta['plan_id'];
                             //echo $sql;
-                            $rsTemp = mysql_query($sql);
-                            if(mysql_num_rows($rsTemp)>0){
-                                if($rsPlan = mysql_fetch_array($rsTemp)){
+                            $rsTemp = mysqli_query($conn,$sql);
+                            if(mysqli_num_rows($rsTemp)>0){
+                                if($rsPlan = mysqli_fetch_array($rsTemp)){
                                     ?>
                                     <li><h3>Plan de pago en cuentas a pagar</h3></li>
                                     <li><label>Plan:</label><?php echo $rsPlan['plan']?> </li>
@@ -848,9 +848,9 @@ if(is_array($data) and count($data)>1 and ($_GET['action'] == 'consultar' or $_G
 	
 		$sql = "SELECT * FROM plans WHERE id=".$rs['plan_id'];
 		//echo $sql;
-		$rsTemp = mysql_query($sql);
-		if(mysql_num_rows($rsTemp)>0){
-		if($rsPlan = mysql_fetch_array($rsTemp)){
+		$rsTemp = mysqli_query($conn,$sql);
+		if(mysqli_num_rows($rsTemp)>0){
+		if($rsPlan = mysqli_fetch_array($rsTemp)){
 		?>
 		<li><h3>Plan de pago</h3></li>
 		<li><label>Plan:</label><?php echo $rsPlan['plan']?> </li>

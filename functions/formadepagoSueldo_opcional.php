@@ -25,8 +25,8 @@ switch($forma_pago){
 	<li><label>Caja origen:</label><select name="efectivo_caja_id[]">
 <?php
 	$sql = "SELECT caja.* FROM caja INNER JOIN usuario_caja ON usuario_caja.caja_id=caja.id AND usuario_caja.usuario_id=".$user_id;
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['caja']?></option>
 	<?php } ?>
 	</select></li>
@@ -45,8 +45,8 @@ switch($forma_pago){
 	<li><label>Tarjeta:</label><select name="tarjeta_tarjeta_id[]">
 <?php
 	$sql = "SELECT banco.banco,tarjeta_marca.marca,tarjeta.titular,tarjeta.id FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id WHERE tarjet.activa=1 ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['marca']?> <?php echo $rs['titular']?></option>
 	<?php } ?>
 	</select></li>
@@ -66,8 +66,8 @@ switch($forma_pago){
 	<li><label>Cuenta:</label><select name="cheque_cuenta_id[]">
 <?php
 	$sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.saldo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
 	<?php } ?>
 	</select></li>
@@ -87,8 +87,8 @@ switch($forma_pago){
 	<li><label>Cuenta origen:</label><select name="transferencia_cuenta_id[]">
 <?php
 	$sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.saldo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id=cuenta.id AND usuario_cuenta.usuario_id=$user_id ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
 	<?php } ?>
 	</select></li>
@@ -115,8 +115,8 @@ switch($forma_pago){
 	<li><label>Cuenta:</label><select name="debito_cuenta_id[]">
 <?php
 	$sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.saldo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo  $rs['nombre']?></option>
 	<?php } ?>
 	</select></li>
@@ -135,8 +135,8 @@ switch($forma_pago){
                           <option value="">Seleccionar...</option>
                   <?php
                   $sql = "SELECT * FROM cobro_cheques WHERE acreditado = 0 AND asociado_a_pagos = 0";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
                         $cheque_monto[$rs['id']] = $rs['monto_neto'] + $rs['interes'];
                   ?>
                           <option value="<?php echo  $rs['id']?>"><?php echo  $rs['banco']?> <?php echo $rs['numero']?> $<?php echo $rs['monto_neto'] + $rs['interes'];?></option>

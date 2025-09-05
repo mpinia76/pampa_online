@@ -12,9 +12,9 @@ $sql = "SELECT ehe.id, CONCAT(u.nombre,' ',u.apellido) as usuario,CONCAT(e.nombr
 			INNER JOIN sector s ON she.sector_id = s.id
 		WHERE empleado_id = ".$_GET['empleado_id'];
 //echo $sql;
-$rsTemp = mysql_query($sql); echo mysql_error();
+$rsTemp = mysqli_query($conn,$sql); echo mysql_error();
 $rows = array();
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	if($rs['estado'] == 1){
 		$estado = 'Aprobada';

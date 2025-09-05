@@ -26,13 +26,13 @@ if(($_POST['agregar'])){
 	$descubierto = 1;
 	if ($monto < 0) {
 		$saldo_sql = "SELECT SUM(monto) as saldo FROM caja_movimiento WHERE caja_id=$caja_id";
-		$saldo_rs = mysql_fetch_array(mysql_query($saldo_sql));
+		$saldo_rs = mysqli_fetch_array(mysqli_query($conn,$saldo_sql));
 		$saldo = $saldo_rs['saldo'];
 		
 		if ($saldo<0) {
 			$sql = "SELECT * FROM caja WHERE id = ".$caja_id;
-			$rsTemp = mysql_query($sql);
-			if($rs = mysql_fetch_array($rsTemp)){
+			$rsTemp = mysqli_query($conn,$sql);
+			if($rs = mysqli_fetch_array($rsTemp)){
 				$descubierto = $rs['descubierto'];
 			}
 		}
@@ -47,14 +47,14 @@ if(($_POST['agregar'])){
 		FROM caja_sincronizada
 		WHERE caja_id = ".$caja_id;
 		
-		$rs = mysql_fetch_array(mysql_query($sql));
+		$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 		$fecha_sincronizacion = $rs['fecha'];
 		
 		$sql = "SELECT * 
 		FROM caja
 		WHERE id = ".$caja_id;
 		
-		$rs = mysql_fetch_array(mysql_query($sql));
+		$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 		$sincronizacion = $rs['sincronizacion'];
 		$dias_sincronizacion = $rs['dias_sincronizacion'];*/
 		$sincronizada=1;
@@ -84,7 +84,7 @@ if(($_POST['agregar'])){
 			$fecha .=' '.$hora;	
 			
 			$insert = "INSERT INTO $tabla (fecha,caja_id,origen,monto,usuario_id) VALUES ('$fecha','$caja_id','$detalle','$monto',$user_id)";
-			mysql_query($insert);
+			mysqli_query($conn,$insert);
 			
 			$result = '1';
 		}
@@ -330,8 +330,8 @@ function valida(F) {
 	<option value="0">Seleccionar...</option>
 	<?php 
 	$sql = "SELECT id,caja FROM caja INNER JOIN usuario_caja ON usuario_caja.caja_id = caja.id AND usuario_caja.usuario_id = $user_id ";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	?>
 	<option  value="<?php echo $rs['id']?>"><?php echo $rs['caja']?></option>
 	<?php } ?>
@@ -344,8 +344,8 @@ function valida(F) {
 	<option value="null">Seleccionar...</option>
 	<?php 
 	$sql = "SELECT * FROM motivo WHERE motivo_grupo_id = 1 ORDER BY nombre ASC";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['nombre']?></option>
 	<?php } ?>

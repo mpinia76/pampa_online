@@ -34,9 +34,9 @@ include_once("config/db.php");
 
 $sql = "SELECT id,nombre,apellido FROM empleado WHERE estado = 1 ORDER BY apellido ASC";
 
-$rsTemp = mysql_query($sql);
+$rsTemp = mysqli_query($conn,$sql);
 
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 
 ?>
 

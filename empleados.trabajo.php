@@ -17,7 +17,7 @@ if(isset($_POST['agregar'])){
 	$sql_entra = "INSERT INTO $tabla (fecha,empleado_id, horas_0001, horas_0002, duracion_jornada, espacio_trabajo_id, sector_1_id, sector_2_id, porcentaje_sector_1, porcentaje_sector_2, creado_por) 
 				VALUES 
 				(NOW(),'".$_POST['empleado_id']."','".$_POST['horas_0001']."','".$_POST['horas_0002']."','".$_POST['duracion_jornada']."','".$_POST['espacio_trabajo']."','".$_POST['sector_1_id']."','".$_POST['sector_2_id']."','".$_POST['porcentaje_sector_1']."','".$_POST['porcentaje_sector_2']."',$user_id)";
-	mysql_query($sql_entra);
+	mysqli_query($conn,$sql_entra);
 	
 	if(mysql_error() == ''){
 		$result = 1;
@@ -208,8 +208,8 @@ $sql = "SELECT * FROM $tabla
 
 	ORDER BY id DESC";
 
-$rsTemp = mysql_query($sql);
-if($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+if($rs = mysqli_fetch_array($rsTemp)){
 	$horas_0001=$rs['horas_0001'];
 	$horas_0002=$rs['horas_0002'];
 	$duracion_jornada=$rs['duracion_jornada'];
@@ -251,8 +251,8 @@ if($rs = mysql_fetch_array($rsTemp)){
 			<select name="espacio_trabajo">
 			<option value="null">Seleccionar...</option>
 			<?php $sql = "SELECT * FROM espacio_trabajo ORDER BY espacio ASC";
-			$rsTemp = mysql_query($sql);
-			while($rs = mysql_fetch_array($rsTemp)){ 
+			$rsTemp = mysqli_query($conn,$sql);
+			while($rs = mysqli_fetch_array($rsTemp)){ 
 				if($rs['id'] == $espacio_trabajo ){
 					$selected = 'selected="selected"';
 				}else{
@@ -270,8 +270,8 @@ if($rs = mysql_fetch_array($rsTemp)){
 			<select name="sector_1_id">
 			<option value="null">Seleccionar...</option>
 			<?php $sql = "SELECT * FROM sector ORDER BY sector ASC";
-			$rsTemp = mysql_query($sql);
-			while($rs = mysql_fetch_array($rsTemp)){ 
+			$rsTemp = mysqli_query($conn,$sql);
+			while($rs = mysqli_fetch_array($rsTemp)){ 
 				if($rs['id'] == $sector_1_id ){
 					$selected = 'selected="selected"';
 				}else{
@@ -289,8 +289,8 @@ if($rs = mysql_fetch_array($rsTemp)){
 			<select name="sector_2_id">
 			<option value="null">Seleccionar...</option>
 			<?php $sql = "SELECT * FROM sector ORDER BY sector ASC";
-			$rsTemp = mysql_query($sql);
-			while($rs = mysql_fetch_array($rsTemp)){ 
+			$rsTemp = mysqli_query($conn,$sql);
+			while($rs = mysqli_fetch_array($rsTemp)){ 
 				if($rs['id'] == $sector_2_id ){
 					$selected = 'selected="selected"';
 				}else{

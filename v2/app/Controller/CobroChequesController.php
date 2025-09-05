@@ -110,7 +110,7 @@ class CobroChequesController extends AppController {
             $acreditado = $this->request->data['acreditado'];
         	//elimino el movimiento anterior si ya estaba acreditado
         	if ($acreditado) {
-				//mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+				//mysqli_query($conn,"DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
 				$this->CuentaMovimiento->deleteAll(array('origen' => 'reservacheque_'.$this->CobroCheque->id), false);
 			}
             $this->CuentaMovimiento->set(array(
@@ -150,7 +150,7 @@ class CobroChequesController extends AppController {
             $acreditado = $this->request->data['acreditado'];
         	//elimino el movimiento anterior si ya estaba acreditado
         	if ($acreditado) {
-				//mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+				//mysqli_query($conn,"DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
 				$this->CajaMovimiento->deleteAll(array('origen' => 'reservacheque_'.$this->CobroCheque->id), false);
 			}
             $this->CajaMovimiento->set(array(

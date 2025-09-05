@@ -9,7 +9,7 @@ if(isset($_POST['ok'])){
 	//include_once("config/db.php");
 
 	$sql	= "SELECT * FROM ".$_POST['tabla']." WHERE id=".$_POST['registro'];
-	$rs		= mysql_fetch_array(mysql_query($sql));
+	$rs		= mysqli_fetch_array(mysqli_query($conn,$sql));
 
 	$cuenta_id	= $rs['cuenta_id'];
 	$origen		= 'transferencia';
@@ -18,10 +18,10 @@ if(isset($_POST['ok'])){
 	$monto		= $rs['monto'] + $rs['interes'] - $rs['descuento'];
 
 	$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,NOW())";
-	mysql_query($insert);
+	mysqli_query($conn,$insert);
 
 	$update = "UPDATE ".$_POST['tabla']." SET debitado=1, fecha_debitada=NOW() WHERE id=$registro_id";
-	mysql_query($update);
+	mysqli_query($conn,$update);
 
 }
 

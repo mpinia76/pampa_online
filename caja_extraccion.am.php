@@ -21,14 +21,14 @@ if(($_POST['agregar'])){
 	$sql_entra = "INSERT INTO caja_movimiento (fecha,origen,caja_id,monto,usuario_id) 
 				VALUES 
 				('".$fecha."','haciacuenta_".$_POST['cuenta_id']."','".$_POST['caja_id']."','-".$_POST['monto']."',$user_id)";
-	mysql_query($sql_entra);
+	mysqli_query($conn,$sql_entra);
 	
 	echo mysql_error();
 	//proceso la entrada de plata a la cuenta
 	$sql_sale = "INSERT INTO cuenta_movimiento (fecha,origen,cuenta_id,monto,usuario_id) 
 				VALUES 
 				('".fechasql($_POST['fecha'])."','desdecaja_".$_POST['caja_id']."','".$_POST['cuenta_id']."','".$_POST['monto']."',$user_id)";
-	mysql_query($sql_sale);
+	mysqli_query($conn,$sql_sale);
 	
 	$result = 1;
 }
@@ -252,8 +252,8 @@ function valida(F) {
 	<select name="caja_id" id="efectivo_caja_id" onChange="consultarDescubierto();consultarSincronismo();consultarSincronismoFecha();">
 	<option value="0">Seleccionar...</option>
 	<?php  $sql = "SELECT id,caja FROM caja INNER JOIN usuario_caja ON usuario_caja.caja_id = caja.id AND usuario_caja.usuario_id = $user_id ";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ 
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
 		
 		
 		?>
@@ -268,8 +268,8 @@ function valida(F) {
 	<select name="cuenta_id">
 	<option value="null">Seleccionar...</option>
 	<?php  $sql = "SELECT banco.banco,cuenta_tipo.cuenta_tipo,cuenta.* FROM cuenta INNER JOIN cuenta_tipo ON cuenta.cuenta_tipo_id=cuenta_tipo.id INNER JOIN banco ON cuenta.banco_id=banco.id INNER JOIN usuario_cuenta ON usuario_cuenta.cuenta_id = cuenta.id AND usuario_cuenta.usuario_id = $user_id ORDER BY banco.banco";
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){ ?>
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){ ?>
 	<option value="<?php echo $rs['id']?>"><?php echo $rs['banco']?> <?php echo $rs['sucursal']?> <?php echo $rs['cuenta_tipo']?> <?php echo $rs['nombre']?></option>
 	<?php  } ?>
 	</select>

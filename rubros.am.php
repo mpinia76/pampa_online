@@ -22,8 +22,8 @@ $form->setAction('rubros.am.php'); //a donde hacer el post
 if(isset($dataid)){
 
 	$sql = "SELECT * FROM $tabla WHERE id=".$dataid; //traer datos
-	$rsTemp = mysql_query($sql);
-	$rs = mysql_fetch_array($rsTemp);
+	$rsTemp = mysqli_query($conn,$sql);
+	$rs = mysqli_fetch_array($rsTemp);
 	
 	foreach($campos as $clave=>$valores){
 		$campos[$clave][3] = $rs[$clave];

@@ -24,8 +24,8 @@ $tabla 		= "tarjeta_consumo_cuota";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total FROM $tabla INNER JOIN tarjeta_consumo ON $tabla.tarjeta_consumo_id=tarjeta_consumo.id INNER JOIN compra ON tarjeta_consumo.operacion_id=compra.id WHERE tarjeta_consumo.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><a style="cursor:pointer;" onclick="$('.compra_tarjeta_por_rubro').toggle();">Tarjeta</a></td>
@@ -43,8 +43,8 @@ $tabla 		= "tarjeta_consumo_cuota";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total,rubro.rubro FROM $tabla INNER JOIN tarjeta_consumo ON $tabla.tarjeta_consumo_id=tarjeta_consumo.id INNER JOIN compra ON tarjeta_consumo.operacion_id=compra.id INNER JOIN rubro ON compra.rubro_id=rubro.id WHERE tarjeta_consumo.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano GROUP BY compra.rubro_id";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 ?>
 	<tr class="compra_tarjeta_por_rubro" style="display:none;">
 		<td><?=$rs['rubro']?></td>
@@ -62,8 +62,8 @@ $tabla 		= "cheque_consumo";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total FROM $tabla INNER JOIN compra ON $tabla.operacion_id=compra.id WHERE $tabla.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><a style="cursor:pointer;"  onclick="$('.compra_cheque_por_rubro').toggle();">Cheque</a></td>
@@ -81,8 +81,8 @@ $tabla 		= "cheque_consumo";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total,rubro.rubro FROM $tabla INNER JOIN compra ON $tabla.operacion_id=compra.id INNER JOIN rubro ON compra.rubro_id=rubro.id WHERE $tabla.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano GROUP BY compra.rubro_id";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 ?>
 	<tr class="compra_cheque_por_rubro" style="display:none;">
 		<td><?=$rs['rubro']?></td>
@@ -99,8 +99,8 @@ $tabla 		= "transferencia_consumo";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total FROM $tabla INNER JOIN compra ON $tabla.operacion_id=compra.id WHERE $tabla.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL) { ?>
 	<tr>
 		<td><a style="cursor:pointer;"  onclick="$('.compra_transferencia_por_rubro').toggle();">Transferencia</a></td>
@@ -118,8 +118,8 @@ $tabla 		= "transferencia_consumo";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total,rubro.rubro FROM $tabla INNER JOIN compra ON $tabla.operacion_id=compra.id INNER JOIN rubro ON compra.rubro_id=rubro.id WHERE $tabla.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano GROUP BY compra.rubro_id";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 ?>
 	<tr class="compra_transferencia_por_rubro" style="display:none;">
 		<td><?=$rs['rubro']?></td>
@@ -136,8 +136,8 @@ $tabla 		= "efectivo_consumo";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total FROM $tabla INNER JOIN compra ON $tabla.operacion_id=compra.id WHERE $tabla.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL) { ?>
 	<tr>
 		<td><a style="cursor:pointer;"  onclick="$('.compra_efectivo_por_rubro').toggle();">Efectivo</a></td>
@@ -155,8 +155,8 @@ $tabla 		= "efectivo_consumo";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total,rubro.rubro FROM $tabla INNER JOIN compra ON $tabla.operacion_id=compra.id INNER JOIN rubro ON compra.rubro_id=rubro.id WHERE $tabla.operacion_tipo='compra' AND compra.estado=1 AND YEAR($tabla.fecha)=$ano GROUP BY compra.rubro_id";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 ?>
 	<tr class="compra_efectivo_por_rubro" style="display:none;">
 		<td><?=$rs['rubro']?></td>
@@ -205,8 +205,8 @@ $tabla 		= "compra";
 $sql_meses 	= sql_meses($tabla);
 $sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total,rubro.rubro,rubro.id as rubro_id FROM $tabla INNER JOIN rubro ON $tabla.rubro_id=rubro.id WHERE compra.estado=1 AND YEAR($tabla.fecha)=$ano GROUP BY $tabla.rubro_id";
 
-$rsTemp =  mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp =  mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 	if($rs['total'] != NULL){ ?>
 	<tr>
 		<td><a onclick="$('.compra_rubro_<?=$rs['rubro_id']?>').toggle();"><?=$rs['rubro']?></a></td>
@@ -222,8 +222,8 @@ while($rs = mysql_fetch_array($rsTemp)){
 	$sql_meses 	= sql_meses($tabla);
 	$sql 		= "SELECT $sql_meses,ROUND(sum($tabla.monto),2) as total,subrubro.subrubro FROM $tabla INNER JOIN subrubro ON $tabla.subrubro_id=subrubro.id WHERE compra.estado=1 AND subrubro.rubro_id=".$rs['rubro_id']." AND YEAR($tabla.fecha)=$ano GROUP BY $tabla.subrubro_id";
 	
-	$rs2Temp = mysql_query($sql);
-	while($rs2 = mysql_fetch_array($rs2Temp)){
+	$rs2Temp = mysqli_query($conn,$sql);
+	while($rs2 = mysqli_fetch_array($rs2Temp)){
 		if($rs2['total'] != NULL){ ?>
 
 		<tr class="compra_rubro_<?=$rs['rubro_id']?>" style="display:none;">

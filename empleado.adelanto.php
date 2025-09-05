@@ -13,8 +13,8 @@ $ano = ($_GET['ano'])?$_GET['ano']:date('Y');
 $mes = ($_GET['mes'])?$_GET['mes']:'0';
 if(isset($_POST['agregar'])){
 	$sql = "SELECT * FROM empleado_pago WHERE empleado_id = ".$_POST['empleado_id']." AND ano = ".$_POST['ano'];
-	$rsTemp = mysql_query($sql);
-	while($rs = mysql_fetch_array($rsTemp)){
+	$rsTemp = mysqli_query($conn,$sql);
+	while($rs = mysqli_fetch_array($rsTemp)){
 		$pagado[$rs['ano']."_".$rs['mes']] = true;
 	}
 
@@ -34,7 +34,7 @@ if(isset($_POST['agregar'])){
 						(empleado_id,monto,comentarios,mes,ano,creado_por,creado)
 					VALUES
 						(".$_POST['empleado_id'].",'".$_POST['monto']."','".$_POST['comentarios']."',".$_POST['mes'].",".$_POST['ano'].",$user_id,NOW())";
-				mysql_query($sql);
+				mysqli_query($conn,$sql);
 
 			$operacion_id[] = mysql_insert_id();
 			$operacion_tipo = 'sueldo_adelanto';
@@ -313,8 +313,8 @@ var dhxWins = parent.dhxWins;
 		<option value="n">Seleccionar...</option>
 		<?php
 		$sql = "SELECT id,forma_pago FROM forma_pago WHERE id IN (1,3,4,6) ORDER BY forma_pago ";
-		$rsTemp = mysql_query($sql);
-		while($rs = mysql_fetch_array($rsTemp)){?>
+		$rsTemp = mysqli_query($conn,$sql);
+		while($rs = mysqli_fetch_array($rsTemp)){?>
 		<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
 		<?php  } ?>
 		</select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>

@@ -525,7 +525,7 @@ function PMBP_exec_sql($file,$con,$linespersession=false,$noFile=false) {
 
         // execute query if end of query detected (; as last character) AND NOT in parents
         if (ereg(";$",trim($dumpline)) && !$inparents) {
-            if (!mysql_query(trim($query),$con)) {
+            if (!mysqli_query($conn,trim($query),$con)) {
                 $error=SQ_ERROR." ".($linenumber+1)."<br>".nl2br(htmlentities(trim($query)))."\n<br>".htmlentities(mysql_error());
                 break;
             }
@@ -587,14 +587,14 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
         @mysql_select_db($db);        
         
         // get auto_increment values and names of all tables
-        $res=mysql_query("show table status");
+        $res=mysqli_query($conn,"show table status");
         $all_tables=array();
-        while($row=mysql_fetch_array($res)) $all_tables[]=$row;
+        while($row=mysqli_fetch_array($res)) $all_tables[]=$row;
 
         // get table structures
         foreach ($all_tables as $table) {
-            $res1=mysql_query("SHOW CREATE TABLE `".$table['Name']."`");
-            $tmp=mysql_fetch_array($res1);
+            $res1=mysqli_query($conn,"SHOW CREATE TABLE `".$table['Name']."`");
+            $tmp=mysqli_fetch_array($res1);
             $table_sql[$table['Name']]=$tmp["Create Table"];
         }
 
@@ -659,10 +659,10 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
                     $out.="### data of table `".$tablename."` ###\n\n";
 
                     // check if field types are NULL or NOT NULL
-                    $res3=mysql_query("show columns from `".$tablename."`");
+                    $res3=mysqli_query($conn,"show columns from `".$tablename."`");
 
-                    $res2=mysql_query("select * from `".$tablename."`");
-                    for ($j=0;$j<mysql_num_rows($res2);$j++){
+                    $res2=mysqli_query($conn,"select * from `".$tablename."`");
+                    for ($j=0;$j<mysqli_num_rows($res2);$j++){
                         $out .= "insert into `".$tablename."` values (";
                         $row2=mysql_fetch_row($res2);
                         // run through each field
@@ -946,7 +946,7 @@ function PMBP_email_store($attachments,$backup_info) {
     // send to all every addresses
     foreach($all_emails as $email) {
         // verify email
-        if (!eregi("^\ *[äöüÄÖÜa-zA-Z0-9_-]+(\.[äöüÄÖÜa-zA-Z0-9\._-]+)*@([äöüÄÖÜa-zA-Z0-9-]+\.)+([a-z]{2,4})$",$email)) {
+        if (!eregi("^\ *[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9_-]+(\.[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9\._-]+)*@([ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9-]+\.)+([a-z]{2,4})$",$email)) {
             $out.="<div class=\"red\">".F_MAIL_1."</div>\n";
             continue;
         }
@@ -1121,7 +1121,7 @@ function PMBP_get_db_list() {
     $list=array();
     @mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
     $db_list=@mysql_list_dbs();
-    while ($row=@mysql_fetch_array($db_list))
+    while ($row=@mysqli_fetch_array($db_list))
         if (@mysql_select_db($row['Database'])) $list[]=$row['Database'];
     return $list;
 }

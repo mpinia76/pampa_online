@@ -42,11 +42,11 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del gasto
 				for($i=0; $i<count($cuentas_id); $i++){
 					$result = 1;
 					$sql = "UPDATE cuenta_a_pagar SET estado=1,fecha_pago=NOW() WHERE id=".$cuentas_id[$i];
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 					
 					$sql = "UPDATE $operacion_tipo SET nro_orden='".$operacion_orden[0]."' WHERE id=".$cuentas_operacion[$i];
 					//echo $sql;
-					mysql_query($sql);
+					mysqli_query($conn,$sql);
 				}
 			}
 			
@@ -76,9 +76,9 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del gasto
 
 if(isset($dataid)){
 	$sql 		= "SELECT * FROM cuenta_a_pagar WHERE id IN ( $dataid )";
-	$rsTemp = mysql_query($sql);
+	$rsTemp = mysqli_query($conn,$sql);
 	
-	while ($rs_cuenta = mysql_fetch_array($rsTemp)){
+	while ($rs_cuenta = mysqli_fetch_array($rsTemp)){
 		$tablas[]  								= $rs_cuenta['operacion_tipo'];
 		$ids[]									= $rs_cuenta['operacion_id'];
 		$estados[]								= $rs_cuenta['estado'];
@@ -104,9 +104,9 @@ if(isset($dataid)){
 		$sql = "SELECT usuario.nombre,usuario.apellido,$tabla.*,subrubro.subrubro,rubro.rubro FROM $tabla LEFT JOIN subrubro ON $tabla.subrubro_id=subrubro.id INNER JOIN usuario ON $tabla.user_id=usuario.id INNER JOIN rubro ON $tabla.rubro_id=rubro.id WHERE $tabla.id IN ($ids)";
 		//echo $sql;
 		
-		$rsTemp = mysql_query($sql);
+		$rsTemp = mysqli_query($conn,$sql);
 		
-		$total = mysql_num_rows($rsTemp);
+		$total = mysqli_num_rows($rsTemp);
 		$registros = explode(",",$dataid); 
 		$registros = count($registros);
 		
@@ -180,8 +180,8 @@ function addFormaDePago(forma_pago_id){
 	});
 }
 
-$(document).ready( function() {   // Esta parte del código se ejecutará automáticamente cuando la página esté lista.
-    $("#agregarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+$(document).ready( function() {   // Esta parte del cï¿½digo se ejecutarï¿½ automï¿½ticamente cuando la pï¿½gina estï¿½ lista.
+    $("#agregarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
         if(validaForm()){      
 	       
         }
@@ -251,7 +251,7 @@ if(isset($_POST['datos']) and $result == 1){
 		<legend>Detalle de <?php echo $operacion_tipo?></legend> 
 		<ul class="form">
 
-		<?php while($rs = mysql_fetch_array($rsTemp)){ ?>
+		<?php while($rs = mysqli_fetch_array($rsTemp)){ ?>
 			<input type="hidden" name="cuentas_id[]" value="<?php echo $cuenta_id[$rs['id']]?>" />
 			<input type="hidden" name="cuentas_pendiente[]" value="<?php echo $monto[$rs['id']]?>"  />
 			<input type="hidden" name="cuentas_operacion[]" value="<?php echo $rs['id']?>" />
@@ -272,8 +272,8 @@ if(isset($_POST['datos']) and $result == 1){
 			<option value="n">Seleccionar...</option>
 			<?php
 			$sql = "SELECT id,forma_pago FROM forma_pago WHERE id != 5 ORDER BY forma_pago ";
-			$rsTemp = mysql_query($sql);
-			while($rs = mysql_fetch_array($rsTemp)){?>
+			$rsTemp = mysqli_query($conn,$sql);
+			while($rs = mysqli_fetch_array($rsTemp)){?>
 			<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
 			<?php } ?>
 			</select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>

@@ -6,7 +6,7 @@ $result['cuit']='';
 include_once("../config/db.php");
 
 $sql = "SELECT p.* FROM proveedor p  WHERE p.id='".$id."'";
-	$rs = mysql_fetch_array(mysql_query($sql));
+	$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 	//echo $sql;
 	if ($rs['id']) {
 		$result['razon']=$rs['razon'];

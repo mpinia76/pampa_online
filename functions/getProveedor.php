@@ -3,7 +3,7 @@
 function getProveedor($nombre){
 	
 	$sql_prov = "SELECT nombre FROM proveedor WHERE id='$nombre'";
-	$rs_prov = mysql_fetch_array(mysql_query($sql_prov));
+	$rs_prov = mysqli_fetch_array(mysqli_query($conn,$sql_prov));
 	
 	if($rs_prov['nombre'] == ''){
 	

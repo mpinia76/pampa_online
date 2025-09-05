@@ -73,7 +73,7 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del compra
 									remito_nro='".$remitos_nro[$i]."',
 									recibo_nro='".$recibos_nro[$i]."'
 								WHERE id=".$compras_id[$i];
-						mysql_query($sql);
+						mysqli_query($conn,$sql);
 					}
 				}
 
@@ -103,9 +103,9 @@ if(isset($_POST['guardar'])){ //guardo los datos extras del compra
 
 
 	$sql = "SELECT usuario.nombre,usuario.apellido,compra.*,subrubro.subrubro,subrubro.id as subrubro_id,rubro.rubro,rubro.id as rubro_id FROM compra LEFT JOIN subrubro ON compra.subrubro_id=subrubro.id INNER JOIN usuario ON compra.user_id=usuario.id INNER JOIN rubro ON compra.rubro_id=rubro.id WHERE compra.id IN (".$dataid.") AND compra.estado = '0' AND compra.nro_orden != '0' ";
-	$rsTemp = mysql_query($sql);
+	$rsTemp = mysqli_query($conn,$sql);
 
-	$total = mysql_num_rows($rsTemp);
+	$total = mysqli_num_rows($rsTemp);
 	$registros = explode(",",$dataid);
 	$registros = count($registros);
 	
@@ -209,8 +209,8 @@ function vacio(q) {
 	}
 return false
 }
-$(document).ready( function() {   // Esta parte del código se ejecutará automáticamente cuando la página esté lista.
-    $("#agregarSubmit").click( function() {     // Con esto establecemos la acción por defecto de nuestro botón de enviar.
+$(document).ready( function() {   // Esta parte del cï¿½digo se ejecutarï¿½ automï¿½ticamente cuando la pï¿½gina estï¿½ lista.
+    $("#agregarSubmit").click( function() {     // Con esto establecemos la acciï¿½n por defecto de nuestro botï¿½n de enviar.
         if(validaForm()){      
 	       
         }
@@ -277,7 +277,7 @@ if(isset($_POST['datos']) and $result == 1){
 		<fieldset>
 			<legend>Detalle de los compras seleccionados</legend> 
 			<ul class="form">
-			<?php  while($rs = mysql_fetch_array($rsTemp)){ ?>
+			<?php  while($rs = mysqli_fetch_array($rsTemp)){ ?>
 				<input type="hidden" name="compra_nro_orden[]" value="<?php echo $rs['nro_orden']?>" />
 				<input type="hidden" name="compra_id[]" value="<?php echo $rs['id']?>" />
 				<input type="hidden" name="compra_monto[]" value="<?php echo $rs['monto']?>" />
@@ -336,8 +336,8 @@ if(isset($_POST['datos']) and $result == 1){
 				<option value="n">Seleccionar...</option>
 				<?php 
 				$sql = "SELECT id,forma_pago FROM forma_pago WHERE id != 5 ORDER BY forma_pago ";
-				$rsTemp = mysql_query($sql);
-				while($rs = mysql_fetch_array($rsTemp)){?>
+				$rsTemp = mysqli_query($conn,$sql);
+				while($rs = mysqli_fetch_array($rsTemp)){?>
 				<option value="<?php echo $rs['id']?>"><?php echo $rs['forma_pago']?></option>
 				<?php  } ?>
 				</select> &nbsp; <a style="cursor:pointer;" onclick="addFormaDePago(form.forma_pago.options[form.forma_pago.selectedIndex].value)">agregar</a> <img id="forma_pago_loading" src="images/loading.gif" style="display:none" /></li>

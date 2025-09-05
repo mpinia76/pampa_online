@@ -98,9 +98,9 @@ FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id
 
 WHERE R.id IN (".$ids.") ORDER BY check_out, C.nombre_apellido ASC";
 
-$rsTemp = mysql_query($sql); 
+$rsTemp = mysqli_query($conn,$sql); 
 $totalGral=0;
-while($rs = mysql_fetch_array($rsTemp)){
+while($rs = mysqli_fetch_array($rsTemp)){
 	
 	if(($rs['estado']!='2')&&($rs['estado']!='3')){
 
@@ -151,12 +151,12 @@ while($rs = mysql_fetch_array($rsTemp)){
 
 		$sql = "SELECT * FROM reserva_cobros WHERE reserva_id = ".$rs['id'];
 		
-		$rsTempDescuentos = mysql_query($sql); 
+		$rsTempDescuentos = mysqli_query($conn,$sql); 
 		$descontado=0;
 		$transferencias=0;
 		$tarjetas=0;
 		$cheques=0;
-		while($rsDescuentos = mysql_fetch_array($rsTempDescuentos)){
+		while($rsDescuentos = mysqli_fetch_array($rsTempDescuentos)){
 			if($rsDescuentos['tipo'] == "DESCUENTO"){
 				
 	        	$descontado += $rsDescuentos['monto_neto'];
@@ -167,9 +167,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 				if ($_GET['metodo']!='check_out') {
 		        	$sql .= " AND cobro_transferencias.fecha_acreditado LIKE '".$_GET["ano"]."-".$_GET["mes"]."%'";
 		        }
-				$rsTempTransferencias = mysql_query($sql); 
+				$rsTempTransferencias = mysqli_query($conn,$sql); 
 				$descontado=0;
-				while($rsTransferencias = mysql_fetch_array($rsTempTransferencias)){
+				while($rsTransferencias = mysqli_fetch_array($rsTempTransferencias)){
 					$transferencias +=$rsTransferencias['monto_neto']+$rsTransferencias['intereses']; 
 					$quienTransfiere =$rsTransferencias['quien_transfiere'];
 				}
@@ -184,9 +184,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 					$sql .= " AND (reserva_cobros.fecha LIKE '".$_GET["ano"]."-".$_GET["mes"]."%')";
 				}
 			
-				$rsTempTarjetas = mysql_query($sql); 
+				$rsTempTarjetas = mysqli_query($conn,$sql); 
 				$descontado=0;
-				while($rsTarjetas = mysql_fetch_array($rsTempTarjetas)){
+				while($rsTarjetas = mysqli_fetch_array($rsTempTarjetas)){
 					$tarjetas +=$rsTarjetas['monto_neto']+$rsTarjetas['intereses']; 
 					$titular =$rsTarjetas['titular'];
 				}
@@ -197,9 +197,9 @@ while($rs = mysql_fetch_array($rsTemp)){
 				if ($_GET['metodo']!='check_out') {
 					$sql .= " AND (fecha_acreditado LIKE '".$_GET["ano"]."-".$_GET["mes"]."%' OR asociado_a_pagos_fecha LIKE '".$_GET["ano"]."-".$_GET["mes"]."%')";
 				}
-				$rsTempCheques = mysql_query($sql); 
+				$rsTempCheques = mysqli_query($conn,$sql); 
 				$descontado=0;
-				while($rsCheques = mysql_fetch_array($rsTempCheques)){
+				while($rsCheques = mysqli_fetch_array($rsTempCheques)){
 					$cheques +=$rsCheques['monto_neto']; 
 					$libradoPor =$rsCheques['librado_por']; 
 				}
@@ -207,10 +207,10 @@ while($rs = mysql_fetch_array($rsTemp)){
 		}
 		$sql = "SELECT * FROM reserva_facturas WHERE reserva_id = ".$rs['id'];
 		
-		$rsTempFacturas = mysql_query($sql); 
+		$rsTempFacturas = mysqli_query($conn,$sql); 
 		$facturas=0;
 		$estado='';
-		while($rsFacturas = mysql_fetch_array($rsTempFacturas)){
+		while($rsFacturas = mysqli_fetch_array($rsTempFacturas)){
 			
 			$facturas +=$rsFacturas['monto'];
 		}
@@ -220,10 +220,10 @@ while($rs = mysql_fetch_array($rsTemp)){
 			
 			$sql .= " AND fecha_emision NOT LIKE '".$_GET["ano"]."-".$_GET["mes"]."%' ";
 			
-			$rsTempFacturas = mysql_query($sql); 
+			$rsTempFacturas = mysqli_query($conn,$sql); 
 			
 			
-			while($rsFacturas = mysql_fetch_array($rsTempFacturas)){
+			while($rsFacturas = mysqli_fetch_array($rsTempFacturas)){
 				
 				$otrasFacturas +=$rsFacturas['monto'];
 			}
@@ -233,18 +233,18 @@ while($rs = mysql_fetch_array($rsTemp)){
 		$ivaCoeficiente=1;
 		$sql = "SELECT * FROM punto_ventas WHERE id = ".$_GET["puntoVenta"];
 		
-		$rsTempPuntos = mysql_query($sql);
-		if($rsPuntos = mysql_fetch_array($rsTempPuntos)){
+		$rsTempPuntos = mysqli_query($conn,$sql);
+		if($rsPuntos = mysqli_fetch_array($rsTempPuntos)){
 				
 				$ivaCoeficiente = ($rsPuntos['alicuota'])?1+$rsPuntos['alicuota']:1;
 				
 			} 
 		$neto = $total/$ivaCoeficiente;
 		$diferencia = $total-$neto;
-		mysql_query("DELETE FROM reserva_factura_procesada WHERE reserva_id = ".$rs['id']." AND cliente = '".$rs['nombre_apellido']."' AND dni = '".$rs['dni']." AND total = '".$total."'");
+		mysqli_query($conn,"DELETE FROM reserva_factura_procesada WHERE reserva_id = ".$rs['id']." AND cliente = '".$rs['nombre_apellido']."' AND dni = '".$rs['dni']." AND total = '".$total."'");
 		
 		$insert = "INSERT INTO reserva_factura_procesada (reserva_id,fecha,cliente,dni,total,neto,diferencia) VALUES (".$rs['id'].",'".date('Y-m-d H:i:s')."','".$rs['nombre_apellido']."','".trim($rs['dni'])."','".$total."','".$neto."','".$diferencia."')";
-		mysql_query($insert);
+		mysqli_query($conn,$insert);
 		$total = trim( number_format($total, 2, '.', '') );
 		$neto = trim( number_format($neto, 2, '.', '') );
 		$diferencia = trim( number_format($diferencia, 2, '.', '') );

@@ -9,7 +9,7 @@ $error=0;
 if(($_POST['agregar'])){
 	if((date("Y-m-d")) >= fechasql($_POST['fecha'])){
 		$sql	= "SELECT * FROM transferencia_consumo WHERE id=".$_POST['registro'];
-		$rs		= mysql_fetch_array(mysql_query($sql));
+		$rs		= mysqli_fetch_array(mysqli_query($conn,$sql));
 		
 			$cuenta_id	= $rs['cuenta_id'];
 			$origen		= 'transferencia';
@@ -18,14 +18,14 @@ if(($_POST['agregar'])){
 			
 			$monto		= $rs['monto'] + $rs['interes'] - $rs['descuento'];
 			if ($_POST['actualizar']) {
-				mysql_query("DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
+				mysqli_query($conn,"DELETE FROM cuenta_movimiento WHERE cuenta_id = ".$cuenta_id." AND registro_id = ".$registro_id);
 			}
 			$insert = "INSERT INTO cuenta_movimiento (cuenta_id,origen,registro_id,monto,fecha) VALUES ($cuenta_id,'$origen',$registro_id,-$monto,'".fechasql($_POST['fecha'])."')";
 			//echo $insert."<br>";
-			mysql_query($insert);
+			mysqli_query($conn,$insert);
 			
 			$update = "UPDATE transferencia_consumo SET debitado=1, fecha_debitada='".fechasql($_POST['fecha'])."' WHERE id=$registro_id";
-			mysql_query($update);
+			mysqli_query($conn,$update);
 			//echo $update."<br>";
 			
 			$result = 1;

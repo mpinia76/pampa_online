@@ -1,7 +1,7 @@
 <?php
 include_once("config/db.php");
 $sql = "SELECT tarjeta_resumen.*, CONCAT(banco.banco,' ',tarjeta_marca.marca,' ',tarjeta.titular) AS tarjeta FROM tarjeta INNER JOIN tarjeta_marca ON tarjeta.tarjeta_marca_id=tarjeta_marca.id INNER JOIN banco ON tarjeta.banco_id=banco.id INNER JOIN tarjeta_resumen ON tarjeta_resumen.tarjeta_id=tarjeta.id WHERE tarjeta_resumen.id=".$_GET['resumen_id'];
-$resumen = mysql_fetch_array(mysql_query($sql));
+$resumen = mysqli_fetch_array(mysqli_query($conn,$sql));
 
 $file 	= "tarjeta_resumen_detalle.php"; //archivo
 $json	= "tarjeta_resumen_detalle.json.php"; //json

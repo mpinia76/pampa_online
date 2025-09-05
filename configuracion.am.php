@@ -14,15 +14,15 @@ $tabla = 'configuracion';
 
 //indicar campos a editar
 $sql = "SELECT * FROM $tabla";
-$rsTemp = mysql_query($sql);
-while($rs = mysql_fetch_array($rsTemp)){
+$rsTemp = mysqli_query($conn,$sql);
+while($rs = mysqli_fetch_array($rsTemp)){
 $campos[$rs['id']] = array('text',$rs['descripcion'],1,$rs['valor']);
 }
 
 if(isset($_POST['editar'])){
 	foreach($campos as $key=>$value){
 		$sql = "UPDATE $tabla SET valor = '$_POST[$key]' WHERE id = '$key'";
-		mysql_query($sql);
+		mysqli_query($conn,$sql);
 		$campos[$key][3] = $_POST[$key];
 	}
 	$result = 2;

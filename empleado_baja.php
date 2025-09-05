@@ -11,7 +11,7 @@ $error=0;
 if(($_POST['agregar'])){
 	$registro_id	= $_POST['registro'];
 	$sql	= "SELECT * FROM empleado_historico WHERE empleado_id = ".$registro_id." AND (baja IS NULL OR baja = '0000-00-00')";
-	$rs		= mysql_fetch_array(mysql_query($sql));
+	$rs		= mysqli_fetch_array(mysqli_query($conn,$sql));
 	if($rs['alta'] <= fechasql($_POST['fecha'])){
 		
 		if((date("Y-m-d")) >= fechasql($_POST['fecha'])){
@@ -21,9 +21,9 @@ if(($_POST['agregar'])){
 		
 		
 			$sql = "UPDATE empleado SET estado = 0, fecha_baja = '".fechasql($_POST['fecha'])."', baja_por = $user_id WHERE id = ".$registro_id;
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 			$sql = "UPDATE empleado_historico SET baja = '".fechasql($_POST['fecha'])."' WHERE empleado_id = ".$registro_id." AND (baja IS NULL OR baja = '0000-00-00')";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 			//echo $update."<br>";
 			
 			$result = 1;

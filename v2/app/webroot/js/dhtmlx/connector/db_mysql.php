@@ -6,7 +6,7 @@ class MySQLDBDataWrapper extends DBDataWrapper{
 	protected $last_result;
 	public function query($sql){
 		LogMaster::log($sql);
-		$res=mysql_query($sql,$this->connection);
+		$res=mysqli_query($conn,$sql,$this->connection);
 		if ($res===false) throw new Exception("MySQL operation failed\n".mysql_error($this->connection));
 		$this->last_result = $res;
 		return $res;
@@ -28,18 +28,18 @@ class MySQLDBDataWrapper extends DBDataWrapper{
 	}
 
 	public function tables_list() {
-		$result = mysql_query("SHOW TABLES");
+		$result = mysqli_query($conn,"SHOW TABLES");
 		if ($result===false) throw new Exception("MySQL operation failed\n".mysql_error($this->connection));
 
 		$tables = array();
-		while ($table = mysql_fetch_array($result)) {
+		while ($table = mysqli_fetch_array($result)) {
 			$tables[] = $table[0];
 		}
 		return $tables;
 	}
 
 	public function fields_list($table) {
-		$result = mysql_query("SHOW COLUMNS FROM `".$table."`");
+		$result = mysqli_query($conn,"SHOW COLUMNS FROM `".$table."`");
 		if ($result===false) throw new Exception("MySQL operation failed\n".mysql_error($this->connection));
 
 		$fields = array();

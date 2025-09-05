@@ -12,14 +12,14 @@ $sql = "SELECT MAX(fecha) AS fecha
 FROM caja_sincronizada
 WHERE caja_id = ".$caja_id;
 
-$rs = mysql_fetch_array(mysql_query($sql));
+$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 $fecha_sincronizacion = $rs['fecha'];
 
 $sql = "SELECT * 
 FROM caja
 WHERE id = ".$caja_id;
 
-$rs = mysql_fetch_array(mysql_query($sql));
+$rs = mysqli_fetch_array(mysqli_query($conn,$sql));
 $sincronizacion = $rs['sincronizacion'];
 $dias_sincronizacion = $rs['dias_sincronizacion'];
 $sincronizada=1;
