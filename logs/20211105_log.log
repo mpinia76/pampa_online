@@ -1,8 +1,0 @@
-2021-11-05 10:47:56 --> INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
-						('6','','50','0','0','2021-11-05')
-2021-11-05 10:47:56 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
-						(1030, 'transferencia', 'sueldo_adelanto', 2582)
-2021-11-05 10:48:32 --> INSERT INTO transferencia_consumo (cuenta_id,cuenta_destino,monto,interes,descuento,fecha) VALUES 
-						('6','','50','0','0','2021-11-05')
-2021-11-05 10:48:32 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
-						(1031, 'transferencia', 'sueldo_adelanto', 0)

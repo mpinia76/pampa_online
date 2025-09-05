@@ -1,7 +1,0 @@
-2020-06-10 15:41:49 --> INSERT INTO efectivo_consumo (caja_id,monto,interes,descuento,fecha) VALUES 
-					(1,'2000','0','0','2020-06-10')
-2020-06-10 15:41:49 --> 12830
-2020-06-10 15:41:49 --> INSERT INTO `rel_pago_operacion` (`forma_pago_id`, `forma_pago`, `operacion_tipo`, `operacion_id`) VALUES
-						(12830, 'efectivo', 'reserva_devolucion', 62)
-2020-06-10 15:41:49 --> INSERT INTO caja_movimiento (caja_id,origen,registro_id,monto,fecha,usuario_id) VALUES 
-					(1,'efectivo_consumo',12830,'-2000','2020-06-10 15:41:49','1')

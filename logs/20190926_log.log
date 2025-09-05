@@ -1,2 +1,0 @@
-2019-09-26 15:54:43 --> INSERT INTO cuenta_a_pagar (operacion_tipo,operacion_id,monto,estado) VALUES 
-				('gasto',17569,1030.18,0)
