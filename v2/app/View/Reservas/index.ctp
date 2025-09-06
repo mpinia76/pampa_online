@@ -11,7 +11,7 @@
             "bServerSide": true,
             "bAutoWidth": false,
             "oLanguage": {
-                 "sUrl": "'.$this->webroot.'js/dataTables.spanish.txt"
+                 "sUrl": "'.$this->webroot.'app/webroot/js/dataTables.spanish.txt"
             },
             "fnDrawCallback": function( oSettings ) {
                 $("#dataTable tr").unbind("dblclick").dblclick(function(){
