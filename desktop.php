@@ -14,6 +14,7 @@ include_once("config/user.php");
 <title>Pampa Online!</title>
 <link href="styles/structure.css" rel="stylesheet" type="text/css" />
 <script src="library/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
+    <script src="js/jqsimplemenu.js" type="text/javascript"></script>
 
     <!--dhtmlWindows-->
 <link rel="stylesheet" type="text/css" href="library/dhtml/styles/dhtmlxwindows.css">
