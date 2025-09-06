@@ -10,7 +10,7 @@ $this->Js->buffer('
         "bProcessing": true,
         "bAutoWidth": false,
         "oLanguage": {
-            "sUrl": "/dataTables.spanish.txt"
+            "sUrl": "'.$this->webroot.'app/webroot/js/dataTables.spanish.txt"
         },
         "fnDrawCallback": function( oSettings ) {
             $("#dataTable tr").click(function(e){

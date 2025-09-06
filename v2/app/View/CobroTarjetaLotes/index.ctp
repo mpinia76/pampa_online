@@ -13,7 +13,7 @@ $this->Js->buffer('
         "bServerSide": true,
         "bAutoWidth": false,
         "oLanguage": {
-            "sUrl": "/dataTables.spanish.txt"
+            "sUrl": "'.$this->webroot.'app/webroot/js/dataTables.spanish.txt"
         },
         
         "fnDrawCallback": function( oSettings ) {
