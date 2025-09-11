@@ -265,7 +265,7 @@ class Form{
 		$html .='<div class="content">';	
 	
 		include_once("config/db.php");
-		
+		$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 		if($atr['sql'] != ''){
 			$sql = $atr['sql'];
 		}else{
