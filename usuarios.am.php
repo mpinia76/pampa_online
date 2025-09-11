@@ -1,6 +1,6 @@
 <?php
 include_once("functions/form.class.php");
-/*include_once("config/db.php");*/
+include_once("config/db.php");
 include_once("functions/abm.php");
 $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
