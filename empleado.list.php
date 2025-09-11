@@ -1,3 +1,6 @@
+<?php
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+?>
 <script>
 function findEmpleado (){
 	$.ajax({
@@ -21,16 +24,7 @@ function findEmpleado (){
 <option value="null" selected="selected">Seleccionar...</option>
 
 <?php
-$dbhost = "163.10.35.37";
-$dbname = "pampa";
-$dbuser = "root";
-$dbpassword = "secyt";
 
-//CONEXION A LA BASE DE DATOS
-
-
-
-include_once("config/db.php");
 
 $sql = "SELECT id,nombre,apellido FROM empleado WHERE estado = 1 ORDER BY apellido ASC";
 

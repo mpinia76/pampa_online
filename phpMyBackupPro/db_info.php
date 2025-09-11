@@ -57,7 +57,7 @@ if ($_GET['table']) {
     if (is_array($table_names))
     foreach($table_names as $table) {
         mysqli_query($conn,"show columns from `".$table."`");
-        $table_fields[]=mysql_affected_rows();
+        $table_fields[]=mysqli_affected_rows($conn);
     }
 
     echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"

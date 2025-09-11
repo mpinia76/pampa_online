@@ -290,7 +290,7 @@ $rsTemp = mysqli_query($conn,$sql);
     if(isset($_POST)){
         if ($sql) {
             $rsTemp = mysqli_query($conn,$sql);
-            if(mysql_affected_rows()>0){
+            if(mysqli_affected_rows($conn)>0){
                 while($rs = mysqli_fetch_array($rsTemp)){
                     $encuestas[$rs['id']]=1;
                     if(!isset($respuestas[$rs['pregunta_id']][$rs['valor']])){
@@ -2510,14 +2510,14 @@ $rsTemp = mysqli_query($conn,$sql);
             if ($sql1) {
                 $rsTemp1 = mysqli_query($conn,$sql1);
 
-                if(mysql_affected_rows()>0){
+                if(mysqli_affected_rows($conn)>0){
                     while($rs1 = mysqli_fetch_array($rsTemp1)){
                         $enviada=0;
                         $sql2 = "SELECT respondida,enviada 
 			FROM encuesta where reserva_id = ".$rs1['id'];
 
                         $rsTemp2 = mysqli_query($conn,$sql2);
-                        if(mysql_affected_rows()>0){
+                        if(mysqli_affected_rows($conn)>0){
                             $imgEnviada = "ok.gif";
                             if($rs2 = mysqli_fetch_array($rsTemp2)){
                                 $imgRespuesta = ($rs2['respondida'])?"ok.gif":"bt_delete.png";

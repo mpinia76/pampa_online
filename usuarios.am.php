@@ -1,7 +1,8 @@
 <?php
 include_once("functions/form.class.php");
-include_once("config/db.php");
+/*include_once("config/db.php");*/
 include_once("functions/abm.php");
+global $conn;
 
 //indicar tabla a editar
 $tabla = 'usuario';

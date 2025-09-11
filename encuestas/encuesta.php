@@ -10,20 +10,7 @@ include("preguntas.inc.php");
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 
-
-?>
-
-<?php
-
-
-$dbhost = "163.10.35.37";
-$dbname = "pampa";
-$dbuser = "root";
-$dbpassword = "secyt";
-
-
-
-$conn=mysqli_connect($dbhost, $dbuser, $dbpassword, $dbname);
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 
 //funciones utiles
@@ -280,7 +267,7 @@ input.dp-applied {
 
 	$rsTemp = mysqli_query($conn,$sql);
 
-	if(mysql_affected_rows()==1){
+	if(mysqli_affected_rows($conn)==1){
 
 
 		//cargo el cliente en la bd
@@ -289,7 +276,7 @@ input.dp-applied {
 
 		$rsTemp = mysqli_query($conn,$sql);
 
-		if(mysql_affected_rows()==1){
+		if(mysqli_affected_rows($conn)==1){
 
 			$rs = mysqli_fetch_array($rsTemp);
 

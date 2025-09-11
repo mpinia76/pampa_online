@@ -1,8 +1,8 @@
 <div class="label">Permisos</div>
 <div class="content">
-<?php 
+<?php
 
-include_once("config/db.php");
+global $conn;
 if(isset($dataid) and $dataid!=''){
 
 	$sql = "SELECT usuario_permiso.permiso_id,permiso.permiso_grupo_id FROM usuario_permiso INNER JOIN permiso ON usuario_permiso.permiso_id=permiso.id WHERE usuario_permiso.usuario_id = $dataid";

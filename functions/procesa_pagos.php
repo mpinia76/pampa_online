@@ -222,7 +222,7 @@ if ($ok) {
 				$sql = "SELECT chequera_cheques.chequera_id FROM chequera_cheques  WHERE chequera_cheques.chequera_id = '".$chequera_id[$key]."' AND chequera_cheques.estado = '0'";
 				
 				mysqli_query($conn,$sql);
-				$estadoChequera = (mysql_affected_rows() > 0)?'1':'3';
+				$estadoChequera = (mysqli_affected_rows($conn) > 0)?'1':'3';
 				$sql = "UPDATE chequeras SET estado = ".$estadoChequera." WHERE id = '".$chequera_id[$key]."'";
 				_log($sql);
 				mysqli_query($conn,$sql);

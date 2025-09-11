@@ -265,7 +265,7 @@ input.dp-applied {
 
 	$rsTemp = mysqli_query($conn,$sql);
 
-	if(mysql_affected_rows()==1){
+	if(mysqli_affected_rows($conn)==1){
 
 
 		//cargo el cliente en la bd
@@ -274,7 +274,7 @@ input.dp-applied {
 
 		$rsTemp = mysqli_query($conn,$sql);
 
-		if(mysql_affected_rows()==1){
+		if(mysqli_affected_rows($conn)==1){
 
 			$rs = mysqli_fetch_array($rsTemp);
 

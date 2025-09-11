@@ -177,7 +177,7 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
                             // print number of rows or if empty mysql result print number of affected rows
                             if (!$result_exists) {
                                 if (!$key) echo "<tr>\n<td>".SQ_SUCCESS."</td>\n</tr>\n";
-                                if (!$affected=@mysql_affected_rows()) $affected=0;
+                                if (!$affected=@mysqli_affected_rows($conn)) $affected=0;
                             } else {
                                 if (!$affected=@mysqli_num_rows($res)) $affected=0;
                             }

@@ -67,7 +67,7 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
 			$sql = "DELETE FROM cuenta_a_pagar WHERE operacion_id = ".$rsCompra['id'];
 			//echo $sql;
 			mysqli_query($conn,$sql);
-			if(mysql_affected_rows() > 0){
+			if(mysqli_affected_rows($conn) > 0){
 				echo "<br>Forma de pago: cuentas a pagar";
 				echo "<br>&nbsp; &nbsp; Eliminando";
 			}
@@ -81,7 +81,7 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
 					$sql = "DELETE FROM cuenta_movimiento WHERE origen = 'cheque' AND registro_id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
 					//_log($sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>Forma de pago: cheque";
 						echo "<br>&nbsp; &nbsp; Eliminando el movimiento de cuenta";
 					}
@@ -93,7 +93,7 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
                             $sql = "UPDATE chequera_cheques INNER JOIN chequeras ON chequera_cheques.chequera_id = chequeras.id SET chequera_cheques.estado = 0 WHERE chequeras.cuenta_id = '".$rsCheque['cuenta_id']."' AND chequera_cheques.numero = '".$numero."'";
                             mysqli_query($conn,$sql);
 							_LogCheques('Update '.$sql);
-                            if(mysql_affected_rows() > 0){
+                            if(mysqli_affected_rows($conn) > 0){
 
                                 $sql = "SELECT chequeras.id FROM chequera_cheques INNER JOIN chequeras ON chequera_cheques.chequera_id = chequeras.id WHERE chequeras.cuenta_id = '".$rsCheque['cuenta_id']."' AND chequera_cheques.numero = '".$numero."'";
 
@@ -103,7 +103,7 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
                                     $sql = "SELECT chequera_cheques.chequera_id FROM chequera_cheques  WHERE chequera_cheques.chequera_id = '".$rsChequera['id']."' AND chequera_cheques.estado = '0'";
 
                                     mysqli_query($conn,$sql);
-                                    $estadoChequera = (mysql_affected_rows() > 0)?'1':'3';
+                                    $estadoChequera = (mysqli_affected_rows($conn) > 0)?'1':'3';
                                     $sql = "UPDATE chequeras SET estado = ".$estadoChequera." WHERE id = '".$rsChequera['id']."'";
                                     //echo $sql;
                                     mysqli_query($conn,$sql);
@@ -115,7 +115,7 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
 					$sql = "DELETE FROM cheque_consumo WHERE id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
 					//_log($sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>&nbsp; &nbsp; Eliminando el cheque emitido";
 					}
 					break;
@@ -123,7 +123,7 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
 					case 'debito':
 					$sql = "DELETE FROM cuenta_movimiento WHERE id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>Forma de pago: debito de cuenta";
 						echo "<br>&nbsp; &nbsp; Eliminando el movimiento de cuenta";
 					}
@@ -133,14 +133,14 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
 
 					$sql = "DELETE FROM caja_movimiento WHERE origen = 'efectivo_consumo' AND registro_id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>Forma de pago: efectivo";
 						echo "<br>&nbsp; &nbsp; Eliminando el movimiento de la caja";
 					}
 
 					$sql = "DELETE FROM efectivo_consumo WHERE id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>&nbsp; &nbsp; Eliminando el movimiento de efectivo";
 					}
 
@@ -150,14 +150,14 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
 
 					$sql = "DELETE FROM tarjeta_consumo_cuota WHERE tarjeta_consumo_id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>Forma de pago: tarjeta";
 						echo "<br>&nbsp; &nbsp; Eliminando las cuotas";
 					}
 
 					$sql = "DELETE FROM tarjeta_consumo WHERE id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>&nbsp; &nbsp; Eliminando el movimiento de tarjeta";
 					}
 
@@ -166,14 +166,14 @@ if(mysqli_num_rows(mysqli_query($conn,$sql)) != 0){
 					case 'transferencia':
 					$sql = "DELETE FROM cuenta_movimiento WHERE origen = 'transferencia' AND registro_id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>Forma de pago: transferencia";
 						echo "<br>&nbsp; &nbsp; Eliminando el movimiento de cuenta";
 					}
 
 					$sql = "DELETE FROM transferencia_consumo WHERE id = ".$rs['forma_pago_id'];
 					mysqli_query($conn,$sql);
-					if(mysql_affected_rows() > 0){
+					if(mysqli_affected_rows($conn) > 0){
 						echo "<br>&nbsp; &nbsp; Eliminando el consumo de transferencia";
 					}
 					break;

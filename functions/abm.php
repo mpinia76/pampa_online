@@ -52,7 +52,7 @@ if (!$msg) {
 	$query.=')';
 	//echo $query;
 	mysqli_query($conn,$query);
-	$result=mysql_affected_rows();
+	$result=mysqli_affected_rows($conn);
 	//print_r($result);
 	if($result=="-1"){
 	//$msg="No se pudieron cargar los datos: ".mysql_error();
@@ -91,7 +91,7 @@ $query.=' WHERE id = \''.$id.'\'';
 
 
 mysqli_query($conn,$query);
-$result=mysql_affected_rows();
+$result=mysqli_affected_rows($conn);
 if($result=="-1"){
 	$msg="No se pudieron actualizar los datos: ".mysql_error();
 	//$msg="No se pudieron actualizar los datos: ";
@@ -104,7 +104,7 @@ INNER JOIN chequeras ON chequera_cheques.chequera_id = chequeras.id
 SET chequera_cheques.estado = 2 WHERE chequeras.cuenta_id = '".$_POST['cuenta_id']."' AND chequera_cheques.numero = '".$numero."'";
 		//echo $sql;
 		mysqli_query($conn,$sql);
-		if(mysql_affected_rows() > 0){
+		if(mysqli_affected_rows($conn) > 0){
 			$sql = "SELECT chequeras.id FROM chequera_cheques INNER JOIN chequeras ON chequera_cheques.chequera_id = chequeras.id WHERE chequeras.cuenta_id = '".$_POST['cuenta_id']."' AND chequera_cheques.numero = '".$numero."'";
 			
 			$rsTempChequera = mysqli_query($conn,$sql);
@@ -112,7 +112,7 @@ SET chequera_cheques.estado = 2 WHERE chequeras.cuenta_id = '".$_POST['cuenta_id
 				$sql = "SELECT chequera_cheques.chequera_id FROM chequera_cheques  WHERE chequera_cheques.chequera_id = '".$rsChequera['id']."' AND chequera_cheques.estado = '0'";
 				
 				mysqli_query($conn,$sql);
-				$estadoChequera = (mysql_affected_rows() > 0)?'1':'3';
+				$estadoChequera = (mysqli_affected_rows($conn) > 0)?'1':'3';
 				$sql = "UPDATE chequeras SET estado = ".$estadoChequera." WHERE id = '".$rsChequera['id']."'";
 				echo $sql;
 				mysqli_query($conn,$sql);
