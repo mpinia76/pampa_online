@@ -2,7 +2,7 @@
 include_once("functions/form.class.php");
 /*include_once("config/db.php");*/
 include_once("functions/abm.php");
-global $conn;
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 //indicar tabla a editar
 $tabla = 'usuario';
