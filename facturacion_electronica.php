@@ -139,6 +139,8 @@ include_once("functions/util.php");
 	
 </select> 
 <input type="button" name="descargar" id="descargar" value="Descargar" onClick="descargar()"/>
+<input type="button" name="facturar" id="facturar" value="Facturar" onClick="abrirFacturacion()"/>
+
 <table class="medios_pago">
 <tbody>
 	
@@ -628,9 +630,129 @@ function descargar(){
 	else{
 		window.location.href='excel_facturacion_electronica_2.php?ano='+$('#ano').val()+'&mes='+$('#mes').val()+'&metodo='+$('#metodo').val()+'&ids='+ids+'&columnaTransfiere='+columnaTransfiere+'&columnaTC='+columnaTC+'&columnaCheques='+columnaCheques;
 	}
-	
-	
+
+
+
 
 }
+
+function abrirFacturacion() {
+    // Obtener las filas seleccionadas
+    var seleccionadas = [];
+    $('.trSelected', $('.medios_pago')).each(function() {
+        var id = $(this).attr('id');
+        var disable = $(this).attr('disable');
+        if (id && disable == '0') {
+            seleccionadas.push(id);
+        }
+    });
+
+    if (seleccionadas.length === 0) {
+        alert('Debe seleccionar al menos una reserva para facturar.');
+        return;
+    }
+
+    // Crear la ventana
+    var ancho = 400;
+    var alto = 300;
+    var x = 200;
+    var y = 100;
+
+    if (!dhxWins) dhxWins = new dhtmlXWindows();
+    if (w1) w1.close();
+
+    w1 = dhxWins.createWindow("w_facturar", x, y, ancho, alto);
+    w1.setText("Facturación");
+    w1.setModal(true);
+    w1.button("park").hide();
+    w1.centerOnScreen();
+
+    // Formulario dentro de la ventana
+    var htmlForm = `
+        <div style="padding:15px;font-family:Arial, sans-serif;">
+            <form id="formFacturar">
+                <label>Fecha de la factura:</label><br>
+                <input type="date" id="fechaFactura" name="fechaFactura" style="width:95%;padding:4px;"><br><br>
+
+                <label>Concepto:</label><br>
+                <select id="conceptoFactura" name="conceptoFactura" style="width:95%;padding:4px;">
+                    <option value="">Seleccione un concepto</option>
+                </select><br><br>
+
+                <label>Monto total:</label><br>
+                <input type="text" id="montoFactura" name="montoFactura" readonly style="width:95%;padding:4px;"><br><br>
+
+                <input type="hidden" id="idsSeleccionados" name="idsSeleccionados" value="${seleccionadas.join(',')}">
+                <button type="button" onclick="confirmarFacturacion()">Confirmar</button>
+                <button type="button" onclick="w1.close()">Cancelar</button>
+            </form>
+        </div>
+    `;
+
+    w1.attachHTMLString(htmlForm);
+
+    // Obtener monto total
+    var total = 0;
+    $('.trSelected', $('.medios_pago')).each(function() {
+        var disable = $(this).attr('disable');
+        if (disable == '0') {
+            total += parseFloat($(this).attr('monto'));
+        }
+    });
+    $('#montoFactura').val(total.toFixed(2));
+
+    // Cargar conceptos de facturación (AJAX)
+    $.ajax({
+        url: 'ajax_conceptos_facturacion.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var select = $('#conceptoFactura');
+            data.forEach(function(item) {
+                select.append(`<option value="${item.id}">${item.nombre}</option>`);
+            });
+        }
+    });
+}
+function confirmarFacturacion() {
+    var fecha = $('#fechaFactura').val();
+    var conceptoId = $('#conceptoFactura').val();
+    var monto = $('#montoFactura').val();
+    var ids = $('#idsSeleccionados').val();
+    var puntoVenta = $('#puntos').val(); // ✅ tomamos el punto de venta seleccionado
+
+    if (!fecha || !conceptoId || !puntoVenta) {
+        alert('Debe completar todos los campos y seleccionar un punto de venta.');
+        return;
+    }
+
+    $.ajax({
+        url: 'facturar_reservas_api.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            fecha: fecha,
+            conceptoId: conceptoId,
+            monto: monto,
+            ids: ids,
+            puntoVenta: puntoVenta // ✅ se envía también al backend
+        },
+        success: function(resp) {
+            if (resp.success) {
+                alert("Factura emitida. Nro: " + resp.numero + " CAE: " + resp.cae);
+            } else {
+                alert("Error al facturar: " + resp.error);
+            }
+            w1.close();
+            $('#ver').click(); // refresca tabla
+        },
+        error: function(xhr, status, err) {
+            console.error(xhr, status, err);
+            alert("Error inesperado al facturar.");
+        }
+    });
+}
+
+
 </script>
 </html>
