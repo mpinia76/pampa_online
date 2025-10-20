@@ -734,7 +734,7 @@ function abrirFacturacion() {
     if (!dhxWins) dhxWins = new dhtmlXWindows();
     if (w1) w1.close();
 
-    w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 450);
+    w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 400);
     w1.setText("Facturación");
     w1.setModal(true);
     w1.button("park").hide();
@@ -790,7 +790,8 @@ function confirmarFacturacion() {
     var conceptoId = $('#conceptoFactura').val();
     var monto = $('#montoFactura').val();
     var ids = $('#idsSeleccionados').val();
-    var puntoVenta = $('#puntos').val(); // ✅ tomamos el punto de venta seleccionado
+    var puntoVenta = $('#modalPuntoVenta').val(); // ✅ nuevo origen
+
 
     var ano = $('#ano').val();
     var mes = $('#mes').val();
