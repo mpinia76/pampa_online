@@ -7,15 +7,13 @@ include_once("functions/util.php");
 $nombreFile = 'factura_reserva_' . date('Ymd') . '_log';
 $dt = date('Y-m-d G:i:s');
 $logPath = "./logs/" . $nombreFile . ".log";
-file_put_contents($logPath, 'POST: '.print_r($_POST,true)."\n", FILE_APPEND);
-
 // POST
 $fecha = $_POST['fecha']; // formato dd/mm/yyyy
 $fechaParts = explode('-', $fecha);
 if (count($fechaParts) === 3) {
     $fecha = $fechaParts[2] . '/' . $fechaParts[1] . '/' . $fechaParts[0];
 }
-$conceptoId = intval($_POST['conceptoId']);
+//$conceptoId = intval($_POST['conceptoId']);
 $monto = floatval($_POST['monto']);
 $ids = explode(',', trim($_POST['ids'], ','));
 $puntoVentaId = intval($_POST['puntoVenta']);
@@ -43,13 +41,13 @@ $puntoVenta = $tf['NUMERO'];
 
 
 $conceptoGral='';
-if($conceptoId){
+/*if($conceptoId){
     // Concepto de la factura
     $sqlConcepto = "SELECT nombre FROM concepto_facturacions WHERE id = $conceptoId";
     $rsC = mysqli_query($conn, $sqlConcepto);
     $cRow = mysqli_fetch_assoc($rsC);
     $conceptoGral    = $cRow['nombre'] ?? "";
-}
+}*/
 
 
 
