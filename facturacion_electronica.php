@@ -764,10 +764,10 @@ function abrirFacturacion() {
                 ${$('#puntos option').clone().map(function(){
         return `<option value="${this.value}" ${this.value==puntoVentaSelect ? 'selected' : ''}>${this.text}</option>`;
     }).get().join('')}
-            </select><br><br>
+            </select><br>
 
             <label><b>Fecha facturas:</b></label><br>
-            <input type="date" id="fechaFactura" style="width:95%;padding:4px;"><br><br>
+            <input type="date" id="fechaFactura" style="width:95%;padding:4px;"><br>
 
             <b>Monto total Neto:</b> $${montoNeto.toFixed(2)}<br>
             <b>IVA:</b> $${iva.toFixed(2)}<br>
