@@ -734,7 +734,7 @@ function abrirFacturacion() {
     if (!dhxWins) dhxWins = new dhtmlXWindows();
     if (w1) w1.close();
 
-    w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 350);
+    w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 450);
     w1.setText("Facturación");
     w1.setModal(true);
     w1.button("park").hide();
