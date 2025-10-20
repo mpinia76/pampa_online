@@ -775,6 +775,7 @@ function abrirFacturacion() {
             <b>Cantidad de facturas:</b> ${cantidad}<br><br>
 
             <div style="text-align:right;">
+                <input type="hidden" id="idsSeleccionados" name="idsSeleccionados" value="${seleccionadas.join(',')}">
                 <button type="button" onclick="confirmarFacturacion()">Confirmar</button>
                 <button type="button" onclick="w1.close()">Cerrar</button>
             </div>
