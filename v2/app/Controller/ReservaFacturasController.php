@@ -530,7 +530,15 @@ class ReservaFacturasController extends AppController {
 		]);
 
 		$http = new HttpSocket();
+		App::import('Core', 'CakeLog');
 
+// Generar nombre del archivo con fecha
+		$nombreFile = 'facturas_reserva_' . date('Ymd'); // ej: facturas_reserva_20251020
+
+// Función helper para escribir en el log
+		function escribirLog($mensaje, $nombreFile) {
+			CakeLog::write('info', $mensaje, $nombreFile);
+		}
 		foreach ($reservas as $reserva) {
 			$reserva_id = $reserva['ReservaFacturaProcesada']['reserva_id'];
 			$reserva_valida = true; // Bandera para verificar si todas las facturas pasan validación
@@ -611,15 +619,15 @@ class ReservaFacturasController extends AppController {
 
 						if ($this->ReservaFactura->validates()) {
 							$this->ReservaFactura->save();
+							escribirLog("Factura de reserva $reserva_id guardada correctamente", $nombreFile);
 						} else {
-							$reserva_valida = false; // Si hay error, no procesamos la reserva
 							$errores = '';
 							foreach ($this->ReservaFactura->validationErrors as $value) {
 								foreach ($value as $val) {
 									$errores .= $val . ' - ';
 								}
 							}
-							echo "Errores al guardar factura de reserva $reserva_id: $errores <br>";
+							escribirLog("Factura de reserva $reserva_id NO guardada: $errores", $nombreFile);
 						}
 					}
 				}
@@ -629,8 +637,6 @@ class ReservaFacturasController extends AppController {
 				if ($reserva_valida) {
 					$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
 					$this->ReservaFacturaProcesada->saveField('procesada_api', 1);
-				} else {
-					echo "Reserva $reserva_id NO fue marcada como procesada por errores en la validación.<br>";
 				}
 
 			}
