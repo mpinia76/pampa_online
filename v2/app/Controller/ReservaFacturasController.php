@@ -533,7 +533,7 @@ class ReservaFacturasController extends AppController {
 
 		foreach ($reservas as $reserva) {
 			$reserva_id = $reserva['ReservaFacturaProcesada']['reserva_id'];
-
+			$reserva_valida = true; // Bandera para verificar si todas las facturas pasan validación
 			// Recorremos los puntos de venta
 			foreach ($tusfacturas_tokens as $pvId => $tokenData) {
 
@@ -612,6 +612,7 @@ class ReservaFacturasController extends AppController {
 						if ($this->ReservaFactura->validates()) {
 							$this->ReservaFactura->save();
 						} else {
+							$reserva_valida = false; // Si hay error, no procesamos la reserva
 							$errores = '';
 							foreach ($this->ReservaFactura->validationErrors as $value) {
 								foreach ($value as $val) {
@@ -624,9 +625,13 @@ class ReservaFacturasController extends AppController {
 				}
 
 // marcar reserva como procesada
-				$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
-				$this->ReservaFacturaProcesada->saveField('procesada_api', 1);
-
+				// Solo marcamos como procesada si todas las facturas se guardaron correctamente
+				if ($reserva_valida) {
+					$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
+					$this->ReservaFacturaProcesada->saveField('procesada_api', 1);
+				} else {
+					echo "Reserva $reserva_id NO fue marcada como procesada por errores en la validación.<br>";
+				}
 
 			}
 		}
