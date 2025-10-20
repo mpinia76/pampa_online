@@ -803,7 +803,7 @@ ALTER TABLE `categorias`
 
 ##################################17/10/2025###########################################################
 ALTER TABLE reserva_factura_procesada
-    ADD COLUMN procesada_api TINYINT(1) NOT NULL DEFAULT 0;
+    ADD COLUMN procesada_api TINYINT(1) NOT NULL DEFAULT 1;
 
 ALTER TABLE `reserva_factura_procesada`
     ADD COLUMN `usuario_id` INT(11) NULL DEFAULT 0 AFTER `procesada_api`;

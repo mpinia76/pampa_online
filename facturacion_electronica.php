@@ -767,7 +767,7 @@ function abrirFacturacion() {
             </select><br><br>
 
             <label><b>Fecha facturas:</b></label><br>
-            <input type="date" id="modalFechaFactura" style="width:95%;padding:4px;"><br><br>
+            <input type="date" id="fechaFactura" style="width:95%;padding:4px;"><br><br>
 
             <b>Monto total Neto:</b> $${montoNeto.toFixed(2)}<br>
             <b>IVA:</b> $${iva.toFixed(2)}<br>
@@ -802,7 +802,7 @@ function confirmarFacturacion() {
     var columnaCheques = $('#columnaCheques').is(':checked') ? 1 : 0;
 
     if (!fecha || !puntoVenta) {
-        alert('Debe completar falta la fecha y/ punto de venta.');
+        alert('Debe completar la fecha y/ punto de venta.');
         return;
     }
 
