@@ -584,15 +584,29 @@ class ReservaFacturasController extends AppController {
 				if (!empty($data['comprobantes'])) {
 					foreach ($data['comprobantes'] as $comp) {
 						$this->ReservaFactura->create();
-						$this->ReservaFactura->set('reserva_id', $reserva_id);
-						$this->ReservaFactura->set('punto_venta_id', $pvId);
-						$this->ReservaFactura->set('tipo', $comp['comprobante']['tipo']); // FACTURA A/B/C
-						$this->ReservaFactura->set('titular', $reserva['ReservaFacturaProcesada']['cliente']);
-						$this->ReservaFactura->set('fecha_emision', date('Y-m-d', strtotime(str_replace('/', '-', $comp['comprobante']['fecha']))));
-						$this->ReservaFactura->set('numero', $comp['comprobante']['numero']);
-						$this->ReservaFactura->set('monto', $comp['comprobante']['total']);
-						$this->ReservaFactura->set('agregada_por', $reserva['ReservaFacturaProcesada']['usuario_id']);
-						$this->ReservaFactura->save();
+						// Preparar datos
+						$reserva_id = $reserva_id; // tu id de reserva
+						$pvId = $pvId; // id de punto de venta
+						$titular = $reserva['ReservaFacturaProcesada']['cliente'];
+						$tipo = $comp['comprobante']['tipo']; // FACTURA A/B/C
+						$fecha = $comp['comprobante']['fecha']; // mantener DD/MM/YYYY
+						$numero = str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT); // 8 dígitos
+						$monto = $comp['comprobante']['total'];
+						$tipoDoc = 1; // definir según corresponda (1 = factura estándar, ajustar si hay otros tipos)
+						$usuario_id = $reserva['ReservaFacturaProcesada']['usuario_id'];
+
+						// Asignar campos al modelo
+						$this->ReservaFactura->set([
+							'reserva_id' => $reserva_id,
+							'punto_venta_id' => $pvId,
+							'tipo' => $tipo,
+							'titular' => $titular,
+							'fecha_emision' => $fecha,
+							'numero' => $numero,
+							'monto' => $monto,
+							'tipoDoc' => $tipoDoc,
+							'agregada_por' => $usuario_id
+						]);
 
 
 						if ($this->ReservaFactura->validates()) {
