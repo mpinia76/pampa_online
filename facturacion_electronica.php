@@ -721,8 +721,16 @@ function confirmarFacturacion() {
     var ids = $('#idsSeleccionados').val();
     var puntoVenta = $('#puntos').val(); // ✅ tomamos el punto de venta seleccionado
 
-    if (!fecha || !conceptoId || !puntoVenta) {
-        alert('Debe completar todos los campos y seleccionar un punto de venta.');
+    var ano = $('#ano').val();
+    var mes = $('#mes').val();
+
+    // ✅ Obtener el estado de los checkbox
+    var columnaTransfiere = $('#columnaTransfiere').is(':checked') ? 1 : 0;
+    var columnaTC = $('#columnaTC').is(':checked') ? 1 : 0;
+    var columnaCheques = $('#columnaCheques').is(':checked') ? 1 : 0;
+
+    if (!fecha || !puntoVenta) {
+        alert('Debe completar falta la fecha y/ punto de venta.');
         return;
     }
 
@@ -732,19 +740,41 @@ function confirmarFacturacion() {
         dataType: 'json',
         data: {
             fecha: fecha,
+            ano: ano,
+            mes: mes,
             conceptoId: conceptoId,
             monto: monto,
             ids: ids,
-            puntoVenta: puntoVenta // ✅ se envía también al backend
+            puntoVenta: puntoVenta,
+            columnaTransfiere: columnaTransfiere, // ✅ agregado
+            columnaTC: columnaTC,                 // ✅ agregado
+            columnaCheques: columnaCheques        // ✅ agregado
         },
         success: function(resp) {
-            if (resp.success) {
-                alert("Factura emitida. Nro: " + resp.numero + " CAE: " + resp.cae);
-            } else {
-                alert("Error al facturar: " + resp.error);
-            }
+            let mensaje = "";
+
+            resp.results.forEach(function(r) {
+                // Cambiar la condición
+                if (r.error === "N") {
+                    mensaje += "✅ Reserva ID " + r.id + ": Factura emitida correctamente.\n";
+                } else {
+                    let detalle = "Error desconocido";
+
+                    if (Array.isArray(r.errores) && r.errores.length > 0) {
+                        detalle = r.errores.join(" | ");
+                    } else if (typeof r.error_details === "string" && r.error_details.trim() !== "") {
+                        detalle = r.error_details;
+                    } else if (typeof r.rta === "string" && r.rta.trim() !== "") {
+                        detalle = r.rta; // opcional: mostrar mensaje de la API
+                    }
+
+                    mensaje += "❌ Reserva ID " + r.id + ": " + detalle + "\n";
+                }
+            });
+
+            alert(mensaje);
             w1.close();
-            $('#ver').click(); // refresca tabla
+            $('#ver').click();
         },
         error: function(xhr, status, err) {
             console.error(xhr, status, err);

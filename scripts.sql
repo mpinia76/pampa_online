@@ -800,3 +800,7 @@ UPDATE permiso SET `nombre`='Editar y eliminar facturas' WHERE  `id`=117;
 ##################################05/02/2025###########################################################
 ALTER TABLE `categorias`
     ADD COLUMN `descripcion` text NULL;
+
+##################################17/10/2025###########################################################
+ALTER TABLE reserva_factura_procesada
+    ADD COLUMN procesada_api TINYINT(1) NOT NULL DEFAULT 0;
