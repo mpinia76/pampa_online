@@ -636,7 +636,7 @@ function descargar(){
 
 }
 
-function abrirFacturacion() {
+function abrirFacturacion_old() {
     // Obtener las filas seleccionadas
     var seleccionadas = [];
     $('.trSelected', $('.medios_pago')).each(function() {
@@ -714,6 +714,77 @@ function abrirFacturacion() {
         }
     });
 }
+
+function abrirFacturacion() {
+    var seleccionadas = [];
+    $('.trSelected', $('.medios_pago')).each(function() {
+        var id = $(this).attr('id');
+        var disable = $(this).attr('disable');
+        if (id && disable == '0') {
+            seleccionadas.push(id);
+        }
+    });
+
+    if (seleccionadas.length === 0) {
+        alert('Debe seleccionar al menos una reserva para facturar.');
+        return;
+    }
+
+    if (!dhxWins) dhxWins.close();
+    if (!dhxWins) dhxWins = new dhtmlXWindows();
+    if (w1) w1.close();
+
+    w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 350);
+    w1.setText("Facturación");
+    w1.setModal(true);
+    w1.button("park").hide();
+    w1.centerOnScreen();
+
+    var puntoVentaSelect = $('#puntos').val();
+
+    var totalBruto = 0;
+    var cantidad = 0;
+
+    $('.trSelected', $('.medios_pago')).each(function() {
+        var disable = $(this).attr('disable');
+        if (disable == '0') {
+            var monto = parseFloat($(this).attr('monto'));
+            totalBruto += monto;
+            cantidad++;
+        }
+    });
+
+    var montoNeto = totalBruto; // si querés ponerlo igual al bruto
+    var iva = totalBruto - montoNeto; // como dijiste, la diferencia
+
+    var htmlInfo = `
+        <div style="padding:15px;font-family:Arial, sans-serif;line-height:1.8;">
+            <label><b>Punto de venta:</b></label><br>
+            <select id="modalPuntoVenta" style="width:95%;padding:4px;">
+                ${$('#puntos option').clone().map(function(){
+        return `<option value="${this.value}" ${this.value==puntoVentaSelect ? 'selected' : ''}>${this.text}</option>`;
+    }).get().join('')}
+            </select><br><br>
+
+            <label><b>Fecha facturas:</b></label><br>
+            <input type="date" id="modalFechaFactura" style="width:95%;padding:4px;"><br><br>
+
+            <b>Monto total Neto:</b> $${montoNeto.toFixed(2)}<br>
+            <b>IVA:</b> $${iva.toFixed(2)}<br>
+            <b>Monto total Bruto:</b> $${totalBruto.toFixed(2)}<br>
+            <b>Cantidad de facturas:</b> ${cantidad}<br><br>
+
+            <div style="text-align:right;">
+                <button type="button" onclick="confirmarFacturacion()">Confirmar</button>
+                <button type="button" onclick="w1.close()">Cerrar</button>
+            </div>
+        </div>
+    `;
+
+    w1.attachHTMLString(htmlInfo);
+}
+
+
 function confirmarFacturacion() {
     var fecha = $('#fechaFactura').val();
     var conceptoId = $('#conceptoFactura').val();
