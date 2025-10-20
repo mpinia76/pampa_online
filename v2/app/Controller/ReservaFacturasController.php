@@ -512,79 +512,112 @@ class ReservaFacturasController extends AppController {
     }
 
 	public function cronImportarFacturas() {
-		// Lista de tipos de comprobante a consultar
-		$tiposComprobante = ['FACTURA A', 'FACTURA B', 'FACTURA C', 'NOTA DE CREDITO A', 'NOTA DE CREDITO B'];
+		$this->autoRender = false; // No renderiza vista
 
-		// Datos de autenticación API
-		$apiUrl = 'https://www.tusfacturas.app/app/api/v2/facturacion/consulta_avanzada';
-		$usertoken = 'TU_USERTOKEN';
-		$apikey = 'TU_APIKEY';
-		$apitoken = 'TU_APITOKEN';
+		App::uses('HttpSocket', 'Network/Http');
 
-		// Para registrar la importación
-		$this->loadModel('ReservaFacturaImportacion');
-		$this->ReservaFacturaImportacion->create();
-		$this->ReservaFacturaImportacion->set('fecha', date('Y-m-d H:i:s'));
-		$this->ReservaFacturaImportacion->save();
-		$importacionId = $this->ReservaFacturaImportacion->id;
+		// Traemos los tokens de los puntos de venta
+		$tusfacturas_tokens = Configure::read('TusFacturas.tokens');
 
-		$this->loadModel('ReservaFacturaImportacionItem');
+		// Cargamos el modelo
+		$this->loadModel('ReservaFacturaProcesada');
 
-		foreach ($tiposComprobante as $tipo) {
-			$pagina = 0;
-			$limite = 100;
+		// Traemos las reservas procesadas que aún no fueron consultadas en la API
+		$reservas = $this->ReservaFacturaProcesada->find('all', [
+			'conditions' => ['procesada_api' => 0],
+			'limit' => 50, // límite para no saturar la API
+			'order' => ['fecha' => 'ASC']
+		]);
 
-			do {
-				// Construimos el JSON para la API
-				$postData = [
-					'usertoken' => $usertoken,
-					'apikey' => $apikey,
-					'apitoken' => $apitoken,
-					'busqueda_tipo' => 'EXT_REF', // O el criterio que uses
-					'pagina' => $pagina,
-					'limite' => $limite,
+		$http = new HttpSocket();
+
+		foreach ($reservas as $reserva) {
+			$reserva_id = $reserva['ReservaFacturaProcesada']['reserva_id'];
+
+			// Recorremos los puntos de venta
+			foreach ($tusfacturas_tokens as $pvId => $tokenData) {
+
+				$payload = [
+					'usertoken' => $tokenData['USER_TOKEN'],
+					'apikey'    => API_KEY,
+					'apitoken'  => API_TOKEN,
+					'busqueda_tipo' => 'EXT_REF',
+					'pagina'    => 0,
+					'limite'    => 100,
 					'comprobante' => [
-						'tipo' => $tipo,
-						'operacion' => 'V', // ventas
-						'punto_venta' => '', // opcional
-						'numero_desde' => '', // opcional
-						'numero_hasta' => ''  // opcional
-					]
-				];
+						'tipo' => '', // vacío para todos los tipos
+						'operacion' => 'V',
+						'punto_venta' => $tokenData['NUMERO'],
+						'numero_desde' => '0',
+						'numero_hasta' => '99999999',
+						'external_reference' => 'RES-' . $reserva_id
+					],
 
-				// Llamada a la API
-				$ch = curl_init($apiUrl);
+				];
+				echo "<pre>JSON enviado:\n";
+				print_r($payload);
+				echo "</pre>";
+
+				$ch = curl_init('https://www.tusfacturas.app/app/api/v2/facturacion/consulta_avanzada');
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 				curl_setopt($ch, CURLOPT_POST, true);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+				curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
 				$response = curl_exec($ch);
 				curl_close($ch);
 
 				$data = json_decode($response, true);
 
-				if (!empty($data['ventas'])) {
-					foreach ($data['ventas'] as $venta) {
-						$this->ReservaFacturaImportacionItem->create();
-						$this->ReservaFacturaImportacionItem->set('reserva_factura_importacion_id', $importacionId);
-						$this->ReservaFacturaImportacionItem->set('tipo', $tipo);
-						$this->ReservaFacturaImportacionItem->set('nro', $venta['nro'] ?? '');
-						$this->ReservaFacturaImportacionItem->set('fecha', $venta['fecha'] ?? '');
-						$this->ReservaFacturaImportacionItem->set('CAE', $venta['CAE'] ?? '');
-						$this->ReservaFacturaImportacionItem->set('nombre', $venta['nombre'] ?? '');
-						$this->ReservaFacturaImportacionItem->set('documento', $venta['documento'] ?? '');
-						$this->ReservaFacturaImportacionItem->set('total', $venta['total'] ?? 0);
-						$this->ReservaFacturaImportacionItem->set('observaciones', 'Importado desde API');
-						$this->ReservaFacturaImportacionItem->set('exito', 1);
-						$this->ReservaFacturaImportacionItem->save();
+				// Mostrar toda la info de la API en pantalla
+				echo "<pre>";
+				echo "Reserva ID: " . $reserva_id . "\n";
+				echo "Punto de Venta: " . $tokenData['NUMERO'] . "\n";
+				echo "Respuesta API completa:\n";
+				print_r($data);
+				echo "</pre>";
+				echo str_repeat("-", 80) . "<br>";
+
+				$this->loadModel('ReservaFactura');
+
+
+				if (!empty($data['comprobantes'])) {
+					foreach ($data['comprobantes'] as $comp) {
+						$this->ReservaFactura->create();
+						$this->ReservaFactura->set('reserva_id', $reserva_id);
+						$this->ReservaFactura->set('punto_venta_id', $pvId);
+						$this->ReservaFactura->set('tipo', $comp['comprobante']['tipo']); // FACTURA A/B/C
+						$this->ReservaFactura->set('titular', $reserva['ReservaFacturaProcesada']['cliente']);
+						$this->ReservaFactura->set('fecha_emision', date('Y-m-d', strtotime(str_replace('/', '-', $comp['comprobante']['fecha']))));
+						$this->ReservaFactura->set('numero', $comp['comprobante']['numero']);
+						$this->ReservaFactura->set('monto', $comp['comprobante']['total']);
+						$this->ReservaFactura->set('agregada_por', $reserva['ReservaFacturaProcesada']['usuario_id']);
+						$this->ReservaFactura->save();
+
+
+						if ($this->ReservaFactura->validates()) {
+							$this->ReservaFactura->save();
+						} else {
+							$errores = '';
+							foreach ($this->ReservaFactura->validationErrors as $value) {
+								foreach ($value as $val) {
+									$errores .= $val . ' - ';
+								}
+							}
+							echo "Errores al guardar factura de reserva $reserva_id: $errores <br>";
+						}
 					}
 				}
 
-				$pagina++;
-			} while (!empty($data['ventas']) && count($data['ventas']) == $limite);
+// marcar reserva como procesada
+				$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
+				$this->ReservaFacturaProcesada->saveField('procesada_api', 1);
+
+
+			}
 		}
 
-		echo "Importación finalizada: ID $importacionId\n";
+		echo "Importación finalizada";
 	}
 
 	public function probarApiCron() {
@@ -606,7 +639,7 @@ class ReservaFacturasController extends AppController {
 		]);
 
 		$http = new HttpSocket();
-		$tipos = ['FACTURA A', 'FACTURA B', 'FACTURA C'];
+
 		foreach ($reservas as $reserva) {
 			$reserva_id = $reserva['ReservaFacturaProcesada']['reserva_id'];
 

@@ -319,8 +319,8 @@ foreach ($ids as $idReserva) {
 
         // Insertar nuevo registro
         $insert = "INSERT INTO reserva_factura_procesada 
-        (reserva_id, fecha, cliente, dni, total, neto, diferencia) VALUES 
-        (".$res['id'].",'".date('Y-m-d H:i:s')."','".$res['nombre_apellido']."','".trim($res['dni'])."','".$total."','".$neto."','".($total-$neto)."')";
+        (reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id) VALUES 
+        (".$res['id'].",'".date('Y-m-d H:i:s')."','".$res['nombre_apellido']."','".trim($res['dni'])."','".$total."','".$neto."','".($total-$neto)."','".($usuarioId)."')";
         mysqli_query($conn, $insert);
     }
 
