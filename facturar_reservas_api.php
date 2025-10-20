@@ -4,6 +4,10 @@ session_start();
 $usuarioId = $_SESSION['userid'];
 include_once("config/db.php");
 include_once("functions/util.php");
+$nombreFile = 'factura_reserva_' . date('Ymd') . '_log';
+$dt = date('Y-m-d G:i:s');
+$logPath = "./logs/" . $nombreFile . ".log";
+file_put_contents($logPath, 'POST: '.print_r($_POST,true)."\n", FILE_APPEND);
 
 // POST
 $fecha = $_POST['fecha']; // formato dd/mm/yyyy
@@ -36,9 +40,7 @@ $tf = $tusfacturas_tokens[$puntoVentaId];
 $puntoVenta = $tf['NUMERO'];
 //$ivaCoeficiente=1;
 
-$nombreFile = 'factura_reserva_' . date('Ymd') . '_log';
-$dt = date('Y-m-d G:i:s');
-$logPath = "./logs/" . $nombreFile . ".log";
+
 
 $conceptoGral='';
 if($conceptoId){
