@@ -747,9 +747,10 @@ function abrirFacturacion() {
 
             <div style="text-align:right;">
                 <input type="hidden" id="idsSeleccionados" value="${seleccionadas.join(',')}">
-                <button type="button" onclick="confirmarFacturacion()">Confirmar</button>
+                <button type="button" id="btnConfirmarFacturacion" onclick="confirmarFacturacion()">Confirmar</button>
                 <button type="button" onclick="cerrarVentanaFacturacion()">Cerrar</button>
             </div>
+
         </div>
     `;
 
@@ -780,13 +781,11 @@ function confirmarFacturacion() {
     var conceptoId = $('#conceptoFactura').val();
     var monto = $('#montoFactura').val();
     var ids = $('#idsSeleccionados').val();
-    var puntoVenta = $('#modalPuntoVenta').val(); // ✅ nuevo origen
-
+    var puntoVenta = $('#modalPuntoVenta').val();
 
     var ano = $('#ano').val();
     var mes = $('#mes').val();
 
-    // ✅ Obtener el estado de los checkbox
     var columnaTransfiere = $('#columnaTransfiere').is(':checked') ? 1 : 0;
     var columnaTC = $('#columnaTC').is(':checked') ? 1 : 0;
     var columnaCheques = $('#columnaCheques').is(':checked') ? 1 : 0;
@@ -795,10 +794,10 @@ function confirmarFacturacion() {
         alert('Debe completar la fecha y/ punto de venta.');
         return;
     }
-    // ✅ Fecha en formato YYYY-MM-DD (por input type="date")
-    const fechaStr = $('#fechaFactura').val(); // ejemplo: "2025-10-21"
+
+    const fechaStr = $('#fechaFactura').val();
     const partes = fechaStr.split('-');
-    const fechaFactura = new Date(partes[0], partes[1] - 1, partes[2]); // año, mes (0-based), día
+    const fechaFactura = new Date(partes[0], partes[1] - 1, partes[2]);
 
     const hoy = new Date();
     const diffDias = Math.floor((hoy - fechaFactura) / (1000 * 60 * 60 * 24));
@@ -813,6 +812,16 @@ function confirmarFacturacion() {
         return;
     }
 
+    // Loading seguro
+    if ($('#loadingFacturacion').length === 0) {
+        $('#modalPuntoVenta').after('<div id="loadingFacturacion" style="display:none;margin-top:10px;">Procesando, por favor espere...</div>');
+    }
+
+    // Botón seguro dentro de la ventana
+    var btnConfirmar = $(w1._content).find('#btnConfirmarFacturacion');
+    if (btnConfirmar.length) btnConfirmar.prop('disabled', true);
+    $('#loadingFacturacion').show();
+
     $.ajax({
         url: 'facturar_reservas_api.php',
         type: 'POST',
@@ -825,17 +834,16 @@ function confirmarFacturacion() {
             monto: monto,
             ids: ids,
             puntoVenta: puntoVenta,
-            columnaTransfiere: columnaTransfiere, // âœ… agregado
-            columnaTC: columnaTC,                 // âœ… agregado
-            columnaCheques: columnaCheques        // âœ… agregado
+            columnaTransfiere: columnaTransfiere,
+            columnaTC: columnaTC,
+            columnaCheques: columnaCheques
         },
         success: function(resp) {
             let mensaje = "";
 
             resp.results.forEach(function(r) {
-                // Cambiar la condiciÃ³n
                 if (r.error === "N") {
-                    mensaje += "âœ… Reserva ID " + r.id + ": Factura emitida correctamente.\n";
+                    mensaje += "✔ Reserva ID " + r.id + ": Factura emitida correctamente.\n";
                 } else {
                     let detalle = "Error desconocido";
 
@@ -844,10 +852,10 @@ function confirmarFacturacion() {
                     } else if (typeof r.error_details === "string" && r.error_details.trim() !== "") {
                         detalle = r.error_details;
                     } else if (typeof r.rta === "string" && r.rta.trim() !== "") {
-                        detalle = r.rta; // opcional: mostrar mensaje de la API
+                        detalle = r.rta;
                     }
 
-                    mensaje += "âŒ Reserva ID " + r.id + ": " + detalle + "\n";
+                    mensaje += "❌ Reserva ID " + r.id + ": " + detalle + "\n";
                 }
             });
 
@@ -858,9 +866,14 @@ function confirmarFacturacion() {
         error: function(xhr, status, err) {
             console.error(xhr, status, err);
             alert("Error inesperado al facturar.");
+        },
+        complete: function() {
+            $('#loadingFacturacion').hide();
+            if (btnConfirmar.length) btnConfirmar.prop('disabled', false);
         }
     });
 }
+
 
 
 </script>
