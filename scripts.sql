@@ -807,3 +807,7 @@ ALTER TABLE reserva_factura_procesada
 
 ALTER TABLE `reserva_factura_procesada`
     ADD COLUMN `usuario_id` INT(11) NULL DEFAULT 0 AFTER `procesada_api`;
+
+ALTER TABLE `reserva_factura_procesada`
+    ADD COLUMN `error_api` TINYINT(1) NOT NULL DEFAULT 0 AFTER `procesada_api`,
+ADD COLUMN `error_mensaje` TEXT NULL AFTER `error_api`;

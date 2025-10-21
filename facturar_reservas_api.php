@@ -9,10 +9,32 @@ $dt = date('Y-m-d G:i:s');
 $logPath = "./logs/" . $nombreFile . ".log";
 // POST
 $fecha = $_POST['fecha']; // formato dd/mm/yyyy
-$fechaParts = explode('-', $fecha);
-if (count($fechaParts) === 3) {
-    $fecha = $fechaParts[2] . '/' . $fechaParts[1] . '/' . $fechaParts[0];
+// Normalizar formato a dd/mm/yyyy
+if (strpos($fecha, '-') !== false) {
+    // viene como yyyy-mm-dd → convertir
+    $fechaParts = explode('-', $fecha);
+    if (count($fechaParts) === 3) {
+        $fecha = $fechaParts[2] . '/' . $fechaParts[1] . '/' . $fechaParts[0];
+    }
 }
+
+// 🔹 Validar fecha AFIP (máx. 10 días hacia atrás, no futura)
+$fechaObj = DateTime::createFromFormat('d/m/Y', $fecha);
+$hoy = new DateTime();
+
+if (!$fechaObj) {
+    die(json_encode(['error' => 'Ingrese una fecha válida.']));
+}
+
+if ($fechaObj > $hoy) {
+    die(json_encode(['error' => 'La fecha de facturación no puede ser futura.']));
+}
+
+$diffDias = $hoy->diff($fechaObj)->days;
+if ($fechaObj < (clone $hoy)->modify('-10 days')) {
+    die(json_encode(['error' => 'AFIP no permite facturar servicios con más de 10 días de antigüedad.']));
+}
+
 //$conceptoId = intval($_POST['conceptoId']);
 $monto = floatval($_POST['monto']);
 $ids = explode(',', trim($_POST['ids'], ','));

@@ -107,6 +107,8 @@ Montos
     <option <?php if($_POST['estado'] == '2'){?> selected="selected" <?php } ?> value="2">Facturado</option>
     <option <?php if($_POST['estado'] == '3'){?> selected="selected" <?php } ?> value="3">Facturacion parcial</option>
     <option <?php if($_POST['estado'] == '4'){?> selected="selected" <?php } ?> value="4">Sobre facturacion</option>
+    <option <?php if($_POST['estado'] == '5'){?> selected="selected" <?php } ?> value="5">Enviada (sin procesar)</option>
+    <option <?php if($_POST['estado'] == '6'){?> selected="selected" <?php } ?> value="6">Error API</option>
 </select> 
 <input type="hidden"  name="hTransfiere" id="hTransfiere"/>
 <input type="hidden"  name="hTC" id="hTC"/>
@@ -122,22 +124,20 @@ include_once("functions/util.php");
 	<option value="descarga1" <?php if($_POST['descargas'] == '"descarga1"'){?> selected="selected" <?php } ?> >descarga1</option>
 	<option value="descarga2" <?php if($_POST['descargas'] == '"descarga2"'){?> selected="selected" <?php } ?> >descarga2</option>
 	
-</select> 
+</select>
 <select size="1" name="puntos" id="puntos">
+    <?php
+    $sql = "SELECT id, CONCAT(numero,' ', cuit,' ', descripcion,' ', direccion) as punto, alicuota FROM punto_ventas";
+    $rsTemp = mysqli_query($conn,$sql);
+    while($rs = mysqli_fetch_array($rsTemp)){
+        ?>
+        <option value="<?php echo $rs['id']?>" data-alicuota="<?php echo $rs['alicuota']; ?>"
+            <?php if($_POST['puntos'] == $rs['id']) echo 'selected="selected"'; ?>>
+            <?php echo $rs['punto']?>
+        </option>
+    <?php } ?>
+</select>
 
-	<?php 
-	$sql = "SELECT id, CONCAT(numero,' ', cuit,' ', descripcion,' ', direccion) as punto FROM punto_ventas  ";
-
-	$rsTemp = mysqli_query($conn,$sql);
-	while($rs = mysqli_fetch_array($rsTemp)){
-	
-	?>
-	
-	<option value="<?php echo $rs['id']?>" <?php if($_POST['puntos'] == $rs['id']){?> selected="selected" <?php } ?>><?php echo $rs['punto']?> </option>
-	
-	<?php } ?>
-	
-</select> 
 <input type="button" name="descargar" id="descargar" value="Descargar" onClick="descargar()"/>
 <input type="button" name="facturar" id="facturar" value="Facturar" onClick="abrirFacturacion()"/>
 
@@ -184,9 +184,24 @@ auditarUsuarios('Facturacion electronica');
 if (isset($_POST['ver'])) {
 	
 	
-	$sql = "SELECT R.numero,R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.cuit, C.titular_factura, C.razon_social, C.iva
-FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id ";
-if ($_POST['metodo']=='check_out') {
+	/*$sql = "SELECT R.numero,R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.cuit, C.titular_factura, C.razon_social, C.iva
+FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id ";*/
+    $sql = "
+SELECT R.numero, R.id, R.check_in, R.check_out, R.total, 
+       C.nombre_apellido, C.dni, R.estado, C.cuit, 
+       C.titular_factura, C.razon_social, C.iva,
+       RFP.id AS procesada_id,
+       RFP.procesada_api,
+       RFP.error_api,
+       RFP.error_mensaje
+FROM reservas R
+INNER JOIN clientes C ON R.cliente_id = C.id
+LEFT JOIN reserva_factura_procesada RFP 
+       ON RFP.reserva_id = R.id
+      AND RFP.cliente = C.nombre_apellido
+      AND RFP.dni = C.dni
+";
+    if ($_POST['metodo']=='check_out') {
 	$sql .= "WHERE check_out LIKE '".$_POST["ano"]."-".$_POST["mes"]."%' ORDER BY check_out, C.nombre_apellido ASC";
 }
 else{
@@ -360,24 +375,36 @@ while($rs = mysqli_fetch_array($rsTemp)){
 		}
 		
 		$disabled=0;
-		if ($facturas==0) {
-			$estado = 'Pendiente'; 
-			$color='fc3156';
-		}
-		elseif ($facturas==$fcEstado){
-			$estado = 'Facturado'; 
-			$disabled=1;
-			$color='15d905';
-		}
-		elseif (($facturas-$fcEstado)<0){
-			$estado = 'Facturacion Parcial'; 
-			$color='fa9008';
-		}
-		else{
-			$estado = 'Sobre Facturacion'; 
-			$disabled=1;
-			$color='9404cd';
-		}
+        $color = '';   // por defecto
+        $detalleError ='';
+        if ($rs['error_api'] == 1) {
+            $estado = 'Error API';
+            $color = 'ff0000';  // rojo
+            $disabled = 0;      // siempre habilitada
+            $detalleError = $rs['error_mensaje'];
+        } else {
+            if ($rs['procesada_id'] && $rs['procesada_api'] == 0) {
+                $estado = 'Enviada (sin procesar)';
+                $color = '6fa8dc'; // azul claro
+                $disabled = 1;     // evita que se pueda seleccionar
+            } else {
+                if ($facturas == 0) {
+                    $estado = 'Pendiente';
+                    $color = 'fc3156';
+                } elseif ($facturas == $fcEstado) {
+                    $estado = 'Facturado';
+                    $disabled = 1;
+                    $color = '15d905';
+                } elseif (($facturas - $fcEstado) < 0) {
+                    $estado = 'Facturacion Parcial';
+                    $color = 'fa9008';
+                } else {
+                    $estado = 'Sobre Facturacion';
+                    $disabled = 1;
+                    $color = '9404cd';
+                }
+            }
+        }
 		//echo $estado."-".$_POST['estado']."<br>";
 		$mostrar=1;
 		
@@ -415,6 +442,12 @@ while($rs = mysqli_fetch_array($rsTemp)){
 				case 4:
 				$mostrar = ($estado=='Sobre Facturacion')?1:0;
 				break;
+                case 5:
+                    $mostrar = ($estado == 'Enviada (sin procesar)') ? 1 : 0;
+                    break;
+                case 6:
+                    $mostrar = ($estado == 'Error API') ? 1 : 0;
+                    break;
 			}
 		}
 		if ($fc==0) {
@@ -448,7 +481,7 @@ if ($mostrar) {
 <td><?php echo $titular;?></td>
 <td><?php echo trim( number_format($cheques, 2, '.', '') );?></td>
 <td><?php echo $libradoPor;?></td>
-<td><?php echo $estado;?></td>
+<td><?php echo ($detalleError) ? $detalleError : $estado; ?></td>
 <td><a style="cursor:pointer;" onclick="detalle(<?php echo $rs['id'];?>)">Ver</a> </td>
 
 
@@ -636,85 +669,6 @@ function descargar(){
 
 }
 
-function abrirFacturacion_old() {
-    // Obtener las filas seleccionadas
-    var seleccionadas = [];
-    $('.trSelected', $('.medios_pago')).each(function() {
-        var id = $(this).attr('id');
-        var disable = $(this).attr('disable');
-        if (id && disable == '0') {
-            seleccionadas.push(id);
-        }
-    });
-
-    if (seleccionadas.length === 0) {
-        alert('Debe seleccionar al menos una reserva para facturar.');
-        return;
-    }
-
-    // Crear la ventana
-    var ancho = 400;
-    var alto = 300;
-    var x = 200;
-    var y = 100;
-
-    if (!dhxWins) dhxWins = new dhtmlXWindows();
-    if (w1) w1.close();
-
-    w1 = dhxWins.createWindow("w_facturar", x, y, ancho, alto);
-    w1.setText("Facturación");
-    w1.setModal(true);
-    w1.button("park").hide();
-    w1.centerOnScreen();
-
-    // Formulario dentro de la ventana
-    var htmlForm = `
-        <div style="padding:15px;font-family:Arial, sans-serif;">
-            <form id="formFacturar">
-                <label>Fecha de la factura:</label><br>
-                <input type="date" id="fechaFactura" name="fechaFactura" style="width:95%;padding:4px;"><br><br>
-
-                <label>Concepto:</label><br>
-                <select id="conceptoFactura" name="conceptoFactura" style="width:95%;padding:4px;">
-                    <option value="">Seleccione un concepto</option>
-                </select><br><br>
-
-                <label>Monto total:</label><br>
-                <input type="text" id="montoFactura" name="montoFactura" readonly style="width:95%;padding:4px;"><br><br>
-
-                <input type="hidden" id="idsSeleccionados" name="idsSeleccionados" value="${seleccionadas.join(',')}">
-                <button type="button" onclick="confirmarFacturacion()">Confirmar</button>
-                <button type="button" onclick="w1.close()">Cancelar</button>
-            </form>
-        </div>
-    `;
-
-    w1.attachHTMLString(htmlForm);
-
-    // Obtener monto total
-    var total = 0;
-    $('.trSelected', $('.medios_pago')).each(function() {
-        var disable = $(this).attr('disable');
-        if (disable == '0') {
-            total += parseFloat($(this).attr('monto'));
-        }
-    });
-    $('#montoFactura').val(total.toFixed(2));
-
-    // Cargar conceptos de facturación (AJAX)
-    $.ajax({
-        url: 'ajax_conceptos_facturacion.php',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            var select = $('#conceptoFactura');
-            data.forEach(function(item) {
-                select.append(`<option value="${item.id}">${item.nombre}</option>`);
-            });
-        }
-    });
-}
-
 function abrirFacturacion() {
     var seleccionadas = [];
     $('.trSelected', $('.medios_pago')).each(function() {
@@ -730,10 +684,21 @@ function abrirFacturacion() {
         return;
     }
 
-    if (!dhxWins) dhxWins.close();
-    if (!dhxWins) dhxWins = new dhtmlXWindows();
-    if (w1) w1.close();
+    // ✅ Inicialización segura del manejador de ventanas
+    if (typeof dhxWins === 'undefined' || !dhxWins) {
+        dhxWins = new dhtmlXWindows();
+    }
 
+    // ✅ Cierra ventana anterior solo si existe y tiene método close
+    if (typeof w1 !== 'undefined' && w1 && typeof w1.close === 'function') {
+        try {
+            w1.close();
+        } catch (e) {
+            console.warn('No se pudo cerrar ventana anterior:', e);
+        }
+    }
+
+    // ✅ Crea nueva ventana
     w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 400);
     w1.setText("Facturación");
     w1.setModal(true);
@@ -742,47 +707,71 @@ function abrirFacturacion() {
 
     var puntoVentaSelect = $('#puntos').val();
 
-    var totalBruto = 0;
-    var cantidad = 0;
-
+    // Total bruto y cantidad
+    var totalBruto = 0, cantidad = 0;
     $('.trSelected', $('.medios_pago')).each(function() {
-        var disable = $(this).attr('disable');
-        if (disable == '0') {
-            var monto = parseFloat($(this).attr('monto'));
-            totalBruto += monto;
+        if ($(this).attr('disable') == '0') {
+            totalBruto += parseFloat($(this).attr('monto'));
             cantidad++;
         }
     });
 
-    var montoNeto = totalBruto; // si querés ponerlo igual al bruto
-    var iva = totalBruto - montoNeto; // como dijiste, la diferencia
+    // Clonar opciones del select principal incluyendo data-alicuota
+    var opcionesSelect = $('#puntos option').map(function() {
+        var alicuota = this.dataset.alicuota; // acceso directo al atributo data-alicuota
+        return `<option value="${this.value}" data-alicuota="${alicuota}" ${this.value == puntoVentaSelect ? 'selected' : ''}>${this.text}</option>`;
+    }).get().join('');
+
+
+    // IVA y Neto inicial según el punto seleccionado
+    var alicuota = parseFloat($('#puntos option:selected').attr('data-alicuota')) || 0;
+    var montoNeto = totalBruto / (1 + alicuota);
+    var iva = totalBruto - montoNeto;
+
+
 
     var htmlInfo = `
         <div style="padding:15px;font-family:Arial, sans-serif;line-height:1.8;">
             <label><b>Punto de venta:</b></label><br>
             <select id="modalPuntoVenta" style="width:95%;padding:4px;">
-                ${$('#puntos option').clone().map(function(){
-        return `<option value="${this.value}" ${this.value==puntoVentaSelect ? 'selected' : ''}>${this.text}</option>`;
-    }).get().join('')}
+                ${opcionesSelect}
             </select><br>
 
             <label><b>Fecha facturas:</b></label><br>
             <input type="date" id="fechaFactura" style="width:95%;padding:4px;"><br>
 
-            <b>Monto total Neto:</b> $${montoNeto.toFixed(2)}<br>
-            <b>IVA:</b> $${iva.toFixed(2)}<br>
-            <b>Monto total Bruto:</b> $${totalBruto.toFixed(2)}<br>
+            <b>Monto total Neto:</b> $<span id="modalNeto">${montoNeto.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><br>
+            <b>IVA:</b> $<span id="modalIva">${iva.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><br>
+            <b>Monto total Bruto:</b> $${totalBruto.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<br>
             <b>Cantidad de facturas:</b> ${cantidad}<br><br>
 
             <div style="text-align:right;">
-                <input type="hidden" id="idsSeleccionados" name="idsSeleccionados" value="${seleccionadas.join(',')}">
+                <input type="hidden" id="idsSeleccionados" value="${seleccionadas.join(',')}">
                 <button type="button" onclick="confirmarFacturacion()">Confirmar</button>
-                <button type="button" onclick="w1.close()">Cerrar</button>
+                <button type="button" onclick="cerrarVentanaFacturacion()">Cerrar</button>
             </div>
         </div>
     `;
 
     w1.attachHTMLString(htmlInfo);
+
+    var modalSelect = document.getElementById('modalPuntoVenta');
+    modalSelect.addEventListener('change', function() {
+        var alicuotaNueva = parseFloat(this.options[this.selectedIndex].dataset.alicuota) || 0;
+        var nuevoNeto = totalBruto / (1 + alicuotaNueva);
+        var nuevoIva = totalBruto - nuevoNeto;
+
+        document.getElementById('modalNeto').textContent = nuevoNeto.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('modalIva').textContent = nuevoIva.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    });
+
+}
+
+// Función global para cerrar ventana
+function cerrarVentanaFacturacion() {
+    if (typeof w1 !== 'undefined' && w1 && typeof w1.close === 'function') {
+        w1.close();
+    }
 }
 
 
@@ -806,6 +795,23 @@ function confirmarFacturacion() {
         alert('Debe completar la fecha y/ punto de venta.');
         return;
     }
+    // ✅ Fecha en formato YYYY-MM-DD (por input type="date")
+    const fechaStr = $('#fechaFactura').val(); // ejemplo: "2025-10-21"
+    const partes = fechaStr.split('-');
+    const fechaFactura = new Date(partes[0], partes[1] - 1, partes[2]); // año, mes (0-based), día
+
+    const hoy = new Date();
+    const diffDias = Math.floor((hoy - fechaFactura) / (1000 * 60 * 60 * 24));
+
+    if (fechaFactura > hoy) {
+        alert('La fecha de factura no puede ser futura.');
+        return;
+    }
+
+    if (diffDias > 10) {
+        alert('AFIP no permite emitir facturas de servicios con más de 10 días de antigüedad.');
+        return;
+    }
 
     $.ajax({
         url: 'facturar_reservas_api.php',
@@ -819,17 +825,17 @@ function confirmarFacturacion() {
             monto: monto,
             ids: ids,
             puntoVenta: puntoVenta,
-            columnaTransfiere: columnaTransfiere, // ✅ agregado
-            columnaTC: columnaTC,                 // ✅ agregado
-            columnaCheques: columnaCheques        // ✅ agregado
+            columnaTransfiere: columnaTransfiere, // âœ… agregado
+            columnaTC: columnaTC,                 // âœ… agregado
+            columnaCheques: columnaCheques        // âœ… agregado
         },
         success: function(resp) {
             let mensaje = "";
 
             resp.results.forEach(function(r) {
-                // Cambiar la condición
+                // Cambiar la condiciÃ³n
                 if (r.error === "N") {
-                    mensaje += "✅ Reserva ID " + r.id + ": Factura emitida correctamente.\n";
+                    mensaje += "âœ… Reserva ID " + r.id + ": Factura emitida correctamente.\n";
                 } else {
                     let detalle = "Error desconocido";
 
@@ -841,7 +847,7 @@ function confirmarFacturacion() {
                         detalle = r.rta; // opcional: mostrar mensaje de la API
                     }
 
-                    mensaje += "❌ Reserva ID " + r.id + ": " + detalle + "\n";
+                    mensaje += "âŒ Reserva ID " + r.id + ": " + detalle + "\n";
                 }
             });
 

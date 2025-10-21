@@ -540,8 +540,13 @@ class ReservaFacturasController extends AppController {
 			CakeLog::write('info', $mensaje, $nombreFile);
 		}
 		foreach ($reservas as $reserva) {
+			echo "<pre>DEBUG ReservaFacturaProcesada:\n";
+			print_r($reserva['ReservaFacturaProcesada']);
+			echo "</pre>";
 			$reserva_id = $reserva['ReservaFacturaProcesada']['reserva_id'];
 			$reserva_valida = true; // Bandera para verificar si todas las facturas pasan validación
+			$facturas_guardadas = false;
+			$errores_api = [];
 			// Recorremos los puntos de venta
 			foreach ($tusfacturas_tokens as $pvId => $tokenData) {
 
@@ -577,14 +582,10 @@ class ReservaFacturasController extends AppController {
 
 				$data = json_decode($response, true);
 
-				// Mostrar toda la info de la API en pantalla
-				echo "<pre>";
-				echo "Reserva ID: " . $reserva_id . "\n";
-				echo "Punto de Venta: " . $tokenData['NUMERO'] . "\n";
-				echo "Respuesta API completa:\n";
+				// Mostrar info de depuración
+				echo "<pre>Reserva ID: $reserva_id, PV: {$tokenData['NUMERO']}\n";
 				print_r($data);
 				echo "</pre>";
-				echo str_repeat("-", 80) . "<br>";
 
 				$this->loadModel('ReservaFactura');
 
@@ -592,35 +593,26 @@ class ReservaFacturasController extends AppController {
 				if (!empty($data['comprobantes'])) {
 					foreach ($data['comprobantes'] as $comp) {
 						$this->ReservaFactura->create();
-						// Preparar datos
-						$reserva_id = $reserva_id; // tu id de reserva
-						$pvId = $pvId; // id de punto de venta
-						$titular = $reserva['ReservaFacturaProcesada']['cliente'];
-						$tipo = $comp['comprobante']['tipo']; // FACTURA A/B/C
-						$fecha = $comp['comprobante']['fecha']; // mantener DD/MM/YYYY
-						$numero = str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT); // 8 dígitos
-						$monto = $comp['comprobante']['total'];
-						$tipoDoc = 1; // definir según corresponda (1 = factura estándar, ajustar si hay otros tipos)
-						$usuario_id = $reserva['ReservaFacturaProcesada']['usuario_id'];
 
-						// Asignar campos al modelo
 						$this->ReservaFactura->set([
 							'reserva_id' => $reserva_id,
 							'punto_venta_id' => $pvId,
-							'tipo' => $tipo,
-							'titular' => $titular,
-							'fecha_emision' => $fecha,
-							'numero' => $numero,
-							'monto' => $monto,
-							'tipoDoc' => $tipoDoc,
-							'agregada_por' => $usuario_id
+							'tipo' => $comp['comprobante']['tipo'],
+							'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
+							'fecha_emision' => $comp['comprobante']['fecha'],
+							'numero' => str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT),
+							'monto' => $comp['comprobante']['total'],
+							'tipoDoc' => 1,
+							'agregada_por' => $reserva['ReservaFacturaProcesada']['usuario_id']
 						]);
-
 
 						if ($this->ReservaFactura->validates()) {
 							$this->ReservaFactura->save();
 							escribirLog("Factura de reserva $reserva_id guardada correctamente", $nombreFile);
+							$facturas_guardadas = true;
+							$reserva_valida = true;
 						} else {
+							$reserva_valida = false;
 							$errores = '';
 							foreach ($this->ReservaFactura->validationErrors as $value) {
 								foreach ($value as $val) {
@@ -628,17 +620,28 @@ class ReservaFacturasController extends AppController {
 								}
 							}
 							escribirLog("Factura de reserva $reserva_id NO guardada: $errores", $nombreFile);
+							$errores_api[$pvId] = $errores;
 						}
 					}
+				} else {
+					$errores_api[$pvId] = $data['error_details'] ?? 'Sin comprobantes';
 				}
+			}
 
-// marcar reserva como procesada
-				// Solo marcamos como procesada si todas las facturas se guardaron correctamente
-				if ($reserva_valida) {
-					$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
-					$this->ReservaFacturaProcesada->saveField('procesada_api', 1);
-				}
-
+			// Guardamos el estado final de la reserva
+			$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
+			if ($facturas_guardadas) {
+				$this->ReservaFacturaProcesada->save([
+					'procesada_api' => 1,
+					'error_api' => 0,
+					'error_mensaje' => null
+				]);
+			} else {
+				$this->ReservaFacturaProcesada->save([
+					'procesada_api' => 1,
+					'error_api' => 1,
+					'error_mensaje' => json_encode($errores_api)
+				]);
 			}
 		}
 
