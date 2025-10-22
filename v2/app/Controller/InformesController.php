@@ -1588,7 +1588,8 @@ function iva_compras($mes,$ano, $orden){
         ));
     }
 
-	function exportarIvaVenta($mes,$ano,$orden,$tipoDoc,$tipo,$puntoVenta,$buscar){
+    function exportarIvaVenta($mes = null, $ano = null, $orden = null, $tipoDoc = null, $tipo = null, $puntoVenta = null, $buscar = '')
+    {
          //error_reporting(0);
         $this->layout = 'ajax';
 
