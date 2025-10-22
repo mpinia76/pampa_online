@@ -593,11 +593,13 @@ class ReservaFacturasController extends AppController {
 				if (!empty($data['comprobantes'])) {
 					foreach ($data['comprobantes'] as $comp) {
 						$this->ReservaFactura->create();
+						$partes = explode(' ', $comp['comprobante']['tipo']);
+						$tipoLetra = end($partes); // devuelve la última palabra
 
 						$this->ReservaFactura->set([
 							'reserva_id' => $reserva_id,
 							'punto_venta_id' => $pvId,
-							'tipo' => $comp['comprobante']['tipo'],
+							'tipo' => $tipoLetra, // solo la letra
 							'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
 							'fecha_emision' => $comp['comprobante']['fecha'],
 							'numero' => str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT),

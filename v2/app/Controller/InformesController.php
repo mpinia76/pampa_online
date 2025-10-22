@@ -1517,49 +1517,50 @@ function iva_compras($mes,$ano, $orden){
 		$this->ExportXls->export($fileName, $headerRow, $data);
     }
 
-    function iva_ventas($mes,$ano,$orden,$tipoDoc,$tipo,$puntoVenta,$buscar){
-         //error_reporting(0);
+    function iva_ventas($mes = null, $ano = null, $orden = null, $tipoDoc = null, $tipo = null, $puntoVenta = null, $buscar = '')
+    {
         $this->layout = 'ajax';
-
         $this->loadModel('ReservaFactura');
 
-         $condicionTipoDoc = array();
-
-    	if ($tipoDoc!='Seleccionar...') {
-
-        	$condicionTipoDoc = array('ReservaFactura.tipoDoc ' => $tipoDoc);
+        $condicionTipoDoc = array();
+        if ($tipoDoc != 'Seleccionar...' && $tipoDoc != null) {
+            $condicionTipoDoc = array('ReservaFactura.tipoDoc ' => $tipoDoc);
         }
 
-		$condicionTipo = array();
-
-    	if ($tipo!='Seleccionar...') {
-
-        	$condicionTipo = array('ReservaFactura.tipo ' => $tipo);
+        $condicionTipo = array();
+        if ($tipo != 'Seleccionar...' && $tipo != null) {
+            $condicionTipo = array('ReservaFactura.tipo ' => $tipo);
         }
 
-		$condicionPuntoVenta = array();
-
-    	if ($puntoVenta!='Seleccionar...') {
-
-        	$condicionPuntoVenta = array('ReservaFactura.punto_venta_id ' => $puntoVenta);
+        $condicionPuntoVenta = array();
+        if ($puntoVenta != 'Seleccionar...' && $puntoVenta != null) {
+            $condicionPuntoVenta = array('ReservaFactura.punto_venta_id ' => $puntoVenta);
         }
 
-		$condicionBuscar = array();
-
-    	if ($buscar!='') {
-
-        	$condicionBuscar=array('or' =>
-	        	  array('Reserva.numero LIKE '=>'%'.$buscar.'%', 'ReservaFactura.titular LIKE '=>'%'.$buscar.'%', 'ReservaFactura.numero LIKE '=>'%'.$buscar.'%', 'ReservaFactura.monto LIKE '=>'%'.$buscar.'%', 'ReservaFactura.fecha_emision LIKE '=>'%'.($buscar).'%',
-			    ));
+        $condicionBuscar = array();
+        if ($buscar != '' && $buscar != null && $buscar != '-') {
+            $condicionBuscar = array('or' => array(
+                'Reserva.numero LIKE ' => '%' . $buscar . '%',
+                'ReservaFactura.titular LIKE ' => '%' . $buscar . '%',
+                'ReservaFactura.numero LIKE ' => '%' . $buscar . '%',
+                'ReservaFactura.monto LIKE ' => '%' . $buscar . '%',
+                'ReservaFactura.fecha_emision LIKE ' => '%' . $buscar . '%',
+            ));
         }
 
-
-
-
-
-
-        $reservas = $this->ReservaFactura->find('all',array('conditions' => array('YEAR(fecha_emision)' => $ano, 'MONTH(fecha_emision)' => $mes, ivaVentas => 1,$condicionTipoDoc,$condicionTipo,$condicionPuntoVenta,$condicionBuscar), 'order' => $orden.' asc', 'recursive' => 1));
-
+        $reservas = $this->ReservaFactura->find('all', array(
+            'conditions' => array(
+                'YEAR(fecha_emision)' => $ano,
+                'MONTH(fecha_emision)' => $mes,
+                'ivaVentas' => 1,
+                $condicionTipoDoc,
+                $condicionTipo,
+                $condicionPuntoVenta,
+                $condicionBuscar
+            ),
+            'order' => $orden . ' asc',
+            'recursive' => 1
+        ));
 
          $reservasMostrar = array();
         if(count($reservas) > 0){
