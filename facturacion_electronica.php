@@ -182,9 +182,11 @@ include_once("functions/util.php");
 auditarUsuarios('Facturacion electronica');
 
 if (isset($_POST['ver'])) {
-	
-	
-	/*$sql = "SELECT R.numero,R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.cuit, C.titular_factura, C.razon_social, C.iva
+
+    // Obtener todos los conceptos posibles (idealmente al inicio del archivo para no repetir)
+    $conceptos = mysqli_query($conn, "SELECT id, nombre FROM concepto_facturacions ORDER BY nombre");
+
+    /*$sql = "SELECT R.numero,R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.cuit, C.titular_factura, C.razon_social, C.iva
 FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id ";*/
     $sql = "
 SELECT R.numero, R.id, R.check_in, R.check_out, R.total, 
@@ -418,6 +420,8 @@ while($rs = mysqli_fetch_array($rsTemp)){
 			$mostrar = ($fc<=$_POST['monto'])?1:0;
 			
 		}
+        $detalle = '';
+        $idCobro = 0;
 
         $sql = "SELECT reserva_cobros.*, concepto_facturacions.nombre as concepto_facturacion FROM reserva_cobros LEFT JOIN concepto_facturacions ON reserva_cobros.concepto_facturacion_id = concepto_facturacions.id  WHERE fecha LIKE '".$_POST["ano"]."-".$_POST["mes"]."%' AND reserva_id = ".$rs['id']." AND reserva_cobros.tipo <> 'DESCUENTO' ORDER BY reserva_cobros.id";
 
@@ -425,6 +429,7 @@ while($rs = mysqli_fetch_array($rsTemp)){
 
         while($rsCobros = mysqli_fetch_array($rsTempCobros)){
             $detalle = $rsCobros['concepto_facturacion'];
+            $idCobro = $rsCobros['id'];
         }
 		
 		if (isset($_POST['estado'])) {
@@ -473,7 +478,23 @@ if ($mostrar) {
 <td><?php echo $razonSocial;?></td>
 <td><?php echo ($rs['cuit']!='')?$rs['cuit']:$rs['dni']; ?></td>
     <td><?php echo $iva; ?></td>
-    <td><?php echo $detalle; ?></td>
+    <?php
+
+
+    echo '<td>';
+        if (($estado=='Pendiente')||($estado=='Error API')||($estado=='Facturacion Parcial')) {
+            echo '<select class="select-concepto" data-id="' . $idCobro . '" style="width:100px;">';
+            mysqli_data_seek($conceptos, 0); // reiniciar puntero
+            while ($c = mysqli_fetch_assoc($conceptos)) {
+                $selected = ($c['nombre'] == $detalle) ? 'selected' : '';
+                echo '<option value="' . $c['id'] . '" ' . $selected . '>' . $c['nombre'] . '</option>';
+            }
+            echo '</select>';
+        }
+        else{
+            echo $detalle;
+        }
+        echo '</td>'; ?>
 <td><?php echo trim( number_format($fc, 2, '.', '') );?></td>
 <td><?php echo trim( number_format($transferencias, 2, '.', '') );?></td>
 <td><?php echo $quienTransfiere;?></td>
@@ -670,6 +691,8 @@ function descargar(){
 }
 
 function abrirFacturacion() {
+
+
     var seleccionadas = [];
     $('.trSelected', $('.medios_pago')).each(function() {
         var id = $(this).attr('id');
@@ -706,6 +729,17 @@ function abrirFacturacion() {
     w1.centerOnScreen();
 
     var puntoVentaSelect = $('#puntos').val();
+
+    var erroresPV = validarPuntoVenta(seleccionadas, puntoVentaSelect);
+
+    if (erroresPV.length > 0) {
+        let mensaje = "No se puede facturar estas reservas por incluir facturas con otro punto de venta:\n";
+        erroresPV.forEach(function(r) {
+            mensaje += "Reserva ID " + r.id + " - Nro: " + r.nro + " - Punto de venta: " + r.punto_venta + "\n";
+        });
+        alert(mensaje);
+        return; // bloquea la facturación
+    }
 
     // Total bruto y cantidad
     var totalBruto = 0, cantidad = 0;
@@ -874,6 +908,56 @@ function confirmarFacturacion() {
     });
 }
 
+$('.select-concepto').live('change', function() {
+    var id = $(this).attr('data-id'); // <--- usar attr
+    var conceptoId = $(this).val(); // directamente del select que cambió
+
+    $.ajax({
+        url : 'v2/reserva_cobros/guardarConcepto',
+        type : 'POST',
+        dataType : 'json',
+        data : {
+            cobro_id: id,
+            concepto_facturacion_id: conceptoId
+        },
+        success : function(res) {
+
+        },
+        error: function(xhr, status, err){
+            console.error(xhr.responseText);
+            alert('Error de conexión con el servidor');
+        }
+    });
+});
+
+function validarPuntoVenta(seleccionadas, puntoVenta) {
+    let errorReservas = [];
+
+    // Recorremos cada reserva seleccionada
+    seleccionadas.forEach(function(id) {
+        $.ajax({
+            url: 'v2/reserva_facturas/validarPuntoVenta', // archivo PHP que devuelve facturas de la reserva
+            type: 'POST',
+            dataType: 'json',
+            async: false, // síncrono para que se valide antes de continuar
+            data: { reserva_id: id, punto_venta_id: puntoVenta },
+            success: function(resp) {
+                if (resp.error === 1) {
+                    errorReservas.push({
+                        id: id,
+                        nro: resp.numero,
+                        punto_venta: resp.punto_venta
+                    });
+                }
+            },
+            error: function(xhr, status, err) {
+                console.error('Error validando reserva ' + id, xhr, status, err);
+            }
+        });
+    });
+
+    return errorReservas;
+}
 
 
 </script>

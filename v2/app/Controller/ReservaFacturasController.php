@@ -793,6 +793,45 @@ class ReservaFacturasController extends AppController {
 		echo "Consulta de API finalizada.";
 	}
 
+	public function validarPuntoVenta() {
+		$this->autoRender = false; // no renderiza vista
+		$this->layout = 'ajax';
+
+		$reserva_id = $this->request->data['reserva_id'];
+		$punto_venta_id = $this->request->data['punto_venta_id'];
+
+		$this->loadModel('ReservaFactura');
+		$this->loadModel('PuntoVenta');
+
+		$puntoVenta = $this->PuntoVenta->read(null, $punto_venta_id);
+		$error = 0;
+		$numero = '';
+		$punto_venta_numero = '';
+
+		if ($reserva_id && $puntoVenta) {
+			// Buscamos la factura de la reserva
+			$factura = $this->ReservaFactura->find('first', array(
+				'conditions' => array('ReservaFactura.reserva_id' => $reserva_id),
+				'order' => 'ReservaFactura.fecha_emision ASC'
+			));
+
+			if ($factura) {
+				$numeroArray = explode('-', $factura['ReservaFactura']['numero']);
+				$numero = $factura['ReservaFactura']['numero'];
+				$punto_venta_numero = $numeroArray[0];
+
+				if ($punto_venta_numero != $puntoVenta['PuntoVenta']['numero']) {
+					$error = 1;
+				}
+			}
+		}
+
+		echo json_encode(array(
+			'error' => $error,
+			'numero' => $numero,
+			'punto_venta' => $punto_venta_numero
+		));
+	}
 
 
 

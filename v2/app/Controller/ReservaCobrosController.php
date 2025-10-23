@@ -610,7 +610,7 @@ class ReservaCobrosController extends AppController {
         }
     }
 
-    public function guardarConcepto(){
+    public function guardarConcepto_old(){
 
         //print_r($this->request->data);
 
@@ -641,5 +641,41 @@ class ReservaCobrosController extends AppController {
             'detalle'
         ));
     }
+
+    public function guardarConcepto() {
+        $this->autoRender = false; // No buscar vista
+        $this->response->type('json'); // Asegura respuesta JSON
+
+        // Debug de entrada
+        //CakeLog::write('debug', 'guardarConcepto POST: ' . print_r($this->request->data, true));
+        // o con error_log:
+        // error_log('guardarConcepto POST: ' . print_r($this->request->data, true));
+
+        $cobroId = $this->request->data('cobro_id');
+        $conceptoId = $this->request->data('concepto_facturacion_id');
+
+        //CakeLog::write('debug', "cobroId: $cobroId, conceptoId: $conceptoId");
+
+        $this->ReservaCobro->id = $cobroId;
+
+        if ($this->ReservaCobro->saveField('concepto_facturacion_id', $conceptoId, false)) {
+            $resultado = 'OK';
+            $mensaje = 'Datos guardados correctamente';
+            $detalle = '';
+        } else {
+            $resultado = 'ERROR';
+            $mensaje = 'No se pudo guardar';
+            $detalle = '';
+        }
+
+        //CakeLog::write('debug', "Resultado: $resultado, Mensaje: $mensaje");
+
+        $this->set(compact('resultado', 'mensaje', 'detalle'));
+        $this->set('_serialize', ['resultado', 'mensaje', 'detalle']);
+    }
+
+
 }
+
+
 ?>
