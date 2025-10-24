@@ -802,13 +802,19 @@ class ReservaFacturasController extends AppController {
 
 		$this->loadModel('ReservaFactura');
 		$this->loadModel('PuntoVenta');
+		$this->loadModel('Reserva'); // <-- cargar modelo Reserva para obtener numero
 
 		$puntoVenta = $this->PuntoVenta->read(null, $punto_venta_id);
 		$error = 0;
 		$numero = '';
+		$numero_reserva = '';
 		$punto_venta_numero = '';
 
 		if ($reserva_id && $puntoVenta) {
+			// Obtenemos la reserva para mostrar el número
+			$reserva = $this->Reserva->read(null, $reserva_id);
+			$numero_reserva = $reserva['Reserva']['numero'];
+
 			// Buscamos la factura de la reserva
 			$factura = $this->ReservaFactura->find('first', array(
 				'conditions' => array('ReservaFactura.reserva_id' => $reserva_id),
@@ -816,11 +822,14 @@ class ReservaFacturasController extends AppController {
 			));
 
 			if ($factura) {
-				$numeroArray = explode('-', $factura['ReservaFactura']['numero']);
 				$numero = $factura['ReservaFactura']['numero'];
-				$punto_venta_numero = $numeroArray[0];
+				$punto_venta_factura_id = $factura['ReservaFactura']['punto_venta_id'];
 
-				if ($punto_venta_numero != $puntoVenta['PuntoVenta']['numero']) {
+				// Traemos el número real del punto de venta
+				$puntoFactura = $this->PuntoVenta->read(null, $punto_venta_factura_id);
+				$punto_venta_numero = $puntoFactura ? $puntoFactura['PuntoVenta']['numero'] : '';
+
+				if ($punto_venta_id != $punto_venta_factura_id) {
 					$error = 1;
 				}
 			}
@@ -829,8 +838,62 @@ class ReservaFacturasController extends AppController {
 		echo json_encode(array(
 			'error' => $error,
 			'numero' => $numero,
+			'numero_reserva' => $numero_reserva, // <-- agregamos
 			'punto_venta' => $punto_venta_numero
 		));
+	}
+
+// En ReservaFacturasController.php
+	public function validarFechaFactura() {
+		$this->autoRender = false; // No renderiza vista
+		$this->layout = 'ajax';
+
+
+		$punto_venta_id = $this->request->data['punto_venta_id'] ?? null;
+		$fecha = $this->request->data['fecha'] ?? null;
+
+		if (!$punto_venta_id || !$fecha) {
+			echo json_encode(['error' => 1, 'mensaje' => 'Datos incompletos']);
+			return;
+		}
+
+		$this->loadModel('ReservaFactura');
+		$this->loadModel('PuntoVenta');
+
+
+		$puntoVenta = $this->PuntoVenta->read(null, $punto_venta_id);
+		// Obtenemos la fecha más reciente de facturas existentes para ese punto de venta
+		$ultimaFactura = $this->ReservaFactura->find('first', [
+			'conditions' => ['ReservaFactura.punto_venta_id' => $punto_venta_id],
+			'order' => ['ReservaFactura.fecha_emision DESC'],
+			'fields' => ['ReservaFactura.fecha_emision', 'ReservaFactura.numero', 'ReservaFactura.reserva_id']
+		]);
+
+		$error = 0;
+		$mensaje = '';
+
+		if ($ultimaFactura) {
+			$fechaUltima = $ultimaFactura['ReservaFactura']['fecha_emision'];
+			if ($fecha < $fechaUltima) {
+				$error = 1;
+				$punto_venta_numero = $puntoVenta ? $puntoVenta['PuntoVenta']['numero'] : '';
+				$numeroFactura = $ultimaFactura ? $ultimaFactura['ReservaFactura']['numero'] : '';
+				$mensaje = "No se puede emitir una factura con fecha anterior a la última ya emitida para el punto de venta $punto_venta_numero Factura: $numeroFactura Fecha: $fechaUltima ";
+			}
+		}
+
+
+
+
+
+
+
+		echo json_encode([
+			'error' => $error,
+			'mensaje' => $mensaje,
+			'numero' => $numeroFactura,
+			'punto_venta' => $punto_venta_numero
+		]);
 	}
 
 

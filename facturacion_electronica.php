@@ -581,6 +581,19 @@ echo '<script>
 
 </tbody>
 </table>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Esto se ejecuta cuando el navegador empieza a renderizar el HTML,
+        // pero todavía NO terminó de cargar todo (imágenes, estilos, etc.)
+        document.getElementById('cargando').style.display = 'block';
+    });
+
+    window.addEventListener("load", function() {
+        // Esto se ejecuta SOLO cuando todo el contenido terminó de cargarse
+        // (incluyendo la ejecución de tu PHP pesado)
+        document.getElementById('cargando').style.display = 'none';
+    });
+</script>
 
 </body>
 <script>
@@ -755,6 +768,28 @@ function abrirFacturacion() {
         }
     }
 
+    var puntoVentaSelect = $('#puntos').val();
+
+    var resultadoPV = validarPuntoVenta(seleccionadas, puntoVentaSelect);
+
+    if (resultadoPV.errores.length > 0) {
+        let mensaje = "Se excluirán estas reservas por incluir facturas con otro punto de venta:\n";
+        resultadoPV.errores.forEach(function(r) {
+            mensaje += "Reserva " + r.numero_reserva + " - Nro: " + r.nro + " - Punto de venta: " + r.punto_venta + "\n";
+        });
+        alert(mensaje);
+    }
+
+// Solo facturamos las válidas
+    seleccionadas = resultadoPV.validas;
+
+    if (seleccionadas.length === 0) {
+        alert('No hay reservas válidas para facturar.');
+        return;
+    }
+
+
+
     // ✅ Crea nueva ventana
     w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 400);
     w1.setText("Facturación");
@@ -762,27 +797,19 @@ function abrirFacturacion() {
     w1.button("park").hide();
     w1.centerOnScreen();
 
-    var puntoVentaSelect = $('#puntos').val();
 
-    var erroresPV = validarPuntoVenta(seleccionadas, puntoVentaSelect);
 
-    if (erroresPV.length > 0) {
-        let mensaje = "No se puede facturar estas reservas por incluir facturas con otro punto de venta:\n";
-        erroresPV.forEach(function(r) {
-            mensaje += "Reserva ID " + r.id + " - Nro: " + r.nro + " - Punto de venta: " + r.punto_venta + "\n";
-        });
-        alert(mensaje);
-        return; // bloquea la facturación
-    }
-
-    // Total bruto y cantidad
+    // Total bruto y cantidad solo de reservas válidas
     var totalBruto = 0, cantidad = 0;
     $('.trSelected', $('.medios_pago')).each(function() {
-        if ($(this).attr('disable') == '0') {
+        var id = $(this).attr('id');
+        var disable = $(this).attr('disable');
+        if (id && disable == '0' && seleccionadas.includes(id)) {
             totalBruto += parseFloat($(this).attr('monto'));
             cantidad++;
         }
     });
+
 
     // Clonar opciones del select principal incluyendo data-alicuota
     var opcionesSelect = $('#puntos option').map(function() {
@@ -843,8 +870,41 @@ function cerrarVentanaFacturacion() {
     }
 }
 
-
 function confirmarFacturacion() {
+    var fecha = $('#fechaFactura').val();
+    if (!fecha) {
+        alert('Debe seleccionar una fecha de factura.');
+        return;
+    }
+
+    var puntoVenta = $('#modalPuntoVenta').val();
+
+    // Validación de fecha para el punto de venta
+    $.ajax({
+        url: 'v2/reserva_facturas/validarFechaFactura',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            punto_venta_id: puntoVenta,
+            fecha: fecha
+        },
+        success: function(resp) {
+            if (resp.error === 1) {
+                alert(resp.mensaje);
+                return; // bloquea la facturación si la fecha es inválida
+            }
+
+            // Aquí seguís con el envío normal a la API
+            enviarFacturacion();
+        },
+        error: function(xhr, status, err) {
+            console.error(xhr, status, err);
+            alert('Error validando la fecha de la factura.');
+        }
+    });
+}
+
+function enviarFacturacion() {
     var fecha = $('#fechaFactura').val();
     var conceptoId = $('#conceptoFactura').val();
     var monto = $('#montoFactura').val();
@@ -966,22 +1026,24 @@ $('.select-concepto').live('change', function() {
 
 function validarPuntoVenta(seleccionadas, puntoVenta) {
     let errorReservas = [];
+    let validas = [];
 
-    // Recorremos cada reserva seleccionada
     seleccionadas.forEach(function(id) {
         $.ajax({
-            url: 'v2/reserva_facturas/validarPuntoVenta', // archivo PHP que devuelve facturas de la reserva
+            url: 'v2/reserva_facturas/validarPuntoVenta',
             type: 'POST',
             dataType: 'json',
-            async: false, // síncrono para que se valide antes de continuar
+            async: false,
             data: { reserva_id: id, punto_venta_id: puntoVenta },
             success: function(resp) {
                 if (resp.error === 1) {
                     errorReservas.push({
-                        id: id,
+                        numero_reserva: resp.numero_reserva,
                         nro: resp.numero,
                         punto_venta: resp.punto_venta
                     });
+                } else {
+                    validas.push(id);
                 }
             },
             error: function(xhr, status, err) {
@@ -990,8 +1052,9 @@ function validarPuntoVenta(seleccionadas, puntoVenta) {
         });
     });
 
-    return errorReservas;
+    return { errores: errorReservas, validas: validas };
 }
+
 
 
 </script>
