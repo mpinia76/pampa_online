@@ -32,6 +32,20 @@ function doOnLoad() {
     
 
 }
+function asignarColumnas(){
+
+
+    if($('#columnaTransfiere').is(':checked')){
+        $('#hTransfiere').val(1);
+    }
+    if($('#columnaTC').is(':checked')){
+        $('#hTC').val(1);
+    }
+    if($('#columnaCheques').is(':checked')){
+        $('#hCheques').val(1);
+    }
+
+}
 </script>
 
 <script src="js/createWindow.js"></script>
@@ -576,20 +590,7 @@ function buscar(){
 	
 	
 }
-function asignarColumnas(){
-	
 
-	if($('#columnaTransfiere').is(':checked')){
-		$('#hTransfiere').val(1);
-	}
-	if($('#columnaTC').is(':checked')){
-		$('#hTC').val(1);
-	}
-	if($('#columnaCheques').is(':checked')){
-		$('#hCheques').val(1);
-	}
-	
-}
 $('.medios_pago').flexigrid({height:'auto',striped:false});
 
 seleccionarTodas()
