@@ -874,13 +874,27 @@ class ReservaFacturasController extends AppController {
 
 		if ($ultimaFactura) {
 			$fechaUltima = $ultimaFactura['ReservaFactura']['fecha_emision'];
-			if ($fecha < $fechaUltima) {
+
+			// Normalizar formatos de fecha
+			$fechaObj = DateTime::createFromFormat('d/m/Y', $fecha);
+			if (!$fechaObj) $fechaObj = DateTime::createFromFormat('Y-m-d', $fecha);
+
+			$fechaUltimaObj = DateTime::createFromFormat('Y-m-d', $fechaUltima);
+			if (!$fechaUltimaObj) $fechaUltimaObj = DateTime::createFromFormat('d/m/Y', $fechaUltima);
+
+			if ($fechaObj && $fechaUltimaObj && $fechaObj < $fechaUltimaObj) {
 				$error = 1;
 				$punto_venta_numero = $puntoVenta ? $puntoVenta['PuntoVenta']['numero'] : '';
 				$numeroFactura = $ultimaFactura ? $ultimaFactura['ReservaFactura']['numero'] : '';
-				$mensaje = "No se puede emitir una factura con fecha anterior a la última ya emitida para el punto de venta $punto_venta_numero Factura: $numeroFactura Fecha: $fechaUltima ";
+				$mensaje = sprintf(
+					"No se puede emitir una factura con fecha anterior a la última ya emitida para el punto de venta %s. Factura: %s Fecha: %s",
+					$punto_venta_numero,
+					$numeroFactura,
+					$fechaUltimaObj->format('d/m/Y')
+				);
 			}
 		}
+
 
 
 
