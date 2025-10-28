@@ -43,7 +43,7 @@ class ReservaFacturasController extends AppController {
                 $transaccion['ReservaFactura']['fecha_emision'],
                 ($transaccion['ReservaFactura']['tipoDoc']==1)?'Factura':'Nota de credito',
                	'$'.$transaccion['ReservaFactura']['monto'],
-                $transaccion['ReservaFactura']['tipo'].'-'.$transaccion['ReservaFactura']['numero'],
+                $transaccion['ReservaFactura']['tipo'].'-'.$transaccion['PuntoVenta']['numero'].'-'.$transaccion['ReservaFactura']['numero'],
                $transaccion['ReservaFactura']['titular']
                 
             );

@@ -811,3 +811,19 @@ ALTER TABLE `reserva_factura_procesada`
 ALTER TABLE `reserva_factura_procesada`
     ADD COLUMN `error_api` TINYINT(1) NOT NULL DEFAULT 0 AFTER `procesada_api`,
 ADD COLUMN `error_mensaje` TEXT NULL AFTER `error_api`;
+
+ALTER TABLE `concepto_facturacions`
+    ADD COLUMN `punto_venta_id` INT(11) NULL AFTER `activo`;
+
+-- luego asignas valores válidos a las filas existentes
+UPDATE `concepto_facturacions` SET punto_venta_id = 1; -- ejemplo, asignar un punto de venta válido
+
+-- luego puedes hacer que sea NOT NULL y agregar la FK
+ALTER TABLE `concepto_facturacions`
+    MODIFY COLUMN `punto_venta_id` INT(11) NOT NULL,
+    ADD INDEX `punto_venta_id` (`punto_venta_id`),
+    ADD CONSTRAINT `fk_concepto_punto_venta`
+    FOREIGN KEY (`punto_venta_id`) REFERENCES `punto_ventas`(`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+

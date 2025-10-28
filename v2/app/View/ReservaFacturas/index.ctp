@@ -52,7 +52,7 @@ $this->Js->buffer('
             <th width="20">Fecha</th>
             <th width="50">Tipo</th>
             <th width="50">Monto</th>
-            <th width="50">Tipo-Nro FC</th>
+            <th width="50">Factura</th>
             
             <th width="100">Titular</th>
             

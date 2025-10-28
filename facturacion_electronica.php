@@ -129,7 +129,7 @@ Montos
 <input type="hidden"  name="hCheques" id="hCheques"/>
 <input type="submit"  name="ver" id="ver" value="ver" /><span id="cargando" style="display:none;">Cargando ...</span>
 
-</form>
+<br>
 <?php
 include_once("config/db.php");
 include_once("functions/util.php");
@@ -154,7 +154,7 @@ include_once("functions/util.php");
 
 <input type="button" name="descargar" id="descargar" value="Descargar" onClick="descargar()"/>
 <input type="button" name="facturar" id="facturar" value="Facturar" onClick="abrirFacturacion()"/>
-
+</form>
 <table class="medios_pago">
 <tbody>
 	
@@ -198,7 +198,7 @@ auditarUsuarios('Facturacion electronica');
 if (isset($_POST['ver'])) {
 
     // Obtener todos los conceptos posibles (idealmente al inicio del archivo para no repetir)
-    $conceptos = mysqli_query($conn, "SELECT id, nombre FROM concepto_facturacions ORDER BY nombre");
+    $conceptos = mysqli_query($conn, "SELECT * FROM concepto_facturacions ORDER BY nombre");
 
     /*$sql = "SELECT R.numero,R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.cuit, C.titular_factura, C.razon_social, C.iva
 FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id ";*/
@@ -529,19 +529,22 @@ if ($mostrar) {
 
 
     echo '<td>';
-        if (($estado=='Pendiente')||($estado=='Error API')||($estado=='Facturacion Parcial')) {
-            echo '<select class="select-concepto" data-id="' . $idCobro . '" style="width:100px;">';
-            mysqli_data_seek($conceptos, 0); // reiniciar puntero
-            while ($c = mysqli_fetch_assoc($conceptos)) {
+    if (($estado=='Pendiente')||($estado=='Error API')||($estado=='Facturacion Parcial')) {
+        echo '<select class="select-concepto" data-id="' . $idCobro . '" style="width:100px;">';
+        mysqli_data_seek($conceptos, 0); // reiniciar puntero
+        while ($c = mysqli_fetch_assoc($conceptos)) {
+            // Solo mostrar conceptos del punto de venta seleccionado
+            // Supongamos que en tu tabla concepto_facturacions hay un campo punto_venta_id
+            if ($c['punto_venta_id'] == $_POST['puntos']) {
                 $selected = ($c['nombre'] == $detalle) ? 'selected' : '';
                 echo '<option value="' . $c['id'] . '" ' . $selected . '>' . $c['nombre'] . '</option>';
             }
-            echo '</select>';
         }
-        else{
-            echo $detalle;
-        }
-        echo '</td>'; ?>
+        echo '</select>';
+    } else {
+        echo $detalle;
+    }
+    echo '</td>'; ?>
 <td><?php echo trim( number_format($fc, 2, '.', '') );?></td>
 <td><?php echo trim( number_format($transferencias, 2, '.', '') );?></td>
 <td><?php echo $quienTransfiere;?></td>
@@ -1055,6 +1058,9 @@ function validarPuntoVenta(seleccionadas, puntoVenta) {
     return { errores: errorReservas, validas: validas };
 }
 
+$('#puntos').change(function() {
+    $('#ver').click();
+});
 
 
 </script>
