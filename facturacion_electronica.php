@@ -191,65 +191,63 @@ if (isset($_POST['ver'])) {
 
     /*$sql = "SELECT R.numero,R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.cuit, C.titular_factura, C.razon_social, C.iva
 FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id ";*/
-    $sql = "
-SELECT 
-    R.numero,
-    R.id,
-    R.check_in,
-    R.check_out,
-    R.total,
-    C.nombre_apellido,
-    C.dni,
-    R.estado,
-    C.cuit,
-    C.titular_factura,
-    C.razon_social,
-    C.iva,
-    RFP.id AS procesada_id,
-    RFP.procesada_api,
-    RFP.error_api,
-    RFP.error_mensaje
-FROM reservas R
-INNER JOIN clientes C ON R.cliente_id = C.id
-LEFT JOIN (
-    SELECT 
-        rfp1.*
-    FROM reserva_factura_procesada rfp1
-    INNER JOIN (
-        SELECT reserva_id, MAX(id) AS max_id
-        FROM reserva_factura_procesada
-        GROUP BY reserva_id
-    ) rfp2 
-        ON rfp1.id = rfp2.max_id
-) AS RFP 
-    ON RFP.reserva_id = R.id 
-    AND RFP.cliente = C.nombre_apellido 
-    AND RFP.dni = C.dni
-";
-
     $ano = mysqli_real_escape_string($conn, $_POST['ano']);
     $mes = mysqli_real_escape_string($conn, $_POST['mes']);
     $inicio = $ano . '-' . $mes . '-01';
     $fin = $ano . '-' . $mes . '-31';
 
+    $sql = "
+SELECT 
+    R.id,
+    MAX(R.numero) AS numero,
+    MAX(R.check_in) AS check_in,
+    MAX(R.check_out) AS check_out,
+    MAX(R.total) AS total,
+    MAX(C.nombre_apellido) AS nombre_apellido,
+    MAX(C.dni) AS dni,
+    MAX(R.estado) AS estado,
+    MAX(C.cuit) AS cuit,
+    MAX(C.titular_factura) AS titular_factura,
+    MAX(C.razon_social) AS razon_social,
+    MAX(C.iva) AS iva,
+    MAX(RFP.id) AS procesada_id,
+    MAX(RFP.procesada_api) AS procesada_api,
+    MAX(RFP.error_api) AS error_api,
+    MAX(RFP.error_mensaje) AS error_mensaje
+FROM reservas R
+INNER JOIN clientes C ON R.cliente_id = C.id
+LEFT JOIN (
+    SELECT rfp1.*
+    FROM reserva_factura_procesada rfp1
+    INNER JOIN (
+        SELECT reserva_id, MAX(id) AS max_id
+        FROM reserva_factura_procesada
+        GROUP BY reserva_id
+    ) rfp2 ON rfp1.id = rfp2.max_id
+) AS RFP ON RFP.reserva_id = R.id 
+         AND RFP.cliente = C.nombre_apellido 
+         AND RFP.dni = C.dni
+";
+
     if ($_POST['metodo'] == 'check_out') {
-        $sql .= "
-    WHERE R.check_out BETWEEN '$inicio' AND '$fin'
-    ORDER BY R.check_out, C.nombre_apellido ASC";
+        $sql .= " WHERE R.check_out LIKE '$ano-$mes%' 
+              GROUP BY R.id 
+              ORDER BY R.check_out, C.nombre_apellido ASC";
     } else {
         $sql .= "
-    INNER JOIN reserva_cobros RC ON R.id = RC.reserva_id
-    LEFT JOIN cobro_transferencias ON RC.id = cobro_transferencias.reserva_cobro_id
-    LEFT JOIN cobro_cheques ON RC.id = cobro_cheques.reserva_cobro_id
-    WHERE (
-        RC.fecha BETWEEN '$inicio' AND '$fin'
-        OR cobro_transferencias.fecha_acreditado BETWEEN '$inicio' AND '$fin'
-        OR cobro_cheques.fecha_acreditado BETWEEN '$inicio' AND '$fin'
-        OR cobro_cheques.asociado_a_pagos_fecha BETWEEN '$inicio' AND '$fin'
-    )
-    AND RC.tipo != 'DESCUENTO'
-    ORDER BY R.check_out, C.nombre_apellido ASC";
+    INNER JOIN reserva_cobros RC ON R.id = RC.reserva_id 
+    LEFT JOIN cobro_transferencias CT ON RC.id = CT.reserva_cobro_id 
+    LEFT JOIN cobro_cheques CC ON RC.id = CC.reserva_cobro_id
+    WHERE (RC.fecha LIKE '$ano-$mes%' 
+           OR CT.fecha_acreditado LIKE '$ano-$mes%' 
+           OR CC.fecha_acreditado LIKE '$ano-$mes%' 
+           OR CC.asociado_a_pagos_fecha LIKE '$ano-$mes%')
+      AND RC.tipo != 'DESCUENTO'
+    GROUP BY R.id
+    ORDER BY R.check_out, C.nombre_apellido ASC
+    ";
     }
+
 
 //echo $sql;
 $rsTemp = mysqli_query($conn,$sql); 
