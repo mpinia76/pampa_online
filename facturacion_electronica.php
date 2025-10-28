@@ -566,7 +566,7 @@ echo '<script>
 	$("#montoFacturado").text("'.trim( number_format($totalFacturado, 2, '.', '') ).'");
 	$("#montoMesFacturado").text("'.trim( number_format($totalMesFacturado, 2, '.', '') ).'");
 	$("#montoDebitoFiscal").text("'.trim( number_format($totalMesFacturado-$facturasMesIva, 2, '.', '') ).'");
-	$("#cargando").hide();
+	
 </script>'
 ?>
 
