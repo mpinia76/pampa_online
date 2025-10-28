@@ -70,27 +70,16 @@ cursor:pointer;
 	<option value="check_out" <?php if($_POST['metodo'] == 'check_out'){?> selected="selected" <?php } ?> >Por fecha de check out</option>
 	<option value="fecha_cobro" <?php if($_POST['metodo'] == 'fecha_cobro'){?> selected="selected" <?php } ?> >Por fecha de cobro</option>
 	
-</select> 
-<select size="1" name="ano" id="ano">
-	<option <?php if($ano == '2010'){?> selected="selected" <?php } ?> >2010</option>
-	<option <?php if($ano == '2011'){?> selected="selected" <?php } ?> >2011</option>
-	<option <?php if($ano == '2012'){?> selected="selected" <?php } ?> >2012</option>
-	<option <?php if($ano == '2013'){?> selected="selected" <?php } ?> >2013</option>
-	<option <?php if($ano == '2014'){?> selected="selected" <?php } ?> >2014</option>
-	<option <?php if($ano == '2015'){?> selected="selected" <?php } ?> >2015</option>
-    <option <?php if($ano == '2016'){?> selected="selected" <?php } ?> >2016</option>
-    <option <?php if($ano == '2017'){?> selected="selected" <?php } ?> >2017</option>
-    <option <?php if($ano == '2018'){?> selected="selected" <?php } ?> >2018</option>
-    <option <?php if($ano == '2019'){?> selected="selected" <?php } ?> >2019</option>
-    <option <?php if($ano == '2020'){?> selected="selected" <?php } ?> >2020</option>
-    <option <?php if($ano == '2021'){?> selected="selected" <?php } ?> >2021</option>
-    <option <?php if($ano == '2022'){?> selected="selected" <?php } ?> >2022</option>
-    <option <?php if($ano == '2023'){?> selected="selected" <?php } ?> >2023</option>
-    <option <?php if($ano == '2024'){?> selected="selected" <?php } ?> >2024</option>
-    <option <?php if($ano == '2025'){?> selected="selected" <?php } ?> >2025</option>
-    <option <?php if($ano == '2026'){?> selected="selected" <?php } ?> >2026</option>
-    <option <?php if($ano == '2027'){?> selected="selected" <?php } ?> >2027</option>
-</select> 
+</select>
+    <select size="1" name="ano" id="ano">
+        <?php
+        $anio_actual = date('Y');
+        for ($i = $anio_actual; $i >= 2010; $i--) {
+            $selected = ($i == $ano) ? 'selected' : '';
+            echo "<option value='$i' $selected>$i</option>";
+        }
+        ?>
+    </select>
 
 
 <select id="mes" name="mes" >

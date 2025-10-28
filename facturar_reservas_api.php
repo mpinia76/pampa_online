@@ -245,9 +245,9 @@ foreach ($ids as $idReserva) {
         'cliente' => [
             'documento_tipo' => $documentoTipo,
             'documento_nro' => $documento,
-            'razon_social' => $titular,
+            'razon_social' => limpiarTextoApi($titular),
             'email' => $res['email'] ?? 'no-reply@empresa.com',
-            'domicilio' => $domicilioFiscal,
+            'domicilio' => limpiarTextoApi($domicilioFiscal),
             'provincia' => $res['provincia_id'] ?? '2',
             'envia_por_mail' => 'N',
             'reclama_deuda' => 'N',
@@ -272,12 +272,12 @@ foreach ($ids as $idReserva) {
             'cotizacion'=>1,
             'periodo_facturado_desde'=>$fecha,
             'periodo_facturado_hasta'=>$fecha,
-            'rubro'=>$conceptoNombre,
-            'rubro_grupo_contable'=>$conceptoNombre,
+            'rubro'=>limpiarTextoApi($conceptoNombre),
+            'rubro_grupo_contable'=>limpiarTextoApi($conceptoNombre),
             'detalle'=>[[
                 'cantidad'=>1,
                 'producto'=>[
-                    'descripcion'=>$conceptoNombre . " - Reserva #" . $res['numero'],
+                    'descripcion'=>limpiarTextoApi($conceptoNombre) . " - Reserva #" . $res['numero'],
                     'codigo'=>'0001',
                     'lista_precios'=>'Lista API',
                     'unidad_bulto'=>1,
@@ -331,19 +331,22 @@ foreach ($ids as $idReserva) {
 // Guardar factura procesada solo si se envió bien
     if (empty($respData['error']) || $respData['error'] === 'N') {
 
-        // Borrar registro anterior
-        mysqli_query($conn, "DELETE FROM reserva_factura_procesada 
-        WHERE reserva_id = ".$res['id']."
-        AND cliente = '".$res['nombre_apellido']."'
-        AND dni = '".trim($res['dni'])."'
-        AND total = '".$total."'"
-        );
+        $cliente = mysqli_real_escape_string($conn, $res['nombre_apellido']);
+        $dni = mysqli_real_escape_string($conn, trim($res['dni']));
 
-        // Insertar nuevo registro
-        $insert = "INSERT INTO reserva_factura_procesada 
-        (reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id) VALUES 
-        (".$res['id'].",'".date('Y-m-d H:i:s')."','".$res['nombre_apellido']."','".trim($res['dni'])."','".$total."','".$neto."','".($total-$neto)."','".($usuarioId)."')";
+        mysqli_query($conn, "DELETE FROM reserva_factura_procesada 
+            WHERE reserva_id = ".$res['id']."
+            AND cliente = '".$cliente."'
+            AND dni = '".$dni."'
+            AND total = '".$total."'"
+                );
+
+                $insert = "INSERT INTO reserva_factura_procesada 
+            (reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id) VALUES 
+            (".$res['id'].",'".date('Y-m-d H:i:s')."','".$cliente."','".$dni."','".$total."','".$neto."','".($total-$neto)."','".($usuarioId)."')";
+
         mysqli_query($conn, $insert);
+
     }
 
     $resultados[] = [

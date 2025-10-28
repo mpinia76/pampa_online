@@ -827,3 +827,5 @@ ALTER TABLE `concepto_facturacions`
     ON DELETE CASCADE
     ON UPDATE CASCADE;
 
+ALTER TABLE `reserva_facturas`
+    ADD COLUMN `pdf_url` VARCHAR(255) NULL AFTER `agregada_por`;

@@ -35,19 +35,26 @@ class ReservaFacturasController extends AppController {
        	
         $rows = array();
         $transacciones = $this->ReservaFactura->find('all',array('conditions' => array('ReservaFactura.reserva_id' => $reserva_id), 'order' => 'ReservaFactura.fecha_emision asc','recursive' => 2));
-        foreach($transacciones as $transaccion){
-            
-           
-            $rows[] = array(
-                
-                $transaccion['ReservaFactura']['fecha_emision'],
-                ($transaccion['ReservaFactura']['tipoDoc']==1)?'Factura':'Nota de credito',
-               	'$'.$transaccion['ReservaFactura']['monto'],
-                $transaccion['ReservaFactura']['tipo'].'-'.$transaccion['PuntoVenta']['numero'].'-'.$transaccion['ReservaFactura']['numero'],
-               $transaccion['ReservaFactura']['titular']
-                
-            );
-        }
+		foreach($transacciones as $transaccion){
+			$pdfUrl = $transaccion['ReservaFactura']['pdf_url'];
+
+			$link = '';
+			if (!empty($pdfUrl)) {
+				// Si el PDF existe, agregamos un enlace con ícono
+				$link = '<a href="'.$pdfUrl.'" target="_blank">
+                    <img src="'.$this->webroot.'img/pdf_icon.png" alt="Descargar" width="20">
+                 </a>';
+			}
+
+			$rows[] = array(
+				$transaccion['ReservaFactura']['fecha_emision'],
+				($transaccion['ReservaFactura']['tipoDoc']==1)?'Factura':'Nota de crédito',
+				'$'.$transaccion['ReservaFactura']['monto'],
+				$transaccion['ReservaFactura']['tipo'].'-'.$transaccion['PuntoVenta']['numero'].'-'.$transaccion['ReservaFactura']['numero'],
+				$transaccion['ReservaFactura']['titular'],
+				$link // <-- nueva columna
+			);
+		}
         $output = array(
         	"sEcho" => intval($_GET['sEcho']),
         	"iTotalRecords" => count($rows),
@@ -511,6 +518,7 @@ class ReservaFacturasController extends AppController {
   		$this->ExportXls->export($fileName, $headerRow, $data);
     }
 
+
 	public function cronImportarFacturas() {
 		$this->autoRender = false; // No renderiza vista
 
@@ -532,13 +540,13 @@ class ReservaFacturasController extends AppController {
 		$http = new HttpSocket();
 		App::import('Core', 'CakeLog');
 
-// Generar nombre del archivo con fecha
-		$nombreFile = 'facturas_reserva_' . date('Ymd'); // ej: facturas_reserva_20251020
 
-// Función helper para escribir en el log
-		function escribirLog($mensaje, $nombreFile) {
+
+		// Función helper para escribir en el log
+		function escribirLog($mensaje) {
 			CakeLog::write('info', $mensaje, $nombreFile);
 		}
+
 		foreach ($reservas as $reserva) {
 			echo "<pre>DEBUG ReservaFacturaProcesada:\n";
 			print_r($reserva['ReservaFacturaProcesada']);
@@ -567,9 +575,7 @@ class ReservaFacturasController extends AppController {
 					],
 
 				];
-				echo "<pre>JSON enviado:\n";
-				print_r($payload);
-				echo "</pre>";
+
 
 				$ch = curl_init('https://www.tusfacturas.app/app/api/v2/facturacion/consulta_avanzada');
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -583,9 +589,7 @@ class ReservaFacturasController extends AppController {
 				$data = json_decode($response, true);
 
 				// Mostrar info de depuración
-				echo "<pre>Reserva ID: $reserva_id, PV: {$tokenData['NUMERO']}\n";
-				print_r($data);
-				echo "</pre>";
+
 
 				$this->loadModel('ReservaFactura');
 
@@ -596,34 +600,43 @@ class ReservaFacturasController extends AppController {
 						$partes = explode(' ', $comp['comprobante']['tipo']);
 						$tipoLetra = end($partes); // devuelve la última palabra
 
-						$this->ReservaFactura->set([
-							'reserva_id' => $reserva_id,
-							'punto_venta_id' => $pvId,
-							'tipo' => $tipoLetra, // solo la letra
-							'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
-							'fecha_emision' => $comp['comprobante']['fecha'],
-							'numero' => str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT),
-							'monto' => $comp['comprobante']['total'],
-							'tipoDoc' => 1,
-							'agregada_por' => $reserva['ReservaFacturaProcesada']['usuario_id']
-						]);
+						try {
+							$this->ReservaFactura->set([
+								'reserva_id' => $reserva_id,
+								'punto_venta_id' => $pvId,
+								'tipo' => $tipoLetra, // solo la letra
+								'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
+								'fecha_emision' => $comp['comprobante']['fecha'],
+								'numero' => str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT),
+								'monto' => $comp['comprobante']['total'],
+								'tipoDoc' => 1,
+								'agregada_por' => $reserva['ReservaFacturaProcesada']['usuario_id'],
+								'pdf_url' => $comp['comprobante']['comprobante_pdf_url'] ?? null // 👈 nuevo campo
+							]);
 
-						if ($this->ReservaFactura->validates()) {
-							$this->ReservaFactura->save();
-							escribirLog("Factura de reserva $reserva_id guardada correctamente", $nombreFile);
-							$facturas_guardadas = true;
-							$reserva_valida = true;
-						} else {
-							$reserva_valida = false;
-							$errores = '';
-							foreach ($this->ReservaFactura->validationErrors as $value) {
-								foreach ($value as $val) {
-									$errores .= $val . ' - ';
+							if ($this->ReservaFactura->validates()) {
+								$this->ReservaFactura->save();
+								escribirLog("Factura de reserva $reserva_id guardada correctamente");
+								$facturas_guardadas = true;
+								$reserva_valida = true;
+							} else {
+								$reserva_valida = false;
+								$errores = '';
+								foreach ($this->ReservaFactura->validationErrors as $value) {
+									foreach ($value as $val) {
+										$errores .= $val . ' - ';
+									}
 								}
+								escribirLog("Factura de reserva $reserva_id NO guardada: $errores");
+								$errores_api[$pvId] = $errores;
 							}
-							escribirLog("Factura de reserva $reserva_id NO guardada: $errores", $nombreFile);
-							$errores_api[$pvId] = $errores;
+						} catch (Exception $e) {
+							escribirLog("ERROR en reserva {$reserva_id}: " . $e->getMessage());
+							continue;
 						}
+
+
+
 					}
 				} else {
 					$errores_api[$pvId] = $data['error_details'] ?? 'Sin comprobantes';
@@ -633,17 +646,22 @@ class ReservaFacturasController extends AppController {
 			// Guardamos el estado final de la reserva
 			$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
 			if ($facturas_guardadas) {
-				$this->ReservaFacturaProcesada->save([
+				$ok = $this->ReservaFacturaProcesada->save([
 					'procesada_api' => 1,
 					'error_api' => 0,
 					'error_mensaje' => null
 				]);
 			} else {
-				$this->ReservaFacturaProcesada->save([
+				$ok = $this->ReservaFacturaProcesada->save([
 					'procesada_api' => 1,
 					'error_api' => 1,
 					'error_mensaje' => json_encode($errores_api)
 				]);
+			}
+			if (!$ok) {
+				escribirLog("No se pudo actualizar procesada_api para reserva $reserva_id");
+			} else {
+				escribirLog("Reserva $reserva_id marcada como procesada correctamente");
 			}
 		}
 
@@ -886,9 +904,12 @@ class ReservaFacturasController extends AppController {
 				$error = 1;
 				$punto_venta_numero = $puntoVenta ? $puntoVenta['PuntoVenta']['numero'] : '';
 				$numeroFactura = $ultimaFactura ? $ultimaFactura['ReservaFactura']['numero'] : '';
+				$tipoFactura = $ultimaFactura['ReservaFactura']['tipo'] ?? '';
+
 				$mensaje = sprintf(
-					"No se puede emitir una factura con fecha anterior a la última ya emitida para el punto de venta %s. Factura: %s Fecha: %s",
+					"No se puede emitir una factura con fecha anterior a la última ya emitida para el punto de venta %s. %s N° %s - Fecha: %s",
 					$punto_venta_numero,
+					strtoupper($tipoFactura),
 					$numeroFactura,
 					$fechaUltimaObj->format('d/m/Y')
 				);

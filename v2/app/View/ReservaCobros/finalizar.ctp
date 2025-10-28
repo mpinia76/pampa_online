@@ -310,16 +310,17 @@ if(count($facturas)>0){ ?>
     <table width="100%">
         <tr>
 
-            <td width="100"><strong>Fecha</strong></td>
-            <td width="100"><strong>Tipo</strong></td>
-            <td width="250"><strong>Numero</strong></td>
-            <td width="250"><strong>Titular</strong></td>
+            <td width="80"><strong>Fecha</strong></td>
+            <td width="50"><strong>Tipo</strong></td>
+            <td width="150"><strong>Numero</strong></td>
+            <td width="200"><strong>Titular</strong></td>
             <!--<td><strong>Punto de venta</strong></td>-->
             <td width="80" align="right"><strong>Monto</strong></td>
             <td></td>
         </tr>
         <?php foreach($facturas as $factura){ 
         //print_r($factura);
+            $pdfUrl = $factura['ReservaFactura']['pdf_url'];
         ?>
         <tr>
 
@@ -329,7 +330,16 @@ if(count($facturas)>0){ ?>
             <td><?php echo $factura['ReservaFactura']['titular']?></td>
             <!-- <td><?php echo $factura['PuntoVenta']['puntoVenta']?></td> -->
             <td align="right">$<?php echo $factura['ReservaFactura']['monto']?></td>
-            <td><a onclick="editarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">editar</a>&nbsp;&nbsp;&nbsp;<a onclick="eliminarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;</td>
+            <td style="padding-left: 15px;"><a onclick="editarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">editar</a>&nbsp;&nbsp;&nbsp;<a onclick="eliminarFactura('<?php echo $factura['ReservaFactura']['id'];?>')">eliminar</a>&nbsp;&nbsp;&nbsp;
+                <?php if (!empty($pdfUrl)) { ?>
+                    <a href="<?php echo $pdfUrl; ?>" target="_blank">
+                        descargar
+                    </a>
+
+                <?php } ?>
+
+            </td>
+
         </tr>
         <?php $factura_total = $factura_total + $factura['ReservaFactura']['monto']; } ?>
         <tr>

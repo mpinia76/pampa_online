@@ -23,7 +23,8 @@ $this->Js->buffer('
             null,
             null,
             null,
-            null
+            null,
+    {"bSortable": false} // la nueva columna del PDF
             
         ]
     });
@@ -55,6 +56,7 @@ $this->Js->buffer('
             <th width="50">Factura</th>
             
             <th width="100">Titular</th>
+            <th width="30">PDF</th> <!-- nueva columna -->
             
         </tr>
     </thead>

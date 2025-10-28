@@ -86,3 +86,27 @@ function _logCheques($msg){
             mysqli_query($conn,$sqlInsertAuditoria);
         }
     }
+
+/**
+ * Limpia texto para enviar a la API de facturación
+ * Reemplaza apostrofes, comillas, tildes y caracteres especiales
+ */
+function limpiarTextoApi($texto) {
+    if (!$texto) return '';
+
+    // 1️⃣ Reemplazar apostrofes y comillas
+    $texto = str_replace(["'", '"'], ["´", "”"], $texto);
+
+    // 2️⃣ Reemplazar tildes y caracteres acentuados
+    $mapTildes = [
+        'Á'=>'A', 'É'=>'E', 'Í'=>'I', 'Ó'=>'O', 'Ú'=>'U',
+        'á'=>'a', 'é'=>'e', 'í'=>'i', 'ó'=>'o', 'ú'=>'u',
+        'Ñ'=>'N', 'ñ'=>'n'
+    ];
+    $texto = strtr($texto, $mapTildes);
+
+    // 3️⃣ Quitar cualquier otro carácter no alfanumérico básico
+    $texto = preg_replace("/[^A-Za-z0-9 \-\.]/", "", $texto);
+
+    return trim($texto);
+}
