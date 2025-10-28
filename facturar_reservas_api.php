@@ -245,9 +245,9 @@ foreach ($ids as $idReserva) {
         'cliente' => [
             'documento_tipo' => $documentoTipo,
             'documento_nro' => $documento,
-            'razon_social' => limpiarTextoApi($titular),
+            'razon_social' => ($titular),
             'email' => $res['email'] ?? 'no-reply@empresa.com',
-            'domicilio' => limpiarTextoApi($domicilioFiscal),
+            'domicilio' => ($domicilioFiscal),
             'provincia' => $res['provincia_id'] ?? '2',
             'envia_por_mail' => 'N',
             'reclama_deuda' => 'N',
@@ -272,12 +272,12 @@ foreach ($ids as $idReserva) {
             'cotizacion'=>1,
             'periodo_facturado_desde'=>$fecha,
             'periodo_facturado_hasta'=>$fecha,
-            'rubro'=>limpiarTextoApi($conceptoNombre),
-            'rubro_grupo_contable'=>limpiarTextoApi($conceptoNombre),
+            'rubro'=>($conceptoNombre),
+            'rubro_grupo_contable'=>($conceptoNombre),
             'detalle'=>[[
                 'cantidad'=>1,
                 'producto'=>[
-                    'descripcion'=>limpiarTextoApi($conceptoNombre) . " - Reserva #" . $res['numero'],
+                    'descripcion'=>($conceptoNombre) . " - Reserva #" . $res['numero'],
                     'codigo'=>'0001',
                     'lista_precios'=>'Lista API',
                     'unidad_bulto'=>1,
