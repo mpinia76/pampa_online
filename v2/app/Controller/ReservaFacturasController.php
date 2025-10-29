@@ -544,7 +544,7 @@ class ReservaFacturasController extends AppController {
 
 		// Función helper para escribir en el log
 		function escribirLog($mensaje) {
-			CakeLog::write('info', $mensaje, $nombreFile);
+			CakeLog::write('info', $mensaje);
 		}
 
 		foreach ($reservas as $reserva) {
@@ -589,6 +589,10 @@ class ReservaFacturasController extends AppController {
 				$data = json_decode($response, true);
 
 				// Mostrar info de depuración
+				echo "<pre>Reserva ID: $reserva_id, PV: {$tokenData['NUMERO']}\n";
+				print_r($data);
+				echo "</pre>";
+
 
 
 				$this->loadModel('ReservaFactura');
@@ -599,6 +603,8 @@ class ReservaFacturasController extends AppController {
 						$this->ReservaFactura->create();
 						$partes = explode(' ', $comp['comprobante']['tipo']);
 						$tipoLetra = end($partes); // devuelve la última palabra
+						$fechaObj = DateTime::createFromFormat('d/m/Y', $comp['comprobante']['fecha']);
+						$fechaFormatoDb = $fechaObj ? $fechaObj->format('Y-m-d') : null;
 
 						try {
 							$this->ReservaFactura->set([
@@ -606,7 +612,7 @@ class ReservaFacturasController extends AppController {
 								'punto_venta_id' => $pvId,
 								'tipo' => $tipoLetra, // solo la letra
 								'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
-								'fecha_emision' => $comp['comprobante']['fecha'],
+								'fecha_emision' => $fechaFormatoDb, // ✅ ahora en formato compatible con DB
 								'numero' => str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT),
 								'monto' => $comp['comprobante']['total'],
 								'tipoDoc' => 1,

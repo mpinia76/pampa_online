@@ -35,6 +35,8 @@ if ($fechaObj < (clone $hoy)->modify('-10 days')) {
     die(json_encode(['error' => 'AFIP no permite facturar servicios con más de 10 días de antigüedad.']));
 }
 
+
+
 //$conceptoId = intval($_POST['conceptoId']);
 $monto = floatval($_POST['monto']);
 $ids = explode(',', trim($_POST['ids'], ','));
