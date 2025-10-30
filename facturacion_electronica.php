@@ -65,8 +65,7 @@ cursor:pointer;
 		if(isset($_POST['mes'])) { $mes = $_POST['mes']; }else{ $mes= date('m'); }	
 ?>
 
-<form method="post" id="formBuscar" action="<?php echo $_SERVER['PHP_SELF']?>" onsubmit="mostrarCargando(); asignarColumnas();">
-
+<form method="post" id="formBuscar" action="<?php echo $_SERVER['PHP_SELF']?>" onSubmit="asignarColumnas()">
 <select size="1" name="metodo" id="metodo">
 	<option value="check_out" <?php if($_POST['metodo'] == 'check_out'){?> selected="selected" <?php } ?> >Por fecha de check out</option>
 	<option value="fecha_cobro" <?php if($_POST['metodo'] == 'fecha_cobro'){?> selected="selected" <?php } ?> >Por fecha de cobro</option>
@@ -572,46 +571,19 @@ echo '<script>
 
 </tbody>
 </table>
-<!-- Overlay de carga -->
-<div id="overlay-cargando" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(255,255,255,0.85);
-    z-index:9999;
-    text-align:center;
-    font-size:1.5rem;
-    color:#333;
-">
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-        <div class="spinner"></div>
-        <p style="margin-top:15px;">Cargando...</p>
-    </div>
-</div>
-
-<style>
-    .spinner {
-        width:40px;
-        height:40px;
-        border:4px solid #ccc;
-        border-top-color:#333;
-        border-radius:50%;
-        animation:spin 1s linear infinite;
-        margin:auto;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-</style>
-
 <script>
-    function mostrarCargando() {
-        document.getElementById('overlay-cargando').style.display = 'block';
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+        // Esto se ejecuta cuando el navegador empieza a renderizar el HTML,
+        // pero todavía NO terminó de cargar todo (imágenes, estilos, etc.)
+        document.getElementById('cargando').style.display = 'block';
+    });
+
+    window.addEventListener("load", function() {
+        // Esto se ejecuta SOLO cuando todo el contenido terminó de cargarse
+        // (incluyendo la ejecución de tu PHP pesado)
+        document.getElementById('cargando').style.display = 'none';
+    });
 </script>
-
-
 
 </body>
 <script>
