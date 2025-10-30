@@ -593,7 +593,7 @@ class ReservaFacturasController extends AppController {
 				print_r($data);
 				echo "</pre>";
 
-
+				escribirLog("Reserva ID: $reserva_id | PV: {$tokenData['NUMERO']} | Respuesta API:\n" . print_r($data, true));
 
 				$this->loadModel('ReservaFactura');
 
@@ -605,7 +605,7 @@ class ReservaFacturasController extends AppController {
 						$tipoLetra = end($partes); // devuelve la última palabra
 						$fechaObj = DateTime::createFromFormat('d/m/Y', $comp['comprobante']['fecha']);
 						$fechaFormatoDb = $fechaObj ? $fechaObj->format('Y-m-d') : null;
-
+						escribirLog("Fecha a guadar: $fechaFormatoDb");
 						try {
 							$this->ReservaFactura->set([
 								'reserva_id' => $reserva_id,
