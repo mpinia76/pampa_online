@@ -603,16 +603,16 @@ class ReservaFacturasController extends AppController {
 						$this->ReservaFactura->create();
 						$partes = explode(' ', $comp['comprobante']['tipo']);
 						$tipoLetra = end($partes); // devuelve la última palabra
-						$fechaObj = DateTime::createFromFormat('d/m/Y', $comp['comprobante']['fecha']);
-						$fechaFormatoDb = $fechaObj ? $fechaObj->format('Y-m-d') : null;
-						escribirLog("Fecha a guadar: $fechaFormatoDb");
+						/*$fechaObj = DateTime::createFromFormat('d/m/Y', $comp['comprobante']['fecha']);
+						$fechaFormatoDb = $fechaObj ? $fechaObj->format('Y-m-d') : null;*/
+						escribirLog("Fecha a guadar: ".$comp['comprobante']['fecha']);
 						try {
 							$this->ReservaFactura->set([
 								'reserva_id' => $reserva_id,
 								'punto_venta_id' => $pvId,
 								'tipo' => $tipoLetra, // solo la letra
 								'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
-								'fecha_emision' => $fechaFormatoDb, // ✅ ahora en formato compatible con DB
+								'fecha_emision' => $comp['comprobante']['fecha'],
 								'numero' => str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT),
 								'monto' => $comp['comprobante']['total'],
 								'tipoDoc' => 1,
