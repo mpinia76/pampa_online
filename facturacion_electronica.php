@@ -572,22 +572,18 @@ echo '<script>
 </tbody>
 </table>
 <script>
-    $(document).ready(function() {
-        // Oculta el "Cargando..." al inicio
-        $('#cargando').hide();
+    document.addEventListener("DOMContentLoaded", function() {
+        // Esto se ejecuta cuando el navegador empieza a renderizar el HTML,
+        // pero todavía NO terminó de cargar todo (imágenes, estilos, etc.)
+        document.getElementById('cargando').style.display = 'block';
+    });
 
-        // Cuando se envía el formulario, muestra el "Cargando..."
-        $('#formBuscar').on('submit', function() {
-            $('#cargando').show();
-        });
-
-        // Cuando todo el contenido (incluyendo la tabla generada por PHP) esté listo
-        $(window).on('load', function() {
-            $('#cargando').hide();
-        });
+    window.addEventListener("load", function() {
+        // Esto se ejecuta SOLO cuando todo el contenido terminó de cargarse
+        // (incluyendo la ejecución de tu PHP pesado)
+        document.getElementById('cargando').style.display = 'none';
     });
 </script>
-
 
 </body>
 <script>
