@@ -518,6 +518,7 @@ if ($mostrar) {
     echo '<td>';
     if (($estado=='Pendiente')||($estado=='Error API')||($estado=='Facturacion Parcial')) {
         echo '<select class="select-concepto" data-id="' . $idCobro . '" style="width:100px;">';
+        echo '<option value=""></option>';
         mysqli_data_seek($conceptos, 0); // reiniciar puntero
         while ($c = mysqli_fetch_assoc($conceptos)) {
             // Solo mostrar conceptos del punto de venta seleccionado
