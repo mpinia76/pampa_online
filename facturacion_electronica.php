@@ -456,7 +456,7 @@ while($rs = mysqli_fetch_array($rsTemp)){
 
         $sql = "SELECT reserva_cobros.*, concepto_facturacions.nombre as concepto_facturacion FROM reserva_cobros LEFT JOIN concepto_facturacions ON reserva_cobros.concepto_facturacion_id = concepto_facturacions.id  WHERE reserva_id = ".$rs['id']." AND reserva_cobros.tipo <> 'DESCUENTO' ORDER BY reserva_cobros.id";
         if ($_POST['metodo']!='check_out') {
-            $sql .= "AND fecha LIKE '".$_POST["ano"]."-".$_POST["mes"]."%'";
+            $sql .= " AND fecha LIKE '".$_POST["ano"]."-".$_POST["mes"]."%'";
         }
 
         $rsTempCobros = mysqli_query($conn,$sql);
