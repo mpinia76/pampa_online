@@ -628,28 +628,31 @@ class ReservaFacturasController extends AppController {
 			// ✅ Guardamos el estado final de la reserva según resultados
 			$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
 
+// Si hubo al menos una factura válida → éxito
 			if ($facturas_guardadas) {
-				// Hubo al menos una factura válida → éxito
 				$ok = $this->ReservaFacturaProcesada->save([
 					'procesada_api' => 1,
 					'error_api' => 0,
 					'error_mensaje' => null
 				]);
-			} else {
-				// Caso especial: hubo comprobantes pero todos ignorados (PROGRAMADO o numero = 0)
-				$solo_ignorados = (
+			}
+// Si no hubo ninguna factura guardada...
+			else {
+
+				// Caso: hubo comprobantes, pero todos ignorados
+				$todos_ignorados = (
+					isset($errores_api) &&
 					!empty($errores_api) &&
-					count(array_unique($errores_api)) === 1 &&
-					reset($errores_api) === 'Comprobantes ignorados (sin emitir)'
+					in_array('Comprobantes ignorados (sin emitir)', $errores_api)
 				);
 
-				if ($solo_ignorados) {
-					// No marcar como procesada todavía → esperar a que se emita
+				if ($todos_ignorados && !$facturas_guardadas) {
 					escribirLog("⏸ Reserva $reserva_id no procesada aún (solo comprobantes ignorados)");
+					// 👇 No tocar la base de datos, la dejamos en procesada_api = 0
 					continue;
 				}
 
-				// Caso: sin comprobantes (ya se buscó en todos los PV)
+				// Caso: no hubo comprobantes en ningún PV
 				$solo_sin_comprobantes = (
 					!empty($errores_api) &&
 					count(array_unique($errores_api)) === 1 &&
@@ -657,7 +660,6 @@ class ReservaFacturasController extends AppController {
 				);
 
 				if ($solo_sin_comprobantes) {
-					// No hay facturas en ningún PV, la dejamos como revisada sin error
 					$ok = $this->ReservaFacturaProcesada->save([
 						'procesada_api' => 1,
 						'error_api' => 0,
@@ -673,11 +675,14 @@ class ReservaFacturasController extends AppController {
 				}
 			}
 
-			if (!$ok) {
+			if (isset($ok) && !$ok) {
 				escribirLog("❌ No se pudo actualizar procesada_api para reserva $reserva_id");
-			} else {
+			} elseif (isset($ok)) {
 				escribirLog("✅ Reserva $reserva_id actualizada correctamente (procesada_api={$this->ReservaFacturaProcesada->field('procesada_api')})");
+			} else {
+				escribirLog("⏭ Reserva $reserva_id se salteó sin actualizar (esperando comprobante emitido)");
 			}
+
 
 		}
 

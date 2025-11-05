@@ -200,7 +200,7 @@ foreach ($ids as $idReserva) {
                 $documento = '20251748056';
             }
             break;
-
+        case 'CF': // Consumidor Final → Factura B
         case 'MT': // Monotributo → Factura B
         case 'EX': // Exento → Factura B
             $facturaTipo = 'B';
@@ -214,7 +214,7 @@ foreach ($ids as $idReserva) {
             break;
 
         default: // Consumidor Final → Factura C
-            $facturaTipo = 'C';
+            $facturaTipo = 'B';
             $documentoTipo = 'DNI';
             $documento = $res['dni'] ?? '99999999';
             break;
