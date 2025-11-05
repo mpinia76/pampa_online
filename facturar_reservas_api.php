@@ -64,14 +64,7 @@ $puntoVenta = $tf['NUMERO'];
 
 
 
-$conceptoGral='';
-/*if($conceptoId){
-    // Concepto de la factura
-    $sqlConcepto = "SELECT nombre FROM concepto_facturacions WHERE id = $conceptoId";
-    $rsC = mysqli_query($conn, $sqlConcepto);
-    $cRow = mysqli_fetch_assoc($rsC);
-    $conceptoGral    = $cRow['nombre'] ?? "";
-}*/
+
 
 
 
@@ -93,7 +86,7 @@ foreach ($ids as $idReserva) {
     /*$logRes = $dt . " | Reserva ID: $idReserva | Resultado consulta CUIT: " . print_r($res, true) . "\n";
     file_put_contents($logPath, $logRes, FILE_APPEND);*/
     $detalle = '';
-    if ($conceptoGral){
+    //if ($conceptoGral){
         $sql = "SELECT reserva_cobros.*, concepto_facturacions.nombre as concepto_facturacion FROM reserva_cobros LEFT JOIN concepto_facturacions ON reserva_cobros.concepto_facturacion_id = concepto_facturacions.id  WHERE fecha LIKE '".$_POST["ano"]."-".$_POST["mes"]."%' AND reserva_id = ". $idReserva." AND reserva_cobros.tipo <> 'DESCUENTO' ORDER BY reserva_cobros.id";
 
         $rsTempCobros = mysqli_query($conn,$sql);
@@ -102,10 +95,10 @@ foreach ($ids as $idReserva) {
             $detalle = $rsCobros['concepto_facturacion'];
         }
         $conceptoNombre=($detalle)?$detalle:'Alquiler de Departamento';
-    }
+    /*}
     else{
         $conceptoNombre=$conceptoGral;
-    }
+    }*/
 
 
     // ---------------------
@@ -274,12 +267,12 @@ foreach ($ids as $idReserva) {
             'cotizacion'=>1,
             'periodo_facturado_desde'=>$fecha,
             'periodo_facturado_hasta'=>$fecha,
-            'rubro'=>($conceptoNombre),
-            'rubro_grupo_contable'=>($conceptoNombre),
+            'rubro'=>$conceptoNombre,
+            'rubro_grupo_contable'=>$conceptoNombre,
             'detalle'=>[[
                 'cantidad'=>1,
                 'producto'=>[
-                    'descripcion'=>($conceptoNombre) . " - Reserva #" . $res['numero'],
+                    'descripcion'=>$conceptoNombre,
                     'codigo'=>'0001',
                     'lista_precios'=>'Lista API',
                     'unidad_bulto'=>1,
