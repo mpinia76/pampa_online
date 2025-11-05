@@ -581,6 +581,8 @@ class ReservaFacturasController extends AppController {
 							stripos($comprobante['status'], 'PROGRAMADO') !== false
 						) {
 							escribirLog("Comprobante ignorado (status {$comprobante['status']} - numero {$comprobante['numero']})");
+							// 👇 Agregamos este registro
+							$errores_api[$pvId] = 'Comprobantes ignorados (sin emitir)';
 							continue; // 👈 NO guarda factura, pasa al siguiente
 						}
 
