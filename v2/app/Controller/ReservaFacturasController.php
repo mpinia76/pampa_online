@@ -520,118 +520,97 @@ class ReservaFacturasController extends AppController {
 
 
 	public function cronImportarFacturas() {
-		$this->autoRender = false; // No renderiza vista
-
+		$this->autoRender = false;
 		App::uses('HttpSocket', 'Network/Http');
-
-		// Traemos los tokens de los puntos de venta
 		$tusfacturas_tokens = Configure::read('TusFacturas.tokens');
-
-		// Cargamos el modelo
 		$this->loadModel('ReservaFacturaProcesada');
-
-		// Traemos las reservas procesadas que aún no fueron consultadas en la API
 		$reservas = $this->ReservaFacturaProcesada->find('all', [
 			'conditions' => ['procesada_api' => 0],
-			'limit' => 50, // límite para no saturar la API
+			'limit' => 50,
 			'order' => ['fecha' => 'ASC']
 		]);
 
-		$http = new HttpSocket();
 		App::import('Core', 'CakeLog');
-
-
-
-		// Función helper para escribir en el log
-		function escribirLog($mensaje) {
-			CakeLog::write('info', $mensaje);
-		}
+		function escribirLog($mensaje) { CakeLog::write('info', $mensaje); }
 
 		foreach ($reservas as $reserva) {
-			echo "<pre>DEBUG ReservaFacturaProcesada:\n";
-			print_r($reserva['ReservaFacturaProcesada']);
-			echo "</pre>";
 			$reserva_id = $reserva['ReservaFacturaProcesada']['reserva_id'];
-			$reserva_valida = true; // Bandera para verificar si todas las facturas pasan validación
 			$facturas_guardadas = false;
 			$errores_api = [];
-			// Recorremos los puntos de venta
-			foreach ($tusfacturas_tokens as $pvId => $tokenData) {
+			$comprobantes_emitidos = false; // 👈 bandera para saber si hubo alguno emitido
 
+			foreach ($tusfacturas_tokens as $pvId => $tokenData) {
 				$payload = [
 					'usertoken' => $tokenData['USER_TOKEN'],
-					'apikey'    => API_KEY,
-					'apitoken'  => API_TOKEN,
+					'apikey' => API_KEY,
+					'apitoken' => API_TOKEN,
 					'busqueda_tipo' => 'EXT_REF',
-					'pagina'    => 0,
-					'limite'    => 100,
+					'pagina' => 0,
+					'limite' => 100,
 					'comprobante' => [
-						'tipo' => '', // vacío para todos los tipos
+						'tipo' => '',
 						'operacion' => 'V',
 						'punto_venta' => $tokenData['NUMERO'],
 						'numero_desde' => '0',
 						'numero_hasta' => '99999999',
 						'external_reference' => 'RES-' . $reserva_id
 					],
-
 				];
-
 
 				$ch = curl_init('https://www.tusfacturas.app/app/api/v2/facturacion/consulta_avanzada');
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_POST, true);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-
 				$response = curl_exec($ch);
 				curl_close($ch);
 
 				$data = json_decode($response, true);
-
-				// Mostrar info de depuración
-				echo "<pre>Reserva ID: $reserva_id, PV: {$tokenData['NUMERO']}\n";
-				print_r($data);
-				echo "</pre>";
-
 				escribirLog("Reserva ID: $reserva_id | PV: {$tokenData['NUMERO']} | Respuesta API:\n" . print_r($data, true));
-
 				$this->loadModel('ReservaFactura');
-
 
 				if (!empty($data['comprobantes'])) {
 					foreach ($data['comprobantes'] as $comp) {
+						$comprobante = $comp['comprobante'];
+
+						// Si el comprobante no está emitido, lo ignoramos totalmente
+						if (
+							empty($comprobante['numero']) ||
+							$comprobante['numero'] == 0 ||
+							stripos($comprobante['status'], 'ERROR') !== false ||
+							stripos($comprobante['status'], 'PROGRAMADO') !== false
+						) {
+							escribirLog("Comprobante ignorado (status {$comprobante['status']} - numero {$comprobante['numero']})");
+							continue; // 👈 NO guarda factura, pasa al siguiente
+						}
+
+						$comprobantes_emitidos = true; // 👈 hubo al menos uno válido
 						$this->ReservaFactura->create();
-						$partes = explode(' ', $comp['comprobante']['tipo']);
-						$tipoLetra = end($partes); // devuelve la última palabra
-						/*$fechaObj = DateTime::createFromFormat('d/m/Y', $comp['comprobante']['fecha']);
-						$fechaFormatoDb = $fechaObj ? $fechaObj->format('Y-m-d') : null;*/
-						escribirLog("Fecha a guadar: ".$comp['comprobante']['fecha']);
+						$partes = explode(' ', $comprobante['tipo']);
+						$tipoLetra = end($partes);
+
 						try {
 							$this->ReservaFactura->set([
 								'reserva_id' => $reserva_id,
 								'punto_venta_id' => $pvId,
-								'tipo' => $tipoLetra, // solo la letra
+								'tipo' => $tipoLetra,
 								'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
-								'fecha_emision' => $comp['comprobante']['fecha'],
-								'numero' => str_pad($comp['comprobante']['numero'], 8, '0', STR_PAD_LEFT),
-								'monto' => $comp['comprobante']['total'],
+								'fecha_emision' => $comprobante['fecha'],
+								'numero' => str_pad($comprobante['numero'], 8, '0', STR_PAD_LEFT),
+								'monto' => $comprobante['total'],
 								'tipoDoc' => 1,
 								'agregada_por' => $reserva['ReservaFacturaProcesada']['usuario_id'],
-								'pdf_url' => $comp['comprobante']['comprobante_pdf_url'] ?? null // 👈 nuevo campo
+								'pdf_url' => $comprobante['comprobante_pdf_url'] ?? null
 							]);
 
 							if ($this->ReservaFactura->validates()) {
 								$this->ReservaFactura->save();
 								escribirLog("Factura de reserva $reserva_id guardada correctamente");
 								$facturas_guardadas = true;
-								$reserva_valida = true;
 							} else {
-								$reserva_valida = false;
 								$errores = '';
-								foreach ($this->ReservaFactura->validationErrors as $value) {
-									foreach ($value as $val) {
-										$errores .= $val . ' - ';
-									}
+								foreach ($this->ReservaFactura->validationErrors as $valores) {
+									foreach ($valores as $val) $errores .= $val . ' - ';
 								}
 								escribirLog("Factura de reserva $reserva_id NO guardada: $errores");
 								$errores_api[$pvId] = $errores;
@@ -640,35 +619,66 @@ class ReservaFacturasController extends AppController {
 							escribirLog("ERROR en reserva {$reserva_id}: " . $e->getMessage());
 							continue;
 						}
-
-
-
 					}
 				} else {
 					$errores_api[$pvId] = $data['error_details'] ?? 'Sin comprobantes';
 				}
 			}
 
-			// Guardamos el estado final de la reserva
+			// ✅ Guardamos el estado final de la reserva según resultados
 			$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
+
 			if ($facturas_guardadas) {
+				// Hubo al menos una factura válida → éxito
 				$ok = $this->ReservaFacturaProcesada->save([
 					'procesada_api' => 1,
 					'error_api' => 0,
 					'error_mensaje' => null
 				]);
 			} else {
-				$ok = $this->ReservaFacturaProcesada->save([
-					'procesada_api' => 1,
-					'error_api' => 1,
-					'error_mensaje' => json_encode($errores_api)
-				]);
+				// Caso especial: hubo comprobantes pero todos ignorados (PROGRAMADO o numero = 0)
+				$solo_ignorados = (
+					!empty($errores_api) &&
+					count(array_unique($errores_api)) === 1 &&
+					reset($errores_api) === 'Comprobantes ignorados (sin emitir)'
+				);
+
+				if ($solo_ignorados) {
+					// No marcar como procesada todavía → esperar a que se emita
+					escribirLog("⏸ Reserva $reserva_id no procesada aún (solo comprobantes ignorados)");
+					continue;
+				}
+
+				// Caso: sin comprobantes (ya se buscó en todos los PV)
+				$solo_sin_comprobantes = (
+					!empty($errores_api) &&
+					count(array_unique($errores_api)) === 1 &&
+					reset($errores_api) === 'Sin comprobantes'
+				);
+
+				if ($solo_sin_comprobantes) {
+					// No hay facturas en ningún PV, la dejamos como revisada sin error
+					$ok = $this->ReservaFacturaProcesada->save([
+						'procesada_api' => 1,
+						'error_api' => 0,
+						'error_mensaje' => null
+					]);
+				} else {
+					// Error real (validación, API, etc.)
+					$ok = $this->ReservaFacturaProcesada->save([
+						'procesada_api' => 1,
+						'error_api' => 1,
+						'error_mensaje' => json_encode($errores_api)
+					]);
+				}
 			}
+
 			if (!$ok) {
-				escribirLog("No se pudo actualizar procesada_api para reserva $reserva_id");
+				escribirLog("❌ No se pudo actualizar procesada_api para reserva $reserva_id");
 			} else {
-				escribirLog("Reserva $reserva_id marcada como procesada correctamente");
+				escribirLog("✅ Reserva $reserva_id actualizada correctamente (procesada_api={$this->ReservaFacturaProcesada->field('procesada_api')})");
 			}
+
 		}
 
 		echo "Importación finalizada";

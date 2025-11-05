@@ -514,7 +514,6 @@ if ($mostrar) {
     <td><?php echo $iva; ?></td>
     <?php
 
-
     echo '<td>';
     if (($estado=='Pendiente')||($estado=='Error API')||($estado=='Facturacion Parcial')) {
         echo '<select class="select-concepto" data-id="' . $idCobro . '" style="width:100px;">';
