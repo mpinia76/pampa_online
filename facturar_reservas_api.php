@@ -339,7 +339,8 @@ foreach ($ids as $idReserva) {
         $insert = "INSERT INTO reserva_factura_procesada 
 (reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id, punto_venta_id) VALUES 
 (".$res['id'].",'".date('Y-m-d H:i:s')."','".$cliente."','".$dni."','".$total."','".$neto."','".($total-$neto)."','".($usuarioId)."','".$puntoVentaId."')";
-
+        $logRes = $dt . " | Inserta: " . $insert . "\n";
+        file_put_contents($logPath, $logRes, FILE_APPEND);
 
         mysqli_query($conn, $insert);
 
