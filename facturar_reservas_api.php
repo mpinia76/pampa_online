@@ -235,8 +235,8 @@ foreach ($ids as $idReserva) {
     // Armar JSON para API v2 asincrónica
     $payload = [
         'usertoken' => $tf['USER_TOKEN'],
-        'apikey' => API_KEY,
-        'apitoken' => API_TOKEN,
+        'apikey' => $tf['API_KEY'],
+        'apitoken' => $tf['API_TOKEN'],
         'cliente' => [
             'documento_tipo' => $documentoTipo,
             'documento_nro' => $documento,
@@ -297,7 +297,7 @@ foreach ($ids as $idReserva) {
                 'formas_pago'=>[['descripcion'=>'Contado','importe'=>$total]],
                 'total'=>$total
             ],
-            'webhook'=>['token'=>WEBHOOK_TOKEN]
+            'webhook'=>['token'=>$tf['WEBHOOK_TOKEN']]
         ]
     ];
 
@@ -336,9 +336,10 @@ foreach ($ids as $idReserva) {
             AND total = '".$total."'"
                 );
 
-                $insert = "INSERT INTO reserva_factura_procesada 
-            (reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id) VALUES 
-            (".$res['id'].",'".date('Y-m-d H:i:s')."','".$cliente."','".$dni."','".$total."','".$neto."','".($total-$neto)."','".($usuarioId)."')";
+        $insert = "INSERT INTO reserva_factura_procesada 
+(reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id, punto_venta_id) VALUES 
+(".$res['id'].",'".date('Y-m-d H:i:s')."','".$cliente."','".$dni."','".$total."','".$neto."','".($total-$neto)."','".($usuarioId)."','".$puntoVentaId."')";
+
 
         mysqli_query($conn, $insert);
 

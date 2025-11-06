@@ -829,3 +829,6 @@ ALTER TABLE `concepto_facturacions`
 
 ALTER TABLE `reserva_facturas`
     ADD COLUMN `pdf_url` VARCHAR(255) NULL AFTER `agregada_por`;
+
+ALTER TABLE `reserva_factura_procesada`
+    ADD COLUMN `punto_venta_id` INT(11) NULL AFTER `usuario_id`;

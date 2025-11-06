@@ -539,11 +539,20 @@ class ReservaFacturasController extends AppController {
 			$errores_api = [];
 			$comprobantes_emitidos = false; // 👈 bandera para saber si hubo alguno emitido
 
-			foreach ($tusfacturas_tokens as $pvId => $tokenData) {
+			//foreach ($tusfacturas_tokens as $pvId => $tokenData) {
+			// Obtener directamente el token según el punto_venta_id
+			$punto_venta_id = $reserva['ReservaFacturaProcesada']['punto_venta_id'];
+
+			if (!isset($tusfacturas_tokens[$punto_venta_id])) {
+				escribirLog("❌ Token no configurado para punto de venta ID $punto_venta_id");
+				continue; // saltear esta reserva
+			}
+
+			$tokenData = $tusfacturas_tokens[$punto_venta_id];
 				$payload = [
 					'usertoken' => $tokenData['USER_TOKEN'],
-					'apikey' => API_KEY,
-					'apitoken' => API_TOKEN,
+					'apikey' => $tokenData['API_KEY'],
+					'apitoken' => $tokenData['API_TOKEN'],
 					'busqueda_tipo' => 'EXT_REF',
 					'pagina' => 0,
 					'limite' => 100,
@@ -582,7 +591,7 @@ class ReservaFacturasController extends AppController {
 						) {
 							escribirLog("Comprobante ignorado (status {$comprobante['status']} - numero {$comprobante['numero']})");
 							// 👇 Agregamos este registro
-							$errores_api[$pvId] = 'Comprobantes ignorados (sin emitir)';
+							$errores_api[$punto_venta_id] = 'Comprobantes ignorados (sin emitir)';
 							continue; // 👈 NO guarda factura, pasa al siguiente
 						}
 
@@ -594,7 +603,7 @@ class ReservaFacturasController extends AppController {
 						try {
 							$this->ReservaFactura->set([
 								'reserva_id' => $reserva_id,
-								'punto_venta_id' => $pvId,
+								'punto_venta_id' => $punto_venta_id,
 								'tipo' => $tipoLetra,
 								'titular' => $reserva['ReservaFacturaProcesada']['cliente'],
 								'fecha_emision' => $comprobante['fecha'],
@@ -615,7 +624,7 @@ class ReservaFacturasController extends AppController {
 									foreach ($valores as $val) $errores .= $val . ' - ';
 								}
 								escribirLog("Factura de reserva $reserva_id NO guardada: $errores");
-								$errores_api[$pvId] = $errores;
+								$errores_api[$punto_venta_id] = $errores;
 							}
 						} catch (Exception $e) {
 							escribirLog("ERROR en reserva {$reserva_id}: " . $e->getMessage());
@@ -623,9 +632,9 @@ class ReservaFacturasController extends AppController {
 						}
 					}
 				} else {
-					$errores_api[$pvId] = $data['error_details'] ?? 'Sin comprobantes';
+					$errores_api[$punto_venta_id] = $data['error_details'] ?? 'Sin comprobantes';
 				}
-			}
+			//}
 
 			// ✅ Guardamos el estado final de la reserva según resultados
 			$this->ReservaFacturaProcesada->id = $reserva['ReservaFacturaProcesada']['id'];
