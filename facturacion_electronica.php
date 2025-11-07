@@ -73,7 +73,7 @@ cursor:pointer;
 </select>
     <select size="1" name="ano" id="ano">
         <?php
-        $anio_actual = date('Y');
+        $anio_actual = date('Y')+1;
         for ($i = $anio_actual; $i >= 2010; $i--) {
             $selected = ($i == $ano) ? 'selected' : '';
             echo "<option value='$i' $selected>$i</option>";
