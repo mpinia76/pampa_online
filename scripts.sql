@@ -832,3 +832,29 @@ ALTER TABLE `reserva_facturas`
 
 ALTER TABLE `reserva_factura_procesada`
     ADD COLUMN `punto_venta_id` INT(11) NULL AFTER `usuario_id`;
+
+
+##################################17/10/2025###########################################################
+-- ======================================
+-- Exportación de reserva_factura_procesada
+-- ======================================
+SELECT CONCAT(
+               "INSERT INTO reserva_factura_procesada (reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id, punto_venta_id, procesada_api, error_api, error_mensaje) VALUES (",
+               IFNULL(reserva_id, 0), ", '", IFNULL(fecha,''), "', '", REPLACE(IFNULL(cliente,''), "'", "''"),
+               "', '", REPLACE(IFNULL(dni,''), "'", "''"), "', ", IFNULL(total,0), ", ", IFNULL(neto,0), ", ", IFNULL(diferencia,0),
+               ", ", IFNULL(usuario_id,0), ", ", IFNULL(punto_venta_id,0), ", ", IFNULL(procesada_api,0), ", ", IFNULL(error_api,0),
+               ", '", REPLACE(IFNULL(error_mensaje,''), "'", "''"), "');"
+       ) AS sql_export
+FROM reserva_factura_procesada
+WHERE fecha >= '2025-10-25';
+
+
+-- ======================================
+-- Exportación de reserva_facturas
+-- ======================================
+SELECT CONCAT(
+               "INSERT INTO reserva_facturas (reserva_id, punto_venta_id, tipo, titular, fecha_emision, numero, monto, tipoDoc, agregada_por, pdf_url) VALUES (",
+               reserva_id, ", ", punto_venta_id, ", '", tipo, "', '", REPLACE(titular, "'", "''"), "', '", fecha_emision, "', '", numero, "', ", monto, ", ", tipoDoc, ", ", agregada_por, ", '", REPLACE(IFNULL(pdf_url,''), "'", "''"), "');"
+       ) AS sql_export
+FROM reserva_facturas
+WHERE fecha_emision >= '2025-10-25';

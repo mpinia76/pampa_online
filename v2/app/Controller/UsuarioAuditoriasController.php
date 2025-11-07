@@ -17,7 +17,7 @@ class UsuarioAuditoriasController extends AppController {
 
 
 
-	public function index($mes, $year){
+	public function index($mes=null, $year=null){
 
 		$_SESSION['mesA'] = '';
 		$_SESSION['yearA'] = '';
