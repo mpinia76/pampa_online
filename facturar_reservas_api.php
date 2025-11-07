@@ -7,6 +7,8 @@ include_once("functions/util.php");
 $nombreFile = 'factura_reserva_' . date('Ymd') . '_log';
 $dt = date('Y-m-d G:i:s');
 $logPath = "./logs/" . $nombreFile . ".log";
+$logRes = $dt . " | Session: " . print_r($_SESSION, true) . "\n";
+    file_put_contents($logPath, $logRes, FILE_APPEND);
 // POST
 $fecha = $_POST['fecha']; // formato dd/mm/yyyy
 // Normalizar formato a dd/mm/yyyy
