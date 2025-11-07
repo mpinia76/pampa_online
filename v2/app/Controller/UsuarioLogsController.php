@@ -27,7 +27,7 @@ class UsuarioLogsController extends AppController {
 
 
 
-   public function index($desde,$hasta){
+   public function index($desde=null,$hasta=null){
    		$_SESSION['desde'] = '';
 		$_SESSION['hasta'] = '';
 	
