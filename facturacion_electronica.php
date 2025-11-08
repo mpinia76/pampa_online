@@ -744,12 +744,12 @@ function abrirFacturacion() {
         return;
     }
 
-    // ✅ Inicialización segura del manejador de ventanas
+    // âœ… Inicialización segura del manejador de ventanas
     if (typeof dhxWins === 'undefined' || !dhxWins) {
         dhxWins = new dhtmlXWindows();
     }
 
-    // ✅ Cierra ventana anterior solo si existe y tiene método close
+    // âœ… Cierra ventana anterior solo si existe y tiene mÃ©todo close
     if (typeof w1 !== 'undefined' && w1 && typeof w1.close === 'function') {
         try {
             w1.close();
@@ -758,7 +758,7 @@ function abrirFacturacion() {
         }
     }
 
-    var puntoVentaSelect = $('#puntos').val();
+    var puntoVentaSelect = 1;
 
     var resultadoPV = validarPuntoVenta(seleccionadas, puntoVentaSelect);
 
@@ -780,7 +780,7 @@ function abrirFacturacion() {
 
 
 
-    // ✅ Crea nueva ventana
+    // âœ… Crea nueva ventana
     w1 = dhxWins.createWindow("w_facturar", 200, 100, 400, 400);
     w1.setText("Facturación");
     w1.setModal(true);
@@ -801,15 +801,11 @@ function abrirFacturacion() {
     });
 
 
-    // Clonar opciones del select principal incluyendo data-alicuota
-    var opcionesSelect = $('#puntos option').map(function() {
-        var alicuota = this.dataset.alicuota; // acceso directo al atributo data-alicuota
-        return `<option value="${this.value}" data-alicuota="${alicuota}" ${this.value == puntoVentaSelect ? 'selected' : ''}>${this.text}</option>`;
-    }).get().join('');
+
 
 
     // IVA y Neto inicial según el punto seleccionado
-    var alicuota = parseFloat($('#puntos option:selected').attr('data-alicuota')) || 0;
+    var alicuota = 0;
     var montoNeto = totalBruto / (1 + alicuota);
     var iva = totalBruto - montoNeto;
 
@@ -817,10 +813,7 @@ function abrirFacturacion() {
 
     var htmlInfo = `
         <div style="padding:15px;font-family:Arial, sans-serif;line-height:1.8;">
-            <label><b>Punto de venta:</b></label><br>
-            <select id="modalPuntoVenta" style="width:95%;padding:4px;">
-                ${opcionesSelect}
-            </select><br>
+
 
             <label><b>Fecha facturas:</b></label><br>
             <input type="date" id="fechaFactura" style="width:95%;padding:4px;"><br>
@@ -841,15 +834,7 @@ function abrirFacturacion() {
 
     w1.attachHTMLString(htmlInfo);
 
-    var modalSelect = document.getElementById('modalPuntoVenta');
-    modalSelect.addEventListener('change', function() {
-        var alicuotaNueva = parseFloat(this.options[this.selectedIndex].dataset.alicuota) || 0;
-        var nuevoNeto = totalBruto / (1 + alicuotaNueva);
-        var nuevoIva = totalBruto - nuevoNeto;
 
-        document.getElementById('modalNeto').textContent = nuevoNeto.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('modalIva').textContent = nuevoIva.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    });
 
 }
 
@@ -867,7 +852,6 @@ function confirmarFacturacion() {
         return;
     }
 
-    var puntoVenta = $('#modalPuntoVenta').val();
 
     // Validación de fecha para el punto de venta
     $.ajax({
@@ -875,7 +859,7 @@ function confirmarFacturacion() {
         type: 'POST',
         dataType: 'json',
         data: {
-            punto_venta_id: puntoVenta,
+            punto_venta_id: 1,
             fecha: fecha
         },
         success: function(resp) {
@@ -896,10 +880,9 @@ function confirmarFacturacion() {
 
 function enviarFacturacion() {
     var fecha = $('#fechaFactura').val();
-    var conceptoId = $('#conceptoFactura').val();
-    var monto = $('#montoFactura').val();
+
     var ids = $('#idsSeleccionados').val();
-    var puntoVenta = $('#modalPuntoVenta').val();
+    var puntoVenta = 1;
 
     var ano = $('#ano').val();
     var mes = $('#mes').val();
@@ -926,13 +909,13 @@ function enviarFacturacion() {
     }
 
     if (diffDias > 10) {
-        alert('AFIP no permite emitir facturas de servicios con más de 10 días de antigüedad.');
+        alert('AFIP no permite emitir facturas de servicios con más de 10 días de antigÃ¼edad.');
         return;
     }
 
     // Loading seguro
     if ($('#loadingFacturacion').length === 0) {
-        $('#modalPuntoVenta').after('<div id="loadingFacturacion" style="display:none;margin-top:10px;">Procesando, por favor espere...</div>');
+        $('#fechaFactura').after('<div id="loadingFacturacion" style="display:none;margin-top:10px;">Procesando, por favor espere...</div>');
     }
 
     // Botón seguro dentro de la ventana
@@ -948,8 +931,6 @@ function enviarFacturacion() {
             fecha: fecha,
             ano: ano,
             mes: mes,
-            conceptoId: conceptoId,
-            monto: monto,
             ids: ids,
             puntoVenta: puntoVenta,
             columnaTransfiere: columnaTransfiere,
@@ -1044,11 +1025,6 @@ function validarPuntoVenta(seleccionadas, puntoVenta) {
 
     return { errores: errorReservas, validas: validas };
 }
-
-$('#puntos').change(function() {
-    $('#ver').click();
-});
-
 
 </script>
 </html>
