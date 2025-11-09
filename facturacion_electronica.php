@@ -187,7 +187,7 @@ auditarUsuarios('Facturacion electronica');
 if (isset($_POST['ver'])) {
 
     // Obtener todos los conceptos posibles (idealmente al inicio del archivo para no repetir)
-    $conceptos = mysqli_query($conn, "SELECT * FROM concepto_facturacions ORDER BY nombre");
+    $conceptos = mysqli_query($conn, "SELECT * FROM concepto_facturacions WHERE activo=1 ORDER BY nombre");
 
     /*$sql = "SELECT R.numero,R.id, R.check_in, R.check_out, R.total, C.nombre_apellido, C.dni, R.estado, C.cuit, C.titular_factura, C.razon_social, C.iva
 FROM reservas R INNER JOIN clientes C ON R.cliente_id = C.id ";*/
@@ -758,7 +758,7 @@ function abrirFacturacion() {
         }
     }
 
-    var puntoVentaSelect = 1;
+    var puntoVentaSelect = $('#puntos').val();
 
     var resultadoPV = validarPuntoVenta(seleccionadas, puntoVentaSelect);
 
@@ -801,11 +801,15 @@ function abrirFacturacion() {
     });
 
 
-
+    // Clonar opciones del select principal incluyendo data-alicuota
+    var opcionesSelect = $('#puntos option').map(function() {
+        var alicuota = this.dataset.alicuota; // acceso directo al atributo data-alicuota
+        return `<option value="${this.value}" data-alicuota="${alicuota}" ${this.value == puntoVentaSelect ? 'selected' : ''}>${this.text}</option>`;
+    }).get().join('');
 
 
     // IVA y Neto inicial según el punto seleccionado
-    var alicuota = 0;
+    var alicuota = parseFloat($('#puntos option:selected').attr('data-alicuota')) || 0;
     var montoNeto = totalBruto / (1 + alicuota);
     var iva = totalBruto - montoNeto;
 
@@ -1025,6 +1029,8 @@ function validarPuntoVenta(seleccionadas, puntoVenta) {
 
     return { errores: errorReservas, validas: validas };
 }
-
+$('#puntos').change(function() {
+    $('#ver').click();
+});
 </script>
 </html>
