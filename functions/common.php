@@ -32,13 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Guardar permisos, rubros, cajas y cuentas (igual que antes)
     if (isset($_POST['permisos'])) {
         $delete_sql = "DELETE FROM usuario_permiso WHERE usuario_id = '$usuario_id'";
-        echo "<pre>DELETE QUERY: $delete_sql</pre>";
+        //echo "<pre>DELETE QUERY: $delete_sql</pre>";
         mysqli_query($conn, $delete_sql);
 
         foreach ($_POST['permisos'] as $permiso_id) {
             $permiso_id = intval($permiso_id);
             $insert_sql = "INSERT INTO usuario_permiso (usuario_id, permiso_id) VALUES ('$usuario_id', '$permiso_id')";
-            echo "<pre>INSERT QUERY: $insert_sql</pre>";
+            //echo "<pre>INSERT QUERY: $insert_sql</pre>";
             mysqli_query($conn, $insert_sql);
         }
     }

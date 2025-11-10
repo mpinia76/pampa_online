@@ -47,7 +47,7 @@ function guardar_usuario($tabla, $datos, $conn)
             if ($usuario_id > 0) {
                 $sql = "DELETE FROM $tabla_rel WHERE usuario_id=$usuario_id";
                 mysqli_query($conn, $sql);
-                echo "<pre>DELETE REL: $sql</pre>";
+                //echo "<pre>DELETE REL: $sql</pre>";
             }
 
             // Insertamos los nuevos
@@ -55,7 +55,7 @@ function guardar_usuario($tabla, $datos, $conn)
                 $valor = intval($valor);
                 $sql = "INSERT INTO $tabla_rel (usuario_id, {$campo_post}_id) VALUES ($usuario_id, $valor)";
                 mysqli_query($conn, $sql);
-                echo "<pre>INSERT REL: $sql</pre>";
+                //echo "<pre>INSERT REL: $sql</pre>";
             }
         }
     }
@@ -75,7 +75,7 @@ function mysql_insert($tabla, $campos, $conn)
             $valores[] = ($valor === 'NOW()') ? $valor : "'" . mysqli_real_escape_string($conn, $valor) . "'";
         }
         $query = "INSERT INTO `$tabla` (" . implode(',', $columnas) . ") VALUES (" . implode(',', $valores) . ")";
-        echo "<pre>$query</pre>";
+        //echo "<pre>$query</pre>";
         mysqli_query($conn, $query);
         if (mysqli_errno($conn)) {
             return "Error al insertar en $tabla: " . mysqli_error($conn);
@@ -104,7 +104,7 @@ function mysql_update($tabla, $campos, $id, $conn)
     }
 
     $query = "UPDATE `$tabla` SET " . implode(',', $set) . " WHERE id=" . intval($id);
-    echo "<pre>$query</pre>";
+    //echo "<pre>$query</pre>";
     mysqli_query($conn, $query);
 
     if (mysqli_errno($conn)) {
