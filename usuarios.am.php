@@ -70,11 +70,22 @@ include_once("functions/common.php");
 
 $form = new Form();
 $form->setLegend('Datos del usuario'); //nombre del form
+
+// Determinar el dataid, ya sea por GET o por POST (editar)
+$dataid = $_GET['dataid'] ?? $_POST['id'] ?? null;
+
 if(!$_GET['comun']){
-	$form->setAction('usuarios.am.php'); //a donde hacer el post
-}
-else{
-	$form->setAction('usuarios.am.php?comun=1&extras=off'); //a donde hacer el post
+    if($dataid){
+        $form->setAction('usuarios.am.php?dataid='.$dataid); // pasar id al post
+    } else {
+        $form->setAction('usuarios.am.php'); // agregar nuevo
+    }
+} else {
+    if($dataid){
+        $form->setAction('usuarios.am.php?comun=1&extras=off&dataid='.$dataid);
+    } else {
+        $form->setAction('usuarios.am.php?comun=1&extras=off');
+    }
 }
 
 if(isset($dataid)){
