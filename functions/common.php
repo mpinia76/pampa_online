@@ -1,178 +1,103 @@
 <?php
 if(isset($_GET['dataid'])){
-	$dataid = $_GET['dataid'];
+    $dataid = intval($_GET['dataid']);
 }
 
 if(isset($_POST['agregar'])){
-	
-	foreach($campos as $key=>$atr){
-		
-		if(($atr['type']=='date')||($atr[0]=='date')){
-			$datos[$key] = fechasql($_POST[$key]);
-		}
-		elseif(($atr['type']=='checkbox')||($atr[0]=='checkbox')){
-			$datos[$key] = ($_POST[$key])?1:0;
-		}
-		elseif(($atr['type']=='textarea')||($atr[0]=='textarea')){
-			$datos[$key] = addslashes($_POST[$key]);
-		}elseif(($atr['type']=='text_info')||($atr[0]=='text_info')){
-			$var = 'null';
-		}else{
-			$datos[$key] = $_POST[$key];
-		}
-	}	
-	//print_r($datos);
-	if (!$datos['id']) {
-		$datos['id']='0';
-	}	
-	$result = mysql_insert($tabla,$datos, $conn);
-	$usuario_id = mysql_insert_id();
-	//creo el hist�rico de empleados
-	if ($tabla == 'empleado' ) {
-		$alta = fechasql($_POST['fecha_alta']);
-		$sql = "INSERT INTO empleado_historico (empleado_id,alta) VALUES ($usuario_id,'$alta')";
-		//echo $sql;
-		mysqli_query($conn,$sql);
-	}
-	//guardo si hay permisos actualizados
-	if(isset($_POST['permisos'])){
-	
-		$permisos = $_POST['permisos'];
-		
-		foreach($permisos as $key => $permiso_id){
-		
-			$sql = "INSERT INTO usuario_permiso (usuario_id,permiso_id) VALUES ($usuario_id,$permiso_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}
-	if(isset($_POST['rubros'])){
-	
-		$rubros = $_POST['rubros'];
-		
-		foreach($rubros as $key => $rubro_id){
-		
-			$sql = "INSERT INTO usuario_rubro (usuario_id,rubro_id) VALUES ($usuario_id,$rubro_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}
-	
-	//guardo si hay cajas seleccionadas
-	if(isset($_POST['cajas'])){
-	
-		$cajas = $_POST['cajas'];
-		
-		foreach($cajas as $key => $caja_id){
-		
-			$sql = "INSERT INTO usuario_caja (usuario_id,caja_id) VALUES ($usuario_id,$caja_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}	
-	
-	if(isset($_POST['cuentas'])){
-	
-		$cuentas = $_POST['cuentas'];
-		
-		foreach($cuentas as $key => $cuenta_id){
-		
-			$sql = "INSERT INTO usuario_cuenta (usuario_id,cuenta_id) VALUES ($usuario_id,$cuenta_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}	
+    $datos = [];
+
+    foreach($campos as $key=>$atr){
+        $tipo = is_array($atr) ? ($atr['type'] ?? $atr[0]) : '';
+
+        if($tipo == 'date'){
+            $datos[$key] = fechasql($_POST[$key] ?? '');
+        } elseif($tipo == 'checkbox'){
+            $datos[$key] = !empty($_POST[$key]) ? 1 : 0;
+        } elseif($tipo == 'textarea'){
+            $datos[$key] = addslashes($_POST[$key] ?? '');
+        } elseif($tipo == 'text_info'){
+            $datos[$key] = null;
+        } else{
+            $datos[$key] = $_POST[$key] ?? '';
+        }
+    }
+
+    if(empty($datos['id'])) {
+        $datos['id'] = 0;
+    }
+
+    $result = mysql_insert($tabla, $datos, $conn);
+    $usuario_id = mysqli_insert_id($conn);
+
+    if($tabla == 'empleado' && !empty($_POST['fecha_alta'])){
+        $alta = fechasql($_POST['fecha_alta']);
+        $sql = "INSERT INTO empleado_historico (empleado_id, alta) VALUES ($usuario_id, '$alta')";
+        mysqli_query($conn, $sql);
+    }
+
+    if(!empty($_POST['permisos'])){
+        foreach($_POST['permisos'] as $permiso_id){
+            $permiso_id = intval($permiso_id);
+            mysqli_query($conn, "INSERT INTO usuario_permiso (usuario_id, permiso_id) VALUES ($usuario_id, $permiso_id)");
+        }
+    }
+
+    if(!empty($_POST['rubros'])){
+        foreach($_POST['rubros'] as $rubro_id){
+            $rubro_id = intval($rubro_id);
+            mysqli_query($conn, "INSERT INTO usuario_rubro (usuario_id, rubro_id) VALUES ($usuario_id, $rubro_id)");
+        }
+    }
+
+    if(!empty($_POST['cajas'])){
+        foreach($_POST['cajas'] as $caja_id){
+            $caja_id = intval($caja_id);
+            mysqli_query($conn, "INSERT INTO usuario_caja (usuario_id, caja_id) VALUES ($usuario_id, $caja_id)");
+        }
+    }
+
+    if(!empty($_POST['cuentas'])){
+        foreach($_POST['cuentas'] as $cuenta_id){
+            $cuenta_id = intval($cuenta_id);
+            mysqli_query($conn, "INSERT INTO usuario_cuenta (usuario_id, cuenta_id) VALUES ($usuario_id, $cuenta_id)");
+        }
+    }
 }
+
 if(isset($_POST['editar'])){
-	
-	foreach($campos as $key=>$atr){
-		
-		if(($atr['type']=='date')||($atr[0]=='date')){
-			$datos[$key] = fechasql($_POST[$key]);
-		}
-		elseif(($atr['type']=='checkbox')||($atr[0]=='checkbox')){
-			$datos[$key] = ($_POST[$key])?1:0;
-		}
-		elseif(($atr['type']=='textarea')||($atr[0]=='textarea')){
-			$datos[$key] = addslashes($_POST[$key]);
-		}elseif(($atr['type']=='text_info')||($atr[0]=='text_info')){
-			$var = 'null';
-		}else{
-			$datos[$key] = $_POST[$key];
-		}
-	}
-	
-	$result = mysql_update($tabla,$datos,$datos['id'],$conn);
-	$dataid = $datos['id'];
-	$usuario_id = $dataid;
-	
-	if(isset($_POST['cajas'])){
-	
-		$sql = "DELETE FROM usuario_caja WHERE usuario_id=$usuario_id";
-		mysqli_query($conn,$sql);
-		
-		$cajas = $_POST['cajas'];
-		
-		foreach($cajas as $key => $caja_id){
-		
-			$sql = "INSERT INTO usuario_caja (usuario_id,caja_id) VALUES ($usuario_id,$caja_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}
+    $datos = [];
 
+    foreach($campos as $key=>$atr){
+        $tipo = is_array($atr) ? ($atr['type'] ?? $atr[0]) : '';
 
-	if(isset($_POST['permisos'])){
-	
-		$sql = "DELETE FROM usuario_permiso WHERE usuario_id=$usuario_id";
-		mysqli_query($conn,$sql);
-		
-		$permisos = $_POST['permisos'];
-		
-		foreach($permisos as $key => $permiso_id){
-		
-			$sql = "INSERT INTO usuario_permiso (usuario_id,permiso_id) VALUES ($usuario_id,$permiso_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}
-	
-	if(isset($_POST['rubros'])){
-	
-		$sql = "DELETE FROM usuario_rubro WHERE usuario_id=$usuario_id";
-		mysqli_query($conn,$sql);
-		
-		$rubros = $_POST['rubros'];
-		
-		foreach($rubros as $key => $rubro_id){
-		
-			$sql = "INSERT INTO usuario_rubro (usuario_id,rubro_id) VALUES ($usuario_id,$rubro_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}
-	
-	if(isset($_POST['cuentas'])){
-		
-		$sql = "DELETE FROM usuario_cuenta WHERE usuario_id=$usuario_id";
-		mysqli_query($conn,$sql);
-	
-		$cuentas = $_POST['cuentas'];
-		
-		foreach($cuentas as $key => $cuenta_id){
-		
-			$sql = "INSERT INTO usuario_cuenta (usuario_id,cuenta_id) VALUES ($usuario_id,$cuenta_id)";
-			mysqli_query($conn,$sql);
-		
-		}
-		
-	}	
+        if($tipo == 'date'){
+            $datos[$key] = fechasql($_POST[$key] ?? '');
+        } elseif($tipo == 'checkbox'){
+            $datos[$key] = !empty($_POST[$key]) ? 1 : 0;
+        } elseif($tipo == 'textarea'){
+            $datos[$key] = addslashes($_POST[$key] ?? '');
+        } elseif($tipo == 'text_info'){
+            $datos[$key] = null;
+        } else{
+            $datos[$key] = $_POST[$key] ?? '';
+        }
+    }
+
+    $result = mysql_update($tabla, $datos, $datos['id'], $conn);
+    $usuario_id = intval($datos['id']);
+    $dataid = $usuario_id;
+
+    // Borrar y volver a insertar relaciones
+    $relaciones = ['cajas' => 'usuario_caja', 'permisos' => 'usuario_permiso', 'rubros' => 'usuario_rubro', 'cuentas' => 'usuario_cuenta'];
+
+    foreach($relaciones as $postKey => $tablaRel){
+        mysqli_query($conn, "DELETE FROM $tablaRel WHERE usuario_id=$usuario_id");
+        if(!empty($_POST[$postKey])){
+            foreach($_POST[$postKey] as $id){
+                $id = intval($id);
+                mysqli_query($conn, "INSERT INTO $tablaRel (usuario_id, {$postKey}_id) VALUES ($usuario_id, $id)");
+            }
+        }
+    }
 }
 ?>
