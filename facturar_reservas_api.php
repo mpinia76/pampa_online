@@ -222,14 +222,16 @@ foreach ($ids as $idReserva) {
 // RG5329 se usa sólo en B/C
     $rg5329 = ($facturaTipo == 'A') ? 'N' : 'N';
 
-    // 🔹 Calcular valores según tipo de comprobante
     if ($facturaTipo == 'A') {
-        $alicuota = 21;
+        // Factura A → separar IVA
+        $alicuota = $rowPV['alicuota'] * 100; // ejemplo: 0.21 → 21
         $precio_unitario = $neto; // sin IVA
     } else {
-        $alicuota = 0;
+        // Factura B → precio final, pero con la alicuota correcta
+        $alicuota = $rowPV['alicuota'] * 100; // ejemplo: 21
         $precio_unitario = $total; // total con IVA incluido
     }
+
 
     // Domicilio fiscal obligatorio
     $domicilioFiscal = !empty($res['direccion']) ? $res['direccion'] : 'Sin domicilio fiscal';
