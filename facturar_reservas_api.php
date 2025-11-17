@@ -294,7 +294,7 @@ foreach ($ids as $idReserva) {
             'impuestos_internos'=>'0',
             'impuestos_internos_base'=>'0',
             'impuestos_internos_alicuota'=>'0',
-            'total'=>$total,
+            /*'total'=>$total,*/
             'pagos'=>[
                 'formas_pago'=>[['descripcion'=>'Contado','importe'=>$total]],
                 'total'=>$total
