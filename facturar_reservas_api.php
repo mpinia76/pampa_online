@@ -154,6 +154,7 @@ foreach ($ids as $idReserva) {
     // Total final
     $total = $transferencias + $tarjetas + $cheques - $facturas;
     $neto = $total / $ivaCoeficiente;
+    $iva = $total - $neto;
 
     // ---------------------
 // Datos del cliente
@@ -228,7 +229,10 @@ foreach ($ids as $idReserva) {
 // RG5329 se usa sólo en B/C
     $rg5329 = ($facturaTipo == 'A') ? 'N' : 'N';
 
-    if ($facturaTipo == 'A') {
+    $alicuota = $rowPV['alicuota'] * 100; // ejemplo: 0.21 → 21
+    $precio_unitario = $neto; // sin IVA
+
+    /*if ($facturaTipo == 'A') {
         // Factura A → separar IVA
         $alicuota = $rowPV['alicuota'] * 100; // ejemplo: 0.21 → 21
         $precio_unitario = $neto; // sin IVA
@@ -236,7 +240,7 @@ foreach ($ids as $idReserva) {
         // Factura B → precio final, pero con la alicuota correcta
         $alicuota = $rowPV['alicuota'] * 100; // ejemplo: 21
         $precio_unitario = $total; // total con IVA incluido
-    }
+    }*/
 
 
     // Domicilio fiscal obligatorio
