@@ -328,28 +328,52 @@ foreach ($conceptosPost as $idCobro => $conceptoId) {
     file_put_contents($logPath, $logPayload, FILE_APPEND);
 
     // Enviar request asincrónico
-    // ==========================
-// DRY RUN – SIMULACIÓN
-// ==========================
-    $respData = [
-        'dry_run' => true,
-        'error' => 'N',
-        'msg' => 'Simulación OK'
-    ];
+    $ch = curl_init(API_URL);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-// Log mínimo
-    $logMsg = $dt . " | DRY RUN | Reserva ID: $idReserva | Cliente: " . $res['nombre_apellido'] .
-        " | Total: $total\n";
+    $respData = json_decode($response, true);
+
+    // Preparar datos para log
+    $logMsg = $dt . " | Reserva ID: $idReserva | Cliente: " . $res['nombre_apellido'] .
+        " | Response: " . json_encode($respData) . "\n";
+
+    // Guardar log
     file_put_contents($logPath, $logMsg, FILE_APPEND);
+// Guardar factura procesada solo si se envió bien
+    if (empty($respData['error']) || $respData['error'] === 'N') {
 
-// Resultado simulado
+        $cliente = mysqli_real_escape_string($conn, $res['nombre_apellido']);
+        $dni = mysqli_real_escape_string($conn, trim($res['dni']));
+
+        mysqli_query($conn, "DELETE FROM reserva_factura_procesada 
+            WHERE reserva_id = ".$res['id']."
+            AND cliente = '".$cliente."'
+            AND dni = '".$dni."'
+            AND total = '".$total."'"
+        );
+
+        $insert = "INSERT INTO reserva_factura_procesada 
+(reserva_id, fecha, cliente, dni, total, neto, diferencia, usuario_id, punto_venta_id) VALUES 
+(".$res['id'].",'".date('Y-m-d H:i:s')."','".$cliente."','".$dni."','".$total."','".$neto."','".($total-$neto)."','".($usuarioId)."','".$puntoVentaId."')";
+        $logRes = $dt . " | Inserta: " . $insert . "\n";
+        file_put_contents($logPath, $logRes, FILE_APPEND);
+
+        mysqli_query($conn, $insert);
+
+    }
+
     $resultados[] = [
         'id' => $idReserva,
-        'success' => true,
-        'error' => null,
-        'errores' => [],
-        'error_details' => [],
-        'raw_response' => $respData
+        'success' => empty($respData['error']),
+        'error' => $respData['error'] ?? null,
+        'errores' => $respData['errores'] ?? [],
+        'error_details' => $respData['error_details'] ?? [],
+        'raw_response' => $respData // por si queremos ver todo después
     ];
 
 }
