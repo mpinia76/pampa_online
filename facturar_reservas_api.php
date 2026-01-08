@@ -63,7 +63,7 @@ if (!isset($tusfacturas_tokens[$puntoVentaId])) {
 $tf = $tusfacturas_tokens[$puntoVentaId];
 $puntoVenta = $tf['NUMERO'];
 //$ivaCoeficiente=1;
-print_r($conceptosPost);
+//print_r($conceptosPost);
 
 $conceptoNombre = null;
 $idReserva = null;
@@ -93,6 +93,9 @@ foreach ($conceptosPost as $idCobro => $conceptoId) {
     if (!$idReserva) {
         die(json_encode(['error' => "Cobro $idCobro sin reserva asociada"]));
     }
+
+    // 🟢 Guardar el nombre del concepto
+    $conceptoNombre = $row['nombre'];
 
     $sql = "SELECT R.*, C.nombre_apellido, C.cuit, C.dni, C.direccion, C.tipoPersona, C.razon_social, C.titular_factura, C.iva
             FROM reservas R
