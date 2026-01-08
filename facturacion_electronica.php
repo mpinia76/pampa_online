@@ -916,10 +916,10 @@ function enviarFacturacion() {
     });
 
 
-    if (errorConcepto) {
+    /*if (errorConcepto) {
         alert('Debe seleccionar un concepto para cada cobro.');
         return;
-    }
+    }*/
 
 
     if (!fecha || !puntoVenta) {
