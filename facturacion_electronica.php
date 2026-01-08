@@ -516,7 +516,7 @@
     
         echo '<td>';
         if (($estado=='Pendiente')||($estado=='Error API')||($estado=='Facturacion Parcial')) {
-            echo '<select class="select-concepto" data-id="' . $idCobro . '" style="width:100px;">';
+            echo '<select class="select-concepto" data-id="' . $idCobro . '" data-reserva-id="' . $rs['id'] . '" style="width:100px;">';
             echo '<option value=""></option>';
             mysqli_data_seek($conceptos, 0); // reiniciar puntero
             while ($c = mysqli_fetch_assoc($conceptos)) {
@@ -905,12 +905,17 @@
 
             var cobroId = $(this).attr('data-id');
 
-            // ⛔ si este cobro NO está seleccionado → ignorar
-            if (ids.indexOf(String(cobroId)) === -1) {
+            //console.log('COBRO:', cobroId);
+
+            var reservaId = $(this).attr('data-reserva-id');
+            if (ids.indexOf(reservaId) === -1) {
+                //console.log('⛔ COBRO IGNORADO (reserva no seleccionada):', cobroId);
                 return;
             }
 
             var conceptoId = $(this).val();
+
+            //console.log('✔ TOMADO:', cobroId, '→ concepto:', conceptoId);
 
             if (!conceptoId) {
                 errorConcepto = true;

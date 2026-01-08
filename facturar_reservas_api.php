@@ -63,7 +63,7 @@ if (!isset($tusfacturas_tokens[$puntoVentaId])) {
 $tf = $tusfacturas_tokens[$puntoVentaId];
 $puntoVenta = $tf['NUMERO'];
 //$ivaCoeficiente=1;
-//print_r($conceptosPost);
+print_r($conceptosPost);
 
 $conceptoNombre = null;
 $idReserva = null;
