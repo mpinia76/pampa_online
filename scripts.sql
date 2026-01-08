@@ -846,7 +846,7 @@ SELECT CONCAT(
                ", '", REPLACE(IFNULL(error_mensaje,''), "'", "''"), "');"
        ) AS sql_export
 FROM reserva_factura_procesada
-WHERE fecha >= '2025-11-07';
+WHERE fecha >= '2025-12-07';
 
 
 -- ======================================
@@ -857,4 +857,4 @@ SELECT CONCAT(
                reserva_id, ", ", punto_venta_id, ", '", tipo, "', '", REPLACE(titular, "'", "''"), "', '", fecha_emision, "', '", numero, "', ", monto, ", ", tipoDoc, ", ", agregada_por, ", '", REPLACE(IFNULL(pdf_url,''), "'", "''"), "');"
        ) AS sql_export
 FROM reserva_facturas
-WHERE fecha_emision >= '2025-10-29';
+WHERE fecha_emision >= '2025-11-29';

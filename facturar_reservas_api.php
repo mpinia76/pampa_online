@@ -46,7 +46,7 @@ $puntoVentaId = intval($_POST['puntoVenta']);
 $columnaTransfiere = $_POST['columnaTransfiere'] ?? 0;
 $columnaTC = $_POST['columnaTC'] ?? 0;
 $columnaCheques = $_POST['columnaCheques'] ?? 0;
-
+$conceptosPost = $_POST['conceptos'] ?? [];
 
 // Punto de venta
 $sqlPV = "SELECT numero, alicuota FROM punto_ventas WHERE id = $puntoVentaId";
@@ -63,14 +63,40 @@ if (!isset($tusfacturas_tokens[$puntoVentaId])) {
 $tf = $tusfacturas_tokens[$puntoVentaId];
 $puntoVenta = $tf['NUMERO'];
 //$ivaCoeficiente=1;
+//print_r($conceptosPost);
 
+$conceptoNombre = null;
+$idReserva = null;
 
+foreach ($conceptosPost as $idCobro => $conceptoId) {
 
+    $idCobro = (int)$idCobro;
+    $conceptoId = (int)$conceptoId;
 
+    $sql = "SELECT rc.reserva_id, cf.nombre
+            FROM reserva_cobros rc
+            JOIN concepto_facturacions cf ON cf.id = $conceptoId
+            WHERE rc.id = $idCobro
+              AND rc.tipo <> 'DESCUENTO'";
 
+    //echo $sql;
 
+    $rs = mysqli_query($conn, $sql);
+    if (!$rs || mysqli_num_rows($rs) === 0) {
+        die(json_encode(['error' => "Cobro inválido ($idCobro)"]));
+    }
 
-foreach ($ids as $idReserva) {
+    $row = mysqli_fetch_assoc($rs);
+
+    // Validar UNA sola reserva
+    if ($idReserva === null) {
+        $idReserva = (int)$row['reserva_id'];
+        $conceptoNombre = $row['nombre'];
+    } elseif ($idReserva !== (int)$row['reserva_id']) {
+        die(json_encode([
+            'error' => 'Los cobros pertenecen a distintas reservas'
+        ]));
+    }
     $idReserva = intval($idReserva);
     if (!$idReserva) continue;
 
@@ -84,23 +110,7 @@ foreach ($ids as $idReserva) {
     $res = mysqli_fetch_assoc($rs);
 
 
-// 🔹 Log del resultado de la consulta
-    /*$logRes = $dt . " | Reserva ID: $idReserva | Resultado consulta CUIT: " . print_r($res, true) . "\n";
-    file_put_contents($logPath, $logRes, FILE_APPEND);*/
-    $detalle = '';
-    //if ($conceptoGral){
-        $sql = "SELECT reserva_cobros.*, concepto_facturacions.nombre as concepto_facturacion FROM reserva_cobros LEFT JOIN concepto_facturacions ON reserva_cobros.concepto_facturacion_id = concepto_facturacions.id  WHERE fecha LIKE '".$_POST["ano"]."-".$_POST["mes"]."%' AND reserva_id = ". $idReserva." AND reserva_cobros.tipo <> 'DESCUENTO' ORDER BY reserva_cobros.id";
 
-        $rsTempCobros = mysqli_query($conn,$sql);
-
-        while($rsCobros = mysqli_fetch_array($rsTempCobros)){
-            $detalle = $rsCobros['concepto_facturacion'];
-        }
-        $conceptoNombre=($detalle)?$detalle:'Alquiler de Departamento';
-    /*}
-    else{
-        $conceptoNombre=$conceptoGral;
-    }*/
 
 
     // ---------------------

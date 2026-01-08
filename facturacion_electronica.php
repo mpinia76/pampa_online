@@ -895,6 +895,33 @@ function enviarFacturacion() {
     var columnaTC = $('#columnaTC').is(':checked') ? 1 : 0;
     var columnaCheques = $('#columnaCheques').is(':checked') ? 1 : 0;
 
+    /* =========================
+       🔹 RECOLECTAR CONCEPTOS
+       ========================= */
+    var conceptos = {};
+    var errorConcepto = false;
+
+    $('.select-concepto').each(function () {
+        var cobroId = $(this).attr('data-id'); // 👈 FIX
+        var conceptoId = $(this).val();
+
+        if (!conceptoId) {
+            errorConcepto = true;
+            $(this).css('border', '2px solid red');
+        } else {
+            $(this).css('border', '');
+        }
+
+        conceptos[cobroId] = conceptoId;
+    });
+
+
+    if (errorConcepto) {
+        alert('Debe seleccionar un concepto para cada cobro.');
+        return;
+    }
+
+
     if (!fecha || !puntoVenta) {
         alert('Debe completar la fecha y/ punto de venta.');
         return;
@@ -939,7 +966,8 @@ function enviarFacturacion() {
             puntoVenta: puntoVenta,
             columnaTransfiere: columnaTransfiere,
             columnaTC: columnaTC,
-            columnaCheques: columnaCheques
+            columnaCheques: columnaCheques,
+            conceptos: conceptos // 👈 acá viajan
         },
         success: function(resp) {
             let mensaje = "";
