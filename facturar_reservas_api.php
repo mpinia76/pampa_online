@@ -79,7 +79,7 @@ foreach ($conceptosPost as $idCobro => $conceptoId) {
             WHERE rc.id = $idCobro
               AND rc.tipo <> 'DESCUENTO'";
 
-    //echo $sql;
+    echo $sql;
 
     $rs = mysqli_query($conn, $sql);
     if (!$rs || mysqli_num_rows($rs) === 0) {
