@@ -88,17 +88,11 @@ foreach ($conceptosPost as $idCobro => $conceptoId) {
 
     $row = mysqli_fetch_assoc($rs);
 
-    // Validar UNA sola reserva
-    if ($idReserva === null) {
-        $idReserva = (int)$row['reserva_id'];
-        $conceptoNombre = $row['nombre'];
-    } elseif ($idReserva !== (int)$row['reserva_id']) {
-        die(json_encode([
-            'error' => 'Los cobros pertenecen a distintas reservas'
-        ]));
+    // ✅ ACÁ
+    $idReserva = (int)$row['reserva_id'];
+    if (!$idReserva) {
+        die(json_encode(['error' => "Cobro $idCobro sin reserva asociada"]));
     }
-    $idReserva = intval($idReserva);
-    if (!$idReserva) continue;
 
     $sql = "SELECT R.*, C.nombre_apellido, C.cuit, C.dni, C.direccion, C.tipoPersona, C.razon_social, C.titular_factura, C.iva
             FROM reservas R
