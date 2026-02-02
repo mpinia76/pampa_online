@@ -932,6 +932,20 @@
             return;
         }
 
+        /* =========================
+           🔹 RECOLECTAR MONTOS
+        ========================= */
+        var montos = {};
+
+        $('.trSelected', $('.medios_pago')).each(function() {
+            var id = $(this).attr('id');
+            var disable = $(this).attr('disable');
+
+            if (id && disable == '0') {
+                var monto = parseFloat($(this).attr('monto')) || 0;
+                montos[id] = monto;
+            }
+        });
 
 
         if (!fecha || !puntoVenta) {
@@ -979,7 +993,8 @@
                 columnaTransfiere: columnaTransfiere,
                 columnaTC: columnaTC,
                 columnaCheques: columnaCheques,
-                conceptos: conceptos // 👈 acá viajan
+                conceptos: conceptos, // 👈 acá viajan
+                montos: montos // ✅ ACÁ
             },
             success: function(resp) {
                 let mensaje = "";

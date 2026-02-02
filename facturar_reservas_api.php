@@ -47,6 +47,9 @@ $columnaTransfiere = $_POST['columnaTransfiere'] ?? 0;
 $columnaTC = $_POST['columnaTC'] ?? 0;
 $columnaCheques = $_POST['columnaCheques'] ?? 0;
 $conceptosPost = $_POST['conceptos'] ?? [];
+$ano = (int)$_POST['ano'];
+$mes = str_pad((int)$_POST['mes'], 2, '0', STR_PAD_LEFT);
+$montosPost = isset($_POST['montos']) ? $_POST['montos'] : array();
 
 // Punto de venta
 $sqlPV = "SELECT numero, alicuota FROM punto_ventas WHERE id = $puntoVentaId";
@@ -107,59 +110,15 @@ foreach ($conceptosPost as $idCobro => $conceptoId) {
     $res = mysqli_fetch_assoc($rs);
 
 
-
-
-
-    // ---------------------
-    // CÁLCULO DE MONTOS
-    // ---------------------
-    $transferencias = $tarjetas = $cheques = 0;
-
-    $sqlCobros = "SELECT * FROM reserva_cobros WHERE reserva_id = $idReserva";
-    $rsCobros = mysqli_query($conn, $sqlCobros);
-    while ($cobro = mysqli_fetch_assoc($rsCobros)) {
-        if ($cobro['tipo'] == "DESCUENTO") continue;
-
-        // Transferencias
-        if ($columnaTransfiere == 1) {
-            $sqlTrans = "SELECT * FROM cobro_transferencias INNER JOIN cuenta ON cobro_transferencias.cuenta_id = cuenta.id  
-                         WHERE reserva_cobro_id = {$cobro['id']} AND cuenta.controla_facturacion = 1 AND cobro_transferencias.acreditado = 1";
-            $rsTrans = mysqli_query($conn, $sqlTrans);
-            while ($t = mysqli_fetch_assoc($rsTrans)) {
-                $transferencias += $t['monto_neto'] + $t['intereses'];
-            }
-        }
-
-        // Tarjetas
-        if ($columnaTC == 1) {
-            $sqlTC = "SELECT * FROM cobro_tarjetas WHERE reserva_cobro_id = {$cobro['id']}";
-            $rsTC = mysqli_query($conn, $sqlTC);
-            while ($t = mysqli_fetch_assoc($rsTC)) {
-                $tarjetas += $t['monto_neto'] + $t['intereses'];
-            }
-        }
-
-        // Cheques
-        if ($columnaCheques == 1) {
-            $sqlCheques = "SELECT * FROM cobro_cheques LEFT JOIN cuenta ON cobro_cheques.cuenta_acreditado = cuenta.id  
-                           WHERE reserva_cobro_id = {$cobro['id']} AND ((acreditado = 1 AND cuenta.controla_facturacion = 1) OR (cobro_cheques.cuenta_acreditado=0))";
-            $rsCheques = mysqli_query($conn, $sqlCheques);
-            while ($ch = mysqli_fetch_assoc($rsCheques)) {
-                $cheques += $ch['monto_neto'];
-            }
-        }
+    if (!isset($montosPost[$idReserva])) {
+        die(json_encode(['error' => "Monto no recibido para reserva $idReserva"]));
     }
 
-    // Facturas previas
-    $sqlFact = "SELECT * FROM reserva_facturas WHERE reserva_id = $idReserva";
-    $rsFact = mysqli_query($conn, $sqlFact);
-    $facturas = 0;
-    while ($f = mysqli_fetch_assoc($rsFact)) {
-        $facturas += $f['monto'];
-    }
 
     // Total final
-    $total = $transferencias + $tarjetas + $cheques - $facturas;
+
+
+    $total = (float)$montosPost[$idReserva];
     $neto = $total / $ivaCoeficiente;
     $iva = $total - $neto;
 
