@@ -1001,24 +1001,21 @@
 
                 resp.results.forEach(function(r) {
                     console.log(r);
-                    if (r.success) {
+                    if (r.error === "N") {
                         mensaje += "✔ Reserva ID " + r.id + ": Factura emitida correctamente.\n";
                     } else {
                         let detalle = "Error desconocido";
 
-                        if (Array.isArray(r.errores) && r.errores.length) {
+                        if (Array.isArray(r.errores) && r.errores.length > 0) {
                             detalle = r.errores.join(" | ");
-                        } else if (Array.isArray(r.error_details) && r.error_details.length) {
-                            detalle = r.error_details.join(" | ");
-                        } else if (typeof r.error_details === "string" && r.error_details.trim()) {
+                        } else if (typeof r.error_details === "string" && r.error_details.trim() !== "") {
                             detalle = r.error_details;
-                        } else if (typeof r.error === "string" && r.error.trim()) {
-                            detalle = r.error;
+                        } else if (typeof r.rta === "string" && r.rta.trim() !== "") {
+                            detalle = r.rta;
                         }
 
                         mensaje += "❌ Reserva ID " + r.id + ": " + detalle + "\n";
                     }
-
                 });
     
                 alert(mensaje);
