@@ -43,9 +43,9 @@ if ($fechaObj > $hoy) {
     responderError('La fecha de facturación no puede ser futura.');
 }
 
-if ($fechaObj < (clone $hoy)->modify('-10 days')) {
+/*if ($fechaObj < (clone $hoy)->modify('-10 days')) {
     responderError('AFIP no permite facturar servicios con más de 10 días de antigüedad.');
-}
+}*/
 
 
 
