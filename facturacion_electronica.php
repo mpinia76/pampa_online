@@ -855,7 +855,8 @@
             alert('Debe seleccionar una fecha de factura.');
             return;
         }
-    
+
+        var puntoVenta = $('#puntos').val();
     
         // Validación de fecha para el punto de venta
         $.ajax({
@@ -863,7 +864,7 @@
             type: 'POST',
             dataType: 'json',
             data: {
-                punto_venta_id: 1,
+                punto_venta_id: puntoVenta,
                 fecha: fecha
             },
             success: function(resp) {
