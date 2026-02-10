@@ -998,10 +998,14 @@
                 montos: montos // ✅ ACÁ
             },
             success: function(resp) {
+                if (resp.success === false && resp.error) {
+                    alert("❌ " + resp.error);
+                    return;
+                }
+
                 let mensaje = "";
 
                 resp.results.forEach(function(r) {
-                    console.log(r);
                     if (r.error === "N") {
                         mensaje += "✔ Reserva ID " + r.id + ": Factura emitida correctamente.\n";
                     } else {
@@ -1009,16 +1013,14 @@
 
                         if (Array.isArray(r.errores) && r.errores.length > 0) {
                             detalle = r.errores.join(" | ");
-                        } else if (typeof r.error_details === "string" && r.error_details.trim() !== "") {
+                        } else if (r.error_details) {
                             detalle = r.error_details;
-                        } else if (typeof r.rta === "string" && r.rta.trim() !== "") {
-                            detalle = r.rta;
                         }
 
                         mensaje += "❌ Reserva ID " + r.id + ": " + detalle + "\n";
                     }
                 });
-    
+
                 alert(mensaje);
                 w1.close();
                 $('#ver').click();

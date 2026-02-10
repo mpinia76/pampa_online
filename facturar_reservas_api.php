@@ -1,6 +1,17 @@
 <?php
 //DATOS DEL USUARIO
 session_start();
+
+function responderError($msg) {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'error' => $msg,
+        'results' => []
+    ]);
+    exit;
+}
+
 $usuarioId = $_SESSION['userid'];
 include_once("config/db.php");
 include_once("functions/util.php");
@@ -25,16 +36,15 @@ $fechaObj = DateTime::createFromFormat('d/m/Y', $fecha);
 $hoy = new DateTime();
 
 if (!$fechaObj) {
-    die(json_encode(['error' => 'Ingrese una fecha válida.']));
+    responderError('Ingrese una fecha válida.');
 }
 
 if ($fechaObj > $hoy) {
-    die(json_encode(['error' => 'La fecha de facturación no puede ser futura.']));
+    responderError('La fecha de facturación no puede ser futura.');
 }
 
-$diffDias = $hoy->diff($fechaObj)->days;
 if ($fechaObj < (clone $hoy)->modify('-10 days')) {
-    die(json_encode(['error' => 'AFIP no permite facturar servicios con más de 10 días de antigüedad.']));
+    responderError('AFIP no permite facturar servicios con más de 10 días de antigüedad.');
 }
 
 
@@ -339,4 +349,7 @@ foreach ($conceptosPost as $idCobro => $conceptoId) {
 
 
 header('Content-Type: application/json');
-echo json_encode(['results' => $resultados]);
+echo json_encode([
+    'success' => true,
+    'results' => $resultados
+]);
