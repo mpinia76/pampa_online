@@ -10,6 +10,7 @@
         <td>Direccion <input type="checkbox" checked="checked"  id="colDireccion" name="colDireccion"></input></td>
         <td>Localidad <input type="checkbox" checked="checked"  id="colLocalidad" name="colLocalidad"></input></td>
         <td>E-mail <input type="checkbox" checked="checked"  id="colEmail" name="colEmail"></input></td>
+        <td>F. Nacimiento <input type="checkbox" checked="checked"  id="colNacimiento" name="colNacimiento"></input></td>
 
 
 
@@ -30,6 +31,7 @@
             <td align="left"><?php echo $cliente['direccion']; ?></td>
             <td align="left"><?php echo $cliente['localidad']; ?></td>
             <td align="left"><?php echo $cliente['email']; ?></td>
+            <td align="left"><?php echo $cliente['nacimiento']; ?></td>
 
 
 

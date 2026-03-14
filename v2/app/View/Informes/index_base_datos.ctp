@@ -40,7 +40,10 @@ function descargar(){
     if($('#colEmail').is(':checked')){
         colEmail=1;
     }
-	    createWindow('w_base_datos_exportar_descargar','Descargar','<?php echo $this->Html->url('/informes/exportarBaseDatos', true);?>/'+$('#financiero_mesual_mes').val()+'/'+$('#financiero_mensual_ano').val()+'/'+colNombre+'/'+colDni+'/'+colTelefono+'/'+colCelular+'/'+colDireccion+'/'+colLocalidad+'/'+colEmail,'430','300');
+    if($('#colNacimiento').is(':checked')){
+        colNacimiento=1;
+    }
+	    createWindow('w_base_datos_exportar_descargar','Descargar','<?php echo $this->Html->url('/informes/exportarBaseDatos', true);?>/'+$('#financiero_mesual_mes').val()+'/'+$('#financiero_mensual_ano').val()+'/'+colNombre+'/'+colDni+'/'+colTelefono+'/'+colCelular+'/'+colDireccion+'/'+colLocalidad+'/'+colEmail+'/'+colNacimiento,'430','300');
 	    setTimeout('dhxWins.window("w_base_datos_exportar_descargar").close()', 4000);
 
 }
@@ -111,9 +114,13 @@ function ver_financiero_mensual(){
     if($('#colEmail').is(':checked')){
         colEmail=1;
     }
+    var colNacimiento=0
+    if($('#colNacimiento').is(':checked')){
+        colNacimiento=1;
+    }
     $('#cargando').show();
     $.ajax({
-        url: '<?php echo $this->Html->url('/informes/base_datos', true);?>/'+$('#financiero_mesual_mes').val()+'/'+$('#financiero_mensual_ano').val()+'/'+colNombre+'/'+colDni+'/'+colTelefono+'/'+colCelular+'/'+colDireccion+'/'+colLocalidad+'/'+colEmail,
+        url: '<?php echo $this->Html->url('/informes/base_datos', true);?>/'+$('#financiero_mesual_mes').val()+'/'+$('#financiero_mensual_ano').val()+'/'+colNombre+'/'+colDni+'/'+colTelefono+'/'+colCelular+'/'+colDireccion+'/'+colLocalidad+'/'+colEmail+'/'+colNacimiento,
         dataType: 'html',
         success: function(data){
             $('#cargando').hide();

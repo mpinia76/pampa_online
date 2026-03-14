@@ -1693,7 +1693,7 @@ function iva_compras($mes,$ano, $orden){
     }
 
 
-    function base_datos($mes,$ano, $colNombre, $colDni, $colTelefono, $colCelular, $colDireccion, $colLocalidad, $colEmail){
+    function base_datos($mes,$ano, $colNombre, $colDni, $colTelefono, $colCelular, $colDireccion, $colLocalidad, $colEmail, $colNacimiento){
         //error_reporting(0);
 
         //echo $colNombre;
@@ -1722,7 +1722,7 @@ function iva_compras($mes,$ano, $orden){
             foreach($reservas as $reserva){
 
 
-                $clientesMostrar[]=array('nombre_apellido'=>$reserva['Cliente']['nombre_apellido'],'dni'=>$reserva['Cliente']['dni'],'telefono'=>$reserva['Cliente']['telefono'],'celular'=>$reserva['Cliente']['celular'],'direccion'=>$reserva['Cliente']['direccion'],'localidad'=>$reserva['Cliente']['localidad'],'email'=>$reserva['Cliente']['email']);
+                $clientesMostrar[]=array('nombre_apellido'=>$reserva['Cliente']['nombre_apellido'],'dni'=>$reserva['Cliente']['dni'],'telefono'=>$reserva['Cliente']['telefono'],'celular'=>$reserva['Cliente']['celular'],'direccion'=>$reserva['Cliente']['direccion'],'localidad'=>$reserva['Cliente']['localidad'],'email'=>$reserva['Cliente']['email'],'nacimiento'=>$reserva['Cliente']['nacimiento']);
             }
         }
         //$this->array_sort_by($gastosMostrar, $orden);
@@ -1735,10 +1735,11 @@ function iva_compras($mes,$ano, $orden){
             'colDireccion' => $colDireccion,
             'colLocalidad' => $colLocalidad,
             'colEmail' => $colEmail,
+            'colNacimiento' => $colNacimiento,
         ));
     }
 
-    function exportarBaseDatos($mes, $ano, $colNombre, $colDni, $colTelefono, $colCelular, $colDireccion, $colLocalidad, $colEmail){
+    function exportarBaseDatos($mes, $ano, $colNombre, $colDni, $colTelefono, $colCelular, $colDireccion, $colLocalidad, $colEmail, $colNacimiento){
         //error_reporting(0);
         $this->layout = 'ajax';
 
@@ -1783,6 +1784,9 @@ function iva_compras($mes,$ano, $orden){
         if ($colEmail){
             $headerRow[]="E-mail";
         }
+        if ($colNacimiento){
+            $headerRow[]="F. Nacimiento";
+        }
 
         //$headerRow = array("Nombre Apellido","DNI","Telefono","Celular","Direccion","Localidad","E-mail");
 
@@ -1796,7 +1800,7 @@ function iva_compras($mes,$ano, $orden){
 
 
 
-                $clientesMostrar[]=array('nombre_apellido'=>$reserva['Cliente']['nombre_apellido'],'dni'=>$reserva['Cliente']['dni'],'telefono'=>$reserva['Cliente']['telefono'],'celular'=>$reserva['Cliente']['celular'],'direccion'=>$reserva['Cliente']['direccion'],'localidad'=>$reserva['Cliente']['localidad'],'email'=>$reserva['Cliente']['email']);
+                $clientesMostrar[]=array('nombre_apellido'=>$reserva['Cliente']['nombre_apellido'],'dni'=>$reserva['Cliente']['dni'],'telefono'=>$reserva['Cliente']['telefono'],'celular'=>$reserva['Cliente']['celular'],'direccion'=>$reserva['Cliente']['direccion'],'localidad'=>$reserva['Cliente']['localidad'],'email'=>$reserva['Cliente']['email'],'nacimiento'=>$reserva['Cliente']['nacimiento']);
             }
         }
        // $this->array_sort_by($gastosMostrar, $orden);
@@ -1824,6 +1828,9 @@ function iva_compras($mes,$ano, $orden){
             if ($colEmail){
                 $row[]=utf8_decode(trim($cliente['email']));
             }
+             if ($colNacimiento){
+                 $row[]=utf8_decode(trim($cliente['nacimiento']));
+             }
             $data[] = $row;
         }
 
