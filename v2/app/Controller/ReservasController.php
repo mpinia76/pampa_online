@@ -1074,6 +1074,15 @@ class ReservasController extends AppController {
                 $this->Cliente->save();
 
                 //guardo reserva
+                if (empty($reserva['id'])) {
+                    // New reservation: recalculate the number at save time, not from the form
+                    $this->Reserva->create();
+                    $ultima_reserva = $this->Reserva->find('first', array(
+                        'order'  => array('Reserva.numero' => 'desc'),
+                        'fields' => array('Reserva.numero'),
+                    ));
+                    $this->Reserva->set('numero', $ultima_reserva['Reserva']['numero'] + 1);
+                }
                 $this->Reserva->set('cliente_id',$this->Cliente->id);
                 $this->Reserva->set('estado','0');
                 $this->Reserva->save();
