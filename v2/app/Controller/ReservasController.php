@@ -1076,7 +1076,7 @@ class ReservasController extends AppController {
                 //guardo reserva
                 if (empty($reserva['id'])) {
                     // New reservation: recalculate the number at save time, not from the form
-                    $this->Reserva->create();
+                    $this->Reserva->id = null;
                     $ultima_reserva = $this->Reserva->find('first', array(
                         'order'  => array('Reserva.numero' => 'desc'),
                         'fields' => array('Reserva.numero'),
@@ -1527,7 +1527,7 @@ class ReservasController extends AppController {
 
 
 		// main header (multipart mandatory)
-		$headers  = "From: Village de las Pampas Apart Hotel Boutique <info@villagedelaspampas.com.ar> ".$eol;
+		$headers  = "From: Village de las Pampas Apart Hotel Boutique <info@villagedelaspampas.com  .ar> ".$eol;
 
 	    $headers .= "Return-path: Village de las Pampas Apart Hotel Boutique <info@villagedelaspampas.com.ar> ".$eol;
 	   //$headers .= "CC: ".$this->request->data['Reserva']['mailsCC']." \r\n";

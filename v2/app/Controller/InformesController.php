@@ -1837,5 +1837,320 @@ function iva_compras($mes,$ano, $orden){
 
         $this->ExportXls->export($fileName, $headerRow, $data);
     }
+
+
+    public function inicio_fin_semana($fecha){
+
+        $diaInicio="Sunday";
+        $diaFin="Saturday";
+
+        $strFecha = strtotime($fecha);
+
+        $fechaInicio = date('Y-m-d',strtotime('last '.$diaInicio,$strFecha));
+        $fechaFin = date('Y-m-d',strtotime('next '.$diaFin,$strFecha));
+
+        if(date("l",$strFecha)==$diaInicio){
+            $fechaInicio= date("Y-m-d",$strFecha);
+        }
+        if(date("l",$strFecha)==$diaFin){
+            $fechaFin= date("Y-m-d",$strFecha);
+        }
+
+        return Array("fechaInicio"=>$fechaInicio,"fechaFin"=>$fechaFin);
+
+    }
+
+    function index_ventas_semanal(){
+        $this->layout = 'informeDefault';
+        if ((isset($_SESSION['primerDia']))&&(isset($_SESSION['ultimoDia']))) {
+            $primerDia=$_SESSION['primerDia'];
+            $ultimoDia=$_SESSION['ultimoDia'];
+        }
+        else{
+            $arraySemana=$this->inicio_fin_semana(date('Y-m-d'));
+            $primerDia=$arraySemana['fechaInicio'];
+            $ultimoDia=$arraySemana['fechaFin'];
+            $_SESSION['primerDia']=$primerDia;
+            $_SESSION['ultimoDia']=$ultimoDia;
+        }
+
+        $_SESSION['paginaOperaciones']=2;
+        $this->set('primerDia',date('d/m/Y',strtotime($primerDia)));
+        $this->set('ultimoDia',date('d/m/Y',strtotime($ultimoDia)));
+        $this->setLogUsuario('Listado semanal de operaciones');
+    }
+
+    function ventas_semanal($desde, $hasta,$pdf=0){
+        //echo $desde;
+        ini_set( "memory_limit", "-1" );
+        ini_set('max_execution_time', "-1");
+        //error_reporting(0);
+        $_SESSION['primerDia']=$desde;
+        $_SESSION['ultimoDia']=$hasta;
+        $this->layout = 'informe';
+
+        $this->loadModel('Reserva');
+        $this->loadModel('Categoria');
+        $array_dias['Sunday'] = "Domingo";
+        $array_dias['Monday'] = "Lunes";
+        $array_dias['Tuesday'] = "Martes";
+        $array_dias['Wednesday'] = "Miércoles";
+        $array_dias['Thursday'] = "Jueves";
+        $array_dias['Friday'] = "Viernes";
+        $array_dias['Saturday'] = "Sábado";
+
+
+        //lista de empleados de operaciones, tengo que ir a buscar por sector de trabajo
+        $this->loadModel('EmpleadoTrabajo');
+
+
+        $empleadosTrabajo = $this->EmpleadoTrabajo->find('all',array('fields'=>array('max(EmpleadoTrabajo.id) as id'), 'group' => array('EmpleadoTrabajo.empleado_id'), 'conditions' => array( 'Empleado.estado ' => 1 )));
+
+        foreach($empleadosTrabajo as $empleadoTrabajo){
+
+            $this->EmpleadoTrabajo->id = $empleadoTrabajo[0]['id'];
+            $sector = $this->EmpleadoTrabajo->read();
+
+            if (($sector['EmpleadoTrabajo']['sector_1_id']==5)||($sector['EmpleadoTrabajo']['sector_2_id']==5)) {
+                $empleados[$sector['Empleado']['id']] = $sector['Empleado']['nombre']." ".$sector['Empleado']['apellido'];
+            }
+
+        }
+        $this->set('empleados',$empleados);
+
+        $reservasMostrar = array();
+        for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
+
+            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('retiro =' => $fecha,'devolucion =' => $fecha))));
+
+
+            /*App::uses('ConnectionManager', 'Model');
+            $dbo = ConnectionManager::getDatasource('default');
+            $logs = $dbo->getLog();
+            $lastLog = $logs['log'][0];
+            echo $lastLog['query'];*/
+            $date = new DateTime($fecha);
+
+            $reservasMostrarDia = array();
+            if(count($reservas) > 0){
+
+                foreach($reservas as $reserva){
+                    //print_r($reserva);
+                    //verifico que la reserva no este cancelada
+                    if(($reserva['Reserva']['estado'] != 2)&&($reserva['Reserva']['estado'] != 3)){
+                        $reservaMostrar = array();
+                        $this->Categoria->id = $reserva['Apartamento']['categoria_id'];
+                        $categoria = $this->Categoria->read();
+                        $reservaMostrar['categoria']=$categoria['Categoria']['categoria'];
+
+                        $reservaMostrar['apartamento']=$reserva['Apartamento']['apartamento'];
+                        $reservaMostrar['titular']=$reserva['Cliente']['nombre_apellido'];
+
+                        $reservaMostrar['obs']=$reserva['Reserva']['housekeeping'];
+                        $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
+                        $reservaMostrar['responsableRetiro']=$reserva['Reserva']['responsableRetiro'];
+                        $reservaMostrar['responsableDevolucion']=$reserva['Reserva']['responsableDevolucion'];
+                        if ($reserva['Reserva']['retiro']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Entrega';
+                            $reservaMostrar['lugar']=$reserva['Lugar_Retiro']['lugar'];
+                            $reservaMostrar['hora']=$reserva['Reserva']['hora_retiro'];
+                        }
+                        if ($reserva['Reserva']['devolucion']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Devoluci�n';
+                            $reservaMostrar['lugar']=$reserva['Lugar_Devolucion']['lugar'];
+                            $reservaMostrar['hora']=$reserva['Reserva']['hora_devolucion'];
+                        }
+
+                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'vehiculo'=>$reservaMostrar['vehiculo'],'patente'=>$reservaMostrar['patente'],'titular'=>$reservaMostrar['titular'],'lugar'=>$reservaMostrar['lugar'],'tipo'=>$reservaMostrar['tipo'],'hora'=>$reservaMostrar['hora'],'vuelo'=>$reservaMostrar['vuelo'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsableRetiro'=>$reservaMostrar['responsableRetiro'],'responsableDevolucion'=>$reservaMostrar['responsableDevolucion']);
+                        $this->array_sort_by($reservasMostrarDia, 'hora');
+                        //print_r($reservasMostrarDia);
+                    }
+
+                    //echo $reserva['Reserva']['mes']." - ".$ventas_netas[$reserva['Reserva']['mes']]."<br>";
+                }// foreach reservas
+            }// if count reservas > 0
+            if (!empty($reservasMostrarDia)) {
+                $reservasMostrar[]=$reservasMostrarDia;
+            }
+
+        }
+
+        //
+
+
+
+
+
+        //echo "El dia es ".$array_dias[date('l', strtotime($fecha))];
+
+        $this->set(array(
+
+            'pdf' => $pdf,
+            'reservas' => $reservasMostrar
+        ));
+        if ($pdf) {
+
+            require_once '../../vendor/autoload.php';
+
+            $mpdf = new \Mpdf\Mpdf(['format' => 'A4-L']);
+            $mpdf->WriteHTML($this->render());
+            $mpdf->Output('Semanal_operaciones_'.$desde.'_'.$hasta.'.pdf','D');
+
+
+
+        }
+        /**/
+
+    }
+
+
+
+    function exportarOperacionesSemanal($desde, $hasta){
+        //error_reporting(0);
+        $this->layout = 'ajax';
+
+
+
+
+        $this->autoRender = false;
+        $this->layout = false;
+
+
+        $fileName = "Semanal_operaciones_".$desde.'_'.$hasta.".xls";
+        //$fileName = "bookreport_".date("d-m-y:h:s").".csv";
+        //$headerRow = array("ENT O DEV","HORARIO","LUGAR","TITULAR","N� VUELO","CATEGORIA","VEH�CULO","OBS","PATENTE","RESPONSABLE");
+
+        $data = array();
+
+        $this->loadModel('Reserva');
+        $this->loadModel('Categoria');
+        $this->loadModel('Empleado');
+        $array_dias['Sunday'] = "Domingo";
+        $array_dias['Monday'] = "Lunes";
+        $array_dias['Tuesday'] = "Martes";
+        $array_dias['Wednesday'] = "Mi�rcoles";
+        $array_dias['Thursday'] = "Jueves";
+        $array_dias['Friday'] = "Viernes";
+        $array_dias['Saturday'] = "S�bado";
+
+        $reservasMostrar = array();
+
+        $table="<table width='100%' cellspacing='0'>
+     	<tr class='titulo'>
+        		<td colspan='10' align='center' style='border: 1px solid black;'>Planificaci�n de Entregas y devoluciones per�odo ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
+
+    		</tr>
+
+    <tr>
+        <td align='center' style='border: 1px solid black;'>ENT O DEV</td>
+        <td align='center' style='border: 1px solid black;'>HORARIO</td>
+        <td align='center' style='border: 1px solid black;'>LUGAR</td>
+
+        <td align='center' style='border: 1px solid black;'>TITULAR</td>
+        <td align='center' style='border: 1px solid black;'>N� VUELO</td>
+        <td align='center' style='border: 1px solid black;'>CATEGORIA</td>
+        <td align='center' style='border: 1px solid black;'>VEH�CULO</td>
+        <td align='center' style='border: 1px solid black;'>OBS</td>
+        <td align='center' style='border: 1px solid black;'>PATENTE</td>
+        <td align='center' style='border: 1px solid black;'>RESPONSABLE</td>
+    </tr>";
+        for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
+
+            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('retiro =' => $fecha,'devolucion =' => $fecha))));
+
+
+            /*App::uses('ConnectionManager', 'Model');
+            $dbo = ConnectionManager::getDatasource('default');
+            $logs = $dbo->getLog();
+            $lastLog = $logs['log'][0];
+            echo $lastLog['query'];*/
+            $date = new DateTime($fecha);
+
+            $reservasMostrarDia = array();
+            if(count($reservas) > 0){
+
+                foreach($reservas as $reserva){
+                    //print_r($reserva);
+                    //verifico que la reserva no este cancelada
+                    if(($reserva['Reserva']['estado'] != 2)&&($reserva['Reserva']['estado'] != 3)){
+                        $reservaMostrar = array();
+                        $this->Categoria->id = $reserva['Unidad']['categoria_id'];
+                        $categoria = $this->Categoria->read();
+                        $reservaMostrar['categoria']=$categoria['Categoria']['categoria'];
+                        $reservaMostrar['vehiculo']=$categoria['Categoria']['vehiculos'];
+                        $reservaMostrar['patente']=$reserva['Unidad']['patente'];
+                        $reservaMostrar['titular']=$reserva['Cliente']['nombre_apellido'];
+                        $reservaMostrar['vuelo']=($reserva['Reserva']['vuelo']==0)?'':$reserva['Reserva']['vuelo'];
+                        $reservaMostrar['obs']=$reserva['Reserva']['comentarios'];
+                        $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
+                        if ($reserva['Reserva']['retiro']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Entrega';
+                            $reservaMostrar['lugar']=$reserva['Lugar_Retiro']['lugar'];
+                            $reservaMostrar['hora']=$reserva['Reserva']['hora_retiro'];
+                            $this->Empleado->id = $reserva['Reserva']['responsableRetiro'];
+                            $empleado = $this->Empleado->read();
+
+                            $reservaMostrar['responsable']=$empleado['Empleado']['nombre']." ".$empleado['Empleado']['apellido'];
+                        }
+                        if ($reserva['Reserva']['devolucion']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Devoluci�n';
+                            $reservaMostrar['lugar']=$reserva['Lugar_Devolucion']['lugar'];
+                            $reservaMostrar['hora']=$reserva['Reserva']['hora_devolucion'];
+                            $this->Empleado->id = $reserva['Reserva']['responsableDevolucion'];
+                            $empleado = $this->Empleado->read();
+
+                            $reservaMostrar['responsable']=$empleado['Empleado']['nombre']." ".$empleado['Empleado']['apellido'];
+                        }
+
+                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'vehiculo'=>$reservaMostrar['vehiculo'],'patente'=>$reservaMostrar['patente'],'titular'=>$reservaMostrar['titular'],'lugar'=>$reservaMostrar['lugar'],'tipo'=>$reservaMostrar['tipo'],'hora'=>$reservaMostrar['hora'],'vuelo'=>$reservaMostrar['vuelo'],'obs'=>$reservaMostrar['obs'],'responsable'=>$reservaMostrar['responsable'],'id_reserva'=>$reservaMostrar['id_reserva']);
+                        $this->array_sort_by($reservasMostrarDia, 'hora');
+                        //print_r($reservasMostrarDia);
+                    }
+
+                    //echo $reserva['Reserva']['mes']." - ".$ventas_netas[$reserva['Reserva']['mes']]."<br>";
+                }// foreach reservas
+            }// if count reservas > 0
+            if (!empty($reservasMostrarDia)) {
+                $reservasMostrar[]=$reservasMostrarDia;
+            }
+
+        }
+
+        foreach($reservasMostrar as $reservaDia){
+            $data[] = array($reservaDia[0]['dia']);
+            $table.="<tr style='font-weight: bold;'>
+	        <td colspan='10' align='center' style='border: 1px solid black;background-color: #a4a6a6;'>".($reservaDia[0]['dia'])."</td>
+
+	    </tr>";
+            foreach($reservaDia as $reserva){
+
+                $table.="<tr>";
+                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['tipo'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['hora']."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['lugar'])."</td>";
+
+
+                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['titular'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['vuelo']."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['categoria'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['vehiculo'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['obs'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['patente']."</td>";
+
+
+                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['responsable']."</td>
+	    	</tr>";
+            }
+        }
+        $table.="
+        <tr class='titulo'>
+        		<td colspan='10' style='border: 1px solid black;color: #fb061c;'>* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emiti� este informe</td>
+
+    		</tr>
+        </table>";
+        //echo $table;
+        $this->ExportXls->exportTable($fileName, $table);
+    }
+
 }
 ?>

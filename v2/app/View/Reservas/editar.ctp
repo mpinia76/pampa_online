@@ -148,9 +148,13 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
     <div class="ym-g50 ym-gl"><?php echo $this->Form->input('Cliente.razon_social',array('label'=>'Nombre Apellido/Razon Social')); ?></div>
     <div class="ym-g50 ym-gl"><?php echo $this->Form->input('Cliente.cuitAux', array('label' => 'CUIT','disabled'=>'disabled', 'value' => $reserva['Cliente']['cuit'])); ?></div>
 </div>
-<div class="sectionSubtitle">Comentarios</div>
+<div class="sectionSubtitle">Comentarios Generales</div>
 <div class="ym-grid">
     <?php echo $this->Form->input('Reserva.comentarios',array('label' => false, 'type' => 'textarea')); ?>
+</div>
+<div class="sectionSubtitle">Comentarios Housekeeping</div>
+<div class="ym-grid">
+    <?php echo $this->Form->input('Reserva.housekeeping',array('label' => false, 'type' => 'textarea')); ?>
 </div>
 <?php if($grilla){ ?>
 <span id="botonGuardar" onclick="guardarSinRefrescar('<?php echo $this->Html->url('/reservas/guardar.json', true);?>',$('form').serialize());" class="boton guardar">Guardar <img src="<?php echo $this->webroot; ?>img/loading_save.gif" class="loading" id="loading_save" /></span>

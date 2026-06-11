@@ -130,10 +130,19 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
     <div class="ym-g50 ym-gl"><?php echo $this->Form->input('Cliente.razon_social',array('label'=>'Nombre Apellido/Razon Social','disabled'=>'disabled')); ?></div>
     <div class="ym-g50 ym-gl"><?php echo $this->Form->input('Cliente.cuitAux', array('label' => 'CUIT','disabled'=>'disabled', 'value' => $reserva['Cliente']['cuit'])); ?></div>
 </div>
-<div class="sectionSubtitle">Comentarios</div>
+<div class="sectionSubtitle">Comentarios Generales</div>
 <div class="ym-grid">
     <?php
     echo $this->Form->input('Reserva.comentarios', array(
+        'label' => false,
+        'type' => 'textarea'
+    ));
+
+    ?>
+<div class="sectionSubtitle">Comentarios Housekeeping</div>
+<div class="ym-grid">
+    <?php
+    echo $this->Form->input('Reserva.housekeeping', array(
         'label' => false,
         'type' => 'textarea'
     ));

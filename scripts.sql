@@ -858,3 +858,9 @@ SELECT CONCAT(
        ) AS sql_export
 FROM reserva_facturas
 WHERE fecha_emision >= '2026-05-05';
+
+##################################11/06/2026###########################################################
+ALTER TABLE `reservas`
+	ADD COLUMN `housekeeping` text NULL;
+
+INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (10, 'Listado de operaciones');

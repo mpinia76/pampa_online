@@ -269,6 +269,11 @@
             Movimiento de Cheques librados
         </div>
         <?php } ?>
+        <?php if(ACCION_158){ ?>
+            <div class="informes item" onclick="createWindow('w_ventas_informe_operaciones','Listado de operaciones','v2/informes/index_ventas_semanal','1230','600'); $('#menu').hide();">
+                Listado de operaciones
+            </div>
+        <?php } ?>
         <?php if(ACCION_110){ ?>
       	<div class="informes item" onclick="createWindow('w_ventas_informe_ocupacion','Informe de ocupacion','v2/informes/index_ventas_ocupacion','1230','600'); $('#menu').hide();">
             Informe de ocupacion
