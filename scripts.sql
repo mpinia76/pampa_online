@@ -864,3 +864,6 @@ ALTER TABLE `reservas`
 	ADD COLUMN `housekeeping` text NULL;
 
 INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (10, 'Listado de operaciones');
+
+ALTER TABLE `reservas`
+    ADD COLUMN `responsable` INT(11) NULL DEFAULT NULL;

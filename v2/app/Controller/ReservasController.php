@@ -1601,5 +1601,38 @@ class ReservasController extends AppController {
             $this->redirect('/index');
         }
     }
+
+    public function guardar_responsable(){
+        $this->layout = 'ajax';
+
+
+        $reserva = $this->Reserva->read(null,$this->request->data['id_reserva']);
+
+
+        $this->Reserva->set('responsable',$this->request->data['id_responsable']);
+
+
+
+
+        if(!$this->Reserva->validates()){
+            $errores['Reserva'] = $this->Reserva->validationErrors;
+        }
+        if(isset($errores) and $errores!=''){
+            $this->set('resultado','ERROR');
+            $this->set('mensaje',$errores);
+            $this->set('detalle','');
+        }else{
+            $this->Reserva->save();
+            $this->set('resultado','OK');
+            $this->set('mensaje','Reserva modificada');
+            $this->set('detalle','');
+        }
+
+        $this->set('_serialize', array(
+            'resultado',
+            'mensaje'
+        ));
+
+    }
 }
 ?>

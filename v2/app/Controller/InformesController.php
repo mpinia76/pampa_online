@@ -1861,7 +1861,7 @@ function iva_compras($mes,$ano, $orden){
     }
 
     function index_ventas_semanal(){
-        $this->layout = 'informeDefault';
+        $this->layout = 'informe';
         if ((isset($_SESSION['primerDia']))&&(isset($_SESSION['ultimoDia']))) {
             $primerDia=$_SESSION['primerDia'];
             $ultimoDia=$_SESSION['ultimoDia'];
@@ -1921,7 +1921,7 @@ function iva_compras($mes,$ano, $orden){
         $reservasMostrar = array();
         for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
 
-            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('retiro =' => $fecha,'devolucion =' => $fecha))));
+            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('check_in =' => $fecha,'check_out =' => $fecha))));
 
 
             /*App::uses('ConnectionManager', 'Model');
@@ -1948,20 +1948,18 @@ function iva_compras($mes,$ano, $orden){
 
                         $reservaMostrar['obs']=$reserva['Reserva']['housekeeping'];
                         $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
-                        $reservaMostrar['responsableRetiro']=$reserva['Reserva']['responsableRetiro'];
-                        $reservaMostrar['responsableDevolucion']=$reserva['Reserva']['responsableDevolucion'];
-                        if ($reserva['Reserva']['retiro']==$date->format('d/m/Y')) {
+                        $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
+
+                        if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
                             $reservaMostrar['tipo']='Entrega';
-                            $reservaMostrar['lugar']=$reserva['Lugar_Retiro']['lugar'];
-                            $reservaMostrar['hora']=$reserva['Reserva']['hora_retiro'];
                         }
-                        if ($reserva['Reserva']['devolucion']==$date->format('d/m/Y')) {
-                            $reservaMostrar['tipo']='Devoluci�n';
-                            $reservaMostrar['lugar']=$reserva['Lugar_Devolucion']['lugar'];
-                            $reservaMostrar['hora']=$reserva['Reserva']['hora_devolucion'];
+                        else if ($reserva['Reserva']['cechk_out']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Devolución';
+                        } else{
+                            $reservaMostrar['tipo']='Repaso';
                         }
 
-                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'vehiculo'=>$reservaMostrar['vehiculo'],'patente'=>$reservaMostrar['patente'],'titular'=>$reservaMostrar['titular'],'lugar'=>$reservaMostrar['lugar'],'tipo'=>$reservaMostrar['tipo'],'hora'=>$reservaMostrar['hora'],'vuelo'=>$reservaMostrar['vuelo'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsableRetiro'=>$reservaMostrar['responsableRetiro'],'responsableDevolucion'=>$reservaMostrar['responsableDevolucion']);
+                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable']);
                         $this->array_sort_by($reservasMostrarDia, 'hora');
                         //print_r($reservasMostrarDia);
                     }
@@ -2043,20 +2041,18 @@ function iva_compras($mes,$ano, $orden){
 
     <tr>
         <td align='center' style='border: 1px solid black;'>ENT O DEV</td>
-        <td align='center' style='border: 1px solid black;'>HORARIO</td>
-        <td align='center' style='border: 1px solid black;'>LUGAR</td>
+        
 
         <td align='center' style='border: 1px solid black;'>TITULAR</td>
-        <td align='center' style='border: 1px solid black;'>N� VUELO</td>
-        <td align='center' style='border: 1px solid black;'>CATEGORIA</td>
-        <td align='center' style='border: 1px solid black;'>VEH�CULO</td>
+       
+        <td align='center' style='border: 1px solid black;'>APARTAMENTO</td>
         <td align='center' style='border: 1px solid black;'>OBS</td>
-        <td align='center' style='border: 1px solid black;'>PATENTE</td>
+        
         <td align='center' style='border: 1px solid black;'>RESPONSABLE</td>
     </tr>";
         for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
 
-            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('retiro =' => $fecha,'devolucion =' => $fecha))));
+            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('check_in =' => $fecha,'check_out =' => $fecha))));
 
 
             /*App::uses('ConnectionManager', 'Model');
@@ -2077,32 +2073,24 @@ function iva_compras($mes,$ano, $orden){
                         $this->Categoria->id = $reserva['Unidad']['categoria_id'];
                         $categoria = $this->Categoria->read();
                         $reservaMostrar['categoria']=$categoria['Categoria']['categoria'];
-                        $reservaMostrar['vehiculo']=$categoria['Categoria']['vehiculos'];
-                        $reservaMostrar['patente']=$reserva['Unidad']['patente'];
+
+                        $reservaMostrar['apartamento']=$reserva['Apartamento']['apartamento'];
                         $reservaMostrar['titular']=$reserva['Cliente']['nombre_apellido'];
-                        $reservaMostrar['vuelo']=($reserva['Reserva']['vuelo']==0)?'':$reserva['Reserva']['vuelo'];
-                        $reservaMostrar['obs']=$reserva['Reserva']['comentarios'];
+
+                        $reservaMostrar['obs']=$reserva['Reserva']['housekeeping'];
                         $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
-                        if ($reserva['Reserva']['retiro']==$date->format('d/m/Y')) {
+                        $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
+
+                        if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
                             $reservaMostrar['tipo']='Entrega';
-                            $reservaMostrar['lugar']=$reserva['Lugar_Retiro']['lugar'];
-                            $reservaMostrar['hora']=$reserva['Reserva']['hora_retiro'];
-                            $this->Empleado->id = $reserva['Reserva']['responsableRetiro'];
-                            $empleado = $this->Empleado->read();
-
-                            $reservaMostrar['responsable']=$empleado['Empleado']['nombre']." ".$empleado['Empleado']['apellido'];
                         }
-                        if ($reserva['Reserva']['devolucion']==$date->format('d/m/Y')) {
-                            $reservaMostrar['tipo']='Devoluci�n';
-                            $reservaMostrar['lugar']=$reserva['Lugar_Devolucion']['lugar'];
-                            $reservaMostrar['hora']=$reserva['Reserva']['hora_devolucion'];
-                            $this->Empleado->id = $reserva['Reserva']['responsableDevolucion'];
-                            $empleado = $this->Empleado->read();
-
-                            $reservaMostrar['responsable']=$empleado['Empleado']['nombre']." ".$empleado['Empleado']['apellido'];
+                        else if ($reserva['Reserva']['cechk_out']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Devolución';
+                        } else{
+                            $reservaMostrar['tipo']='Repaso';
                         }
 
-                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'vehiculo'=>$reservaMostrar['vehiculo'],'patente'=>$reservaMostrar['patente'],'titular'=>$reservaMostrar['titular'],'lugar'=>$reservaMostrar['lugar'],'tipo'=>$reservaMostrar['tipo'],'hora'=>$reservaMostrar['hora'],'vuelo'=>$reservaMostrar['vuelo'],'obs'=>$reservaMostrar['obs'],'responsable'=>$reservaMostrar['responsable'],'id_reserva'=>$reservaMostrar['id_reserva']);
+                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable']);
                         $this->array_sort_by($reservasMostrarDia, 'hora');
                         //print_r($reservasMostrarDia);
                     }
@@ -2126,16 +2114,14 @@ function iva_compras($mes,$ano, $orden){
 
                 $table.="<tr>";
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['tipo'])."</td>";
-                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['hora']."</td>";
-                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['lugar'])."</td>";
+
 
 
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['titular'])."</td>";
-                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['vuelo']."</td>";
-                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['categoria'])."</td>";
-                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['vehiculo'])."</td>";
+
+                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['apartamento'])."</td>";
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['obs'])."</td>";
-                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['patente']."</td>";
+
 
 
                 $table.="<td align='center' style='border: 1px solid black;'>".$reserva['responsable']."</td>
@@ -2144,7 +2130,7 @@ function iva_compras($mes,$ano, $orden){
         }
         $table.="
         <tr class='titulo'>
-        		<td colspan='10' style='border: 1px solid black;color: #fb061c;'>* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emiti� este informe</td>
+        		<td colspan='10' style='border: 1px solid black;color: #fb061c;'>* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emitió este informe</td>
 
     		</tr>
         </table>";
