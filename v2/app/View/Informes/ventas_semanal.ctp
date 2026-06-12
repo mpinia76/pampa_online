@@ -17,12 +17,12 @@
     		</tr>
     <?php } ?>		
     <tr class="titulo">
-        <td style='border: 1px solid black;'>ENT O DEV</td>
+        <td style='border: 1px solid black;'>ACCION</td>
 
         
         <td style='border: 1px solid black;'>TITULAR</td>
 
-        <td style='border: 1px solid black;'>APARTAMENTO</td>
+        <td style='border: 1px solid black;'>DEPARTAMENTO</td>
         <td style='border: 1px solid black;'>OBS</td>
 
         <td style='border: 1px solid black;'>RESPONSABLE</td>

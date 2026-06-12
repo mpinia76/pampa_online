@@ -1951,10 +1951,10 @@ function iva_compras($mes,$ano, $orden){
                         $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
 
                         if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
-                            $reservaMostrar['tipo']='Entrega';
+                            $reservaMostrar['tipo']='Check In';
                         }
-                        else if ($reserva['Reserva']['cechk_out']==$date->format('d/m/Y')) {
-                            $reservaMostrar['tipo']='Devolución';
+                        else if ($reserva['Reserva']['check_out']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Check Out';
                         } else{
                             $reservaMostrar['tipo']='Repaso';
                         }
@@ -2035,17 +2035,17 @@ function iva_compras($mes,$ano, $orden){
 
         $table="<table width='100%' cellspacing='0'>
      	<tr class='titulo'>
-        		<td colspan='10' align='center' style='border: 1px solid black;'>Planificaci�n de Entregas y devoluciones per�odo ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
+        		<td colspan='10' align='center' style='border: 1px solid black;'>Planificación de Check Ins y Check Outs per�odo ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
 
     		</tr>
 
     <tr>
-        <td align='center' style='border: 1px solid black;'>ENT O DEV</td>
+        <td align='center' style='border: 1px solid black;'>ACCION</td>
         
 
         <td align='center' style='border: 1px solid black;'>TITULAR</td>
        
-        <td align='center' style='border: 1px solid black;'>APARTAMENTO</td>
+        <td align='center' style='border: 1px solid black;'>DEPARTAMENTO</td>
         <td align='center' style='border: 1px solid black;'>OBS</td>
         
         <td align='center' style='border: 1px solid black;'>RESPONSABLE</td>
@@ -2082,10 +2082,10 @@ function iva_compras($mes,$ano, $orden){
                         $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
 
                         if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
-                            $reservaMostrar['tipo']='Entrega';
+                            $reservaMostrar['tipo']='Check In';
                         }
-                        else if ($reserva['Reserva']['cechk_out']==$date->format('d/m/Y')) {
-                            $reservaMostrar['tipo']='Devolución';
+                        else if ($reserva['Reserva']['check_out']==$date->format('d/m/Y')) {
+                            $reservaMostrar['tipo']='Check Out';
                         } else{
                             $reservaMostrar['tipo']='Repaso';
                         }
