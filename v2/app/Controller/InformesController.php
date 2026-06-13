@@ -1921,7 +1921,12 @@ function iva_compras($mes,$ano, $orden){
         $reservasMostrar = array();
         for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
 
-            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('check_in =' => $fecha,'check_out =' => $fecha))));
+            $reservas = $this->Reserva->find('all', array(
+                'conditions' => array(
+                    'check_in <=' => $fecha,
+                    'check_out >=' => $fecha
+                )
+            ));
 
 
             /*App::uses('ConnectionManager', 'Model');
@@ -2052,7 +2057,12 @@ function iva_compras($mes,$ano, $orden){
     </tr>";
         for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
 
-            $reservas = $this->Reserva->find('all',array('conditions' => array('or'=>array('check_in =' => $fecha,'check_out =' => $fecha))));
+            $reservas = $this->Reserva->find('all', array(
+                'conditions' => array(
+                    'check_in <=' => $fecha,
+                    'check_out >=' => $fecha
+                )
+            ));
 
 
             /*App::uses('ConnectionManager', 'Model');
