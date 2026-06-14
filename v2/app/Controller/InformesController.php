@@ -1955,6 +1955,9 @@ function iva_compras($mes,$ano, $orden){
                         $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
                         $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
 
+                        // Q = mayores + menores loaded in the reservation
+                        $reservaMostrar['pax']=intval($reserva['Reserva']['pax_adultos'])+intval($reserva['Reserva']['pax_menores']);
+
                         if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
                             $reservaMostrar['tipo']='Check In';
                         }
@@ -1964,8 +1967,7 @@ function iva_compras($mes,$ano, $orden){
                             $reservaMostrar['tipo']='Repaso';
                         }
 
-                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable']);
-                        $this->array_sort_by($reservasMostrarDia, 'hora');
+                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'pax'=>$reservaMostrar['pax'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable']); $this->array_sort_by($reservasMostrarDia, 'hora');
                         //print_r($reservasMostrarDia);
                     }
 
@@ -2040,7 +2042,7 @@ function iva_compras($mes,$ano, $orden){
 
         $table="<table width='100%' cellspacing='0'>
      	<tr class='titulo'>
-        		<td colspan='10' align='center' style='border: 1px solid black;'>Planificación de Check Ins y Check Outs per�odo ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
+        		<td colspan='10' align='center' style='border: 1px solid black;'>Planificación de Ingresos, repasos y salidas período ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
 
     		</tr>
 
@@ -2051,6 +2053,7 @@ function iva_compras($mes,$ano, $orden){
         <td align='center' style='border: 1px solid black;'>TITULAR</td>
        
         <td align='center' style='border: 1px solid black;'>DEPARTAMENTO</td>
+        <td align='center' style='border: 1px solid black;'>Q</td>
         <td align='center' style='border: 1px solid black;'>OBS</td>
         
         <td align='center' style='border: 1px solid black;'>RESPONSABLE</td>
@@ -2091,6 +2094,8 @@ function iva_compras($mes,$ano, $orden){
                         $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
                         $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
 
+                        $reservaMostrar['pax']=intval($reserva['Reserva']['pax_adultos'])+intval($reserva['Reserva']['pax_menores']);
+
                         if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
                             $reservaMostrar['tipo']='Check In';
                         }
@@ -2130,6 +2135,8 @@ function iva_compras($mes,$ano, $orden){
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['titular'])."</td>";
 
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['apartamento'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".intval($reserva['pax'])."</td>";
+
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['obs'])."</td>";
 
 

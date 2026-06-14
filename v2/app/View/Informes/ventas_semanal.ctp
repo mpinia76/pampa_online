@@ -1,4 +1,7 @@
- <?php
+<style>
+    #EditTable td select { width:100%; max-width:100%; box-sizing:border-box; }
+</style>
+<?php
  if(!$pdf){
  	echo '<ul class="action_bar">
    
@@ -7,12 +10,12 @@
 </ul>';
  }
  ?>
- 
-    <table width="100%" cellspacing="0" id="EditTable">
+
+    <table width="100%" cellspacing="0" id="EditTable" style="table-layout: fixed;">
      <?php
  		if($pdf){?>
     		<tr class="titulo">
-        		<td colspan='10' align='center' style='border: 1px solid black;'><?php echo utf8_encode('Planificaci�n de Entregas y devoluciones per�odo '.date("d/m/Y",strtotime($_SESSION['primerDia'])).' - '.date("d/m/Y",strtotime($_SESSION['ultimoDia'])).' Fecha Informe: '.date("d/m/Y H:i"));?></td>
+                <td colspan='10' align='center' style='border: 1px solid black;'><?php echo 'Planificación de Ingresos, repasos y salidas período '.date("d/m/Y",strtotime($_SESSION['primerDia'])).' - '.date("d/m/Y",strtotime($_SESSION['ultimoDia'])).' Fecha Informe: '.date("d/m/Y H:i");?></td>
         
     		</tr>
     <?php } ?>		
@@ -23,6 +26,7 @@
         <td style='border: 1px solid black;'>TITULAR</td>
 
         <td style='border: 1px solid black;'>DEPARTAMENTO</td>
+        <td style='border: 1px solid black; width:5%;'>Q</td>
         <td style='border: 1px solid black;'>OBS</td>
 
         <td style='border: 1px solid black;'>RESPONSABLE</td>
@@ -31,7 +35,7 @@
     
     foreach($reservas as $reservaDia){?>
     	<tr style="font-weight: bold;">
-	        <td colspan='10' align='center' style='border: 1px solid black;background-color: #a4a6a6;'><?php echo utf8_encode($reservaDia[0]['dia']);?></td>
+	        <td colspan='10' align='center' style='border: 1px solid black;background-color: #a4a6a6;'><?php echo $reservaDia[0]['dia'];?></td>
 	        
 	    </tr>
     	<?php foreach($reservaDia as $reserva){?> 
@@ -45,7 +49,8 @@
 	        <td style='border: 1px solid black;'><?php echo ($reserva['titular']);?></td>
 
 	        <td style='border: 1px solid black;'><?php echo ($reserva['apartamento']);?></td>
-	        <td style='border: 1px solid black;'><?php echo ($reserva['obs']);?></td>
+            <td style='border: 1px solid black; text-align:center;'><?php echo intval($reserva['pax']);?></td>
+            <td style='border: 1px solid black;'><?php echo (trim($reserva['obs'])!=='') ? nl2br($reserva['obs']) : '&nbsp;';?></td>
 
 	        
 	        <?php
@@ -83,7 +88,7 @@
     }
  		if($pdf){?>
     		<tr class="titulo">
-        		<td colspan='10' style='border: 1px solid black;color: #fb061c;'><?php echo utf8_encode('* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emitió este informe.');?></td>
+        		<td colspan='10' style='border: 1px solid black;color: #fb061c;'><?php echo '* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emitió este informe.';?></td>
         
     		</tr>
     <?php } ?>	    

@@ -462,5 +462,21 @@ function poneCuit(){
     });
 }
 
+$('#ReservaPracticuna').change(function(){
+    var textoPracticuna = "Requiere Practicuna";
+    var $hk = $('#ReservaHousekeeping');
+    var valor = $hk.val();
+
+    if($(this).is(':checked')){
+        // Only add if it isn't already present
+        if(valor.indexOf(textoPracticuna) === -1){
+            $hk.val(valor.replace(/\s*$/, '') + "\n" + textoPracticuna);
+        }
+    } else {
+        // Remove the line (and its preceding newline if any)
+        $hk.val(valor.replace(new RegExp("\\n?" + textoPracticuna, "g"), ""));
+    }
+});
+
 
 </script>

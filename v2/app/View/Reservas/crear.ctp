@@ -150,7 +150,9 @@ echo $this->Form->create(null, array('url' => '/reservas/crear','inputDefaults' 
     ?>
     <script>
         document.getElementById('ReservaComentarios').value =
-            "OBSERVACIONES: BOOKING/ MOTOR/ DIRECTA\nCAMA MATRIMONIAL/ SEPARADAS\n\nVIAJA CON: (EDADES)\n\nRESTRICCION DE ALIMENTOS:\n\nMASAJE:\n\nTARIFA CATEGORIA --- PAX:\nFOTOS DE LA CATEGORIA:";
+            "OBSERVACIONES: BOOKING/ MOTOR/ DIRECTA\nVIAJA CON: (EDADES)\n\nRESTRICCION DE ALIMENTOS:\n\nMASAJE:\n\nTARIFA CATEGORIA --- PAX:\nFOTOS DE LA CATEGORIA:";
+        document.getElementById('ReservaHousekeeping').value =
+            "CAMA MATRIMONIAL/ SEPARADAS:\n\n";
     </script>
 </div>
 
@@ -297,6 +299,22 @@ $(document).ready(function(){
                 },
             });
 
+        }
+    });
+    $('#ReservaPracticuna').change(function(){
+        var textoPracticuna = "Requiere Practicuna";
+        var $hk = $('#ReservaHousekeeping');
+        var valor = $hk.val();
+
+        if($(this).is(':checked')){
+            // Solo agregar si no está ya
+            if(valor.indexOf(textoPracticuna) === -1){
+                // Agrega en una línea nueva, evitando saltos de línea de más
+                $hk.val(valor.replace(/\s*$/, '') + "\n" + textoPracticuna);
+            }
+        } else {
+            // Quitar la línea (con su salto de línea previo si lo hubiera)
+            $hk.val(valor.replace(new RegExp("\\n?" + textoPracticuna, "g"), ""));
         }
     });
 });
