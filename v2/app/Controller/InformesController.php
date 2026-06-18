@@ -1935,7 +1935,7 @@ function iva_compras($mes,$ano, $orden){
             $lastLog = $logs['log'][0];
             echo $lastLog['query'];*/
             $date = new DateTime($fecha);
-
+            $this->loadModel('ReservaDiaOperacion');
             $reservasMostrarDia = array();
             if(count($reservas) > 0){
 
@@ -1953,10 +1953,20 @@ function iva_compras($mes,$ano, $orden){
 
                         $reservaMostrar['obs']=$reserva['Reserva']['housekeeping'];
                         $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
-                        $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
+                        // Per-day responsible and priority (stored in reserva_dia_operacion)
+                        $diaOp = $this->ReservaDiaOperacion->find('first', array(
+                            'conditions' => array(
+                                'ReservaDiaOperacion.reserva_id' => $reserva['Reserva']['id'],
+                                'ReservaDiaOperacion.fecha' => $fecha
+                            )
+                        ));
+                        $reservaMostrar['responsable'] = $diaOp ? $diaOp['ReservaDiaOperacion']['responsable_id'] : 0;
+                        $reservaMostrar['prioridad']   = $diaOp ? $diaOp['ReservaDiaOperacion']['prioridad'] : 0;
+                        $reservaMostrar['fecha']       = $fecha;
 
                         // Q = mayores + menores loaded in the reservation
                         $reservaMostrar['pax']=intval($reserva['Reserva']['pax_adultos'])+intval($reserva['Reserva']['pax_menores']);
+                        $reservaMostrar['bb']=intval($reserva['Reserva']['pax_bebes']);
 
                         if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
                             $reservaMostrar['tipo']='Check In';
@@ -1967,7 +1977,7 @@ function iva_compras($mes,$ano, $orden){
                             $reservaMostrar['tipo']='Repaso';
                         }
 
-                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'pax'=>$reservaMostrar['pax'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable']); $this->array_sort_by($reservasMostrarDia, 'hora');
+                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'pax'=>$reservaMostrar['pax'],'bb'=>$reservaMostrar['bb'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable'],'prioridad'=>$reservaMostrar['prioridad'],'fecha'=>$reservaMostrar['fecha']);
                         //print_r($reservasMostrarDia);
                     }
 
@@ -2030,6 +2040,7 @@ function iva_compras($mes,$ano, $orden){
         $this->loadModel('Reserva');
         $this->loadModel('Categoria');
         $this->loadModel('Empleado');
+        $this->loadModel('ReservaDiaOperacion');
         $array_dias['Sunday'] = "Domingo";
         $array_dias['Monday'] = "Lunes";
         $array_dias['Tuesday'] = "Martes";
@@ -2047,17 +2058,31 @@ function iva_compras($mes,$ano, $orden){
     		</tr>
 
     <tr>
-        <td align='center' style='border: 1px solid black;'>ACCION</td>
+        <td align='center' style='border: 1px solid black;'>ESTADO</td>
         
 
         <td align='center' style='border: 1px solid black;'>TITULAR</td>
        
         <td align='center' style='border: 1px solid black;'>DEPARTAMENTO</td>
-        <td align='center' style='border: 1px solid black;'>Q</td>
+        <td align='center' style='border: 1px solid black;'>Q PAX</td>
+        <td align='center' style='border: 1px solid black;'>BB</td>
         <td align='center' style='border: 1px solid black;'>OBS</td>
         
         <td align='center' style='border: 1px solid black;'>RESPONSABLE</td>
+        <td align='center' style='border: 1px solid black;'>PRIORIDAD</td>
     </tr>";
+
+        // build employee id => name map (operations sector = 5)
+        $this->loadModel('EmpleadoTrabajo');
+        $empleados = array();
+        $empleadosTrabajo = $this->EmpleadoTrabajo->find('all',array('fields'=>array('max(EmpleadoTrabajo.id) as id'), 'group' => array('EmpleadoTrabajo.empleado_id'), 'conditions' => array('Empleado.estado ' => 1)));
+        foreach($empleadosTrabajo as $empleadoTrabajo){
+            $this->EmpleadoTrabajo->id = $empleadoTrabajo[0]['id'];
+            $sector = $this->EmpleadoTrabajo->read();
+            if (($sector['EmpleadoTrabajo']['sector_1_id']==5)||($sector['EmpleadoTrabajo']['sector_2_id']==5)) {
+                $empleados[$sector['Empleado']['id']] = $sector['Empleado']['nombre']." ".$sector['Empleado']['apellido'];
+            }
+        }
         for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
 
             $reservas = $this->Reserva->find('all', array(
@@ -2083,7 +2108,7 @@ function iva_compras($mes,$ano, $orden){
                     //verifico que la reserva no este cancelada
                     if(($reserva['Reserva']['estado'] != 2)&&($reserva['Reserva']['estado'] != 3)){
                         $reservaMostrar = array();
-                        $this->Categoria->id = $reserva['Unidad']['categoria_id'];
+                        $this->Categoria->id = $reserva['Apartamento']['categoria_id'];
                         $categoria = $this->Categoria->read();
                         $reservaMostrar['categoria']=$categoria['Categoria']['categoria'];
 
@@ -2092,9 +2117,20 @@ function iva_compras($mes,$ano, $orden){
 
                         $reservaMostrar['obs']=$reserva['Reserva']['housekeeping'];
                         $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
-                        $reservaMostrar['responsable']=$reserva['Reserva']['responsable'];
+                        // per-day responsible and priority
+                        $diaOp = $this->ReservaDiaOperacion->find('first', array(
+                            'conditions' => array(
+                                'ReservaDiaOperacion.reserva_id' => $reserva['Reserva']['id'],
+                                'ReservaDiaOperacion.fecha' => $fecha
+                            )
+                        ));
+                        $respId = $diaOp ? $diaOp['ReservaDiaOperacion']['responsable_id'] : 0;
+                        $reservaMostrar['responsable'] = ($respId && isset($empleados[$respId])) ? $empleados[$respId] : '';
+                        $reservaMostrar['prioridad'] = $diaOp ? $diaOp['ReservaDiaOperacion']['prioridad'] : 0;
+
 
                         $reservaMostrar['pax']=intval($reserva['Reserva']['pax_adultos'])+intval($reserva['Reserva']['pax_menores']);
+                        $reservaMostrar['bb']=intval($reserva['Reserva']['pax_bebes']);
 
                         if ($reserva['Reserva']['check_in']==$date->format('d/m/Y')) {
                             $reservaMostrar['tipo']='Check In';
@@ -2105,8 +2141,7 @@ function iva_compras($mes,$ano, $orden){
                             $reservaMostrar['tipo']='Repaso';
                         }
 
-                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable']);
-                        $this->array_sort_by($reservasMostrarDia, 'hora');
+                        $reservasMostrarDia[]=array('dia'=>$array_dias[date('l', strtotime($fecha))].' '.$date->format('d/m/Y'),'categoria'=>$reservaMostrar['categoria'],'apartamento'=>$reservaMostrar['apartamento'],'titular'=>$reservaMostrar['titular'],'tipo'=>$reservaMostrar['tipo'],'pax'=>$reservaMostrar['pax'],'bb'=>$reservaMostrar['bb'],'obs'=>$reservaMostrar['obs'],'id_reserva'=>$reservaMostrar['id_reserva'],'responsable'=>$reservaMostrar['responsable'],'prioridad'=>$reservaMostrar['prioridad']);
                         //print_r($reservasMostrarDia);
                     }
 
@@ -2136,13 +2171,15 @@ function iva_compras($mes,$ano, $orden){
 
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['apartamento'])."</td>";
                 $table.="<td align='center' style='border: 1px solid black;'>".intval($reserva['pax'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".intval($reserva['bb'])."</td>";
 
                 $table.="<td align='center' style='border: 1px solid black;'>".($reserva['obs'])."</td>";
 
 
 
-                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['responsable']."</td>
-	    	</tr>";
+                $table.="<td align='center' style='border: 1px solid black;'>".$reserva['responsable']."</td>";
+                $table.="<td align='center' style='border: 1px solid black;'>".(($reserva['prioridad']>0)?$reserva['prioridad']:'')."</td>
+	</tr>";
             }
         }
         $table.="

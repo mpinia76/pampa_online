@@ -1634,5 +1634,46 @@ class ReservasController extends AppController {
         ));
 
     }
+
+    public function guardar_dia_operacion(){
+        $this->layout = 'ajax';
+        $this->loadModel('ReservaDiaOperacion');
+
+        $id_reserva = $this->request->data['id_reserva'];
+        $fecha      = $this->request->data['fecha'];   // Y-m-d
+        $campo      = $this->request->data['campo'];    // 'responsable' or 'prioridad'
+        $valor      = $this->request->data['valor'];
+
+        // map the incoming field name to the real column
+        $columna = ($campo == 'prioridad') ? 'prioridad' : 'responsable_id';
+
+        // look for an existing row for this reservation/day (upsert via UNIQUE key)
+        $existente = $this->ReservaDiaOperacion->find('first', array(
+            'conditions' => array(
+                'ReservaDiaOperacion.reserva_id' => $id_reserva,
+                'ReservaDiaOperacion.fecha' => $fecha
+            )
+        ));
+
+        $this->ReservaDiaOperacion->create();
+        $data = array('ReservaDiaOperacion' => array(
+            'reserva_id' => $id_reserva,
+            'fecha' => $fecha,
+            $columna => ($valor == 0 || $valor === '') ? null : $valor
+        ));
+        if($existente){
+            $data['ReservaDiaOperacion']['id'] = $existente['ReservaDiaOperacion']['id'];
+        }
+
+        if($this->ReservaDiaOperacion->save($data)){
+            $this->set('resultado','OK');
+            $this->set('mensaje','Guardado');
+        }else{
+            $this->set('resultado','ERROR');
+            $this->set('mensaje','No se pudo guardar');
+        }
+
+        $this->set('_serialize', array('resultado','mensaje'));
+    }
 }
 ?>

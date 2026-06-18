@@ -26,10 +26,12 @@
         <td style='border: 1px solid black;'>TITULAR</td>
 
         <td style='border: 1px solid black;'>DEPARTAMENTO</td>
-        <td style='border: 1px solid black; width:5%;'>Q</td>
+        <td style='border: 1px solid black; width:5%;'>Q PAX</td>
+        <td style='border: 1px solid black; width:5%;'>BB</td>
         <td style='border: 1px solid black;'>OBS</td>
 
         <td style='border: 1px solid black;'>RESPONSABLE</td>
+        <td style='border: 1px solid black; width:8%;'>PRIORIDAD</td>
     </tr>
     <?php 
     
@@ -50,34 +52,41 @@
 
 	        <td style='border: 1px solid black;'><?php echo ($reserva['apartamento']);?></td>
             <td style='border: 1px solid black; text-align:center;'><?php echo intval($reserva['pax']);?></td>
+                <td style='border: 1px solid black; text-align:center;'><?php echo intval($reserva['bb']);?></td>
             <td style='border: 1px solid black;'><?php echo (trim($reserva['obs'])!=='') ? nl2br($reserva['obs']) : '&nbsp;';?></td>
 
 	        
 	        <?php
- 			if(!$pdf){	?> 
-	          <td style='border: 1px solid black;'>
-	          	<select id="selectResponsable_<?php echo $reserva['id_reserva'];?>" onChange="seleccionarResponsable('<?php echo $reserva['id_reserva'];?>',this)">
-				<option value="0">Seleccionar...</option>
-	          	<?php foreach($empleados as $key => $value){
-	          		$selected = ($reserva['responsable']==$key)?"selected='selected'":"";
-	          	?>
-	          		<option value="<?php echo $key;?>" <?php echo $selected;?>><?php echo $value;?></option>
-	          	<?php }?>
-	          	</select> 
-	          </td>
+ 			if(!$pdf){	?>
+                <td style='border: 1px solid black;'>
+                    <select id="selectResponsable_<?php echo $reserva['id_reserva'];?>_<?php echo $reserva['fecha'];?>"
+                            onChange="guardarDiaOperacion('<?php echo $reserva['id_reserva'];?>','<?php echo $reserva['fecha'];?>',this,'responsable')">
+                        <option value="0">Seleccionar...</option>
+                        <?php foreach($empleados as $key => $value){
+                            $selected = ($reserva['responsable']==$key)?"selected='selected'":"";
+                            ?>
+                            <option value="<?php echo $key;?>" <?php echo $selected;?>><?php echo $value;?></option>
+                        <?php }?>
+                    </select>
+                </td>
+                <td style='border: 1px solid black;'>
+                    <select id="selectPrioridad_<?php echo $reserva['id_reserva'];?>_<?php echo $reserva['fecha'];?>"
+                            onChange="guardarDiaOperacion('<?php echo $reserva['id_reserva'];?>','<?php echo $reserva['fecha'];?>',this,'prioridad')">
+                        <option value="0">-</option>
+                        <?php for($p=1;$p<=3;$p++){
+                            $selP = ($reserva['prioridad']==$p)?"selected='selected'":"";
+                            ?>
+                            <option value="<?php echo $p;?>" <?php echo $selP;?>><?php echo $p;?></option>
+                        <?php }?>
+                    </select>
+                </td>
 	         <?php } 
 	         else{
 	         ?>
-	         <td style='border: 1px solid black;'>
-	         	<?php foreach($empleados as $key => $value){
-	          		if($reserva['responsable']==$key){
-	          			echo $value;
-	          		}
-	          		}
-	          	?>
-	         
-	         
-	         </td>
+                 <td style='border: 1px solid black;'>
+                     <?php foreach($empleados as $key => $value){ if($reserva['responsable']==$key){ echo $value; } } ?>
+                 </td>
+                 <td style='border: 1px solid black; text-align:center;'><?php echo ($reserva['prioridad']>0)?$reserva['prioridad']:'';?></td>
 	         <?php } 
 	         
 	         ?>
@@ -135,22 +144,14 @@ $('#EditTable tr').dblclick(function () {
      }
 });
 
-function seleccionarResponsable(id_reserva,select){
-
-	var id_responsable = $('#'+select.id).val(); 
-	
-		
-	
-	
-		
-	    $.ajax({
-	        url: '<?php echo $this->Html->url('/reservas/guardar_responsable', true);?>',
-	        type : 'POST',
-            dataType: 'json',
-            data: {'id_reserva' : id_reserva,'id_responsable' : id_responsable}
-	    })
-	
-    
+function guardarDiaOperacion(id_reserva, fecha, select, campo){
+    var valor = $('#'+select.id).val();
+    $.ajax({
+        url: '<?php echo $this->Html->url('/reservas/guardar_dia_operacion', true);?>',
+        type: 'POST',
+        dataType: 'json',
+        data: {'id_reserva': id_reserva, 'fecha': fecha, 'campo': campo, 'valor': valor}
+    });
 }
 
 </script>
