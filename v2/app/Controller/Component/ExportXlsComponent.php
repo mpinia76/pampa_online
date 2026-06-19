@@ -13,5 +13,16 @@ class ExportXlsComponent extends Component {
 	 echo $fileContent;
 	exit;
 	}
+
+	function exportTable($fileName, $table) {
+		ini_set('max_execution_time', 1600);
+		header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+		header('Content-Disposition: attachment; filename='.$fileName);
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		echo "\xEF\xBB\xBF"; // UTF-8 BOM so Excel reads accents correctly
+		echo $table;
+		exit;
+	}
 }
 ?>

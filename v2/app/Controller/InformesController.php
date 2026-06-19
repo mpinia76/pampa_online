@@ -2021,6 +2021,8 @@ function iva_compras($mes,$ano, $orden){
 
 
     function exportarOperacionesSemanal($desde, $hasta){
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
         //error_reporting(0);
         $this->layout = 'ajax';
 
@@ -2075,14 +2077,14 @@ function iva_compras($mes,$ano, $orden){
         // build employee id => name map (operations sector = 5)
         $this->loadModel('EmpleadoTrabajo');
         $empleados = array();
-        $empleadosTrabajo = $this->EmpleadoTrabajo->find('all',array('fields'=>array('max(EmpleadoTrabajo.id) as id'), 'group' => array('EmpleadoTrabajo.empleado_id'), 'conditions' => array('Empleado.estado ' => 1)));
+        /*$empleadosTrabajo = $this->EmpleadoTrabajo->find('all',array('fields'=>array('max(EmpleadoTrabajo.id) as id'), 'group' => array('EmpleadoTrabajo.empleado_id'), 'conditions' => array('Empleado.estado ' => 1)));
         foreach($empleadosTrabajo as $empleadoTrabajo){
             $this->EmpleadoTrabajo->id = $empleadoTrabajo[0]['id'];
             $sector = $this->EmpleadoTrabajo->read();
             if (($sector['EmpleadoTrabajo']['sector_1_id']==5)||($sector['EmpleadoTrabajo']['sector_2_id']==5)) {
                 $empleados[$sector['Empleado']['id']] = $sector['Empleado']['nombre']." ".$sector['Empleado']['apellido'];
             }
-        }
+        }*/
         for($fecha=$desde;$fecha<=$hasta;$fecha = date("Y-m-d", strtotime($fecha ."+ 1 days"))){
 
             $reservas = $this->Reserva->find('all', array(
@@ -2118,15 +2120,15 @@ function iva_compras($mes,$ano, $orden){
                         $reservaMostrar['obs']=$reserva['Reserva']['housekeeping'];
                         $reservaMostrar['id_reserva']=$reserva['Reserva']['id'];
                         // per-day responsible and priority
-                        $diaOp = $this->ReservaDiaOperacion->find('first', array(
+                       /* $diaOp = $this->ReservaDiaOperacion->find('first', array(
                             'conditions' => array(
                                 'ReservaDiaOperacion.reserva_id' => $reserva['Reserva']['id'],
                                 'ReservaDiaOperacion.fecha' => $fecha
                             )
                         ));
-                        $respId = $diaOp ? $diaOp['ReservaDiaOperacion']['responsable_id'] : 0;
-                        $reservaMostrar['responsable'] = ($respId && isset($empleados[$respId])) ? $empleados[$respId] : '';
-                        $reservaMostrar['prioridad'] = $diaOp ? $diaOp['ReservaDiaOperacion']['prioridad'] : 0;
+                        $respId = $diaOp ? $diaOp['ReservaDiaOperacion']['responsable_id'] : 0;*/
+                        $reservaMostrar['responsable'] =  '';
+                        $reservaMostrar['prioridad'] = 0;
 
 
                         $reservaMostrar['pax']=intval($reserva['Reserva']['pax_adultos'])+intval($reserva['Reserva']['pax_menores']);
