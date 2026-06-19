@@ -11,7 +11,7 @@
  }
  ?>
 
-    <table width="100%" cellspacing="0" id="EditTable" style="table-layout: fixed;">
+<table width="100%" cellspacing="0" id="EditTable" style="width:100%; table-layout: fixed;">
      <?php
  		if($pdf){?>
     		<tr class="titulo">

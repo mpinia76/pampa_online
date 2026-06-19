@@ -2051,7 +2051,7 @@ function iva_compras($mes,$ano, $orden){
 
         $reservasMostrar = array();
 
-        $table="<table width='100%' cellspacing='0'>
+        $table="<table width='100%' cellspacing='0' style='width:100%; table-layout:fixed;'>
      	<tr class='titulo'>
         		<td colspan='10' align='center' style='border: 1px solid black;'>Planificación de Ingresos, repasos y salidas período ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
 
