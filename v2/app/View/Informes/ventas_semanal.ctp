@@ -31,7 +31,7 @@
         <td style='border: 1px solid black;'>OBS</td>
 
         <td style='border: 1px solid black;'>RESPONSABLE</td>
-        <td style='border: 1px solid black; width:8%;'>PRIORIDAD</td>
+        <td style='border: 1px solid black;'>PRIORIDAD</td>
     </tr>
     <?php 
     
