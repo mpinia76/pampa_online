@@ -15,7 +15,7 @@
      <?php
  		if($pdf){?>
     		<tr class="titulo">
-                <td colspan='10' align='center' style='border: 1px solid black;'><?php echo 'Planificación de Ingresos, repasos y salidas período '.date("d/m/Y",strtotime($_SESSION['primerDia'])).' - '.date("d/m/Y",strtotime($_SESSION['ultimoDia'])).' Fecha Informe: '.date("d/m/Y H:i");?></td>
+                <td colspan='8' align='center' style='border: 1px solid black;'><?php echo 'Planificación de Ingresos, repasos y salidas período '.date("d/m/Y",strtotime($_SESSION['primerDia'])).' - '.date("d/m/Y",strtotime($_SESSION['ultimoDia'])).' Fecha Informe: '.date("d/m/Y H:i");?></td>
         
     		</tr>
     <?php } ?>		
@@ -37,7 +37,7 @@
     
     foreach($reservas as $reservaDia){?>
     	<tr style="font-weight: bold;">
-	        <td colspan='10' align='center' style='border: 1px solid black;background-color: #a4a6a6;'><?php echo $reservaDia[0]['dia'];?></td>
+	        <td colspan='8' align='center' style='border: 1px solid black;background-color: #a4a6a6;'><?php echo $reservaDia[0]['dia'];?></td>
 	        
 	    </tr>
     	<?php foreach($reservaDia as $reserva){?> 
@@ -97,7 +97,7 @@
     }
  		if($pdf){?>
     		<tr class="titulo">
-        		<td colspan='10' style='border: 1px solid black;color: #fb061c;'><?php echo '* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emitió este informe.';?></td>
+        		<td colspan='8' style='border: 1px solid black;color: #fb061c;'><?php echo '* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emitió este informe.';?></td>
         
     		</tr>
     <?php } ?>	    

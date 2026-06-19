@@ -2053,7 +2053,7 @@ function iva_compras($mes,$ano, $orden){
 
         $table="<table width='100%' cellspacing='0' style='width:100%; table-layout:fixed;'>
      	<tr class='titulo'>
-        		<td colspan='10' align='center' style='border: 1px solid black;'>Planificación de Ingresos, repasos y salidas período ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
+        		<td colspan='8' align='center' style='border: 1px solid black;'>Planificación de Ingresos, repasos y salidas período ".date("d/m/Y",strtotime($desde)).' - '.date("d/m/Y",strtotime($hasta))." Fecha Informe: ".date('d/m/Y H:i')."</td>
 
     		</tr>
 
@@ -2157,7 +2157,7 @@ function iva_compras($mes,$ano, $orden){
         foreach($reservasMostrar as $reservaDia){
             $data[] = array($reservaDia[0]['dia']);
             $table.="<tr style='font-weight: bold;'>
-	        <td colspan='10' align='center' style='border: 1px solid black;background-color: #a4a6a6;'>".($reservaDia[0]['dia'])."</td>
+	        <td colspan='8' align='center' style='border: 1px solid black;background-color: #a4a6a6;'>".($reservaDia[0]['dia'])."</td>
 
 	    </tr>";
             foreach($reservaDia as $reserva){
@@ -2184,7 +2184,7 @@ function iva_compras($mes,$ano, $orden){
         }
         $table.="
         <tr class='titulo'>
-        		<td colspan='10' style='border: 1px solid black;color: #fb061c;'>* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emitió este informe</td>
+        		<td colspan='8' style='border: 1px solid black;color: #fb061c;'>* Tenga presente que este informe es parcial y no incluye reservas cargadas en el sistema posteriormente a la hora en la que se emitió este informe</td>
 
     		</tr>
         </table>";
