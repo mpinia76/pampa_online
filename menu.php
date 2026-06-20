@@ -270,8 +270,8 @@
         </div>
         <?php } ?>
         <?php if(ACCION_158){ ?>
-            <div class="informes item" onclick="createWindow('w_ventas_informe_operaciones','Listado de operaciones','v2/informes/index_ventas_semanal','1230','600'); $('#menu').hide();">
-                Listado de operaciones
+            <div class="informes item" onclick="createWindow('w_ventas_informe_operaciones','Housekeeping operaciones','v2/informes/index_ventas_semanal','1230','600'); $('#menu').hide();">
+                Housekeeping operaciones
             </div>
         <?php } ?>
         <?php if(ACCION_110){ ?>

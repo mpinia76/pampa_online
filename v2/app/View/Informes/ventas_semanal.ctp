@@ -28,7 +28,7 @@
         <td style='border: 1px solid black;'>DEPARTAMENTO</td>
         <td style='border: 1px solid black; width:5%;'>Q PAX</td>
         <td style='border: 1px solid black; width:5%;'>BB</td>
-        <td style='border: 1px solid black;'>OBS</td>
+        <td style='border: 1px solid black;width:32%;'>OBS</td>
 
         <td style='border: 1px solid black;'>RESPONSABLE</td>
         <td style='border: 1px solid black;'>PRIORIDAD</td>
@@ -53,7 +53,7 @@
 	        <td style='border: 1px solid black;'><?php echo ($reserva['apartamento']);?></td>
             <td style='border: 1px solid black; text-align:center;'><?php echo intval($reserva['pax']);?></td>
                 <td style='border: 1px solid black; text-align:center;'><?php echo intval($reserva['bb']);?></td>
-            <td style='border: 1px solid black;'><?php echo (trim($reserva['obs'])!=='') ? nl2br($reserva['obs']) : '&nbsp;';?></td>
+                <td style='border: 1px solid black; word-wrap:break-word; overflow-wrap:break-word; white-space:normal; overflow:hidden;width:32%;'><?php echo (trim($reserva['obs'])!=='') ? nl2br($reserva['obs']) : '&nbsp;';?></td>
 
 	        
 	        <?php

@@ -863,7 +863,7 @@ WHERE fecha_emision >= '2026-05-05';
 ALTER TABLE `reservas`
 	ADD COLUMN `housekeeping` text NULL;
 
-INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (10, 'Listado de operaciones');
+INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (10, 'Housekeeping operaciones');
 
 CREATE TABLE reserva_dia_operacion (
                                        id INT NOT NULL AUTO_INCREMENT,

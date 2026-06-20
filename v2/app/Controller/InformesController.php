@@ -2175,7 +2175,7 @@ function iva_compras($mes,$ano, $orden){
                 $table.="<td align='center' style='border: 1px solid black;'>".intval($reserva['pax'])."</td>";
                 $table.="<td align='center' style='border: 1px solid black;'>".intval($reserva['bb'])."</td>";
 
-                $table.="<td align='center' style='border: 1px solid black;'>".($reserva['obs'])."</td>";
+                $table.="<td align='center' style='border: 1px solid black;word-wrap:break-word; overflow-wrap:break-word; white-space:normal; overflow:hidden;'>".($reserva['obs'])."</td>";
 
 
 
