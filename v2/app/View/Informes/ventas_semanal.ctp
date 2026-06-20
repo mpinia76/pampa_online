@@ -18,20 +18,28 @@
                 <td colspan='8' align='center' style='border: 1px solid black;'><?php echo 'Planificación de Ingresos, repasos y salidas período '.date("d/m/Y",strtotime($_SESSION['primerDia'])).' - '.date("d/m/Y",strtotime($_SESSION['ultimoDia'])).' Fecha Informe: '.date("d/m/Y H:i");?></td>
         
     		</tr>
-    <?php } ?>		
+    <?php } ?>
+    <?php
+    // Different widths per destination: on screen RESPONSABLE/PRIORIDAD need room for the selects;
+    // in the PDF they only show text, so OBS gets the extra space.
+    $wAccion = $pdf ? '9%'  : '9%';
+    $wTit    = $pdf ? '14%' : '13%';
+    $wDepto  = $pdf ? '11%' : '11%';
+    $wQpax   = '6%';
+    $wBb     = '5%';
+    $wObs    = $pdf ? '36%' : '27%';
+    $wResp   = $pdf ? '12%' : '18%';
+    $wPrio   = $pdf ? '7%'  : '11%';
+    ?>
     <tr class="titulo">
-        <td style='border: 1px solid black;'>ACCION</td>
-
-        
-        <td style='border: 1px solid black;'>TITULAR</td>
-
-        <td style='border: 1px solid black;'>DEPARTAMENTO</td>
-        <td style='border: 1px solid black; width:5%;'>Q PAX</td>
-        <td style='border: 1px solid black; width:5%;'>BB</td>
-        <td style='border: 1px solid black;width:32%;'>OBS</td>
-
-        <td style='border: 1px solid black;'>RESPONSABLE</td>
-        <td style='border: 1px solid black;'>PRIORIDAD</td>
+        <td style='border: 1px solid black; width:<?php echo $wAccion;?>;'>ACCION</td>
+        <td style='border: 1px solid black; width:<?php echo $wTit;?>;'>TITULAR</td>
+        <td style='border: 1px solid black; width:<?php echo $wDepto;?>;'>DEPARTAMENTO</td>
+        <td style='border: 1px solid black; width:<?php echo $wQpax;?>;'>Q PAX</td>
+        <td style='border: 1px solid black; width:<?php echo $wBb;?>;'>BB</td>
+        <td style='border: 1px solid black; width:<?php echo $wObs;?>;'>OBS</td>
+        <td style='border: 1px solid black; width:<?php echo $wResp;?>;'>RESPONSABLE</td>
+        <td style='border: 1px solid black; width:<?php echo $wPrio;?>; white-space:nowrap;'>PRIORIDAD</td>
     </tr>
     <?php 
     
@@ -53,7 +61,7 @@
 	        <td style='border: 1px solid black;'><?php echo ($reserva['apartamento']);?></td>
             <td style='border: 1px solid black; text-align:center;'><?php echo intval($reserva['pax']);?></td>
                 <td style='border: 1px solid black; text-align:center;'><?php echo intval($reserva['bb']);?></td>
-                <td style='border: 1px solid black; word-wrap:break-word; overflow-wrap:break-word; white-space:normal; overflow:hidden;width:32%;'><?php echo (trim($reserva['obs'])!=='') ? nl2br($reserva['obs']) : '&nbsp;';?></td>
+                <td style='border: 1px solid black; word-wrap:break-word; overflow-wrap:break-word; white-space:normal; overflow:hidden;width:<?php echo $wObs;?>;'><?php echo (trim($reserva['obs'])!=='') ? nl2br($reserva['obs']) : '&nbsp;';?></td>
 
 	        
 	        <?php
