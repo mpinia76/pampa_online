@@ -2005,11 +2005,17 @@ function iva_compras($mes,$ano, $orden){
         ));
         if ($pdf) {
 
+            /*
+             $this->Mpdf->init(array('format' => 'A4-L'));
+             $this->Mpdf->setFilename('Housekeeping_operaciones_'.$desde.'_'.$hasta.'.pdf');
+             $this->Mpdf->setOutput('D');
+             */
+
             require_once '../../vendor/autoload.php';
 
             $mpdf = new \Mpdf\Mpdf(['format' => 'A4-L']);
             $mpdf->WriteHTML($this->render());
-            $mpdf->Output('Semanal_operaciones_'.$desde.'_'.$hasta.'.pdf','D');
+            $mpdf->Output('Housekeeping_operaciones_'.$desde.'_'.$hasta.'.pdf','D');
 
 
 
@@ -2033,7 +2039,7 @@ function iva_compras($mes,$ano, $orden){
         $this->layout = false;
 
 
-        $fileName = "Semanal_operaciones_".$desde.'_'.$hasta.".xls";
+        $fileName = "Housekeeping_operaciones_".$desde.'_'.$hasta.".xls";
         //$fileName = "bookreport_".date("d-m-y:h:s").".csv";
         //$headerRow = array("ENT O DEV","HORARIO","LUGAR","TITULAR","N� VUELO","CATEGORIA","VEH�CULO","OBS","PATENTE","RESPONSABLE");
 

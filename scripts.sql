@@ -865,12 +865,11 @@ ALTER TABLE `reservas`
 
 INSERT INTO `permiso` (`permiso_grupo_id`, `nombre`) VALUES (10, 'Housekeeping operaciones');
 
-CREATE TABLE reserva_dia_operacion (
-                                       id INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE reserva_dia_operacion (    id INT NOT NULL AUTO_INCREMENT,
                                        reserva_id INT NOT NULL,
                                        fecha DATE NOT NULL,
                                        responsable_id INT DEFAULT NULL,
                                        prioridad TINYINT DEFAULT NULL,
                                        PRIMARY KEY (id),
                                        UNIQUE KEY uq_reserva_fecha (reserva_id, fecha)
-);
+                                   );
