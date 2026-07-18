@@ -1,4 +1,8 @@
-<?php $ano= date('Y'); ?>
+<?php
+    $ano       = date('Y');   // año actual, preseleccionado
+    $anoInicio = 2012;        // primer año disponible
+    $anoMax    = $ano + 1;    // año siguiente como máximo (se genera solo cada año)
+?>
 <table cellpadding="0" cellspacing="0" border="0">
 <tr>
 	<td><span id="cargando" style="display:none;">Cargando ...</span></td><td align="center"><strong>Informe Ventas</strong>: </td><td align="center"><strong>Cargadas entre fechas</strong>: </td><td align="center"><strong>Categor&iacute;a</strong>: </td><td align="center"><strong>Apartamentos</strong>: </td>
@@ -6,21 +10,9 @@
 <tr>
 	<td><input type="button" onclick="ver_economico();" value="Ver" /> </td><td><select id="economico_mes">
 	<option>Seleccionar...</option>
-    <option <?php if($ano == '2012'){?> selected="selected" <?php } ?>>2012</option>
-    <option <?php if($ano == '2013'){?> selected="selected" <?php } ?>>2013</option>
-    <option <?php if($ano == '2014'){?> selected="selected" <?php } ?>>2014</option>
-    <option <?php if($ano == '2015'){?> selected="selected" <?php } ?>>2015</option>
-    <option <?php if($ano == '2016'){?> selected="selected" <?php } ?>>2016</option>
-    <option <?php if($ano == '2017'){?> selected="selected" <?php } ?>>2017</option>
-    <option <?php if($ano == '2018'){?> selected="selected" <?php } ?>>2018</option>
-    <option <?php if($ano == '2019'){?> selected="selected" <?php } ?>>2019</option>
-    <option <?php if($ano == '2020'){?> selected="selected" <?php } ?>>2020</option>
-    <option <?php if($ano == '2021'){?> selected="selected" <?php } ?>>2021</option>
-    <option <?php if($ano == '2022'){?> selected="selected" <?php } ?>>2022</option>
-    <option <?php if($ano == '2023'){?> selected="selected" <?php } ?>>2023</option>
-    <option <?php if($ano == '2024'){?> selected="selected" <?php } ?>>2024</option>
-    <option <?php if($ano == '2025'){?> selected="selected" <?php } ?>>2025</option>
-    <option <?php if($ano == '2026'){?> selected="selected" <?php } ?>>2026</option>
+    <?php for($y = $anoInicio; $y <= $anoMax; $y++){ ?>
+    <option <?php if($ano == $y){?> selected="selected" <?php } ?>><?php echo $y; ?></option>
+    <?php } ?>
 </select></td><td><input type="text" name="desde" id="desde" class="datepicker">&nbsp;&nbsp;y&nbsp;<input type="text" name="hasta" id="hasta" class="datepicker"></td><td><select id="ApartamentoCategoriaId">
 	<option>Seleccionar...</option>
 	<?php foreach($categorias as $categoria){ ?>

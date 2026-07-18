@@ -1,23 +1,15 @@
-<?php $ano= date('Y'); ?>
+<?php
+    $ano       = date('Y');   // año actual, preseleccionado
+    $anoInicio = 2012;        // primer año disponible
+    $anoMax    = $ano + 1;    // año siguiente como máximo (se genera solo cada año)
+?>
 <strong>Informe Financiero</strong>: 
 <select id="financiero_ano">
     <option>Seleccionar...</option>
-    <option <?php if($ano == '2012'){?> selected="selected" <?php } ?>>2012</option>
-    <option <?php if($ano == '2013'){?> selected="selected" <?php } ?>>2013</option>
-    <option <?php if($ano == '2014'){?> selected="selected" <?php } ?>>2014</option>
-    <option <?php if($ano == '2015'){?> selected="selected" <?php } ?>>2015</option>
-    <option <?php if($ano == '2016'){?> selected="selected" <?php } ?>>2016</option>
-    <option <?php if($ano == '2017'){?> selected="selected" <?php } ?>>2017</option>
-    <option <?php if($ano == '2018'){?> selected="selected" <?php } ?>>2018</option>
-    <option <?php if($ano == '2019'){?> selected="selected" <?php } ?>>2019</option>
-    <option <?php if($ano == '2020'){?> selected="selected" <?php } ?>>2020</option>
-    <option <?php if($ano == '2021'){?> selected="selected" <?php } ?>>2021</option>
-    <option <?php if($ano == '2022'){?> selected="selected" <?php } ?>>2022</option>
-    <option <?php if($ano == '2023'){?> selected="selected" <?php } ?>>2023</option>
-    <option <?php if($ano == '2024'){?> selected="selected" <?php } ?>>2024</option>
-    <option <?php if($ano == '2025'){?> selected="selected" <?php } ?>>2025</option>
-    <option <?php if($ano == '2026'){?> selected="selected" <?php } ?>>2026</option>
-</select> 
+    <?php for($y = $anoInicio; $y <= $anoMax; $y++){ ?>
+    <option <?php if($ano == $y){?> selected="selected" <?php } ?>><?php echo $y; ?></option>
+    <?php } ?>
+</select>
 <strong>&nbsp;&nbsp;Entre fechas&nbsp;<input type="text" name="desde" id="desde" class="datepicker">&nbsp;&nbsp;y&nbsp;<input type="text" name="hasta" id="hasta" class="datepicker"></strong>
 <input type="button" onclick="ver_financiero();" value="Ver" /> <span id="cargando" style="display:none;">Cargando ...</span>
 <div id="informe_financiero"></div>
@@ -80,21 +72,9 @@ $(".datepicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd" });
 </select> 
 <select id="financiero_mensual_ano">
     <option>Seleccionar...</option>
-    <option <?php if($ano == '2012'){?> selected="selected" <?php } ?>>2012</option>
-    <option <?php if($ano == '2013'){?> selected="selected" <?php } ?>>2013</option>
-    <option <?php if($ano == '2014'){?> selected="selected" <?php } ?>>2014</option>
-    <option <?php if($ano == '2015'){?> selected="selected" <?php } ?>>2015</option>
-    <option <?php if($ano == '2016'){?> selected="selected" <?php } ?>>2016</option>
-    <option <?php if($ano == '2017'){?> selected="selected" <?php } ?>>2017</option>
-    <option <?php if($ano == '2018'){?> selected="selected" <?php } ?>>2018</option>
-    <option <?php if($ano == '2019'){?> selected="selected" <?php } ?>>2019</option>
-    <option <?php if($ano == '2020'){?> selected="selected" <?php } ?>>2020</option>
-    <option <?php if($ano == '2021'){?> selected="selected" <?php } ?>>2021</option>
-    <option <?php if($ano == '2022'){?> selected="selected" <?php } ?>>2022</option>
-    <option <?php if($ano == '2023'){?> selected="selected" <?php } ?>>2023</option>
-    <option <?php if($ano == '2024'){?> selected="selected" <?php } ?>>2024</option>
-    <option <?php if($ano == '2025'){?> selected="selected" <?php } ?>>2025</option>
-    <option <?php if($ano == '2026'){?> selected="selected" <?php } ?>>2026</option>
+    <?php for($y = $anoInicio; $y <= $anoMax; $y++){ ?>
+    <option <?php if($ano == $y){?> selected="selected" <?php } ?>><?php echo $y; ?></option>
+    <?php } ?>
 </select> <input type="button" onclick="ver_financiero_mensual();" value="Ver" />
 <div id="financiero_mensual"></div>
 <script>
